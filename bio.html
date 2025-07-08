@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Old Internet Page</title>
+  <style>
+    body {
+      background: url('https://www.transparenttextures.com/patterns/stardust.png'); /* tile bg */
+      color: #ffccff;
+      font-family: "Comic Sans MS", "Courier New", cursive;
+      text-shadow: 1px 1px #000;
+    }
+    .container {
+      width: 80%;
+      margin: 20px auto;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border: 4mm ridge rgba(214, 169, 255, 0.6);
+      
+    }
+    h1 {
+      font-size: 40px;
+      color: #7689c5;
+      text-align: center;
+    }
+    h2 {
+      font-size: 36px;
+      color: #ff99ff;
+      text-align: center;
+    }
+    .blink {
+      animation: blink-animation 1s steps(5, start) infinite;
+      -webkit-animation: blink-animation 1s steps(5, start) infinite;
+    }
+    @keyframes blink-animation {
+      to { visibility: hidden; }
+    }
+    a {
+      color: #99ccff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    marquee {
+      font-size: 20px;
+      color: #ff99ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>who am i</h1>
+    <h2>About Me</h2>
+    <p>Hi! I'm Jay. I love old web aesthetics, making art, coding weird stuff, and playing Minecraft. :3</p>
+
+    <h2>Links</h2>
+  </div>
+</body>
+</html>

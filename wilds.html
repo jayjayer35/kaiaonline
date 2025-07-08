@@ -11,10 +11,12 @@
     font-family: "Courier New", monospace;
     color: #f0e6d2;
     background: #0b0c2a url('assets/wilds.jpg');
-    background-attachment: fixed;
-    background-repeat: repeat-y;
-    background-size: 108% auto;
-    background-position: center fill;
+    background-repeat: no-repeat;       /* No repeat */
+    background-size: cover;             /* Fill and crop to cover */
+    background-position: center center; /* Center the image */
+    background-attachment: fixed;       /* Optional: keep fixed on scroll */
+    margin: 0;                         /* Remove default margin */
+    height: 100vh;  
   }
   header {
     text-align: center;
@@ -128,12 +130,7 @@
     22 minutes isn't enough, and two years wasnt enough.<br>
     <span class="star">Choose a question, look for the answer-<br>Keep exploring.</span>
   </footer>
-  <script>
-  window.addEventListener('scroll', function () {
-    const scrollY = window.scrollY;
-    document.body.style.backgroundPosition = `center ${-scrollY * 0.01}px`; // Adjust 0.3 to control speed
-  });
-</script>
+  
 
 </body>
 </html>
