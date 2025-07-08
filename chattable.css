@@ -1,38 +1,221 @@
 :root {
-    --chat-bg-color: #f9f4fc;
-    --chat-text-color: #4a3d5a;
-    --chat-border-color: #c9a3e6;
-    --chat-accent-color: #d7bff0;
-    --chat-input-bg: #f3e8f9;
+   --notification-sfx: https://xobyte.org/files/WinXPNotify.mp3;
 }
-
-.chat-container {
-    background-color: var(--chat-bg-color);
-    color: var(--chat-text-color);
-    border: 2px solid var(--chat-border-color);
-    border-radius: 10px;
+*::selection {
+   color: #EEE;
+   background-color: #55E;
+   opacity: 1;
 }
-
-.chat-container .message {
-    border-bottom: 1px dashed var(--chat-accent-color);
+@font-face {
+   font-family: "WinXP";
+   src: url('https://xobyte.org/files/fonts/win.woff');
 }
-
-.chat-container input, 
-.chat-container textarea {
-    background: var(--chat-input-bg);
-    color: var(--chat-text-color);
-    border: 1px solid var(--chat-border-color);
+body, html {
+  background-color: rgb(236, 233, 216);
+  font-family: MS Gothic, WinXP, Tahoma, sans-serif;
 }
-
-.chat-container button {
-    background: var(--chat-border-color);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
+.msgWrapper {
+  display: flex;
+  width: calc(100% - 20px);
+  align-items: center;
+  overflow: clip;
+  margin: 10px;
 }
-
-.chat-container button:hover {
-    background: #b589d6;
+.allMessages {
+  display: block;
+  background: transparent;
+  border: 1px solid rgb(208, 208, 191);
+  border-radius: 3px;
+  margin: 0;
+  line-height: 12px;
+  position: relative;
+  transition: margin 250ms ease;
+  transition-delay: 500ms;
+  width: 100%;
+}
+.allMessages > pre:hover {
+    outline: dotted 1px #111;
+}
+.allMessages:hover:after {
+   content: ' ';
+   position: absolute;
+   left: 0;
+   top: 0;
+   height: 100%;
+   width: 100%;
+   border-radius: inherit;
+   background-color: rgba(0, 0, 0, 0.05);
+   pointer-events: none;
+}
+.allMessages:before {
+   content: attr(time);
+   float: right;
+   pointer-events: none;
+   font-style: italic;
+   font-size: 8pt;
+   color: #777;
+}
+.sent .senderInfo {
+  color: #33F;
+}
+.received .senderInfo {
+  color: #F11;
+}
+#background {
+   scrollbar-color: unset;
+   scrollbar-width: unset;
+}
+#background::-webkit-scrollbar, #background ::-webkit-scrollbar {
+     width: 20px;
+}
+#background::-webkit-scrollbar-track, #background ::-webkit-scrollbar-track {
+  border-radius: 0;
+  background: linear-gradient(90deg, #DDD, #FEFEFB);
+}
+#background::-webkit-scrollbar-thumb, #background ::-webkit-scrollbar-thumb {
+  background: #C3D3FD; 
+  border: solid 1px #EEE;
+  border-radius: 2%;
+  box-shadow: 0 0 1px #7C9FD3, 0 0 5px rgba(126, 159, 211, 0.5) inset;
+}
+#background::-webkit-scrollbar-button:single-button, #background ::-webkit-scrollbar-button:single-button {
+  background-color: #C3D3FD;
+  width: calc(100% - 2px);
+  border: solid 1px #EEE;
+  border-radius: 2%;
+  box-shadow: 0 0 5px rgba(126, 159, 211, 0.5) inset;
+  min-height: 20px;
+}
+#background::-webkit-scrollbar-button:single-button:vertical:increment, #background ::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-image: url(https://xp.xobyte.org/resources/down.PNG);
+  background-size: 100% 100%;
+}
+#background::-webkit-scrollbar-button:single-button:vertical:decrement, #background ::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-image: url(https://xp.xobyte.org/resources/up.PNG);
+  background-size: 100% 100%;
+}
+#background::-webkit-scrollbar-button:hover, #background ::-webkit-scrollbar-button:hover {
+  background: #7C9FD3;
+  
+}
+#background * {
+  scrollbar-color: #333 transparent;
+  scrollbar-width: thin;
+}
+.msgBody {
+   cursor: text;
+}
+ #input, #nameEntry {
+   background-color: #FFF;
+   border: inset 2px rgb(208, 208, 191);
+   padding: 5px;
+   width: calc(100% - 14px);
+   border-radius: 0;
+   font-family: inherit;
+}
+ #input:focus, #nameEntry:focus {
+   outline: dotted 1px #000;
+}
+ a {
+   font-family: inherit;
+   color: inherit !important;
+}
+ #timestamp {
+   display: none;
+   color: #555;
+   font-size: 10pt;
+}
+ #top_banner {
+   display: none;
+}
+ #top_banner:before {
+   display: inline-block;
+   width: 12pt;
+   height: 12pt;
+   content: ' ';
+   background-image: url('https://xobyte.neocities.org/files/win-min.png');
+   background-size: 100% 100%;
+   margin-right: 5px;
+}
+ #textInput {
+   background-color: rgb(236, 233, 216);
+}
+input, button {
+  font-family: inherit;
+}
+blockquote {
+   border: 1px solid rgb(208, 208, 191);
+   border-radius: 3px;
+   line-height: 12px;
+   position: relative;
+}
+.mod, .owner {
+  background-color: transparent;
+  background-image: url('/media/crown.png');
+  background-size: 100% 100%;
+  border-radius: 0;
+}
+.owner {
+   filter: hue-rotate(-60deg);
+}
+.mod {
+   filter: hue-rotate(-180deg);
+}
+#emojiTray {
+  background-color: rgb(236, 233, 216);
+  color: #222;
+}
+#settings {
+  right: 25px;
+}
+#settingsMenu {
+  padding: 0;
+  width: 100%;
+}
+#settingsMenu p {
+  padding: 3px 10px 3px 10px;
+}
+#save {
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+  padding: 3px 6px 3px 6px;
+  font-size: 10pt;
+  position: relative;
+  border: outset 2px #6982EE;
+  border-radius: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+#save:hover::after {
+  content: " ";
+  display: block;
+  width: 95%;
+  height: 80%;
+  border: dotted 1px #000;
+  position: absolute;
+  left: 2%;
+  top: 10%;
+  border-radius: 6px;
+}
+#save:hover {
+  border-color: #C50;
+}
+#is_typing {
+  background-color: transparent;
+  border-radius: 0;
+  overflow: visible;
+  width: auto;
+}
+#is_typing:before {
+  content: "Typing";
+  font-size: 8pt;
+}
+#is_typing > span {
+   background-color: #000;
+   height: 2px;
+   width: 2px;
+   border-radius: 0;
 }
