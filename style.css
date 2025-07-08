@@ -1,0 +1,33 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #7d52a100 url('assets/starstwinkle.gif') repeat;
+    background-size: cover;
+    background-position: center;
+    font-family: "Comic Sans MS","Courier New",monospace;
+  color: #803083;
+  display: repeat;
+}
+
+.content-frame {
+  width: 100%;
+  max-width: 800px;
+  height: 500px;
+  border: 2px solid #fff;
+  background: rgba(0,0,0,0.6);
+  margin: 2rem auto;
+  display: block;
+}
+
+/* Main content styles */
+.main-content {
+  margin-left: 220px;
+  flex: 1;
+  padding: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center all content horizontally */
+  transition: margin-left 0.3s ease;
+}
+
