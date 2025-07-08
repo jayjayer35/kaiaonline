@@ -1,457 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-<script "></script>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>kaia online</title>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    background: #1f0a31 url('assets/galaxybkagnd.jpg') repeat;
-    background-size: cover;
-    background-position: center;
-    font-family: "Comic Sans MS","Courier New",monospace;
-  color: #fbd4ff;
-  display: repeat;
-}
-
-.content-frame {
-  width: 100%;
-  max-width: 800px;
-  height: 500px;
-  border: 2px solid #fff;
-  background: rgba(0,0,0,0.6);
-  margin: 2rem auto;
-  display: block;
-}
-
-/* Sidebar styles */
-.sidebar {
-  width: 220px;
-  background: rgba(87, 37, 84, 0.9) url('assets/pinkgalaxy.jpg') repeat;
-  background-size: cover;
-  background-position: center;
-  padding: 1rem;
-  box-sizing: border-box;
-  border-right: 2px dashed #fff;
-  height: 100vh;
-  overflow-y: auto;
-  position: fixed;
-  left: 0;
-  top: 0;
-  transition: transform 0.3s ease;
-  z-index: 1000;
-  will-change: transform;
-}
-
-/* When hidden */
-.sidebar.hidden {
-  transform: translateX(-220px);
-}
-
-/* "Bookmark" toggle button attached to sidebar edge */
-.toggle-sidebar {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 1100;
-  background: rgba(92, 31, 107, 0.432);
-  color: #e2aadb;
-  border: 1px solid #e2aadb;
-  padding: 0.4rem 0.6rem;
-  cursor: pointer;
-  font-size: 1rem;
-  line-height: 1rem;
-}
-.sidebar:not(.hidden) + .toggle-sidebar {
-  left: 230px; /* sidebar width + padding */
-}
-/* Center sidebar title */
-.sidebar h2 {
-  font-size:1.2rem;
-  margin-top:0;
-  text-align:center;
-}
-
-/* Tree nav styles */
-.tree {
-  list-style:none;
-  padding:0;
-}
-.tree summary {
-  cursor:pointer;
-  font-weight:bold;
-}
-.tree li {
-  margin-bottom:0.5rem;
-}
-.tree a {
-  color:#cab3ff;
-  text-decoration:underline;
-  font-size:0.9rem;
-}
-.tree a:hover {
-  color:#8862c5;
-}
-
-/* Main content styles */
-.main-content {
-  margin-left: 220px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  transition: margin-left 0.3s ease;
-}
-
-
-/* When sidebar hidden, content fills the screen */
-.sidebar.hidden + .main-content {
-  margin-left: 0;
-}
-
-
-
-h1 {
-  font-size: 2rem;
-  text-align: center;
-  text-shadow:1px 1px 3px #000;
-}
-.blinking-star {
-  display:inline-block;
-  animation:blink 1s infinite alternate;
-}
-@keyframes blink {
-  to {opacity:0.3;}
-}
-p {
-  margin-bottom:1rem;
-  text-align:center;
-}
-
-.update-log {
-  border: 2px solid #fff;
-  max-width: 800px;
-  width: 100%;
-  margin: 2rem auto;
-  padding: 0;
-  line-height: 0;
-}
-
-
-footer {
-  margin-top:2rem;
-  font-size:0.85rem;
-}
-#statuscafe {
-  margin: 2rem auto;
-  max-width: 500px;
-  background-color: rgba(168, 132, 230, 0.2); /* soft lavender overlay */
-  border: 1px solid #fff;
-  padding: 1em;
-  font-family: "Comic Sans MS", "Courier New", monospace;
-  color: #fff;
-  border-radius: 4px;
-}
-#statuscafe-username {
-  visibility: hidden;
-  position: relative;
-}
-
-#statuscafe-username::before {
-  content: "🪐 kaiasei's status"; /* 👈 your visual name */
-  visibility: visible;
-  position: absolute;
-  top: 0;
-  left: 0;
-  font-weight: bold;
-  color: #e2e1ab;
-}
-
-#statuscafe-content {
-  margin: 0 0.5em;
-}
-#statuscafe:hover {
-  background-color: rgba(168, 132, 230, 0.35);
-}
-#music-player {
-  font-size: 0.9em;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 0.7em;
-  border-radius: 6px;
-  color: #d5a7da;
-}
-
-#music-player button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid #402f42;
-  color: #c99dbf;
-  padding: 0.3em 0.8em;
-  margin: 0 0.2em;
-  cursor: pointer;
-  font-family: inherit;
-  border-radius: 4px;
-  transition: background 0.2s, color 0.2s;
-}
-
-#music-player button:hover {
-  background: #c99dbf;
-  color: #000;
-}
-
-#music-player input[type="range"] {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 6px;
-  border-radius: 3px;
-  background: #402f42;
-  outline: none;
-  margin: 0.5em 0;
-}
-
-#music-player input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #c99dbf;
-  cursor: pointer;
-}
-
-#music-player input[type="range"]::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #c99dbf;
-  cursor: pointer;
-}
-/* Remove bullets from all nested lists */
-.tree ul {
-  list-style: none;
-  padding-left: 1.2rem;
-  margin: 0;
-}
-
-/* Custom bullet image for nested list items */
-.tree ul li {
-  position: relative;
-  padding-left: 24px;
-  margin-bottom: 0.5rem;
-}
-
-.tree ul li::before {
-  content: "▶";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  background-image: url('assets/custom-bullet.gif'); /* Your image or gif */
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-
-iframe {
-  z-index: 1;
-  position: relative;
-}
-
-</style>
-<script>
-  const originalTitle = " ✦ kaia online ✦ my little corner of the web ";
-  let scrollTitle = originalTitle;
-  setInterval(() => {
-    scrollTitle = scrollTitle.substring(1) + scrollTitle.charAt(0);
-    document.title = scrollTitle;
-  }, 200); // adjust speed here (milliseconds)
-</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome!</title>
+  <style>
+    body {
+      background: url('assets/197.GIF') repeat;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: #4b006e;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      font-size: 1em;
+      text-shadow: 1px 1px #fff;
+    }
+    p {
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+    .sparkle {
+      display: inline-block;
+      animation: sparkle 1.5s infinite;
+    }
+    @keyframes sparkle {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+    }
+    .corner-image {
+      position: absolute;
+      width: 80px;
+    }
+    .corner-image.tl { top: 10px; left: 10px; }
+    .corner-image.tr { top: 10px; right: 10px; }
+    .corner-image.bl { bottom: 10px; left: 10px; }
+    .corner-image.br { bottom: 10px; right: 10px; }
+    .gif-button {
+      display: inline-block;
+      margin-top: 30px;
+    }
+    .gif-button img {
+      width: 200px;
+      height: auto;
+    }
+  </style>
 </head>
-
 <body>
+  <img src="assets/funnyalien.gif" class="corner-image tl" alt="star" />
+  <img src="assets/funnyalien.gif" class="corner-image tr" alt="star" />
+  <img src="assets/funnyalien.gif" class="corner-image bl" alt="star" />
+  <img src="assets/funnyalien.gif" class="corner-image br" alt="star" />
 
-  <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
-
-
-  
-  <div class="sidebar" id="sidebar">
-    <h2><a href="welcome.html" target="main-frame"><img src="" alt="welcome!" style="width: 70px; height: auto;" /></a></h2>
-    <ul class="tree">
-      <li>
-        <details open>
-          <summary>home</summary>
-          <ul>
-            <li><a href="welcome.html" target="main-frame">welcome!</a></li>
-            <li><a href="updates.html" target="main-frame">updates</a></li>
-            <li><a href="thesite.html" target="main-frame">the site</a></li>
-            <li><a href="" target="main-frame">guestbook!</a></li>
-            
-          </ul>
-        </details>
-      </li>
-      <li>
-        <details>
-          <summary>all about me</summary>
-          <ul>
-            <li><a href="bio.html" target="main-frame">bio</a></li>
-            <li><a href="video.html" target="main-frame">video</a></li>
-            <li><a href="photo.html" target="main-frame">photo</a></li>
-            <li><a href="friends.html" target="main-frame">friends</a></li>
-            <li><a href="music.html" target="main-frame">music</a></li>
-            <li><a href="bigguy.html" target="main-frame">big guy</a></li>
-          </ul>
-        </details>
-      </li>
-      <li>
-        <details>
-          <summary>internet</summary>
-          <ul>
-            <li><a href="internet.html" target="main-frame">internet</a></li>
-            <li><a href="sites.html" target="main-frame">sites</a></li>
-            <li><a href="chat.html" target="main-frame">webchat</a></li>
-          </ul>
-        </details>
-      </li>
-      <li>
-        <details>
-          <summary>other</summary>
-          <ul>
-            <li><a href="arcade.html" target="main-frame">arcade</a></li>
-            <li><a href="wilds.html" target="main-frame">outer wilds</a></li>
-          </ul>
-        </details>
-      </li>
-    </ul>
-
-    <div id="statuscafe" style="margin-top:1em;">
-      <div id="statuscafe-username"></div>
-      <div id="statuscafe-content"></div>
-    </div>
-    <div id="music-player" style="margin-top: 2em;">
-  <strong>Now Playing:</strong>
-  <div id="now-playing" style="margin-bottom: 0.5em;">hit play...</div>
-
-  <audio id="audio" autoplay></audio>
-
-  <!-- Progress slider -->
-  <input
-    type="range"
-    id="progress"
-    value="0"
-    min="0"
-    max="100"
-    step="1"
-    style="width: 100%; margin: 0.5em 0;"
-  />
-
-  <!-- Volume slider -->
-  <label style="display:block; margin-bottom: 0.5em;">
-    Volume:
-    <input
-      type="range"
-      id="volume"
-      min="0"
-      max="1"
-      step="0.01"
-      value="1"
-      style="width: 100%;"
-    />
-  </label>
-
-  <div>
-    <button onclick="togglePlay()">▶ / ⏸</button>
-    <button onclick="playRandomSong()">⏭</button>
-  </div>
-  
-</div>
-
-    <footer>
-      &copy; 2025 kaia <br> stay safe out there!
-    </footer>
-  </div>
-  
-  <div class="main-content" id="main-content">
-    
-    <!-- This iframe displays the pages -->
-    <iframe
-  name="main-frame"
-  src="welcome.html"
-  allowtransparency="true"
-  style="flex:1; border:none;"
-  scrolling="auto">
-</iframe>
-
-    
-  </div>
-
-  <script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
-
-  <script>
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('hidden');
-  }
-  const songs = [
-  { title: "3AM - Animal Crossing New Leaf", file: "music/3am.mp3" },
-  { title: "Travelers - Andrew Prahlow", file: "music/trav.mp3" },
-  { title: "14.3 Billion Years - Andrew Prahlow", file: "music/14.3.mp3" },
-  { title: "Comforting Memories - Kumi Tanioka", file: "music/memories.mp3" },
-  { title: "Falling Stars - A Shell In The Pit", file: "music/stars.mp3" }
-];
-
-const audio = document.getElementById("audio");
-const nowPlaying = document.getElementById("now-playing");
-const progress = document.getElementById("progress");
-const volume = document.getElementById("volume");
-let currentSongIndex = -1;
-
-function playRandomSong() {
-  let newIndex;
-  do {
-    newIndex = Math.floor(Math.random() * songs.length);
-  } while (newIndex === currentSongIndex && songs.length > 1);
-
-  currentSongIndex = newIndex;
-  const song = songs[currentSongIndex];
-  audio.src = song.file;
-  audio.play();
-  nowPlaying.textContent = song.title;
-}
-
-function togglePlay() {
-  if (audio.paused) {
-    audio.play();
-  } else {
-    audio.pause();
-  }
-}
-
-audio.addEventListener("timeupdate", () => {
-  if (audio.duration) {
-    progress.value = (audio.currentTime / audio.duration) * 100;
-  }
-});
-
-progress.addEventListener("input", () => {
-  if (audio.duration) {
-    audio.currentTime = (progress.value / 100) * audio.duration;
-  }
-});
-
-volume.addEventListener("input", () => {
-  audio.volume = parseFloat(volume.value);
-});
-
-audio.addEventListener("ended", playRandomSong);
-
-window.addEventListener("DOMContentLoaded", () => {
-  playRandomSong();
-  audio.volume = volume.value; // Set initial volume
-});
-</script>
+  <a href="index2.html" class="gif-button">
+    <img src="assets/enter.gif" alt="Enter Site" />
+  </a>
 </body>
 </html>
