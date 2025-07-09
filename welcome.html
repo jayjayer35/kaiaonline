@@ -9,19 +9,16 @@
     margin:0;
     padding:1rem;
     font-family:"Comic Sans MS","Courier New",monospace;
-    font-size:.9rem;  /* Made font slightly bigger */
+    font-size:.9rem;
     color:#cebdf7;
     background: #7d599b url('assets/197.GIF') repeat;
     background-size: cover;
     background-position: center;
-  }
-  body {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* centers vertically if min-height is set */
+    justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
   }
   h1 {
     text-align: center;
@@ -30,36 +27,173 @@
   }
   p {
     text-align: center;
-    font-size: 1.2em;
-    margin: 0.5em 0;
-  }
-  img {
-    margin-top: auto;
-    max-width: 300px;
-    height: auto;
+    font-size: 1.4em;
+    margin: 0.5em 0 1rem 0;
   }
   .blinking-star {
-  display:inline-block;
-  animation:blink .5s infinite alternate;
-}
-@keyframes blink {
-  to {opacity:0.3;}
-}
-p {
-  margin-bottom:1rem;
-  text-align:center;
-}
+    display:inline-block;
+    animation:blink .5s infinite alternate;
+  }
+  @keyframes blink {
+    to {opacity:0.3;}
+  }
+  /* blinking cursor */
+  #random-message::after {
+    content: ' _';
+    animation: blink 0.2s infinite alternate;
+  }
+  @keyframes blink {
+    to { opacity: 0; }
+  }
 </style>
 </head>
 <body>
-  <h1><span class="blinking-star">✦</span> kaia-online <span class="blinking-star">✦</span></h1>
-  <p>welcome to the site, i spent a lot of time working on this, enjoy what i hav created <br><br><br><img src="assets/legend.jpg" alt="you fucked with a legend"/><br><br><br>
-  <a href="https://kaia.starscene.com/"><img src="assets/kaiabutton.png" alt="goes to my site"/></a> 
-  <a href="https://wiby.org/"><img src="assets/wiby.gif" alt="go to wiby!"/></a><br>
-  <img src="assets/useframes.gif" alt="A cute image"/>
- 
-  <br>
+  <img src="assets/wordart2.png" alt="use frames!" style="max-width: 600px;"/>
   
-</body>
+  <!-- updated p with id -->
+  <p id="random-message"></p>
+  
+  <p><br><br>
+  <img src="assets/legend.jpg" alt="you fucked with a legend" style="max-width: 300px"/><br><br><br>
+  
+  <a href="https://kaia.starscene.com/" target="_blank">
+    <img src="assets/kaiabutton.png" alt="goes to my site!"/>
+  </a> 
+  <a href="https://wiby.org/" target="_blank">
+    <img src="assets/wiby.gif" alt="go to wiby!"/>
+  </a><br>
+  
+  <img src="assets/useframes.gif" alt="use frames!"/>
+ </p>
+<script>
+  const messages = [
+    "this site is me and i am this site",
+    "'I wanna die on Mars, just not on impact.'",
+    "i coded this place by hand just for you",
+    "explore and get lost like i do in the stars",
+    "my little corner of the internet cosmos",
+    "welcome traveler, sit by the fire",
+    "these pixels are my soul laid bare",
+    "craft OS 1.8",
+    "js, html, css, the holy trinity",
+    "do you wanna play minecraft?",
+    "can you feel my dysphoria?",
+    "gichur gichur belly itchur",
+    "add me on steam! 296521100",
+    "the universe is, and we are",
+    "live to love and love to live",
+    "tmi!",
+    "trans rights are human rights!",
+    "be kind, god knows we need more people like that",
+    "to the moon and back",
+    "kaiasei wuz here",
+    "lets have some fun in minecraft",
+    "its jonny's fault!",
+    "its luis' fault!",
+    "its james' fault!",
+    "its carl's fault!",
+    "its gabriel's fault!",
+    "its julian's fault!",
+    "its jose's fault!",
+    "its david's fault!",
+    "its brandon's fault!",
+    "its eric's fault!",
+    "its kris' fault!",
+    "its steven's fault!",
+    "its twig's fault!",
+    "under construction!",
+    "so much to do, so much to explore.",
+    "appreciate life",
+    "appreciate the little things",
+    "orchids are one of my favorite flowers",
+    "give life to music",
+    "frames changed my life",
+    "i miss you jacob",
+    "dnd session when?",
+    "i lost my glasses again",
+    "any methods at all",
+    "does anybody have a method",
+    "freedom dive",
+    "ah... i wanna play SDVX",
+    "AAAAAAAAAAAAAAAAAAAAA",
+    "sudo shutdown now",
+    "sudo rm -fr /",
+    "seraphina my beloved",
+    "elysia my beloved",
+    "free palestine",
+    "emergency tree seeds",
+    "wait- this isnt lua",
+    "a castle built overnight",
+    "there are so many splash texts",
+    "this is the last one im writing! for now",
+    "live your life to the fullest",
+    "go play outer wilds",
+    "heat death of the universe",
+    "there's more to explore here",
+    "professional emotional wreck",
+    "est. March 2022",
+    "i luv tonkotsu ramen",
+    "science compels us to explode the sun!",
+    "im gregging it",
+    "highly unmotivated",
+    "support local artists!",
+    "luca is swag",
+    "l love birds!",
+    "22 minutes",
+    "meditate it out",
+    "'We do not have much connection, you and I. Still, this encounter feels special. I hope you won't mind if I think of you as a friend.'",
+    "Every moment before this one depends on this one",
+    "'The future depends on the past, even if we don’t get to see it.'",
+    "'Oh, hello… Come, sit with me, my fellow traveler. Let’s sit together and watch the stars die.",
+    "It’s time for something new, now.",
+    "what a time to be alive",
+    "what a beautiful sunrise.",
+    "hooray!",
+    "it's a celebration of life.",
+    "relax here with me for a little, and enjoy the music.",
+    "autumn is the best season ever",
+    "gooning",
+    "level up",
+    "Nuke Victim W'wargaz",
+    "power word: shit",
+    "kaia loves bingus",
+    "i like turtles",
+    "strings on my heart",
+    "lets have some fun!"
+  ];
 
+  const elem = document.getElementById("random-message");
+
+  function typeWriter(text, i, cb) {
+  if (i < text.length) {
+    elem.innerHTML += text.charAt(i);
+    setTimeout(() => typeWriter(text, i + 1, cb), 50);
+  } else {
+    setTimeout(cb, 3000); // waits div/1000 sec
+  }
+}
+
+  function eraseText(cb) {
+    const currentText = elem.innerHTML;
+    if (currentText.length > 0) {
+      elem.innerHTML = currentText.substring(0, currentText.length - 1);
+      setTimeout(() => eraseText(cb), 30);
+    } else {
+      cb();
+    }
+  }
+
+  function startCycle() {
+    const msg = messages[Math.floor(Math.random() * messages.length)];
+    typeWriter(msg, 0, () => {
+      eraseText(startCycle);
+    });
+  }
+
+  startCycle();
+</script>
+
+
+
+</body>
 </html>

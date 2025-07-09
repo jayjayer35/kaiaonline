@@ -273,6 +273,53 @@ iframe {
 </head>
 
 <body>
+  <div id="start-screen" style="
+  position: fixed;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  background: #1f0a31 url('assets/galaxybkagnd.jpg') repeat;
+  background-size: cover;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index: 9999;
+  transition: opacity 4s ease;
+">
+  <div class="stars" style="
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: transparent url('assets/pplstar.gif') repeat;
+    background-size: cover;
+    animation: moveStars 60s linear infinite;
+    z-index: 1;
+    opacity: 0.3;
+  "></div>
+  <a onclick="startSite();playTimberSong()" style="z-index:2;">
+    <img src="assets/campfire.gif" alt="campfire" style="
+      width:150px;
+      cursor:pointer;
+      transition: transform 4s ease, filter 4s ease;">
+  </a>
+  <h1 style="
+    font-size:2rem;
+    color:#fbd4ff;
+    font-family:'Comic Sans MS','Courier New',monospace;
+    text-shadow:2px 2px 5px #000;
+    margin-top:1rem;
+    z-index:2;
+  ">sit by the fire a while...</h1><br>
+  <h3 style="
+    font-size:.8rem;
+    color:#fbd4ff;
+    font-family:'Comic Sans MS','Courier New',monospace;
+    text-shadow:2px 2px 5px #000;
+    margin-top:1rem;
+    z-index:2;
+  ">this site has music! also, click the fire</h3>
+</div>
 
   <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
 
@@ -288,7 +335,7 @@ iframe {
             <li><a href="welcome.html" target="main-frame">welcome!</a></li>
             <li><a href="updates.html" target="main-frame">updates</a></li>
             <li><a href="thesite.html" target="main-frame">the site</a></li>
-            <li><a href="" target="main-frame">guestbook!</a></li>
+            <li><a href="https://kaiasei.atabook.org/" target="main-frame">guestbook!</a></li>
             
           </ul>
         </details>
@@ -311,7 +358,7 @@ iframe {
           <summary>internet</summary>
           <ul>
             <li><a href="internetstuf.html" target="main-frame">internet stuffs</a></li>
-            <li><a href="sites.html" target="main-frame">sites</a></li>
+            <li><a href="pacman.html" target="main-frame">ms.pac-man</a></li>
             <li><a href="https://iframe.chat/embed?chat=10669156" target="main-frame">webchat</a></li>
           </ul>
         </details>
@@ -322,8 +369,8 @@ iframe {
           <ul>
             <li><a href="food.html" target="main-frame">baking / cooking</a></li>
             <li><a href="arcade.html" target="main-frame">arcade</a></li>
-            <li><a href="wilds.html" target="main-frame">outer wilds</a></li>
-            <li><a href="https://status.cafe/users/bluejay023" target="main-frame">old statuses</a></li>
+            <li><a href="wilds.html" target="main-frame" onclick="play143Song()">outer wilds</a></li>
+            <li><a href="https://status.cafe/users/bluejay023" target="main-frame">status.cafe</a></li>
             <li><a href="template.html" target="main-frame">page template</a></li>
             
           </ul>
@@ -396,6 +443,18 @@ iframe {
   <script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
 
   <script>
+    function startSite() {
+  // fade out start screen
+  document.getElementById('start-screen').style.opacity = 0;
+  setTimeout(() => {
+    document.getElementById('start-screen').style.display = "none";
+    // fade in site
+    document.querySelector('.toggle-sidebar').style.opacity = 1;
+    document.getElementById('sidebar').style.opacity = 1;
+    document.getElementById('main-content').style.opacity = 1;
+  }, 4000);
+}
+
   function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('hidden');
@@ -405,7 +464,10 @@ iframe {
   { title: "Travelers - Andrew Prahlow", file: "music/trav.mp3" },
   { title: "14.3 Billion Years - Andrew Prahlow", file: "music/14.3.mp3" },
   { title: "Comforting Memories - Kumi Tanioka", file: "music/memories.mp3" },
-  { title: "Falling Stars - A Shell In The Pit", file: "music/stars.mp3" }
+  { title: "Falling Stars - A Shell In The Pit", file: "music/stars.mp3" },
+  { title: "Timber Hearth - Andrew Prahlow", file: "music/timber.mp3" },
+  { title: "serenity - kaiasei", file: "music/serenity.mp3" },
+  { title: "dawn - kaiasei", file: "music/dawn.mp3" }
 ];
 
 const audio = document.getElementById("audio");
@@ -426,6 +488,31 @@ function playRandomSong() {
   audio.play();
   nowPlaying.textContent = song.title;
 }
+function playTimberSong() {
+  const timberIndex = songs.findIndex(song => song.file === "music/timber.mp3");
+  if (timberIndex !== -1) {
+    currentSongIndex = timberIndex;
+    const song = songs[currentSongIndex];
+    audio.src = song.file;
+    audio.play();
+    nowPlaying.textContent = song.title;
+  } else {
+    console.error("Timber Hearth not found in songs array.");
+  }
+}
+function play143Song() {
+  const timberIndex = songs.findIndex(song => song.file === "music/14.3.mp3");
+  if (timberIndex !== -1) {
+    currentSongIndex = timberIndex;
+    const song = songs[currentSongIndex];
+    audio.src = song.file;
+    audio.play();
+    nowPlaying.textContent = song.title;
+  } else {
+    console.error("14.3 Billion Years not found in songs array.");
+  }
+}
+
 
 function togglePlay() {
   if (audio.paused) {
@@ -454,8 +541,10 @@ volume.addEventListener("input", () => {
 audio.addEventListener("ended", playRandomSong);
 
 window.addEventListener("DOMContentLoaded", () => {
-  playRandomSong();
-  audio.volume = volume.value; // Set initial volume
+  audio.volume = 0.15;
+  volume.value = 0.15;
+  // Try immediate autoplay
+  
 });
 </script>
 </body>
