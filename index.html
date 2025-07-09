@@ -260,6 +260,54 @@ iframe {
   z-index: 1;
   position: relative;
 }
+.flashing-text {
+  animation: flashColors 1s infinite alternate;
+  text-decoration: none; /* optional: remove underline */
+}
+@keyframes flashColors {
+  0% {
+    color: #ff69b4; /* pink */
+  }
+  25% {
+    color: #d0ff00; /* cyan */
+  }
+  50% {
+    color: #26f8ff; /* cyan */
+  }
+  75% {
+    color: #d0ff00; /* cyan */
+  }
+  100% {
+    color: #ff69b4; /* cyan */
+  }
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #ffae00, #00ffff, #ffae00);
+  background-size: 300% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: moveGradient 1s linear infinite;
+  text-decoration: none;
+}
+
+@keyframes moveGradient {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@keyframes moveGradient {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
 
 </style>
 <script>
@@ -326,16 +374,16 @@ iframe {
 
   
   <div class="sidebar" id="sidebar">
-    <h2><a href="welcome.html" target="main-frame"><img src="" alt="welcome!" style="width: 70px; height: auto;" /></a></h2>
+    <h2><a href="welcome.html" target="main-frame"><img src="" alt="welcome!" style="width: 80px; height: auto;" /></a></h2>
     <ul class="tree">
       <li>
         <details open>
           <summary>home</summary>
           <ul>
             <li><a href="welcome.html" target="main-frame">welcome!</a></li>
-            <li><a href="updates.html" target="main-frame">updates</a></li>
+            <li><a href="updates.html" target="main-frame" class="flashing-text">updates</a></li>
             <li><a href="thesite.html" target="main-frame">the site</a></li>
-            <li><a href="https://kaiasei.atabook.org/" target="main-frame">guestbook!</a></li>
+            <li><a href="https://kaiasei.atabook.org/" target="main-frame" class="gradient-text">guestbook!</a></li>
             
           </ul>
         </details>
