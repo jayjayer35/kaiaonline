@@ -65,7 +65,9 @@
   <br><br>
   <div style="display: flex; align-items: center; gap: 4px; justify-content: center;">
    <a href="https://kaia.starscene.com/" target="_blank"><img src="assets/kaiabutton.png" alt="goes to my site!"/></a> 
-   <a href="https://wiby.org/" target="_blank"><img src="assets/wiby.gif" alt="go to wiby!"/> 
+   <a target="_blank"><img src="assets/internetprivacy.gif" alt="privacy now!"/> </a> 
+   <a target="_blank"><img src="assets/b-parentaladvisory2.png" alt=""/> </a> 
+   <a target="_blank"><img src="assets/b-campaignagainstcampaignagainstframes.gif" alt=""/> 
   <br>
   </a><br><br><br>
   </div>
@@ -77,7 +79,7 @@
   
   
  </p>
-<script>
+<script>//MESSAGES
   const messages = [
     "this site is me and i am this site",
     "'I wanna die on Mars, just not on impact.'",
@@ -231,7 +233,17 @@
     });
   }
 
+
+
+    document.addEventListener('click', () => {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+}, true);
+
   startCycle();
+
+
 </script>
 
 

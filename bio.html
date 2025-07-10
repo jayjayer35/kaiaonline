@@ -114,5 +114,13 @@
     <img src="assets/rainbowline.gif" alt="star divider" />
   </div>
   <footer></footer>
+
+  <script>
+    document.addEventListener('click', () => {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+}, true);
+  </script>
 </body>
 </html>

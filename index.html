@@ -61,13 +61,14 @@
   background: rgba(92, 31, 107, 0.432);
   color: #e2aadb;
   border: 1px solid #e2aadb;
+  border-radius: 20%;
   padding: 0.4rem 0.6rem;
   cursor: pointer;
   font-size: 1rem;
   line-height: 1rem;
 }
 .sidebar:not(.hidden) + .toggle-sidebar {
-  left: 230px; /* sidebar width + padding */
+  left: 250rem; /* sidebar width + padding */
 }
 /* Center sidebar title */
 .sidebar h2 {
@@ -89,12 +90,12 @@
   margin-bottom:0.5rem;
 }
 .tree a {
-  color:#cab3ff;
-  text-decoration:underline;
+  color:#6e8fcc;
+  text-decoration:none;
   font-size:0.9rem;
 }
 .tree a:hover {
-  color:#8862c5;
+  color:#815ed4;
 }
 
 /* Main content styles */
@@ -175,7 +176,7 @@ footer {
   margin: 0 0.5em;
 }
 #statuscafe:hover {
-  background-color: rgba(168, 132, 230, 0.35);
+  background-color: rgba(201, 191, 243, 0.445);
 }
 #music-player {
   font-size: 0.9em;
@@ -283,33 +284,47 @@ iframe {
 }
 
 .gradient-text {
-  background: linear-gradient(90deg, #ffae00, #00ffff, #ffae00);
-  background-size: 300% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  animation: moveGradient 1s linear infinite;
+  animation: smoothColors 3s linear infinite;
   text-decoration: none;
 }
 
-@keyframes moveGradient {
-  0% {
-    background-position: 0% center;
-  }
-  100% {
-    background-position: -200% center;
-  }
+@keyframes smoothColors {
+  0%   { color: #ffae00; }
+  50%  { color: #00ffff; }
+  100% { color: #ffae00; }
 }
 
-@keyframes moveGradient {
-  0% {
-    background-position: 0% center;
+  .mailbox {
+    transition: transform 0.2s ease;
   }
-  100% {
-    background-position: -200% center;
+  .mailbox:hover {
+    transform: scale(1.1) rotate(-2deg);
+    animation: shake 0.3s;
   }
-}
 
+  @keyframes shake {
+    0% { transform: scale(1.1) rotate(-2deg) translateX(0); }
+    25% { transform: scale(1.1) rotate(2deg) translateX(2px); }
+    50% { transform: scale(1.1) rotate(-2deg) translateX(-2px); }
+    75% { transform: scale(1.1) rotate(2deg) translateX(2px); }
+    100% { transform: scale(1.1) rotate(-2deg) translateX(0); }
+  }
+
+  ul li a {
+    text-decoration: none; /* removes underline */
+    color: #cebdf7;
+    transition: transform 0.2s ease;
+    display: inline-block;
+  }
+
+  ul li a:hover {
+    transform: scale(1.1);
+  }
+
+  
 </style>
+
+
 <script>
   const originalTitle = " ✦ kaia online ✦ my little corner of the web ";
   let scrollTitle = originalTitle;
@@ -321,6 +336,9 @@ iframe {
 </head>
 
 <body>
+  <audio id="campfire-sound" loop>
+  <source src="assets/ambient.mp3">
+</audio>
   <div id="start-screen" style="
   position: fixed;
   top:0; left:0;
@@ -345,7 +363,7 @@ iframe {
     z-index: 1;
     opacity: 0.3;
   "></div>
-  <a onclick="startSite();playTimberSong()" style="z-index:2;">
+  <a onclick="startSite();playTimberSong();setTimeout(toggleSidebar, 450);playSound('campfire')" style="z-index:2;">
     <img src="assets/campfire.gif" alt="campfire" style="
       width:150px;
       cursor:pointer;
@@ -374,17 +392,29 @@ iframe {
 
   
   <div class="sidebar" id="sidebar">
-    <h2><a href="welcome.html" target="main-frame"><img src="" alt="welcome!" style="width: 80px; height: auto;" /></a></h2>
+    <div style="display: flex; gap: 1rem; justify-content: center;">
+  
+  <a target="main-frame">
+    
+  <a target="main-frame">
+      <img src="assets/mailbox3.gif" alt="a mailbox gif" class="mailbox" style="max-width: 10rem;" onclick="playSoundMail()"/>
+    </a> 
+  </a>
+</div>
+
+    <audio id="mail" src="assets/mail.mp3"></audio>
+    <audio id="click" src="assets/click.mp3"></audio>
+</audio>
+
     <ul class="tree">
       <li>
         <details open>
           <summary>home</summary>
           <ul>
-            <li><a href="welcome.html" target="main-frame">welcome!</a></li>
-            <li><a href="updates.html" target="main-frame" class="flashing-text">updates</a></li>
-            <li><a href="thesite.html" target="main-frame">the site</a></li>
-            <li><a href="https://kaiasei.atabook.org/" target="main-frame" class="gradient-text">guestbook!</a></li>
-            
+            <li><a href="welcome.html" target="main-frame" onclick=" toggleSidebar()">welcome!</a></li>
+            <li><a href="updates.html" target="main-frame" class="flashing-text" onclick=" toggleSidebar()">updates</a></li>
+            <li><a href="thesite.html" target="main-frame" onclick=" toggleSidebar()">the site</a></li>
+            <li><a href="https://kaiasei.atabook.org/" target="main-frame" class="gradient-text" onclick=" toggleSidebar()">guestbook!</a></li>
           </ul>
         </details>
       </li>
@@ -392,12 +422,12 @@ iframe {
         <details>
           <summary>all about me</summary>
           <ul>
-            <li><a href="bio.html" target="main-frame">bio</a></li>
-            <li><a href="video.html" target="main-frame">video</a></li>
-            <li><a href="photo.html" target="main-frame">photo</a></li>
-            <li><a href="friends.html" target="main-frame">friends</a></li>
-            <li><a href="music.html" target="main-frame">music</a></li>
-            <li><a href="bigguy.html" target="main-frame">big guy</a></li>
+            <li><a href="bio.html" target="main-frame"onclick="toggleSidebar()">bio</a></li>
+            <li><a href="video.html" target="main-frame"onclick="toggleSidebar()">video</a></li>
+            <li><a href="photo.html" target="main-frame"onclick="toggleSidebar()">photo</a></li>
+            <li><a href="friends.html" target="main-frame"onclick="toggleSidebar()">friends</a></li>
+            <li><a href="music.html" target="main-frame"onclick="toggleSidebar()">music</a></li>
+            <li><a href="bigguy.html" target="main-frame"onclick="toggleSidebar()">big guy</a></li>
           </ul>
         </details>
       </li>
@@ -405,7 +435,8 @@ iframe {
         <details>
           <summary>internet</summary>
           <ul>
-            <li><a href="internetstuf.html" target="main-frame">internet stuffs</a></li>
+            <li><a href="internetstuf.html" target="main-frame">about internet</a></li>
+            <li><a href="internetstuf2.html" target="main-frame">internet pt.2</a></li>
             <li><a href="pacman.html" target="main-frame">ms.pac-man</a></li>
             <li><a href="https://iframe.chat/embed?chat=10669156" target="main-frame">webchat</a></li>
           </ul>
@@ -473,6 +504,29 @@ iframe {
     <footer>
       &copy; 2025 kaia <br> stay safe out there!
     </footer>
+
+    <footer>
+<a target="main-frame">
+    <img 
+      id="campfire" 
+      src="assets/campfire.gif" 
+      alt="campfire" 
+      class="campfire-icon"
+      onclick="toggleCampfire();playSound('campfire')"
+      style="max-width: 5rem;" 
+    />
+  </a>
+  <a target="main-frame">
+    <img 
+      src="assets/computer_explorer-2.png" 
+      alt="a small computer" 
+      class="mailbox-icon" 
+      onclick="playSound('winstart');openFakeWindow('jacobonline-old/index.html');"
+    />
+  </a>
+
+    </footer>
+    
   </div>
   
   <div class="main-content" id="main-content">
@@ -516,7 +570,14 @@ iframe {
   { title: "Falling Stars - A Shell In The Pit", file: "music/stars.mp3" },
   { title: "Timber Hearth - Andrew Prahlow", file: "music/timber.mp3" },
   { title: "serenity - kaiasei", file: "music/serenity.mp3" },
-  { title: "dawn - kaiasei", file: "music/dawn.mp3" }
+  { title: "dawn - kaiasei", file: "music/dawn.mp3" },
+  { title: "Main Title - Andrew Prahlow", file: "music/title.mp3" },
+  { title: "Giant's Deep - Andrew Prahlow", file: "music/deep.mp3" },
+  { title: "The Ancient Glade - Andrew Prahlow", file: "music/glade.mp3" },
+  { title: "Space - Andrew Prahlow", file: "music/space.mp3" },
+  { title: "The Sun Station - Andrew Prahlow", file: "music/sunstation.mp3" },
+  { title: "Castaways - Andrew Prahlow", file: "music/castaways.mp3" }
+
 ];
 
 const audio = document.getElementById("audio");
@@ -562,6 +623,26 @@ function play143Song() {
   }
 }
 
+function playSoundMail() {
+  document.getElementById('mail').play();
+}
+
+function playClickSound() {
+  document.getElementById('click').play();
+}
+
+function playSound(name) {
+  const audio = new Audio(`assets/${name}.mp3`);
+  audio.volume = 0.3;
+  audio.play();
+}
+
+document.addEventListener('click', () => {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+}, true);
+
 
 function togglePlay() {
   if (audio.paused) {
@@ -588,10 +669,167 @@ volume.addEventListener("input", () => {
 });
 
 audio.addEventListener("ended", playRandomSong);
+  
+function toggleCampfire() {
+    const img = document.getElementById('campfire');
+    const sound = document.getElementById('campfire-sound');
+
+    // Extract just the filename for a reliable check
+    const filename = img.src.split('/').pop().toLowerCase();
+
+    if (filename === 'campfire.gif') {
+      // Turn OFF the fire
+      img.src = 'assets/campfire.png';
+      sound.pause();
+      sound.currentTime = 5;
+    } else {
+      // Turn ON the fire
+      img.src = 'assets/campfire.gif';
+      sound.volume = .4; // Adjust volume if you want
+      sound.play();
+    }
+  }
+
+
+function openFakeWindow(url) {
+  const win = document.createElement('div');
+  win.style.position = 'fixed';
+  win.style.top = '100px';
+  win.style.left = '100px';
+  win.style.width = '400px';
+  win.style.height = '300px';
+  win.style.zIndex = 9999;
+  win.style.opacity = '0';
+  win.style.transition = 'opacity 8s ease';
+
+  const shadow = win.attachShadow({ mode: 'open' });
+
+  // 98.css style link
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://unpkg.com/98.css';
+
+  // Build window
+  const windowHtml = document.createElement('div');
+  windowHtml.className = 'window';
+  windowHtml.style.width = '100%';
+  windowHtml.style.height = '100%';
+  windowHtml.style.display = 'flex';
+  windowHtml.style.flexDirection = 'column';
+  windowHtml.style.position = 'relative'; // for resize
+
+  // Title bar
+  const titleBar = document.createElement('div');
+  titleBar.className = 'title-bar';
+  titleBar.innerHTML = `
+    <div class="title-bar-text">Loading...</div>
+    <div class="title-bar-controls">
+      <button aria-label="Close"></button>
+    </div>
+  `;
+
+  // Body with iframe
+  const body = document.createElement('div');
+  body.className = 'window-body';
+  body.style.flex = '1';
+  body.style.overflow = 'hidden';
+  body.style.position = 'relative';
+  const iframe = document.createElement('iframe');
+  iframe.src = url;
+  iframe.style.width = '100%';
+  iframe.style.height = '100%';
+  iframe.style.border = 'none';
+  body.appendChild(iframe);
+
+  // Resize handle INSIDE shadow
+  const resize = document.createElement('div');
+  resize.style.width = '8px';
+resize.style.height = '8px';
+resize.style.position = 'absolute';
+resize.style.right = '2px';
+resize.style.bottom = '2px';
+resize.style.cursor = 'nwse-resize';
+resize.style.background = `
+  repeating-linear-gradient(
+    45deg,
+    #c0c0c0,
+    #c0c0c0 1px,
+    #808080 1px,
+    #808080 2px
+  )
+`;
+resize.style.borderTop = "1px solid #fff";
+resize.style.borderLeft = "1px solid #fff";
+
+  // Append all
+  windowHtml.appendChild(titleBar);
+  windowHtml.appendChild(body);
+  windowHtml.appendChild(resize);
+  shadow.appendChild(link);
+  shadow.appendChild(windowHtml);
+
+  document.body.appendChild(win);
+
+  // Handle close
+  titleBar.querySelector('button').onclick = () => win.remove();
+
+  // Make draggable
+  let offsetX, offsetY, isDragging = false;
+  titleBar.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - win.getBoundingClientRect().left;
+    offsetY = e.clientY - win.getBoundingClientRect().top;
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      win.style.left = (e.clientX - offsetX) + 'px';
+      win.style.top = (e.clientY - offsetY) + 'px';
+    }
+  });
+  document.addEventListener('mouseup', () => isDragging = false);
+
+  // Make resizable
+  let isResizing = false;
+  resize.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    e.preventDefault();
+    e.stopPropagation();
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (isResizing) {
+      win.style.width = (Math.max(200, e.clientX - win.getBoundingClientRect().left)) + 'px';
+      win.style.height = (Math.max(100, e.clientY - win.getBoundingClientRect().top)) + 'px';
+    }
+  });
+  document.addEventListener('mouseup', () => isResizing = false);
+
+  // Load title
+  iframe.addEventListener('load', () => {
+  try {
+    let pageTitle = iframe.contentDocument.title;
+    if (!pageTitle) {
+      // fallback: get file name
+      const parts = iframe.src.split('/');
+      pageTitle = parts[parts.length - 1] || 'Welcome, ';
+    }
+    titleBar.querySelector('.title-bar-text').textContent = pageTitle;
+  } catch (e) {
+    titleBar.querySelector('.title-bar-text').textContent = 'My old site';
+  }
+  
+  });
+  setTimeout(() => {
+  win.style.opacity = '1';
+  }, 10);
+}
 
 window.addEventListener("DOMContentLoaded", () => {
   audio.volume = 0.15;
   volume.value = 0.15;
+  document.getElementById('mail').volume = 0.3;
+  document.getElementById('click').volume = 0.3;
+  toggleSidebar();
   // Try immediate autoplay
   
 });

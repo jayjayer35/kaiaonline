@@ -98,5 +98,12 @@
     <span class="star">In case you wanted to add a little text down here as well you can too.</span>
   </footer>
   
+  <script>
+    document.addEventListener('click', () => {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+}, true);
+  </script>
 </body>
 </html>

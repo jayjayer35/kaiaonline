@@ -13,4 +13,12 @@
         height='100%'>
     </iframe>
 </body>
+
+<script>
+    document.addEventListener('click', () => {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+}, true);
+  </script>
 </html>
