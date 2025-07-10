@@ -144,7 +144,7 @@ p {
 
 
 footer {
-  margin-top:2rem;
+  margin-top:1rem;
   font-size:0.85rem;
 }
 #statuscafe {
@@ -301,6 +301,13 @@ iframe {
     transform: scale(1.1) rotate(-2deg);
     animation: shake 0.3s;
   }
+  .campfire-icon {
+    transition: transform 0.3s ease;
+  }
+  .campfire-icon:hover {
+    transform: scale(1.1) rotate(-3deg);
+    animation: shake 0.4s;
+  }
 
   @keyframes shake {
     0% { transform: scale(1.1) rotate(-2deg) translateX(0); }
@@ -384,7 +391,19 @@ iframe {
     text-shadow:2px 2px 5px #000;
     margin-top:1rem;
     z-index:2;
-  ">this site has music! also, click the fire</h3>
+    text-align:center;
+  ">this site has music! - best viewed on a computer
+  </h3>
+  <h3 style="
+    font-size:.8rem;
+    color:#fbd4ff;
+    font-family:'Comic Sans MS','Courier New',monospace;
+    text-shadow:2px 2px 5px #000;
+    margin-top:0rem;
+    z-index:2;
+    text-align:center;
+  ">(and some javascript)
+  </h3>
 </div>
 
   <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
@@ -500,11 +519,6 @@ iframe {
   </div>
   
 </div>
-
-    <footer>
-      &copy; 2025 kaia <br> stay safe out there!
-    </footer>
-
     <footer>
 <a target="main-frame">
     <img 
@@ -520,11 +534,11 @@ iframe {
     <img 
       src="assets/computer_explorer-2.png" 
       alt="a small computer" 
-      class="mailbox-icon" 
+      class="mailbox"
       onclick="playSound('winstart');openFakeWindow('jacobonline-old/index.html');"
     />
   </a>
-
+     <br> &copy; 2025 kaia <br> stay safe out there!
     </footer>
     
   </div>
@@ -825,10 +839,10 @@ resize.style.borderLeft = "1px solid #fff";
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  audio.volume = 0.15;
-  volume.value = 0.15;
-  document.getElementById('mail').volume = 0.3;
-  document.getElementById('click').volume = 0.3;
+  audio.volume = 0.07;
+  volume.value = 0.07;
+  document.getElementById('mail').volume = 0.2;
+  document.getElementById('click').volume = 0.2;
   toggleSidebar();
   // Try immediate autoplay
   
