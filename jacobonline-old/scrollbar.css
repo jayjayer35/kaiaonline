@@ -1,0 +1,37 @@
+/* width */
+::-webkit-scrollbar {
+    width: 12px;
+    background: #5260FB;
+}
+
+::-webkit-scrollbar-track-piece {
+    background: #38009E;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #5260FB;
+}
+
+/* dassdasd */
+::-webkit-scrollbar-button {
+    background: #7731F5;
+}
+/*HOVER ON SCROLLBAR BUTTONS*/
+    ::-webkit-scrollbar-button:hover {
+        background: #7731F5;
+    }
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #5260FB;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #52A8FB;
+    }
