@@ -82,19 +82,25 @@
     0% { color: #9effc8; text-shadow: 0 0 8px #7effc1; }
     100% { color: #d0f7e9; text-shadow: 0 0 12px #b8ffd4; }
   }
+  .link-buttons a {
+  position: relative;
+  }
+
+  .link-buttons a img {
+  display: block;
+  max-width: 100%;
+  }
   a {
-    transition: transform 0.2s ease;
+    transition: transform 0.3s ease;
   }
   a:hover {
-    transform: scale(1.1) rotate(-2deg);
-    animation: shake 0.3s;
+    transform: scale(1.1) rotate(-4deg);
   }
   @keyframes shake {
-    0% { transform: scale(1.1) rotate(-2deg) translateX(0); }
-    25% { transform: scale(1.1) rotate(2deg) translateX(2px); }
-    50% { transform: scale(1.1) rotate(-2deg) translateX(-2px); }
-    75% { transform: scale(1.1) rotate(2deg) translateX(2px); }
-    100% { transform: scale(1.1) rotate(-2deg) translateX(0); }
+    0% { transform: scale(1.1) rotate(-1deg) translateX(0); }
+    33% { transform: scale(1.1) rotate(-2deg) translateX(0); }
+    67% { transform: scale(1.1) rotate(-3deg) translateX(0); }
+    100% { transform: scale(1.1) rotate(-4deg) translateX(0); }
   }
 
 </style>
@@ -113,9 +119,9 @@
       be sure to spread my beloved 88x31 button if you enjoyed my site. (i put a lot of work into it!). oh also, these buttons will open up in a new tab, because my site is frame-based, it would be
       a little weird doing a direct link. just my way of saying i havent figured it out yet! 💫 <br>
       something to note, with the way my page is styled, it kinda makes the 2px border around the buttons harder to see, but they're there!
-      <br><br>
-      <a href="https://kaia.starscene.com/" target="_blank"><img src="assets/kaiabutton.png" alt="goes to my site!"/></a>
-      <span >such a cool button, right!? <em>((it took me an hour- i am NOT an artist))</em></span>
+      <br><br><div class="link-buttons"><a href="https://kaia.starscene.com/" target="_blank"><img src="assets/kaiabutton.png" alt="goes to my site!"/></a>
+      <span >such a cool button, right!? <em>((it took me an hour- i am NOT an artist))</em></span></div>
+      
     </p>
   </div>
 
