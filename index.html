@@ -264,13 +264,6 @@ iframe {
     transform: scale(1.1) rotate(-2deg);
     animation: shake 0.3s;
 }
-.campfire-icon {
-  transition: transform 0.3s ease;
-}
-.campfire-icon:hover {
-  transform: scale(1.1) rotate(-3deg);
-  animation: shake 0.4s;
-}
 @keyframes shake {
   0% { transform: scale(1.1) rotate(-2deg) translateX(0); }
   25% { transform: scale(1.1) rotate(2deg) translateX(2px); }
@@ -286,17 +279,6 @@ ul li a {
 }
 ul li a:hover {
   transform: scale(1.1);
-}
-.campfire-container {
-    text-align: center;
-    position: relative;
-    z-index: 2;
-}
-.campfire-container img {
-    width: 150px;
-    height: auto;
-    transition: transform 0.3s ease, filter 0.3s ease;
-    cursor: pointer;
 }
 .campfire-container img:hover {
     transform: scale(1.1);
@@ -376,6 +358,10 @@ font-size: 12px;
 all: unset;
 cursor: pointer;
 }
+#start-screen a img:hover {
+    filter: brightness(1.4) drop-shadow(0 0 20px orange);
+    transform: scale(1.2);
+}
 </style> 
 <!--scrolling title bar-->
 <script>
@@ -392,7 +378,7 @@ cursor: pointer;
   <audio id="campfire-sound" loop>
   <source src="assets/ambient.mp3">
 </audio>
-  <div id="start-screen" style="
+<div id="start-screen" style="
   position: fixed;
   top:0; left:0;
   width:100%;
@@ -404,8 +390,8 @@ cursor: pointer;
   align-items:center;
   flex-direction:column;
   z-index: 9999;
-  transition: opacity 4s ease;
-">
+  transition: opacity 4s ease;"
+>
   <div class="stars" style="
     position: absolute;
     width: 200%;
@@ -420,7 +406,7 @@ cursor: pointer;
     <img src="assets/campfire.gif" alt="campfire" style="
       width:150px;
       cursor:pointer;
-      transition: transform 4s ease, filter 4s ease;">
+      transition: transform 1s ease, filter 1s ease;">
   </a>
   <h1 style="
     font-size:2rem;
@@ -510,16 +496,12 @@ cursor: pointer;
       <li>
         <details>
           <summary>webrings!!</summary>
-          <ul>
-            <li style="list-style-type: none;">
-
+          <ul style="list-style-type: none;">
+            <li>
               <script id='galactic-webring' type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
               <script id='galactic-webring' type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
-
-              <div>
-                <object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#383838" type="image/svg+xml" style="width: 100px; height: 100px;"></object>  
-              </div>
             </li>
+            <li><object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#383838" type="image/svg+xml" style="width: 100px; height: 100px;"></object></li>
           </ul>
         </details>
       </li>
@@ -621,6 +603,9 @@ cursor: pointer;
 
   <script>
     function startSite() {
+      const startScreen = document.getElementById('start-screen');
+  startScreen.style.opacity = '0';
+  startScreen.style.pointerEvents = 'none';
   document.getElementById('start-screen').style.opacity = 0;
   setTimeout(() => {
     document.getElementById('start-screen').style.display = "none";
