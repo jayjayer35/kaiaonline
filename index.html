@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="stylesheet" href="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring.css">
+<link rel="stylesheet" href="galactic-webring.css">
 <script></script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>kaia online</title>
 <style>
-  body {
+body {
     margin: 0;
     padding: 0;
     background: #1f0a31 url('assets/galaxybkagnd.jpg') repeat;
@@ -17,7 +17,6 @@
   color: #fbd4ff;
   display: repeat;
 }
-
 .content-frame {
   width: 100%;
   max-width: 800px;
@@ -27,7 +26,6 @@
   margin: 2rem auto;
   display: block;
 }
-
 .sidebar {
   width: 220px;
   background: rgba(87, 37, 84, 0.9) url('assets/pinkgalaxy.jpg') repeat;
@@ -45,11 +43,9 @@
   z-index: 1000;
   will-change: transform;
 }
-
 .sidebar.hidden {
   transform: translateX(-220px);
 }
-
 .toggle-sidebar {
   position: fixed;
   top: 10px;
@@ -72,7 +68,6 @@
   margin-top:0;
   text-align:center;
 }
-
 .tree {
   list-style:none;
   padding:0;
@@ -92,7 +87,6 @@
 .tree a:hover {
   color:#815ed4;
 }
-
 .main-content {
   margin-left: 220px;
   height: 100vh;
@@ -101,14 +95,9 @@
   padding: 0;
   transition: margin-left 0.3s ease;
 }
-
-
 .sidebar.hidden + .main-content {
   margin-left: 0;
 }
-
-
-
 h1 {
   font-size: 2rem;
   text-align: center;
@@ -125,7 +114,6 @@ p {
   margin-bottom:1rem;
   text-align:center;
 }
-
 .update-log {
   border: 2px solid #fff;
   max-width: 800px;
@@ -134,8 +122,6 @@ p {
   padding: 0;
   line-height: 0;
 }
-
-
 footer {
   margin-top:1rem;
   font-size:0.85rem;
@@ -154,7 +140,6 @@ footer {
   visibility: hidden;
   position: relative;
 }
-
 #statuscafe-username::before {
   content: "🪐 kaiasei's status";
   visibility: visible;
@@ -164,7 +149,6 @@ footer {
   font-weight: bold;
   color: #e2e1ab;
 }
-
 #statuscafe-content {
   margin: 0 0.5em;
 }
@@ -178,7 +162,6 @@ footer {
   border-radius: 6px;
   color: #d5a7da;
 }
-
 #music-player button {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid #402f42;
@@ -190,12 +173,10 @@ footer {
   border-radius: 4px;
   transition: background 0.2s, color 0.2s;
 }
-
 #music-player button:hover {
   background: #c99dbf;
   color: #000;
 }
-
 #music-player input[type="range"] {
   width: 100%;
   height: 6px;
@@ -204,7 +185,6 @@ footer {
   outline: none;
   margin: 0.5em 0;
 }
-
 #music-player input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -214,7 +194,6 @@ footer {
   background: #c99dbf;
   cursor: pointer;
 }
-
 #music-player input[type="range"]::-moz-range-thumb {
   width: 12px;
   height: 12px;
@@ -222,19 +201,16 @@ footer {
   background: #c99dbf;
   cursor: pointer;
 }
-
 .tree ul {
   list-style: none;
   padding-left: 1.2rem;
   margin: 0;
 }
-
 .tree ul li {
   position: relative;
   padding-left: 24px;
   margin-bottom: 0.5rem;
 }
-
 .tree ul li::before {
   content: "➤";
   position: absolute;
@@ -247,7 +223,6 @@ footer {
   background-size: contain;
   background-repeat: no-repeat;
 }
-
 iframe {
   z-index: 1;
   position: relative;
@@ -273,67 +248,146 @@ iframe {
     color: #ff69b4;
   }
 }
-
 .gradient-text {
   animation: smoothColors 3s linear infinite;
   text-decoration: none;
 }
-
 @keyframes smoothColors {
   0%   { color: #ffae00; }
   50%  { color: #00ffff; }
   100% { color: #ffae00; }
 }
-
-  .mailbox {
+.mailbox {
     transition: transform 0.2s ease;
-  }
-  .mailbox:hover {
+}
+.mailbox:hover {
     transform: scale(1.1) rotate(-2deg);
     animation: shake 0.3s;
-  }
-  .campfire-icon {
-    transition: transform 0.3s ease;
-  }
-  .campfire-icon:hover {
-    transform: scale(1.1) rotate(-3deg);
-    animation: shake 0.4s;
-  }
-
-  @keyframes shake {
-    0% { transform: scale(1.1) rotate(-2deg) translateX(0); }
-    25% { transform: scale(1.1) rotate(2deg) translateX(2px); }
-    50% { transform: scale(1.1) rotate(-2deg) translateX(-2px); }
-    75% { transform: scale(1.1) rotate(2deg) translateX(2px); }
-    100% { transform: scale(1.1) rotate(-2deg) translateX(0); }
-  }
-
-  ul li a {
-    text-decoration: none; 
-    color: #cebdf7;
-    transition: transform 0.2s ease;
-    display: inline-block;
-  }
-
-  ul li a:hover {
+}
+.campfire-icon {
+  transition: transform 0.3s ease;
+}
+.campfire-icon:hover {
+  transform: scale(1.1) rotate(-3deg);
+  animation: shake 0.4s;
+}
+@keyframes shake {
+  0% { transform: scale(1.1) rotate(-2deg) translateX(0); }
+  25% { transform: scale(1.1) rotate(2deg) translateX(2px); }
+  50% { transform: scale(1.1) rotate(-2deg) translateX(-2px); }
+  75% { transform: scale(1.1) rotate(2deg) translateX(2px); }
+  100% { transform: scale(1.1) rotate(-2deg) translateX(0); }
+}
+ul li a {
+  text-decoration: none; 
+  color: #cebdf7;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+ul li a:hover {
+  transform: scale(1.1);
+}
+.campfire-container {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+.campfire-container img {
+    width: 150px;
+    height: auto;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
+}
+.campfire-container img:hover {
     transform: scale(1.1);
-  }
-
-  
-  
-</style>
-
-
+    filter: drop-shadow(0 0 15px #ffb347);
+}
+#galactic-box {
+width: 250px;
+margin: 0 auto !important;
+display: flex;
+align-items: center;
+flex-direction: column;
+position: relative;
+font-family: MS Gothic;
+border: 4px solid #0000ff;
+background: linear-gradient(180deg, rgba(0, 0, 0, 1) 36%, rgba(4, 0, 54, 1) 100%);
+box-shadow: 0px 0px 8px #0000ff, 1px 1px 4px #0000ff inset, -1px -1px 4px #0000ff inset;
+color: #ffff00;
+text-shadow: 0px 0px 4px #ffff00;
+box-sizing: border-box;
+padding: 5px;
+}	
+#galactic-box .gw-logo {
+width: 130px;
+image-rendering: pixelated;
+margin-bottom: 5px;
+}
+#galactic-box .gw-content-wrapper {
+display: flex; 
+align-items: center;
+justify-content: center;
+margin-bottom: 7px;
+}
+#galactic-box .gw-content-wrapper a {
+all: unset;
+cursor: pointer;
+font-size: 35px;
+}
+#galactic-box .spot-container {
+display: flex;
+align-items: center;
+flex-direction: column;
+margin-right: 25px;
+}
+#galactic-box .spot-image {
+width: 130px;
+image-rendering: pixelated;
+margin-bottom: 5px;
+}
+#galactic-box .spot-name {
+width: 130px;
+text-align: center;
+font-size: 12px;
+font-weight: bold;
+transition-duration: 0.5s;
+}
+#galactic-box .spot-name:hover {
+font-style: italic;
+letter-spacing: 1px;
+}
+#galactic-box .prevbutton {
+margin-right: 25px;
+}
+#galactic-box .gw-nav-wrapper {
+display: flex;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+}
+#galactic-box .gw-nav-wrapper .gw-link {
+text-align: center;
+width: 80px;
+font-weight: bold;
+text-decoration: underline;
+font-size: 12px;
+}
+#galactic-box .gw-nav-wrapper .gw-link a {
+all: unset;
+cursor: pointer;
+}
+</style> 
+<!--scrolling title bar-->
 <script>
-  const originalTitle = " ✦ kaia online ✦ my little corner of the web ";
-  let scrollTitle = originalTitle;
+  const siteTitle = " ✦ kaia online ✦ my little corner of cyberspace ";
+  let scrollTitle = siteTitle;
   setInterval(() => {
     scrollTitle = scrollTitle.substring(1) + scrollTitle.charAt(0);
     document.title = scrollTitle;
-  }, 200); // adjust speed here (milliseconds)
+  }, 200); //speed
 </script>
-</head>
 
+</head>
 <body>
   <audio id="campfire-sound" loop>
   <source src="assets/ambient.mp3">
@@ -457,13 +511,13 @@ iframe {
         <details>
           <summary>webrings!!</summary>
           <ul>
-            <li>
+            <li style="list-style-type: none;">
 
               <script id='galactic-webring' type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
               <script id='galactic-webring' type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
 
               <div>
-                <object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#f8b4ff" type="image/svg+xml" style="width: 100px; height: 100px;"></object> 
+                <object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#383838" type="image/svg+xml" style="width: 100px; height: 100px;"></object>  
               </div>
             </li>
           </ul>
