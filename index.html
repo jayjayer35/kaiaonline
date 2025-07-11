@@ -28,7 +28,6 @@
   display: block;
 }
 
-/* Sidebar styles */
 .sidebar {
   width: 220px;
   background: rgba(87, 37, 84, 0.9) url('assets/pinkgalaxy.jpg') repeat;
@@ -47,12 +46,10 @@
   will-change: transform;
 }
 
-/* When hidden */
 .sidebar.hidden {
   transform: translateX(-220px);
 }
 
-/* "Bookmark" toggle button attached to sidebar edge */
 .toggle-sidebar {
   position: fixed;
   top: 10px;
@@ -68,16 +65,14 @@
   line-height: 1rem;
 }
 .sidebar:not(.hidden) + .toggle-sidebar {
-  left: 250rem; /* sidebar width + padding */
+  left: 250rem; 
 }
-/* Center sidebar title */
 .sidebar h2 {
   font-size:1.2rem;
   margin-top:0;
   text-align:center;
 }
 
-/* Tree nav styles */
 .tree {
   list-style:none;
   padding:0;
@@ -98,7 +93,6 @@
   color:#815ed4;
 }
 
-/* Main content styles */
 .main-content {
   margin-left: 220px;
   height: 100vh;
@@ -109,7 +103,6 @@
 }
 
 
-/* When sidebar hidden, content fills the screen */
 .sidebar.hidden + .main-content {
   margin-left: 0;
 }
@@ -150,7 +143,7 @@ footer {
 #statuscafe {
   margin: 2rem auto;
   max-width: 500px;
-  background-color: rgba(168, 132, 230, 0.2); /* soft lavender overlay */
+  background-color: rgba(168, 132, 230, 0.2); 
   border: 1px solid #fff;
   padding: 1em;
   font-family: "Comic Sans MS", "Courier New", monospace;
@@ -163,7 +156,7 @@ footer {
 }
 
 #statuscafe-username::before {
-  content: "🪐 kaiasei's status"; /* 👈 your visual name */
+  content: "🪐 kaiasei's status";
   visibility: visible;
   position: absolute;
   top: 0;
@@ -229,14 +222,13 @@ footer {
   background: #c99dbf;
   cursor: pointer;
 }
-/* Remove bullets from all nested lists */
+
 .tree ul {
   list-style: none;
   padding-left: 1.2rem;
   margin: 0;
 }
 
-/* Custom bullet image for nested list items */
 .tree ul li {
   position: relative;
   padding-left: 24px;
@@ -251,7 +243,7 @@ footer {
   transform: translateY(-50%);
   width: 16px;
   height: 16px;
-  background-image: url('assets/custom-bullet.gif'); /* Your image or gif */
+  background-image: url('assets/custom-bullet.gif'); 
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -262,23 +254,23 @@ iframe {
 }
 .flashing-text {
   animation: flashColors 1s infinite alternate;
-  text-decoration: none; /* optional: remove underline */
+  text-decoration: none;
 }
 @keyframes flashColors {
   0% {
-    color: #ff69b4; /* pink */
+    color: #ff69b4; 
   }
   25% {
-    color: #d0ff00; /* cyan */
+    color: #d0ff00; 
   }
   50% {
-    color: #26f8ff; /* cyan */
+    color: #26f8ff; 
   }
   75% {
-    color: #d0ff00; /* cyan */
+    color: #d0ff00;
   }
   100% {
-    color: #ff69b4; /* cyan */
+    color: #ff69b4;
   }
 }
 
@@ -317,7 +309,7 @@ iframe {
   }
 
   ul li a {
-    text-decoration: none; /* removes underline */
+    text-decoration: none; 
     color: #cebdf7;
     transition: transform 0.2s ease;
     display: inline-block;
@@ -470,6 +462,9 @@ iframe {
               <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
               <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
               </div>
+              <div>
+                <object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#f8b4ff" type="image/svg+xml" style="width: 100px; height: 100px;"></object> 
+              </div>
             </li>
           </ul>
         </details>
@@ -501,7 +496,7 @@ iframe {
 
   <audio id="audio" autoplay></audio>
 
-  <!-- Progress slider -->
+
   <input
     type="range"
     id="progress"
@@ -512,7 +507,6 @@ iframe {
     style="width: 100%; margin: 0.5em 0;"
   />
 
-  <!-- Volume slider -->
   <label style="display:block; margin-bottom: 0.5em;">
     Volume:
     <input
@@ -558,7 +552,6 @@ iframe {
   
   <div class="main-content" id="main-content">
     
-    <!-- This iframe displays the pages -->
     <iframe
   name="main-frame"
   src="welcome.html"
@@ -574,11 +567,9 @@ iframe {
 
   <script>
     function startSite() {
-  // fade out start screen
   document.getElementById('start-screen').style.opacity = 0;
   setTimeout(() => {
     document.getElementById('start-screen').style.display = "none";
-    // fade in site
     document.querySelector('.toggle-sidebar').style.opacity = 1;
     document.getElementById('sidebar').style.opacity = 1;
     document.getElementById('main-content').style.opacity = 1;
@@ -701,18 +692,15 @@ function toggleCampfire() {
     const img = document.getElementById('campfire');
     const sound = document.getElementById('campfire-sound');
 
-    // Extract just the filename for a reliable check
     const filename = img.src.split('/').pop().toLowerCase();
 
     if (filename === 'campfire.gif') {
-      // Turn OFF the fire
       img.src = 'assets/campfire.png';
       sound.pause();
       sound.currentTime = 5;
     } else {
-      // Turn ON the fire
       img.src = 'assets/campfire.gif';
-      sound.volume = .4; // Adjust volume if you want
+      sound.volume = .4; 
       sound.play();
     }
   }
@@ -731,21 +719,18 @@ function openFakeWindow(url) {
 
   const shadow = win.attachShadow({ mode: 'open' });
 
-  // 98.css style link
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = 'https://unpkg.com/98.css';
 
-  // Build window
   const windowHtml = document.createElement('div');
   windowHtml.className = 'window';
   windowHtml.style.width = '100%';
   windowHtml.style.height = '100%';
   windowHtml.style.display = 'flex';
   windowHtml.style.flexDirection = 'column';
-  windowHtml.style.position = 'relative'; // for resize
+  windowHtml.style.position = 'relative'; 
 
-  // Title bar
   const titleBar = document.createElement('div');
   titleBar.className = 'title-bar';
   titleBar.innerHTML = `
@@ -755,7 +740,6 @@ function openFakeWindow(url) {
     </div>
   `;
 
-  // Body with iframe
   const body = document.createElement('div');
   body.className = 'window-body';
   body.style.flex = '1';
@@ -768,7 +752,6 @@ function openFakeWindow(url) {
   iframe.style.border = 'none';
   body.appendChild(iframe);
 
-  // Resize handle INSIDE shadow
   const resize = document.createElement('div');
   resize.style.width = '8px';
 resize.style.height = '8px';
@@ -788,7 +771,6 @@ resize.style.background = `
 resize.style.borderTop = "1px solid #fff";
 resize.style.borderLeft = "1px solid #fff";
 
-  // Append all
   windowHtml.appendChild(titleBar);
   windowHtml.appendChild(body);
   windowHtml.appendChild(resize);
@@ -797,10 +779,8 @@ resize.style.borderLeft = "1px solid #fff";
 
   document.body.appendChild(win);
 
-  // Handle close
   titleBar.querySelector('button').onclick = () => win.remove();
 
-  // Make draggable
   let offsetX, offsetY, isDragging = false;
   titleBar.addEventListener('mousedown', (e) => {
     isDragging = true;
@@ -816,7 +796,6 @@ resize.style.borderLeft = "1px solid #fff";
   });
   document.addEventListener('mouseup', () => isDragging = false);
 
-  // Make resizable
   let isResizing = false;
   resize.addEventListener('mousedown', (e) => {
     isResizing = true;
@@ -831,12 +810,10 @@ resize.style.borderLeft = "1px solid #fff";
   });
   document.addEventListener('mouseup', () => isResizing = false);
 
-  // Load title
   iframe.addEventListener('load', () => {
   try {
     let pageTitle = iframe.contentDocument.title;
     if (!pageTitle) {
-      // fallback: get file name
       const parts = iframe.src.split('/');
       pageTitle = parts[parts.length - 1] || 'Welcome, ';
     }
@@ -857,7 +834,6 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById('mail').volume = 0.2;
   document.getElementById('click').volume = 0.2;
   toggleSidebar();
-  // Try immediate autoplay
   
 });
 </script>
