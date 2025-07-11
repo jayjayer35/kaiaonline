@@ -45,6 +45,18 @@
   @keyframes blink {
     to { opacity: 0; }
   }
+  .webring-container {
+  transform: scale(0.8); /* Adjust this to scale down */
+  transform-origin: top left; /* Keep the position stable */
+  width: fit-content;
+  overflow: hidden; /* Hides any overflow from scaling */
+}
+
+/* Optional: limit space it takes up or center it */
+.webring-container {
+  margin: 1em auto;
+  max-width: 100%;
+}
 </style>
 </head>
 <body>
@@ -58,10 +70,12 @@
     
   <img src="assets/legend.jpg" alt="you fucked with a legend" style="max-width: 300px"/><br><br>
   <script type="text/javascript" src="https://counter.websiteout.com/js/30/6/213/1"></script>
-  <div>
-    <div id='galactic-webring'>
-<script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
-<script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
+    <div>
+      <div class="webring-container">
+      <div id="galactic-webring">
+      <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
+      <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
+    </div>
 </div>
     <div style="display: flex; gap: 1rem; align-items: center; justify-content: center;">
     <object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#f8b4ff" type="image/svg+xml" style="width: 100px; height: 100px;"></object> 
