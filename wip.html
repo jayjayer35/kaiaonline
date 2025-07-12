@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>template</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Courier New", monospace;
+    color: #f0e6d2;
+    background: #0b0c2a url('assets/wavestar.jpg');
+    background-repeat: repeat;       /* No repeat */
+     /*background-size: cover;             Fill and crop to cover */
+    background-position: center center; /* Center the image */
+    background-attachment: fixed;       /* keep bkrnd fixed on scroll */
+    margin: 0;                        
+    height: 100vh;  
+  }
+  header {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: rgba(116, 116, 116, 0.479);
+    border-bottom: 2px solid #52273f;
+  }
+  header h1 {
+    font-size: 2rem;
+    margin: 0;
+    color: #c7b8ff;
+    text-shadow: 0 0 7px #4e273f;
+  }
+  .content {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: rgba(63, 25, 44, 0.726);
+    border-radius: 8px;
+  }
+  .content img { /* image borders */
+    max-width: 100%;
+    border: 2px solid #3a093f;  /* change px here */
+    border-radius: 4px; /* change px radius here */
+    display: block;
+    margin: 1rem auto;
+  }
+  h2 {
+    color: #a878a0;
+    text-align: center;
+  }
+  p {
+    line-height: 1.6;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #1b124d;
+  }
+  .star {
+    animation: twinkle 2s infinite alternate;
+  }
+  @keyframes twinkle {
+    0% { opacity: 0.9; }
+    100% { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>this is the main header btw</h1>
+  </header>
+  <div class="content">
+    <h2 class="star">Yeah, Im lazy</h2>
+    <img src="assets/progress.gif" alt="progress" />
+    <p>
+      I made this page template because, believe it or not, yes im lazy and i dont wanna write an entire page from scratch over and over again.<br>Feel free to rip this from my site if you so choose, 
+    but this is just here so i don't forget anything that ive learned. In the html file theres probably a bunch of comments too, unless i forgot to add them. 
+    
+    <br><br>Just a heads up to future me, this text is NOT centered, might wanna get around to that.</button>
+    </p>
+    <img src="assets/htmlbut.gif" alt="alt text here" /><br>
+    <h2 class="star">In case you wanted to section things out, you can use headers like this lolololol</h2>
+    <p>
+      You can write some text here and then <em>emphasize it</em> like that. 
+    </p>
+  </div>
+
+
+  <div class="content" style="max-width: 900px;">
+    <h2 class="star">oh you can make other box things</h2>
+    <p> have fun making websites, it's not something people do a lot nowadays </p>
+  </div>
+  
+  <footer>
+    <br>
+    <span class="star">In case you wanted to add a little text down here as well you can too.</span>
+  </footer>
+  
+  <script>
+    document.addEventListener('click', () => {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+}, true);
+  </script>
+</body>
+</html>
