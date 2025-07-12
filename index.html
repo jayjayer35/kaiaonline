@@ -80,12 +80,12 @@ body {
   margin-bottom:0.5rem;
 }
 .tree a {
-  color:#6e8fcc;
+  color:#b3c8f0;
   text-decoration:none;
   font-size:0.9rem;
 }
 .tree a:hover {
-  color:#815ed4;
+  color:#ffadad;
 }
 .main-content {
   margin-left: 220px;
@@ -284,6 +284,13 @@ ul li a:hover {
     transform: scale(1.1);
     filter: drop-shadow(0 0 15px #ffb347);
 }
+.campfire-icon {
+  transition: transform 0.4s ease, filter 0.4s ease;
+}
+.campfire-icon:hover {
+  transform: scale(1.1);
+  filter: brightness(1.6) drop-shadow(0 0 15px orange);
+}
 #galactic-box {
 width: 250px;
 margin: 0 auto !important;
@@ -360,8 +367,13 @@ cursor: pointer;
 }
 #start-screen a img:hover {
     filter: brightness(1.4) drop-shadow(0 0 20px orange);
-    transform: scale(1.2);
+    transform: scale(1.25);
 }
+.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
 </style> 
 <!--scrolling title bar-->
 <script>
@@ -376,8 +388,8 @@ cursor: pointer;
 </head>
 <body>
   <audio id="campfire-sound" loop>
-  <source src="assets/ambient.mp3">
-</audio>
+    <source src="assets/ambient.mp3">
+  </audio>
 <div id="start-screen" style="
   position: fixed;
   top:0; left:0;
@@ -497,9 +509,9 @@ cursor: pointer;
         <details>
           <summary>webrings!!</summary>
           <ul style="list-style-type: none;">
-            <li>
-              <script id='galactic-webring' type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
-              <script id='galactic-webring' type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
+            <li id='galactic-webring'>
+              <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
+              <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
             </li>
             <li><object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#383838" type="image/svg+xml" style="width: 100px; height: 100px;"></object></li>
           </ul>
@@ -569,7 +581,7 @@ cursor: pointer;
       src="assets/campfire.gif" 
       alt="campfire" 
       class="campfire-icon"
-      onclick="toggleCampfire();playSound('campfire')"
+      onclick="toggleCampfire()"
       style="max-width: 5rem;" 
     />
   </a>
@@ -603,17 +615,15 @@ cursor: pointer;
 
   <script>
     function startSite() {
-      const startScreen = document.getElementById('start-screen');
-  startScreen.style.opacity = '0';
-  startScreen.style.pointerEvents = 'none';
-  document.getElementById('start-screen').style.opacity = 0;
-  setTimeout(() => {
-    document.getElementById('start-screen').style.display = "none";
-    document.querySelector('.toggle-sidebar').style.opacity = 1;
-    document.getElementById('sidebar').style.opacity = 1;
-    document.getElementById('main-content').style.opacity = 1;
-  }, 4000);
-}
+      document.getElementById('start-screen').classList.add('fade-out');
+      document.getElementById('start-screen').style.opacity = 0;
+      setTimeout(() => {
+      document.getElementById('start-screen').style.display = "none";
+      document.querySelector('.toggle-sidebar').style.opacity = 1;
+      document.getElementById('sidebar').style.opacity = 1;
+      document.getElementById('main-content').style.opacity = 1;
+      }, 4000);
+    }
 
   function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
@@ -728,22 +738,33 @@ volume.addEventListener("input", () => {
 audio.addEventListener("ended", playRandomSong);
   
 function toggleCampfire() {
-    const img = document.getElementById('campfire');
-    const sound = document.getElementById('campfire-sound');
+  const img = document.getElementById('campfire');
+  const sound = document.getElementById('campfire-sound');
 
-    const filename = img.src.split('/').pop().toLowerCase();
+  const filename = img.src.split('/').pop().toLowerCase();
 
-    if (filename === 'campfire.gif') {
-      img.src = 'assets/campfire.png';
-      sound.pause();
-      sound.currentTime = 5;
-    } else {
-      img.src = 'assets/campfire.gif';
-      sound.volume = .4; 
-      sound.play();
-    }
+  if (filename === 'campfire.gif') {
+    // Switching OFF
+    img.src = 'assets/campfire.png';
+    sound.pause();
+    sound.currentTime = 5;
+
+    // Play extinguish sound
+    const extinguishSound = new Audio('assets/extinguish.mp3');
+    extinguishSound.volume = 0.3; // adjust volume if needed
+    extinguishSound.play();
+
+  } else {
+    // Switching ON
+    img.src = 'assets/campfire.gif';
+    sound.volume = 0.3; 
+    sound.play();
+
+    const lightSound = new Audio('assets/campfire.mp3');
+    lightSound.volume = 0.3; // adjust volume if needed
+    lightSound.play();
   }
-
+}
 
 function openFakeWindow(url) {
   const win = document.createElement('div');
