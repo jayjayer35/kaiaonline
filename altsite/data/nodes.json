@@ -1,0 +1,29 @@
+[
+  {
+    "id": "sun_station",
+    "name": "Sun Station",
+    "x": 0,
+    "y": 0,
+    "status": "discovered",
+    "image": "images/placeholder.jpg",
+    "children": ["ash_twin_project"]
+  },
+  {
+    "id": "ash_twin_project",
+    "name": "Ash Twin Project",
+    "x": 300,
+    "y": -150,
+    "status": "incomplete",
+    "image": "images/placeholder.jpg",
+    "children": ["white_hole_station"]
+  },
+  {
+    "id": "white_hole_station",
+    "name": "White Hole Station",
+    "x": 600,
+    "y": -100,
+    "status": "undiscovered",
+    "image": "images/placeholder.jpg",
+    "children": []
+  }
+]
