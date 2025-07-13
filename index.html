@@ -88,7 +88,7 @@ body {
   color:#ffadad;
 }
 .main-content {
-  margin-left: 300px;
+  margin-left: 220px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -299,16 +299,16 @@ align-items: center;
 flex-direction: column;
 position: relative;
 font-family: MS Gothic;
-border: 3px solid #ff00ff;
+border: 4px solid #ff00ff;
 background: linear-gradient(180deg, rgba(0, 0, 0, 1) 36%, rgb(54, 0, 47) 100%);
 box-shadow: 0px 0px 8px #ff00ff, 1px 1px 4px #ff00ff inset, -1px -1px 4px #ff00ff inset;
 color: #eba7ce;
 text-shadow: 0px 0px 4px #eba7ce;
 box-sizing: border-box;
-padding: 2x;
+padding: 5px;
 }	
 #galactic-box .gw-logo {
-width: 90px;
+width: 130px;
 image-rendering: pixelated;
 margin-bottom: 5px;
 }
@@ -321,7 +321,7 @@ margin-bottom: 7px;
 #galactic-box .gw-content-wrapper a {
 all: unset;
 cursor: pointer;
-font-size: 30px;
+font-size: 35px;
 }
 #galactic-box .spot-container {
 display: flex;
@@ -469,151 +469,156 @@ cursor: pointer;
     <audio id="click" src="assets/click.mp3"></audio>
 </audio>
 
-  <ul class="tree">
-    <li>
-      <details open>
-        <summary>home</summary>
-        <ul>
-          <li><a href="welcome.html" target="main-frame" onclick=" toggleSidebar()">welcome!</a></li>
-          <li><a href="updates.html" target="main-frame" class="flashing-text" onclick=" toggleSidebar()">updates</a></li>
-          <li><a href="thesite.html" target="main-frame" onclick=" toggleSidebar()">the site</a></li>
-          <li><a href="https://kaiasei.atabook.org/" target="main-frame" class="gradient-text" onclick=" toggleSidebar()">guestbook!</a></li>
-          <li><a href="log.html" target="main-frame" onclick=" toggleSidebar()">alternative site view</a></li>
-        </ul>
-      </details>
-    </li>
-    <li>
-      <details>
-        <summary>personal stuffs</summary>
-        <ul>
-          <li><a href="bio.html" target="main-frame"onclick="toggleSidebar()">bio</a></li>
-          <li><a href="video.html" target="main-frame"onclick="toggleSidebar()">video</a></li>
-          <li><a href="photo.html" target="main-frame"onclick="toggleSidebar()">photo</a></li>
-          <li><a href="wip.html" target="main-frame"onclick="toggleSidebar()">friends</a></li>
-          <li><a href="wip.html" target="main-frame"onclick="toggleSidebar()">music</a></li>
-          <li><a href="wip.html" target="main-frame"onclick="toggleSidebar()">big guy</a></li>
-        </ul>
-      </details>
-    </li>
-    <li>
-      <details>
-        <summary>not so personal stuffs</summary>
-        <ul>
-          <li><a href="wip.html" target="main-frame">baking / cooking</a></li>
-          <li><a href="wip.html" target="main-frame">arcade</a></li>
-          <li><a href="wilds.html" target="main-frame" onclick="play143Song()">outer wilds</a></li>
-          <li><a href="wip.html" target="main-frame">celeste</a></li>
-          <li><a href="template.html" target="main-frame">page template</a></li>         
-        </ul>
-      </details>
-    </li>
-    <li>
-      <details>
-        <summary>indie web</summary>
-        <ul>
-          <li><a href="internetstuf.html" target="main-frame">ideas about internet</a></li>
-          <li><a href="internetstuf2.html" target="main-frame">links n' stuff!</a></li>
-        </ul>
-      </details>
-    </li>
-    <li>
-      <details>
-        <summary>webrings!!</summary>
-        <ul>
-          <li style="content: none">
-            <a href='https://hotlinewebring.club/kaiaonline/previous'><-</a>
-            <a href="https://webring.dinhe.net/">Retronauts Webring</a>
-            <a href='https://hotlinewebring.club/kaiaonline/next'>-></a>
-          </li>
-          <li style="content: none">
-            <a href='https://webring.dinhe.net/prev/https://kaia.starscene.com'><-</a>
-            <a href="https://hotlinewebring.club/">Retronauts Webring</a>
-            <a href='https://webring.dinhe.net/next/https://kaia.starscene.com'>-></a>
-          </li>
-          <li><object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#383838" type="image/svg+xml" style="width: 100px; height: 100px;"></object></li>
-          <li id='galactic-webring'>
-            <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
-            <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
-          </li>
-        </ul>
-      </details>
-    </li>
-  </ul>
-  <!--rest of sidebar-->
+    <ul class="tree">
+      <li>
+        <details open>
+          <summary>home</summary>
+          <ul>
+            <li><a href="welcome.html" target="main-frame" onclick=" toggleSidebar()">welcome!</a></li>
+            <li><a href="updates.html" target="main-frame" class="flashing-text" onclick=" toggleSidebar()">updates</a></li>
+            <li><a href="thesite.html" target="main-frame" onclick=" toggleSidebar()">the site</a></li>
+            <li><a href="https://kaiasei.atabook.org/" target="main-frame" class="gradient-text" onclick=" toggleSidebar()">guestbook!</a></li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details>
+          <summary>all about me</summary>
+          <ul>
+            <li><a href="bio.html" target="main-frame"onclick="toggleSidebar()">bio</a></li>
+            <li><a href="video.html" target="main-frame"onclick="toggleSidebar()">video</a></li>
+            <li><a href="photo.html" target="main-frame"onclick="toggleSidebar()">photo</a></li>
+            <li><a href="friends.html" target="main-frame"onclick="toggleSidebar()">friends</a></li>
+            <li><a href="music.html" target="main-frame"onclick="toggleSidebar()">music</a></li>
+            <li><a href="bigguy.html" target="main-frame"onclick="toggleSidebar()">big guy</a></li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details>
+          <summary>internet</summary>
+          <ul>
+            <li><a href="internetstuf.html" target="main-frame">about internet</a></li>
+            <li><a href="internetstuf2.html" target="main-frame">internet pt.2</a></li>
+            <li><a href="pacman.html" target="main-frame">ms.pac-man</a></li>
+            <li><a href="https://iframe.chat/embed?chat=10669156" target="main-frame">webchat</a></li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details>
+          <summary>webrings!!</summary>
+          <ul>
+            <li>
+              <a href='https://webring.dinhe.net/prev/https://kaia.starscene.com'><</a>
+              <a href="https://webring.dinhe.net/">Retronauts Webring</a>
+              <a href='https://webring.dinhe.net/next/https://kaia.starscene.com'>></a>
+            </li>
+            <li><object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#383838" type="image/svg+xml" style="width: 100px; height: 100px;"></object></li>
+            <li id='galactic-webring'>
+              <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
+              <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
+            </li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details>
+          <summary>other</summary>
+          <ul>
+            <li><a href="food.html" target="main-frame">baking / cooking</a></li>
+            <li><a href="arcade.html" target="main-frame">arcade</a></li>
+            <li><a href="wilds.html" target="main-frame" onclick="play143Song()">outer wilds</a></li>
+            <li><a href="celeste.html" target="main-frame">celeste</a></li>
+            <li><a href="https://status.cafe/users/bluejay023" target="main-frame">status.cafe</a></li>
+            <li><a href="template.html" target="main-frame">page template</a></li>
+            
+          </ul>
+        </details>
+      </li>
+    </ul>
 
-  <!--status-->
-  <div id="statuscafe" style="margin-top:1em;">
-    <div id="statuscafe-username"></div>
-    <div id="statuscafe-content"></div>
-  </div>
-  <!--music player-->
-  <div id="music-player" style="margin-top: 2em;">
-    <strong>Now Playing:</strong>
-    <div id="now-playing" style="margin-bottom: 0.5em;">hit play...</div>
-    <audio id="audio" autoplay></audio>
+    <div id="statuscafe" style="margin-top:1em;">
+      <div id="statuscafe-username"></div>
+      <div id="statuscafe-content"></div>
+    </div>
+    
+    <div id="music-player" style="margin-top: 2em;">
+  <strong>Now Playing:</strong>
+  <div id="now-playing" style="margin-bottom: 0.5em;">hit play...</div>
+
+  <audio id="audio" autoplay></audio>
+
+
+  <input
+    type="range"
+    id="progress"
+    value="0"
+    min="0"
+    max="100"
+    step="1"
+    style="width: 100%; margin: 0.5em 0;"
+  />
+
+  <label style="display:block; margin-bottom: 0.5em;">
+    Volume:
     <input
       type="range"
-      id="progress"
-      value="0"
+      id="volume"
       min="0"
-      max="100"
-      step="1"
-      style="width: 100%; margin: 0.5em 0;"
+      max="1"
+      step="0.01"
+      value="1"
+      style="width: 100%;"
     />
-    <label style="display:block; margin-bottom: 0.5em;">
-      Volume:
-      <input
-        type="range"
-        id="volume"
-        min="0"
-        max="1"
-        step="0.01"
-        value="1"
-        style="width: 100%;"
-    />
-    </label>
-    <div>
-      <button onclick="togglePlay()">▶ / ⏸</button>
-      <button onclick="playRandomSong()">⏭</button>
-    </div> 
-  </div>
+  </label>
 
-  <footer>
-    <a target="main-frame">
-      <img 
-        id="campfire" 
-        src="assets/campfire.gif" 
-        alt="campfire" 
-        class="campfire-icon"
-        onclick="toggleCampfire()"
-        style="max-width: 5rem;" 
-      />
-    </a>
-    <a target="main-frame">
-      <img 
-        src="assets/computer_explorer-2.png" 
-        alt="a small computer" 
-        class="mailbox"
-        onclick="playSound('winstart');openFakeWindow('jacobonline-old/index.html');"
-      />
-    </a>
-    <br> 
-    &copy; 2025 kaia <br> stay safe out there!
-  </footer>
+  <div>
+    <button onclick="togglePlay()">▶ / ⏸</button>
+    <button onclick="playRandomSong()">⏭</button>
+  </div>
   
-  <div class="main-content" id="main-content"> 
+</div>
+    <footer>
+<a target="main-frame">
+    <img 
+      id="campfire" 
+      src="assets/campfire.gif" 
+      alt="campfire" 
+      class="campfire-icon"
+      onclick="toggleCampfire()"
+      style="max-width: 5rem;" 
+    />
+  </a>
+  <a target="main-frame">
+    <img 
+      src="assets/computer_explorer-2.png" 
+      alt="a small computer" 
+      class="mailbox"
+      onclick="playSound('winstart');openFakeWindow('jacobonline-old/index.html');"
+    />
+  </a>
+     <br> &copy; 2025 kaia <br> stay safe out there!
+    </footer>
+    
+  </div>
+  
+  <div class="main-content" id="main-content">
+    
     <iframe
-      name="main-frame"
-      src="welcome.html"
-      allowtransparency="true"
-      style="flex:1; border:none;"
-      scrolling="auto">
-    </iframe>
+  name="main-frame"
+  src="welcome.html"
+  allowtransparency="true"
+  style="flex:1; border:none;"
+  scrolling="auto">
+</iframe>
+
+    
   </div>
 
   <script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
-  <script> //all JS functions, vars, and otha scripts
-    //splash screen start function
+
+  <script>
     function startSite() {
       document.getElementById('start-screen').classList.add('fade-out');
       document.getElementById('start-screen').style.opacity = 0;
@@ -624,280 +629,278 @@ cursor: pointer;
       document.getElementById('main-content').style.opacity = 1;
       }, 4000);
     }
-    //toggle sidebar
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('hidden');
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('hidden');
+  }
+  const songs = [
+  { title: "3AM - Animal Crossing New Leaf", file: "music/3am.mp3" },
+  { title: "Travelers - Andrew Prahlow", file: "music/trav.mp3" },
+  { title: "14.3 Billion Years - Andrew Prahlow", file: "music/14.3.mp3" },
+  { title: "Comforting Memories - Kumi Tanioka", file: "music/memories.mp3" },
+  { title: "Falling Stars - A Shell In The Pit", file: "music/stars.mp3" },
+  { title: "Timber Hearth - Andrew Prahlow", file: "music/timber.mp3" },
+  { title: "serenity - kaiasei", file: "music/serenity.mp3" },
+  { title: "dawn - kaiasei", file: "music/dawn.mp3" },
+  { title: "Main Title - Andrew Prahlow", file: "music/title.mp3" },
+  { title: "Giant's Deep - Andrew Prahlow", file: "music/deep.mp3" },
+  { title: "The Ancient Glade - Andrew Prahlow", file: "music/glade.mp3" },
+  { title: "Space - Andrew Prahlow", file: "music/space.mp3" },
+  { title: "The Sun Station - Andrew Prahlow", file: "music/sun.mp3" },
+  { title: "Castaways - Andrew Prahlow", file: "music/castaways.mp3" }
+
+];
+
+const audio = document.getElementById("audio");
+const nowPlaying = document.getElementById("now-playing");
+const progress = document.getElementById("progress");
+const volume = document.getElementById("volume");
+let currentSongIndex = -1;
+
+function playRandomSong() {
+  let newIndex;
+  do {
+    newIndex = Math.floor(Math.random() * songs.length);
+  } while (newIndex === currentSongIndex && songs.length > 1);
+
+  currentSongIndex = newIndex;
+  const song = songs[currentSongIndex];
+  audio.src = song.file;
+  audio.play();
+  nowPlaying.textContent = song.title;
+}
+function playTimberSong() {
+  const timberIndex = songs.findIndex(song => song.file === "music/timber.mp3");
+  if (timberIndex !== -1) {
+    currentSongIndex = timberIndex;
+    const song = songs[currentSongIndex];
+    audio.src = song.file;
+    audio.play();
+    nowPlaying.textContent = song.title;
+  } else {
+    console.error("Timber Hearth not found in songs array.");
+  }
+}
+function play143Song() {
+  const timberIndex = songs.findIndex(song => song.file === "music/14.3.mp3");
+  if (timberIndex !== -1) {
+    currentSongIndex = timberIndex;
+    const song = songs[currentSongIndex];
+    audio.src = song.file;
+    audio.play();
+    nowPlaying.textContent = song.title;
+  } else {
+    console.error("14.3 Billion Years not found in songs array.");
+  }
+}
+
+function playSoundMail() {
+  document.getElementById('mail').play();
+}
+
+function playClickSound() {
+  document.getElementById('click').play();
+}
+
+function playSound(name) {
+  const audio = new Audio(`assets/${name}.mp3`);
+  audio.volume = 0.3;
+  audio.play();
+}
+
+document.addEventListener('click', () => {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+}, true);
+
+
+function togglePlay() {
+  if (audio.paused) {
+    audio.play();
+  } else {
+    audio.pause();
+  }
+}
+
+audio.addEventListener("timeupdate", () => {
+  if (audio.duration) {
+    progress.value = (audio.currentTime / audio.duration) * 100;
+  }
+});
+
+progress.addEventListener("input", () => {
+  if (audio.duration) {
+    audio.currentTime = (progress.value / 100) * audio.duration;
+  }
+});
+
+volume.addEventListener("input", () => {
+  audio.volume = parseFloat(volume.value);
+});
+
+audio.addEventListener("ended", playRandomSong);
+  
+function toggleCampfire() {
+  const img = document.getElementById('campfire');
+  const sound = document.getElementById('campfire-sound');
+
+  const filename = img.src.split('/').pop().toLowerCase();
+
+  if (filename === 'campfire.gif') {
+    // Switching OFF
+    img.src = 'assets/campfire.png';
+    sound.pause();
+    sound.currentTime = 5;
+
+    // Play extinguish sound
+    const extinguishSound = new Audio('assets/extinguish.mp3');
+    extinguishSound.volume = 0.3; // adjust volume if needed
+    extinguishSound.play();
+
+  } else {
+    // Switching ON
+    img.src = 'assets/campfire.gif';
+    sound.volume = 0.3; 
+    sound.play();
+
+    const lightSound = new Audio('assets/campfire.mp3');
+    lightSound.volume = 0.3; // adjust volume if needed
+    lightSound.play();
+  }
+}
+
+function openFakeWindow(url) {
+  const win = document.createElement('div');
+  win.style.position = 'fixed';
+  win.style.top = '100px';
+  win.style.left = '100px';
+  win.style.width = '400px';
+  win.style.height = '300px';
+  win.style.zIndex = 9999;
+  win.style.opacity = '0';
+  win.style.transition = 'opacity 8s ease';
+
+  const shadow = win.attachShadow({ mode: 'open' });
+
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://unpkg.com/98.css';
+
+  const windowHtml = document.createElement('div');
+  windowHtml.className = 'window';
+  windowHtml.style.width = '100%';
+  windowHtml.style.height = '100%';
+  windowHtml.style.display = 'flex';
+  windowHtml.style.flexDirection = 'column';
+  windowHtml.style.position = 'relative'; 
+
+  const titleBar = document.createElement('div');
+  titleBar.className = 'title-bar';
+  titleBar.innerHTML = `
+    <div class="title-bar-text">Loading...</div>
+    <div class="title-bar-controls">
+      <button aria-label="Close"></button>
+    </div>
+  `;
+
+  const body = document.createElement('div');
+  body.className = 'window-body';
+  body.style.flex = '1';
+  body.style.overflow = 'hidden';
+  body.style.position = 'relative';
+  const iframe = document.createElement('iframe');
+  iframe.src = url;
+  iframe.style.width = '100%';
+  iframe.style.height = '100%';
+  iframe.style.border = 'none';
+  body.appendChild(iframe);
+
+  const resize = document.createElement('div');
+  resize.style.width = '8px';
+resize.style.height = '8px';
+resize.style.position = 'absolute';
+resize.style.right = '2px';
+resize.style.bottom = '2px';
+resize.style.cursor = 'nwse-resize';
+resize.style.background = `
+  repeating-linear-gradient(
+    45deg,
+    #c0c0c0,
+    #c0c0c0 1px,
+    #808080 1px,
+    #808080 2px
+  )
+`;
+resize.style.borderTop = "1px solid #fff";
+resize.style.borderLeft = "1px solid #fff";
+
+  windowHtml.appendChild(titleBar);
+  windowHtml.appendChild(body);
+  windowHtml.appendChild(resize);
+  shadow.appendChild(link);
+  shadow.appendChild(windowHtml);
+
+  document.body.appendChild(win);
+
+  titleBar.querySelector('button').onclick = () => win.remove();
+
+  let offsetX, offsetY, isDragging = false;
+  titleBar.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - win.getBoundingClientRect().left;
+    offsetY = e.clientY - win.getBoundingClientRect().top;
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      win.style.left = (e.clientX - offsetX) + 'px';
+      win.style.top = (e.clientY - offsetY) + 'px';
     }
-    //list of songs available in music folder
-    const songs = [
-    { title: "3AM - Animal Crossing New Leaf", file: "music/3am.mp3" },
-    { title: "Travelers - Andrew Prahlow", file: "music/trav.mp3" },
-    { title: "14.3 Billion Years - Andrew Prahlow", file: "music/14.3.mp3" },
-    { title: "Comforting Memories - Kumi Tanioka", file: "music/memories.mp3" },
-    { title: "Falling Stars - A Shell In The Pit", file: "music/stars.mp3" },
-    { title: "Timber Hearth - Andrew Prahlow", file: "music/timber.mp3" },
-    { title: "serenity - kaiasei", file: "music/serenity.mp3" },
-    { title: "dawn - kaiasei", file: "music/dawn.mp3" },
-    { title: "Main Title - Andrew Prahlow", file: "music/title.mp3" },
-    { title: "Giant's Deep - Andrew Prahlow", file: "music/deep.mp3" },
-    { title: "The Ancient Glade - Andrew Prahlow", file: "music/glade.mp3" },
-    { title: "Space - Andrew Prahlow", file: "music/space.mp3" },
-    { title: "The Sun Station - Andrew Prahlow", file: "music/sun.mp3" },
-    { title: "Castaways - Andrew Prahlow", file: "music/castaways.mp3" }
+  });
+  document.addEventListener('mouseup', () => isDragging = false);
 
-    ];
-    //vars used in musicplayer
-    const audio = document.getElementById("audio");
-    const nowPlaying = document.getElementById("now-playing");
-    const progress = document.getElementById("progress");
-    const volume = document.getElementById("volume");
-    let currentSongIndex = -1;
-    //play random song
-    function playRandomSong() {
-      let newIndex;
-      do {
-        newIndex = Math.floor(Math.random() * songs.length);
-      } while (newIndex === currentSongIndex && songs.length > 1);
-      currentSongIndex = newIndex;
-      const song = songs[currentSongIndex];
-      audio.src = song.file;
-      audio.play();
-      nowPlaying.textContent = song.title;
+  let isResizing = false;
+  resize.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    e.preventDefault();
+    e.stopPropagation();
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (isResizing) {
+      win.style.width = (Math.max(200, e.clientX - win.getBoundingClientRect().left)) + 'px';
+      win.style.height = (Math.max(100, e.clientY - win.getBoundingClientRect().top)) + 'px';
     }
-    //update progress bar
-    audio.addEventListener("timeupdate", () => {
-      if (audio.duration) {
-        progress.value = (audio.currentTime / audio.duration) * 100;
-      }
-    });
-    //volume bar
-    progress.addEventListener("input", () => {
-      if (audio.duration) {
-        audio.currentTime = (progress.value / 100) * audio.duration;
-      }
-    });
-    //volume bar vol changer
-    volume.addEventListener("input", () => {
-      audio.volume = parseFloat(volume.value);
-    });
-    //play song if current song ended
-    audio.addEventListener("ended", playRandomSong);
-    //play specific song, can prob rewrite with playSong('name') in future - [TO-DO]
-    function playTimberSong() {
-      const timberIndex = songs.findIndex(song => song.file === "music/timber.mp3");
-      if (timberIndex !== -1) {
-        currentSongIndex = timberIndex;
-        const song = songs[currentSongIndex];
-        audio.src = song.file;
-        audio.volume = 0.1
-        audio.play();
-        nowPlaying.textContent = song.title;
-      } else {
-        console.error("Timber Hearth not found in songs array.");
-      }
+  });
+  document.addEventListener('mouseup', () => isResizing = false);
+
+  iframe.addEventListener('load', () => {
+  try {
+    let pageTitle = iframe.contentDocument.title;
+    if (!pageTitle) {
+      const parts = iframe.src.split('/');
+      pageTitle = parts[parts.length - 1] || 'Welcome, ';
     }
-    //play specific song, can prob rewrite with playSong('name') in future - [TO-DO]
-    function play143Song() {
-      const timberIndex = songs.findIndex(song => song.file === "music/14.3.mp3");
-      if (timberIndex !== -1) {
-        currentSongIndex = timberIndex;
-        const song = songs[currentSongIndex];
-        audio.src = song.file;
-        audio.play();
-        nowPlaying.textContent = song.title;
-      } else {
-        console.error("14.3 Billion Years not found in songs array.");
-      }
-    }
-    //plays mail sound, migrate all instances to playSound(name) - [TO-DO]
-    function playSoundMail() {
-      document.getElementById('mail').play();
-    }
-    //plays click sound, migrate all instances to playSound(name) - [TO-DO]
-    function playClickSound() {
-      document.getElementById('click').play();
-    }
-    //uni playSound function
-    function playSound(name) {
-      const audio = new Audio(`assets/${name}.mp3`);
-      audio.volume = 0.3;
-      audio.play();
-    }
-    //listen for click event to play click sound
-    document.addEventListener('click', () => {
-        const sound = new Audio('assets/click.mp3');
-        sound.volume = 0.2;
-        sound.play();
-    }, true);
-    //pause/play for musicp players
-    function togglePlay() {
-      if (audio.paused) {
-        audio.play();
-      } else {
-        audio.pause();
-      }
-    }
-    //toggle campfire sound effect
-    function toggleCampfire() {
-      const img = document.getElementById('campfire');
-      const sound = document.getElementById('campfire-sound');
+    titleBar.querySelector('.title-bar-text').textContent = pageTitle;
+  } catch (e) {
+    titleBar.querySelector('.title-bar-text').textContent = 'My old site';
+  }
+  
+  });
+  setTimeout(() => {
+  win.style.opacity = '1';
+  }, 10);
+}
 
-      const filename = img.src.split('/').pop().toLowerCase();
-
-      if (filename === 'campfire.gif') {
-        // turning off
-        img.src = 'assets/campfire.png';
-        sound.pause();
-        sound.currentTime = 5;
-
-        // play extinguish sound when turning off
-        const extinguishSound = new Audio('assets/extinguish.mp3');
-        extinguishSound.volume = 0.3; // vol adjust
-        extinguishSound.play();
-
-      } else {
-        // turning on
-        img.src = 'assets/campfire.gif';
-        sound.volume = 0.3; 
-        sound.play();
-
-        const lightSound = new Audio('assets/campfire.mp3');
-        lightSound.volume = 0.3; // vol adjust
-        lightSound.play();
-      }
-    }
-    //custom old site view hell (uses 98.css imported)
-    function openFakeWindow(url) { // unfold for spam LOL
-      const win = document.createElement('div');
-      win.style.position = 'fixed';
-      win.style.top = '100px';
-      win.style.left = '100px';
-      win.style.width = '400px';
-      win.style.height = '300px';
-      win.style.zIndex = 9999;
-      win.style.opacity = '0';
-      win.style.transition = 'opacity 8s ease';
-
-      const shadow = win.attachShadow({ mode: 'open' });
-
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = 'https://unpkg.com/98.css';
-
-      const windowHtml = document.createElement('div');
-      windowHtml.className = 'window';
-      windowHtml.style.width = '100%';
-      windowHtml.style.height = '100%';
-      windowHtml.style.display = 'flex';
-      windowHtml.style.flexDirection = 'column';
-      windowHtml.style.position = 'relative'; 
-
-      const titleBar = document.createElement('div');
-      titleBar.className = 'title-bar';
-      titleBar.innerHTML = `
-        <div class="title-bar-text">Loading...</div>
-        <div class="title-bar-controls">
-          <button aria-label="Close"></button>
-        </div>
-      `;
-
-      const body = document.createElement('div');
-      body.className = 'window-body';
-      body.style.flex = '1';
-      body.style.overflow = 'hidden';
-      body.style.position = 'relative';
-      const iframe = document.createElement('iframe');
-      iframe.src = url;
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.border = 'none';
-      body.appendChild(iframe);
-
-      const resize = document.createElement('div');
-      resize.style.width = '8px';
-      resize.style.height = '8px';
-      resize.style.position = 'absolute';
-      resize.style.right = '2px';
-      resize.style.bottom = '2px';
-      resize.style.cursor = 'nwse-resize';
-      resize.style.background = `
-        repeating-linear-gradient(
-          45deg,
-          #c0c0c0,
-          #c0c0c0 1px,
-          #808080 1px,
-          #808080 2px
-        )
-      `;
-      resize.style.borderTop = "1px solid #fff";
-      resize.style.borderLeft = "1px solid #fff";
-
-      windowHtml.appendChild(titleBar);
-      windowHtml.appendChild(body);
-      windowHtml.appendChild(resize);
-      shadow.appendChild(link);
-      shadow.appendChild(windowHtml);
-
-      document.body.appendChild(win);
-
-      titleBar.querySelector('button').onclick = () => win.remove();
-
-      let offsetX, offsetY, isDragging = false;
-      titleBar.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        offsetX = e.clientX - win.getBoundingClientRect().left;
-        offsetY = e.clientY - win.getBoundingClientRect().top;
-        e.preventDefault();
-      });
-      document.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-          win.style.left = (e.clientX - offsetX) + 'px';
-          win.style.top = (e.clientY - offsetY) + 'px';
-        }
-      });
-      document.addEventListener('mouseup', () => isDragging = false);
-
-      let isResizing = false;
-      resize.addEventListener('mousedown', (e) => {
-        isResizing = true;
-        e.preventDefault();
-        e.stopPropagation();
-      });
-      document.addEventListener('mousemove', (e) => {
-        if (isResizing) {
-          win.style.width = (Math.max(200, e.clientX - win.getBoundingClientRect().left)) + 'px';
-          win.style.height = (Math.max(100, e.clientY - win.getBoundingClientRect().top)) + 'px';
-        }
-      });
-      document.addEventListener('mouseup', () => isResizing = false);
-
-      iframe.addEventListener('load', () => {
-      try {
-        let pageTitle = iframe.contentDocument.title;
-        if (!pageTitle) {
-          const parts = iframe.src.split('/');
-          pageTitle = parts[parts.length - 1] || 'Welcome, ';
-        }
-        titleBar.querySelector('.title-bar-text').textContent = pageTitle;
-      } catch (e) {
-        titleBar.querySelector('.title-bar-text').textContent = 'My old site';
-      }
-      
-      });
-      setTimeout(() => {
-        win.style.opacity = '1';
-        }, 10);
-      }
-    //adjust volumes on site load so its not fucking earrape oh my god
-    window.addEventListener("DOMContentLoaded", () => {
-      audio.volume = 0.07;
-      volume.value = 0.07;
-      document.getElementById('mail').volume = 0.2;
-      document.getElementById('click').volume = 0.2;
-      toggleSidebar();
-      
-    });
-  </script>
+window.addEventListener("DOMContentLoaded", () => {
+  audio.volume = 0.07;
+  volume.value = 0.07;
+  document.getElementById('mail').volume = 0.2;
+  document.getElementById('click').volume = 0.2;
+  toggleSidebar();
+  
+});
+</script>
 </body>
 </html>
