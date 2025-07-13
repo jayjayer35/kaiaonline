@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <title>Welcome</title>
 <link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="mc.css">
 <style>
   body {
     margin:0;
@@ -45,16 +46,62 @@
   @keyframes blink {
     to { opacity: 0; }
   }
+  .cute-glitch {
+  position: relative;
+  font-size: 2.8rem;
+  font-family: "Comic Sans MS", "Courier New", monospace;
+  color: #ffbbf2;
+  letter-spacing: 2px;
+  text-align: center;
+  animation: softGlitch 3s ease-in-out infinite;
+}
+
+.cute-glitch::before,
+.cute-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: -1;
+}
+
+.cute-glitch::before {
+  color: #a5f7ff;
+  animation: glitchShift1 3s ease-in-out infinite;
+}
+
+.cute-glitch::after {
+  color: #ffbbf2;
+  animation: glitchShift2 3s ease-in-out infinite;
+}
+
+@keyframes glitchShift1 {
+  0%, 100% { transform: translate(0, 0); opacity: 0.7; }
+  50% { transform: translate(1px, -1px); opacity: 1; }
+}
+
+@keyframes glitchShift2 {
+  0%, 100% { transform: translate(0, 0); opacity: 0.7; }
+  50% { transform: translate(-1px, 1px); opacity: 1; }
+}
+
+@keyframes softGlitch {
+  0%, 100% { text-shadow: 0 0 1px #ffbbf2; }
+  50% { text-shadow: 1px 1px 3px #ffbbf2, -1px -1px 3px #a5f7ff; }
+}
+
 </style>
 
 
 </head>
 <body>
   
-  <img src="assets/wordarta2.png" alt="placeholder" style="max-width: 600px;"/>
+  <h2 class="cute-glitch" data-text="">KILL ME</h2>
   
   <!-- updated p with id -->
-  <p id="random-message"></p>
+  <p class="minecraft light_purple" id="random-message"></p>
+
   
   <p><br><br>
     
@@ -96,6 +143,8 @@
     "live to love and love to live",
     "tmi!",
     "trans rights are human rights!",
+    "black lives matter!",
+    "glass half full",
     "be kind, god knows we need more people like that",
     "to the moon and back",
     "kaiasei wuz here",
@@ -200,7 +249,11 @@
     "doze off",
     "a perfect planet",
     "a perfect solar system",
-    "a perfect time to be alive"
+    "a perfect time to be alive",
+    "check the webrings tab!",
+    "sign the guestbook!",
+    ":3",
+    "big hugs to you"
   ];
 
   const elem = document.getElementById("random-message");

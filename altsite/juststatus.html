@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Status</title>
+<script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
+<style>
+#statuscafe {
+  margin: 2rem auto;
+  max-width: 500px;
+  background-color: rgba(168, 132, 230, 0.2); 
+  border: 1px solid #fff;
+  padding: 1em;
+  font-family: "Comic Sans MS", "Courier New", monospace;
+  color: #fff;
+  border-radius: 4px;
+}
+#statuscafe-username {
+  visibility: hidden;
+  position: relative;
+}
+#statuscafe-username::before {
+  content: "🪐 kaiasei's status";
+  visibility: visible;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-weight: bold;
+  color: #e2e1ab;
+}
+#statuscafe-content {
+  margin: 0 0.5em;
+}
+#statuscafe:hover {
+  background-color: rgba(201, 191, 243, 0.445);
+}
+</style>
+</head>
+<body>
+  <div id="statuscafe">
+    <div id="statuscafe-username"></div>
+    <div id="statuscafe-content"></div>
+  </div>
+</body>
+</html>
