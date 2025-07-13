@@ -292,7 +292,7 @@ box-sizing: border-box;
 
 .popup-header {
   background: rgba(0,0,0,0.3);
-  padding: 2px;
+  padding: 1px;
   cursor: move;
   display: flex;
   justify-content: space-between;
@@ -314,6 +314,9 @@ box-sizing: border-box;
 .popup-content {
   flex: 1;
   overflow: auto;
+}
+.popup-header span {
+  padding-left: 10px;
 }
 
 
@@ -440,7 +443,79 @@ viewport.addEventListener('wheel', (e) => {
 
 });
 
+document.querySelectorAll(".frame").forEach(frame => {
+  frame.addEventListener("click", () => {
+    clickSound.currentTime = 0;
+    clickSound.play();
 
+    const targetPage = frame.getAttribute("data-page") || "default.html";
+
+    const windowEl = document.createElement("div");
+    windowEl.className = "popup-window";
+
+    const headerEl = document.createElement("div");
+    headerEl.className = "popup-header";
+
+    const titleEl = document.createElement("span");
+    titleEl.textContent = "Loading...";  // loading
+
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = " × ";
+    closeBtn.onclick = () => {
+      const clickOutSound = document.getElementById('clickOutSound');
+      clickOutSound.currentTime = 0;
+      clickOutSound.play();
+      windowEl.remove();
+    };
+    headerEl.appendChild(titleEl);
+    headerEl.appendChild(closeBtn);
+
+    const contentEl = document.createElement("div");
+    contentEl.className = "popup-content";
+
+    if (targetPage === "juststatus.html") {
+      contentEl.innerHTML = `
+        <div id="statuscafe">
+          <div id="statuscafe-username"></div>
+          <div id="statuscafe-content"></div>
+        </div>
+      `;
+      windowEl.style.width = "300px";
+      windowEl.style.height = "200px";
+      titleEl.textContent = "Status";
+    } else {
+      const iframe = document.createElement("iframe");
+      iframe.src = targetPage;
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+
+      // When iframe loads, set the title
+      iframe.onload = () => {
+        let iframeTitle = "Untitled";
+        try {
+          iframeTitle = iframe.contentDocument.title || "Untitled";
+        } catch (e) {
+          console.warn("Cannot access iframe content:", e);
+        }
+        titleEl.textContent = iframeTitle;
+      };
+
+      contentEl.appendChild(iframe);
+      windowEl.style.width = "80vw";
+      windowEl.style.height = "80vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "10vw";
+      windowEl.style.resize = "both";
+    }
+
+    windowEl.appendChild(headerEl);
+    windowEl.appendChild(contentEl);
+    document.body.appendChild(windowEl);
+
+    makeDraggable(windowEl, headerEl);
+  });
+});
 
 function animateZoom() {
   const zoomSpeed = 0.15; // adjust to zoom speed
@@ -486,66 +561,7 @@ function closeLogWindow() {
   document.getElementById('logWindow').style.display = "none";
 }
 
-document.querySelectorAll(".frame").forEach(frame => {
-  frame.addEventListener("click", () => {
-    clickSound.currentTime = 0;
-    clickSound.play();
 
-    const targetPage = frame.getAttribute("data-page") || "default.html";
-
-    // Create the window container
-    const windowEl = document.createElement("div");
-    windowEl.className = "popup-window";
-
-    // Create the header
-    const headerEl = document.createElement("div");
-    headerEl.className = "popup-header";
-
-    const titleEl = document.createElement("span");
-    titleEl.textContent = frame.querySelector("h2").textContent;
-
-    const closeBtn = document.createElement("button");
-    closeBtn.textContent = " × ";
-    closeBtn.onclick = () => {
-      const clickOutSound = document.getElementById('clickOutSound');
-      clickOutSound.currentTime = 0;
-      clickOutSound.play();
-      windowEl.remove();
-    };
-    headerEl.appendChild(titleEl);
-    headerEl.appendChild(closeBtn);
-
-    // Create the content
-    const contentEl = document.createElement("div");
-    contentEl.className = "popup-content";
-
-    if (targetPage === "juststatus.html") {
-      // Custom content
-      contentEl.innerHTML = `<div id="statuscafe"><div id="statuscafe-username"></div><div id="statuscafe-content"></div></div>
-      `;
-      // Smaller window
-      windowEl.style.width = "300px";
-      windowEl.style.height = "200px";
-    } else {
-      // Iframe for everything else
-      const iframe = document.createElement("iframe");
-      iframe.src = targetPage;
-      iframe.style.width = "100%";
-      iframe.style.height = "100%";
-      iframe.style.border = "none";
-      contentEl.appendChild(iframe);
-      windowEl.style.width = "1700px";
-      windowEl.style.height = "800px";
-    }
-
-    windowEl.appendChild(headerEl);
-    windowEl.appendChild(contentEl);
-    document.body.appendChild(windowEl);
-
-    // Make draggable
-    makeDraggable(windowEl, headerEl);
-  });
-});
 
 function makeDraggable(dragTarget, handle) {
   let offsetX = 0;
@@ -571,6 +587,7 @@ function makeDraggable(dragTarget, handle) {
     }
   });
 }
+
 // Get the container that holds the entries
 const frames = document.querySelectorAll('.frame');
 const lineContainer = document.getElementById('line-container');
