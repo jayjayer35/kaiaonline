@@ -97,6 +97,16 @@
   .color-gray  { background: #a3a3a3; }
   .color-red  { background: #c34d4d; }
   .color-yellow  { background: #c3b74d; }
+  .color-special  { background: #08ffd6; animation: fadeColors 2s linear infinite;}
+  @keyframes fadeColors {
+    0%   { background: #ff6868; } /* red */
+    16%  { background: #ffb163; } /* orange */
+    33%  { background: #ffff6f; } /* yellow */
+    50%  { background: #6dff6d; } /* green */
+    66%  { background: #6a6aff; } /* blue */
+    83%  { background: #c26dff; } /* indigo */
+    100% { background: #ff6868; } /* back to red for smooth loop */
+  }
 
   .frame h2 {
     margin: 0 0 10px 0;
@@ -425,11 +435,11 @@ box-sizing: border-box;
         <h2>Internet</h2>
         <img src="altsite/entrypng/warp.png" alt="my site">
     </div>
-    <div class="frame color-gray" style="left: 50px; top: 100px; max-width: 90px;" data-page="/altsite/juststatus.html"> <!-- status 4 -->
+    <div class="frame color-gray" style="left: 50px; top: 100px; max-width: 90px;" data-page="altsite/juststatus.html"> <!-- status 4 -->
         <h2>Status</h2>
         <img src="assets/placeholder.png" style="size: 90px 90px;" alt="status">
     </div>
-    <div class="frame color-purple" style="left: 520px; top: 1735px; display:none;" data-page="/wilds.html"> <!-- wilds 5 -->
+    <div class="frame color-special" style="left: 520px; top: 1735px; display:none;" data-page="wilds.html"> <!-- wilds 5 -->
         <h2>Outer Wilds</h2>
         <img src="altsite/entrypng/wilds.jpg" alt="outer wilds">
     </div>
@@ -461,7 +471,7 @@ box-sizing: border-box;
         <h2>Guestbook</h2>
         <img src="altsite/entrypng/video.jpg" alt="video">
     </div>
-    <div class="frame color-green" style="left: 1900px; top: -1000px; display:none;" data-page="internetstuf.html"> <!-- manifesto 13 -->
+    <div class="frame color-special" style="left: 1900px; top: -1000px; display:none;" data-page="internetstuf.html"> <!-- manifesto 13 -->
         <h2>Manifesto</h2>
         <img src="altsite/entrypng/warp.png" alt="indie web manifesto">
     </div>
@@ -484,6 +494,10 @@ box-sizing: border-box;
     <div class="frame color-gray" style="left: 475px; top: -460px; max-width: 90px;" data-page="musicplayer.html"> <!-- musicplayer 18 -->
         <h2>Audio Player</h2>
         <img src="assets/placeholder.png" style="size: 90px 90px;" alt="musicplayer">
+    </div>
+    <div class="frame color-special" style="left: 1200px; top: -1090px; display:none;" data-page="jacobonline-old/index.html" > <!-- old site 19 -->
+        <h2>Old Site</h2>
+        <img src="altsite/entrypng/warp.png" alt="old site">
     </div>
 
   </div>
@@ -601,7 +615,7 @@ document.querySelectorAll(".frame").forEach(frame => {
     const contentEl = document.createElement("div");
     contentEl.className = "popup-content";
 
-    if (targetPage === "juststatus.html") {
+    if (targetPage === "altsite/juststatus.html") {
       const iframe = document.createElement("iframe");
       iframe.src = targetPage;
       iframe.style.width = "100%";
@@ -778,7 +792,8 @@ const connections = [
   [14,15],
   [14,16],
   [0,14],
-  [1, 17]
+  [1, 17],
+  [6, 19], [3,19]
 
 ];
 
@@ -877,43 +892,43 @@ window.addEventListener("message", (event) => {
     const command = event.data.command.toLowerCase();
 
     const map = {
-      "wilds": 5,
-      "Wilds": 5,
-      "manifesto": 13,
-      "Manifesto": 13
+      "jacob": [5],
+      "ideas": [13],
+      "windows98": [19],
+      "FreedomDive": [5, 13, 19]  //master password
     };
 
-    const idx = map[command];
-    if (idx !== undefined) {
-      const frames = window.parent.document.querySelectorAll(".frame");
-      const frame = frames[idx];
-      const revealSound = window.parent.document.getElementById("revealSound");
-      frame.style.display = "block";
-      frame.style.opacity = "0";
-      void frame.offsetWidth; // trigger reflow
-      frame.style.opacity = "1";
+    const idxList = map[command];
+    if (idxList !== undefined) {
+      idxList.forEach(idx => {
+        const frames = window.parent.document.querySelectorAll(".frame");
+        const frame = frames[idx];
+        const revealSound = window.parent.document.getElementById("revealSound");
+        
+        if (!frame) return;
 
-      // Wait until fade completes, then draw connections
-      if (typeof drawConnections === "function") {
+        const wasHidden = frame.style.display === "none" || frame.style.display === "";
+
+        frame.style.display = "block";
+        frame.style.opacity = "0";
+        void frame.offsetWidth; // trigger reflow
+        frame.style.opacity = "1";
+
         setTimeout(() => {
-          if (revealSound) {
-            revealSound.volume = 0.2;  // quieter
+          if (wasHidden && revealSound) {
+            revealSound.volume = 0.2;
             revealSound.currentTime = 0;
             revealSound.play();
           }
-          drawConnections();
-        }, 500); // match the CSS transition duration
-      }
-      // Only play the sound if it was hidden before
-      if (frame.style.display === "none") {
-        frame.style.display = "block";
-        if (window.parent.drawConnections) {
-          window.parent.drawConnections();
-        }
-      }
+          if (typeof window.parent.drawConnections === "function") {
+            window.parent.drawConnections();
+          }
+        }, 500);
+      });
     }
-    }
+  }
 });
+
 window.addEventListener("DOMContentLoaded", () => {
   drawConnections()
 });
