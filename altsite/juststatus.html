@@ -5,41 +5,92 @@
 <title>Status</title>
 <script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
 <style>
-#statuscafe {
-  margin: 2rem auto;
-  max-width: 500px;
-  background-color: rgba(168, 132, 230, 0.2); 
-  border: 1px solid #fff;
-  padding: 1em;
-  font-family: "Comic Sans MS", "Courier New", monospace;
-  color: #fff;
-  border-radius: 4px;
-}
-#statuscafe-username {
-  visibility: hidden;
-  position: relative;
-}
-#statuscafe-username::before {
-  content: "🪐 kaiasei's status";
-  visibility: visible;
-  position: absolute;
-  top: 0;
-  left: 0;
-  font-weight: bold;
-  color: #e2e1ab;
-}
-#statuscafe-content {
-  margin: 0 0.5em;
-}
-#statuscafe:hover {
-  background-color: rgba(201, 191, 243, 0.445);
-}
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  #statuscafe {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 1em;
+    background-color: rgba(36, 0, 99, 0.2);
+    border: 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 4vw;
+    color: #b5a9d6;
+    text-shadow: 0 0 10px #00d9ff;
+    animation: flicker .005s infinite;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  #statuscafe-username {
+    visibility: hidden;
+    
+  }
+  #statuscafe-content {
+    visibility: hidden; /* Hide the status text initially */
+    text-align: left;
+  }
+  #statuscafe:hover {
+    background-color: rgba(0, 5, 92, 0.164);
+  }
+  @keyframes flicker {
+  0% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
+  20% {
+    text-shadow: none;
+  }
+  40% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
+  60% {
+    text-shadow: none;
+  }
+  80% {
+    text-shadow: 0 0 4px #00eeff, 0 0 4px #00eeff;
+  }
+  100% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
+  }
 </style>
 </head>
 <body>
   <div id="statuscafe">
-    <div id="statuscafe-username"></div>
     <div id="statuscafe-content"></div>
+    <div id="statuscafe-username"></div>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Wait for status.cafe to populate the text
+      setTimeout(() => {
+        const contentEl = document.getElementById("statuscafe-content");
+        const originalText = contentEl.textContent.trim();
+        contentEl.textContent = ""; // clear text
+
+        let i = 0;
+
+        // Make the element visible now that we start typing
+        contentEl.style.visibility = "visible";
+
+        function typeWriter() {
+          if (i < originalText.length) {
+            contentEl.textContent += originalText.charAt(i);
+            i++;
+            setTimeout(typeWriter, 50); // typing speed in ms
+          }
+        }
+
+        typeWriter();
+      }, 400); // adjust delay if needed
+    });
+  </script>
 </body>
 </html>

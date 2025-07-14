@@ -78,14 +78,25 @@
     width: fit-content;
     transition: transform 0.3s ease, filter 0.3s ease;
     border: 0px solid #000;
+    transition: transform 0.5s ease, filter 0.5s ease, box-shadow 0.5s ease;
   }
 
+  .frame.hidden {
+    display: none;
+    opacity: 0;
+  }
+
+  .frame.fading-in {
+    display: block;
+    opacity: 0;
+  }
   .color-orange { background: #c37c4d; }
   .color-blue   { background: #4d79c3; }
   .color-green  { background: #4dc37c; }
   .color-purple  { background: #844dc3; }
-  .color-gray  { background: #c2c2c2; }
+  .color-gray  { background: #a3a3a3; }
   .color-red  { background: #c34d4d; }
+  .color-yellow  { background: #c3b74d; }
 
   .frame h2 {
     margin: 0 0 10px 0;
@@ -140,12 +151,15 @@
   box-shadow: 0 0 20px #4d79c3;
   color: #eee;
   font-family: monospace;
+  animation: flicker .005s infinite;
   z-index: 10000;
   overflow: hidden;
 }
 
 #logWindow .logHeader {
   text-align: right;
+
+  animation: flicker .005s infinite;
   background: rgba(0,0,0,0.3);
 }
 
@@ -266,7 +280,7 @@ box-sizing: border-box;
 }
 .connection-line {
   position: absolute;
-  height: 4px; /* or your desired thickness */
+  height: 6px; /* or your desired thickness */
   background: #aaa; /* or any color */
   transform-origin: 0% 50%;
   pointer-events: none;
@@ -280,14 +294,37 @@ box-sizing: border-box;
   height: 400px;
   background: rgba(10, 10, 20, 0.9);
   border: 2px solid #4d79c3;
-  box-shadow: 0 0 20px #4d79c3;
-  color: #eee;
+  box-shadow: 0 0 10px #4d79c3;
+  animation: flicker .05s infinite;
+  color: #f6f5ff;
   font-family: monospace;
   z-index: 1000;
   display: flex;
   flex-direction: column;
   resize: both;
   overflow: auto;
+  transform-origin: center center;
+}
+
+@keyframes flicker {
+  0% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
+  20% {
+    text-shadow: none;
+  }
+  40% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
+  60% {
+    text-shadow: none;
+  }
+  80% {
+    text-shadow: 0 0 4px #00eeff, 0 0 4px #00eeff;
+  }
+  100% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
 }
 
 .popup-header {
@@ -300,6 +337,8 @@ box-sizing: border-box;
   font-family: 'Courier New', Courier, monospace;
   font-size: 1.5rem;
   font-weight: 400;
+  border: #4d79c3;
+  border-radius: 1px;
 }
 
 .popup-header button {
@@ -309,6 +348,7 @@ box-sizing: border-box;
   font-size: 18px;
   cursor: pointer;
   padding: 2px 6px;
+  animation: flicker .005s infinite;
 }
 
 .popup-content {
@@ -318,8 +358,30 @@ box-sizing: border-box;
 .popup-header span {
   padding-left: 10px;
 }
+@keyframes crtStartup {
+  0% { transform: scaleY(0); opacity: 0; }
+  40% { transform: scaleY(0.1); opacity: .3; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
 
-
+@keyframes crtShutdown {
+  0% { transform: scaleY(1); opacity: 1; }
+  60% { transform: scaleY(0.1); opacity: .3; }
+  100% { transform: scaleY(0); opacity: 0; }
+}
+#screenPadding {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  border: 29px solid rgba(10, 10, 20, 0.76);
+  z-index: 5000;
+  outline: 4px solirgb(208, 255, 0)ck;
+  outline-offset: -4px; /* moves outline inside the element's border box */
+  /* interior glow */
+  box-shadow: inset 0 0 5px #4d79c3, 
+              inset 0 0 5px rgba(77,121,195,0.6);
+}
 </style>
 </head>
 <body>
@@ -329,8 +391,10 @@ box-sizing: border-box;
 <audio id="clickSound" src="fx/1selectentry.wav" preload="auto"></audio>
 <audio id="clickOutSound" src="fx/1leaventry.wav" preload="auto"></audio>
 <audio id="zoomSound" src="fx/zoom.wav" preload="auto"></audio>
+<audio id="revealSound" src="fx/newentry.wav" preload="auto"></audio>
 
 
+<div id="screenPadding"></div>
 <div id="gridOverlayThin"></div>
 <div id="parallax"></div>
 
@@ -345,29 +409,82 @@ box-sizing: border-box;
 
 
     <!--entries--> 
-    <div class="frame color-gray" style="left: 880px; top: 400px;" data-page="../welcome.html"> <!--0-->
+    <div class="frame color-gray" style="left: 880px; top: 400px;" data-page="../welcome.html"> <!-- welcome 0 -->
         <h2>Welcome</h2>
-        <img src="entrypng/welcome.png" alt="eric">
+        <img src="entrypng/welcome.png" alt="welcome">
     </div>
-    <div class="frame color-purple" style="left: 350px; top: 150px;" data-page="../bio.html"> <!--1-->
+    <div class="frame color-gray" style="left: -50px; top: -30px;" data-page="../bio.html"> <!-- me 1 -->
         <h2>Me</h2>
         <img src="entrypng/me.png" alt="me">
     </div>
-    <div class="frame color-purple" style="left: 720px; top: -280px;" data-page="../thesite.html"> <!--2-->
+    <div class="frame color-gray" style="left: 520px; top: -580px;" data-page="../thesite.html"> <!-- the site 2 -->
         <h2>The Site</h2>
         <img src="entrypng/me.png" alt="the site">
     </div>
-    <div class="frame color-purple" style="left: 1186px; top: -490px;" data-page="../internetstuf.html"> <!--3-->
+    <div class="frame color-green" style="left: 1600px; top: -390px;" data-page="../internetstuf.html"> <!-- internet 3 -->
         <h2>Internet</h2>
-        <img src="entrypng/me.png" alt="the site">
+        <img src="entrypng/warp.png" alt="my site">
     </div>
-    <div class="frame color-purple" style="left: 450px; top: 275px; max-width: 90px;" data-page="juststatus.html"> <!--4-->
+    <div class="frame color-gray" style="left: 50px; top: 100px; max-width: 90px;" data-page="juststatus.html"> <!-- status 4 -->
         <h2>Status</h2>
-        <img src="../assets/placeholder.png" alt="status">
+        <img src="../assets/placeholder.png" style="size: 90px 90px;" alt="status">
     </div>
-
-    
-
+    <div class="frame color-purple" style="left: 520px; top: 1735px; display:none;" data-page="../wilds.html"> <!-- wilds 5 -->
+        <h2>Outer Wilds</h2>
+        <img src="entrypng/wilds.jpg" alt="outer wilds">
+    </div>
+    <div class="frame color-blue" style="left: 83px; top: -1280px;" data-page="../konsole.html"> <!-- console 6 -->
+        <h2>Console</h2>
+        <img src="entrypng/me.png" alt="a console?">
+    </div>
+    <div class="frame color-green" style="left: 1786px; top: -490px;" data-page="../internetstuf2.html"> <!-- other sites 7 -->
+        <h2>Other Sites!</h2>
+        <img src="entrypng/warp.png" alt="other sites">
+    </div>
+    <div class="frame color-green" style="left: 1586px; top: 120px;" data-page="../foryou.html"> <!-- for you 8 -->
+        <h2>For You</h2>
+        <img src="entrypng/warp.png" alt="stuffs for you">
+    </div>
+    <div class="frame color-orange" style="left: -700px; top: 370px;" data-page="../friends.html"> <!-- friends 9 -->
+        <h2>Friends</h2>
+        <img src="entrypng/friends.png" alt="friends">
+    </div>
+    <div class="frame color-orange" style="left: -1000px; top: 840px;" data-page="../photo.html"> <!-- photo 10 -->
+        <h2>Photos</h2>
+        <img src="entrypng/photo.jpg" alt="photography">
+    </div>
+    <div class="frame color-orange" style="left: -1245px; top: 800px;" data-page="../video.html"> <!-- video 11 -->
+        <h2>Videos</h2>
+        <img src="entrypng/video.jpg" alt="video">
+    </div>
+    <div class="frame color-green" style="left: 2310px; top: -110px;" data-page="https://kaiasei.atabook.org/"> <!-- guestbook 12 -->
+        <h2>Guestbook</h2>
+        <img src="entrypng/video.jpg" alt="video">
+    </div>
+    <div class="frame color-green" style="left: 1900px; top: -1000px; display:none;" data-page="../internetstuf.html"> <!-- manifesto 13 -->
+        <h2>Manifesto</h2>
+        <img src="entrypng/warp.png" alt="indie web manifesto">
+    </div>
+    <div class="frame color-purple" style="left: 980px; top: 1500px; max-width: 120%;" data-page="../videogames.html"> <!-- video games 14 -->
+        <h2>Video Games</h2>
+        <img src="entrypng/welcome.png" alt="videogames">
+    </div>
+    <div class="frame color-purple" style="left: 860px; top: 2020px;" data-page="../celeste.html"> <!-- celeste 15 -->
+        <h2>Celeste</h2>
+        <img src="entrypng/welcome.png" alt="celeste">
+    </div>
+    <div class="frame color-purple" style="left: 1535px; top: 1860px;" data-page="../minecraft.html"> <!-- minecraft 16 -->
+        <h2>Minecraft</h2>
+        <img src="entrypng/welcome.png" alt="minecraft">
+    </div>
+    <div class="frame color-yellow" style="left: -560px; top: -570px;" data-page="../music.html"> <!-- music 17 -->
+        <h2>Music</h2>
+        <img src="entrypng/welcome.png" alt="music">
+    </div>
+    <div class="frame color-gray" style="left: 475px; top: -460px; max-width: 90px;" data-page="../musicplayer.html"> <!-- musicplayer 18 -->
+        <h2>Audio Player</h2>
+        <img src="../assets/placeholder.png" style="size: 90px 90px;" alt="musicplayer">
+    </div>
 
   </div>
 </div>
@@ -452,12 +569,16 @@ document.querySelectorAll(".frame").forEach(frame => {
 
     const windowEl = document.createElement("div");
     windowEl.className = "popup-window";
+    windowEl.style.animation = "crtStartup 0.4s forwards";
 
     const headerEl = document.createElement("div");
     headerEl.className = "popup-header";
+    headerEl.styleanimation = "flicker .005s infinite;"
 
     const titleEl = document.createElement("span");
-    titleEl.textContent = "Loading...";  // loading
+    const frameTitle = frame.querySelector("h2")?.textContent || "Untitled";
+    titleEl.textContent = frameTitle;
+
 
     const closeBtn = document.createElement("button");
     closeBtn.textContent = " × ";
@@ -465,7 +586,14 @@ document.querySelectorAll(".frame").forEach(frame => {
       const clickOutSound = document.getElementById('clickOutSound');
       clickOutSound.currentTime = 0;
       clickOutSound.play();
-      windowEl.remove();
+
+      // Add animation class
+      windowEl.style.animation = "crtShutdown 0.4s forwards";
+
+      // Remove after animation completes
+      setTimeout(() => {
+        windowEl.remove();
+      }, 400);
     };
     headerEl.appendChild(titleEl);
     headerEl.appendChild(closeBtn);
@@ -474,40 +602,68 @@ document.querySelectorAll(".frame").forEach(frame => {
     contentEl.className = "popup-content";
 
     if (targetPage === "juststatus.html") {
-      contentEl.innerHTML = `
-        <div id="statuscafe">
-          <div id="statuscafe-username"></div>
-          <div id="statuscafe-content"></div>
-        </div>
-      `;
-      windowEl.style.width = "300px";
-      windowEl.style.height = "200px";
-      titleEl.textContent = "Status";
+      const iframe = document.createElement("iframe");
+      iframe.src = targetPage;
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      
+      contentEl.appendChild(iframe);
+      windowEl.style.width = "25vw"; //size
+      windowEl.style.height = "14vh"; //size
+      windowEl.style.top = "10vh"; //pos
+      windowEl.style.left = "15vh"; //pos
+      windowEl.style.resize = "none"; //allow resiz
+      //no scroll
+      windowEl.style.overflow = "hidden"; 
+      contentEl.style.overflow = "hidden";
+
+    } else if (targetPage === "../konsole.html") { 
+      const iframe = document.createElement("iframe");
+      iframe.src = targetPage;
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      
+      contentEl.appendChild(iframe);
+      windowEl.style.width = "25vw"; //size
+      windowEl.style.height = "14vh"; //size
+      windowEl.style.top = "10vh"; //pos
+      windowEl.style.left = "15vh"; //pos
+      windowEl.style.resize = "none"; //allow resiz
+      //no scroll
+      windowEl.style.overflow = "hidden"; 
+      contentEl.style.overflow = "hidden";
+    } else if (targetPage === "../musicplayer.html") { 
+      const iframe = document.createElement("iframe");
+      iframe.src = targetPage;
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      
+      contentEl.appendChild(iframe);
+      windowEl.style.width = "22vw"; //size
+      windowEl.style.height = "18.5vh"; //size
+      windowEl.style.top = "10vh"; //pos
+      windowEl.style.left = "15vh"; //pos
+      windowEl.style.resize = "none"; //allow resiz
+      //no scroll
+      windowEl.style.overflow = "hidden"; 
+      contentEl.style.overflow = "hidden";
     } else {
       const iframe = document.createElement("iframe");
       iframe.src = targetPage;
       iframe.style.width = "100%";
       iframe.style.height = "100%";
       iframe.style.border = "none";
-
-      // When iframe loads, set the title
-      iframe.onload = () => {
-        let iframeTitle = "Untitled";
-        try {
-          iframeTitle = iframe.contentDocument.title || "Untitled";
-        } catch (e) {
-          console.warn("Cannot access iframe content:", e);
-        }
-        titleEl.textContent = iframeTitle;
-      };
-
+      
       contentEl.appendChild(iframe);
-      windowEl.style.width = "80vw";
-      windowEl.style.height = "80vh";
-      windowEl.style.top = "10vh";
-      windowEl.style.left = "10vw";
+      windowEl.style.width = "80vw"; //size
+      windowEl.style.height = "80vh"; //size
+      windowEl.style.top = "10vh"; //pos
+      windowEl.style.left = "10vw"; //pos
       windowEl.style.resize = "both";
-    }
+    } 
 
     windowEl.appendChild(headerEl);
     windowEl.appendChild(contentEl);
@@ -582,8 +738,19 @@ function makeDraggable(dragTarget, handle) {
 
   document.addEventListener('mousemove', (e) => {
     if (isDragging) {
-      dragTarget.style.left = (e.clientX - offsetX) + 'px';
-      dragTarget.style.top = (e.clientY - offsetY) + 'px';
+      let newLeft = (e.clientX - offsetX);
+      let newTop = (e.clientY - offsetY);
+
+      // Get window size and element size
+      const elWidth = dragTarget.offsetWidth;
+      const elHeight = dragTarget.offsetHeight;
+
+      // Clamp all sides (50px padding)
+      if (newLeft < 30) newLeft = 30;
+      if (newTop < 30) newTop = 30;
+
+      dragTarget.style.left = newLeft + 'px';
+      dragTarget.style.top = newTop + 'px';
     }
   });
 }
@@ -597,13 +764,33 @@ const lineContainer = document.getElementById('line-container');
 const connections = [
   [0, 1],
   [1, 2],
-  [2, 3]
+  [2, 3],
+  [2, 6],
+  [3, 7],
+  [0, 8],
+  [3, 8],
+  [1, 9],
+  [9, 10],
+  [9, 11],
+  [3,12],
+  [7,13],
+  [5,14],
+  [14,15],
+  [14,16],
+  [0,14],
+  [1, 17]
+
 ];
 
 // For each connection, create a line
 connections.forEach(([fromIdx, toIdx]) => {
   const from = frames[fromIdx];
   const to = frames[toIdx];
+
+  // Skip drawing if either frame is hidden
+  if (from.style.display === "none" || to.style.display === "none") {
+    return; // skip this line
+  }
 
   // Get positions relative to the content container
   const fromRect = from.getBoundingClientRect();
@@ -645,12 +832,89 @@ document.addEventListener('mouseup', (e) => {
   const duration = Date.now() - mouseDownTime;
   
   // e.button === 0 ensures it's the left mouse button
-  if (duration < 80 && e.button === 0) {
+  if (duration < 100 && e.button === 0) {
     const sound = new Audio('../assets/click.mp3');
     sound.volume = 0.2;
     sound.play();
   }
 }, true);
+
+function drawConnections() {
+  // Clear old lines
+  lineContainer.innerHTML = '';
+
+  const visibleFrames = Array.from(document.querySelectorAll('.frame')).filter(f => f.style.display !== 'none');
+
+  // Only draw lines for visible frames
+  connections.forEach(([fromIdx, toIdx]) => {
+    const from = visibleFrames.find(f => f === frames[fromIdx]);
+    const to = visibleFrames.find(f => f === frames[toIdx]);
+    if (!from || !to) return;
+
+    const x1 = from.offsetLeft + from.offsetWidth / 2;
+    const y1 = from.offsetTop + from.offsetHeight / 2;
+    const x2 = to.offsetLeft + to.offsetWidth / 2;
+    const y2 = to.offsetTop + to.offsetHeight / 2;
+
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    const line = document.createElement('div');
+    line.className = 'connection-line';
+    line.style.left = `${x1}px`;
+    line.style.top = `${y1}px`;
+    line.style.width = `${distance}px`;
+    line.style.transform = `rotate(${angle}deg)`;
+
+    lineContainer.appendChild(line);
+  });
+}
+
+window.addEventListener("message", (event) => {
+  if (event.data?.type === "showEntry") {
+    const command = event.data.command.toLowerCase();
+
+    const map = {
+      "wilds": 5,
+      "Wilds": 5,
+      "manifesto": 13,
+      "Manifesto": 13
+    };
+
+    const idx = map[command];
+    if (idx !== undefined) {
+      const frames = window.parent.document.querySelectorAll(".frame");
+      const frame = frames[idx];
+      const revealSound = window.parent.document.getElementById("revealSound");
+      frame.style.display = "block";
+      frame.style.opacity = "0";
+      void frame.offsetWidth; // trigger reflow
+      frame.style.opacity = "1";
+
+      // Wait until fade completes, then draw connections
+      if (typeof drawConnections === "function") {
+        setTimeout(() => {
+          if (revealSound) {
+            revealSound.volume = 0.2;  // quieter
+            revealSound.currentTime = 0;
+            revealSound.play();
+          }
+          drawConnections();
+        }, 500); // match the CSS transition duration
+      }
+      // Only play the sound if it was hidden before
+      if (frame.style.display === "none") {
+        frame.style.display = "block";
+        if (window.parent.drawConnections) {
+          window.parent.drawConnections();
+        }
+      }
+    }
+    }
+});
+
 
 </script>
 
