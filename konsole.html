@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>console</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #000;
+    color: #006eff;
+    font-family: monospace;
+    font-size: 1rem;
+  }
+  #console {
+    padding: 1em;
+    box-sizing: border-box;
+    height: 100%;
+    overflow-y: auto;
+  }
+  .line {
+    white-space: pre-wrap;
+  }
+  #input-line {
+    display: flex;
+  }
+  #prompt {
+    margin-right: 0.5em;
+  }
+  #input {
+    background: none;
+    border: none;
+    color: #006eff;
+    outline: none;
+    flex: 1;
+    font-family: monospace;
+    font-size: 1rem;
+  }
+</style>
+</head>
+<body>
+  <div id="console">
+    <div class="line"></div>
+    <div id="input-line">
+      <span id="prompt">&gt;</span>
+      <input id="input" autofocus />
+    </div>
+  </div>
+  <script>
+    const input = document.getElementById("input");
+    const consoleDiv = document.getElementById("console");
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const value = input.value.trim();
+        if (value) {
+          const output = document.createElement("div");
+          output.className = "line";
+          output.textContent = "> " + value;
+          consoleDiv.insertBefore(output, document.getElementById("input-line"));
+          input.value = "";
+          // Optionally: add response
+          const response = document.createElement("div");
+          response.className = "line";
+          response.textContent = "Command received: " + value;
+          handleCommand(value.toLowerCase());
+          consoleDiv.insertBefore(response, document.getElementById("input-line"));
+        }
+
+        handleCommand(value.toLowerCase());
+        // Scroll to bottom
+        consoleDiv.scrollTop = consoleDiv.scrollHeight;
+      }
+    });
+
+    function handleCommand(command) {
+  window.parent.postMessage({ type: "showEntry", command }, "*");
+}
+  </script>
+</body>
+</html>

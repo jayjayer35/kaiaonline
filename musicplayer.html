@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Music Player</title>
+<style>
+body {
+  margin: 0;
+  background: #010d1f;
+  color: #eee;
+  font-family: 'Courier New', Courier, monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+#player {
+  background: rgba(10,10,20,0.95);
+  border: 0px solid #4d79c3;
+  box-shadow: 0 0 10px #4d79c3;
+  padding: 20px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  animation: flicker .05s infinite;
+}
+
+@keyframes flicker {
+  0% { text-shadow: 0 0 5px #00eeff; }
+  20% { text-shadow: none; }
+  40% { text-shadow: 0 0 5px #00eeff; }
+  60% { text-shadow: none; }
+  80% { text-shadow: 0 0 4px #00eeff; }
+  100% { text-shadow: 0 0 5px #00eeff; }
+}
+
+#title {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+#controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+button {
+  background: none;
+  border: 2px solid #4d79c3;
+  color: #4d79c3;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  font-family: monospace;
+}
+button:hover {
+  background: rgba(77,121,195,0.2);
+}
+
+#progressContainer {
+  width: 100%;
+  background: rgba(255,255,255,0.1);
+  height: 8px;
+  cursor: pointer;
+  margin: 10px 0;
+  position: relative;
+}
+#progress {
+  background: #4d79c3;
+  height: 100%;
+  width: 0%;
+}
+#volumeSlider {
+  -webkit-appearance: none;
+  height: 4px;
+  background: rgba(77,121,195,0.5);
+  outline: none;
+  border-radius: 2px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+#volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  background: #4d79c3;
+  border-radius: 50%;
+}
+#volumeSlider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  background: #4d79c3;
+  border-radius: 50%;
+  border: none;
+}
+#volumeSlider {
+  -webkit-appearance: none;
+  width: 100px;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Webkit (Chrome, Safari) */
+#volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 0; height: 0;
+  box-shadow: -1000px 0 0 1000px #4d79c3;
+}
+
+/* Firefox */
+#volumeSlider::-moz-range-track {
+  background: rgba(255,255,255,0.1);
+  height: 8px;
+  border-radius: 4px;
+}
+#volumeSlider::-moz-range-progress {
+  background: #4d79c3;
+  height: 8px;
+  border-radius: 4px;
+}
+
+/* Edge / IE */
+#volumeSlider::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+  height: 8px;
+}
+#volumeSlider::-ms-fill-lower {
+  background: #4d79c3;
+  border-radius: 4px;
+}
+#volumeSlider::-ms-fill-upper {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+</style>
+</head>
+<body>
+
+<div id="player">
+  <div id="title">Loading...</div>
+  <div id="progressContainer">
+    <div id="progress"></div>
+  </div>
+  <div id="controls">
+    <button id="prev">⏮</button>
+    <button id="play">▶</button>
+    <button id="next">⏭</button>
+    <button id="loopButton">Loop: Off</button>
+    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.07" style="width: 80px;">
+  </div>
+</div>
+
+<script>
+  let recentSongs = [];
+const RECENT_HISTORY_SIZE = 3;
+
+const songs = [
+  { title: "3AM - Animal Crossing New Leaf", file: "music/3am.mp3" },
+  { title: "Travelers - Andrew Prahlow", file: "music/trav.mp3" },
+  { title: "14.3 Billion Years - Andrew Prahlow", file: "music/14.3.mp3" },
+  { title: "Comforting Memories - Kumi Tanioka", file: "music/memories.mp3" },
+  { title: "Falling Stars - A Shell In The Pit", file: "music/stars.mp3" },
+  { title: "Timber Hearth - Andrew Prahlow", file: "music/timber.mp3" },
+  { title: "serenity - kaiasei", file: "music/serenity.mp3" },
+  { title: "dawn - kaiasei", file: "music/dawn.mp3" },
+  { title: "Main Title - Andrew Prahlow", file: "music/title.mp3" },
+  { title: "Giant's Deep - Andrew Prahlow", file: "music/deep.mp3" },
+  { title: "The Ancient Glade - Andrew Prahlow", file: "music/glade.mp3" },
+  { title: "Space - Andrew Prahlow", file: "music/space.mp3" },
+  { title: "The Sun Station - Andrew Prahlow", file: "music/sun.mp3" },
+  { title: "Castaways - Andrew Prahlow", file: "music/castaways.mp3" }
+];
+
+let currentSong = Math.floor(Math.random() * songs.length);
+const audio = new Audio();
+audio.volume = 0.07;
+const titleEl = document.getElementById('title');
+const playBtn = document.getElementById('play');
+const nextBtn = document.getElementById('next');
+const prevBtn = document.getElementById('prev');
+const progressContainer = document.getElementById('progressContainer');
+const progress = document.getElementById('progress');
+const loopBtn = document.getElementById('loopButton');
+
+let isLooping = false;
+
+// Load song
+function loadSong(index) {
+  const song = songs[index];
+  audio.src = song.file;
+  titleEl.textContent = song.title;
+}
+
+// Play/Pause
+function playPause() {
+  if (audio.paused) {
+    audio.play();
+    playBtn.textContent = "⏸";
+  } else {
+    audio.pause();
+    playBtn.textContent = "▶";
+  }
+}
+
+// Next song with recent check
+function nextSong() {
+  let tries = 0;
+  let newSong;
+  do {
+    newSong = Math.floor(Math.random() * songs.length);
+    tries++;
+    // In case playlist is very small, break after 10 tries
+  } while (recentSongs.includes(newSong) && tries < 10);
+
+  currentSong = newSong;
+  addToRecent(currentSong);
+  loadSong(currentSong);
+  audio.play();
+  playBtn.textContent = "⏸";
+}
+
+// Previous song directly (doesn’t use recent list to avoid skipping)
+function prevSong() {
+  currentSong = (currentSong - 1 + songs.length) % songs.length;
+  loadSong(currentSong);
+  audio.play();
+  playBtn.textContent = "⏸";
+}
+
+// Add to recent history
+function addToRecent(index) {
+  recentSongs.push(index);
+  if (recentSongs.length > RECENT_HISTORY_SIZE) {
+    recentSongs.shift();
+  }
+}
+
+// Progress bar
+audio.addEventListener('timeupdate', () => {
+  const percent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = percent + "%";
+});
+
+// Seek on click
+progressContainer.addEventListener('click', (e) => {
+  const clickX = e.offsetX;
+  const width = progressContainer.clientWidth;
+  const duration = audio.duration;
+  audio.currentTime = (clickX / width) * duration;
+});
+
+// Looping toggle
+loopBtn.addEventListener('click', () => {
+  isLooping = !isLooping;
+  audio.loop = isLooping;
+  loopBtn.textContent = `Loop: ${isLooping ? "On" : "Off"}`;
+});
+
+// Handle end
+audio.addEventListener('ended', () => {
+  if (!isLooping) nextSong();
+});
+
+// Buttons
+playBtn.addEventListener('click', playPause);
+nextBtn.addEventListener('click', nextSong);
+prevBtn.addEventListener('click', prevSong);
+
+// Init
+loadSong(currentSong);
+addToRecent(currentSong);
+
+const volumeSlider = document.getElementById('volumeSlider');
+
+volumeSlider.addEventListener('input', () => {
+  audio.volume = volumeSlider.value;
+});
+
+loadSong(currentSong);
+audio.play();
+playBtn.textContent = "⏸";
+</script>
+
+</body>
+</html>
