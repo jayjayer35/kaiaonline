@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>log site test 1</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    top: 0; left: 0; 
+    width: 100vw;
+    height: 100vh;
+    background: url('assets/static.gif');
+    opacity: .98;
+    background-repeat: repeat;
+    background-position: center center;
+    background-size: cover;
+    font-family: monospace;
+  }
+
+#viewportContainer {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  width: calc(100% - 60px);
+  height: calc(100% - 60px);
+  pointer-events: none; 
+  z-index: 999;
+}
+
+
+#viewportContainer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(77,121,195,0.6);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+#viewportContainer::after {
+  content: "";
+  position: absolute;
+  filter: blur(3px);
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border: 2px solid rgba(77, 121, 195, 0.4);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+.viewport {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; 
+  cursor: grab;
+  z-index: 1;
+  pointer-events: auto; 
+}
+
+
+.content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+  .frame {
+    position: absolute;
+    padding: 3px;
+    text-align: center;
+    width: fit-content;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    border: 0px solid #000;
+    transition: transform 0.5s ease, filter 0.5s ease, box-shadow 0.5s ease;
+  }
+
+  .frame.hidden {
+    display: none;
+    opacity: 0;
+  }
+
+  .frame.fading-in {
+    display: block;
+    opacity: 0;
+  }
+  .color-orange { background: #c37c4d; }
+  .color-blue   { background: #4d79c3; }
+  .color-green  { background: #4dc37c; }
+  .color-purple  { background: #844dc3; }
+  .color-gray  { background: #a3a3a3; }
+  .color-red  { background: #c34d4d; }
+  .color-yellow  { background: #c3b74d; }
+
+  .frame h2 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    color: #000;
+  }
+
+  .frame img {
+    display: block;
+    max-width: 150px;
+    height: auto;
+    border: 0px solid #000;
+  }
+
+  .linething:hover {
+    filter: brightness(1.5);
+  }
+
+  .frame:hover {
+    transform: scale(1.2);
+    z-index: 10;
+    filter: brightness(1.25);
+    box-shadow: 0 0 6px #9c9c9c85;
+  }
+ #parallax {
+  position: absolute;
+  top: 0; left: 0; 
+  width: 100vw;
+  height: 100vh;
+  background: url('assets/galaxybkgndblue.jpg');
+  filter: blur(2px);
+  background-color: #010d1f;
+  opacity: .8;
+  background-repeat: repeat;
+  background-position: center center;
+  background-size: cover;
+  z-index: -1;
+  transform: translate(0, 0);
+}
+
+
+
+  #logWindow {
+  display: none;
+  position: fixed;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background: rgba(10, 10, 20, 0.9);
+  border: 2px solid #4d79c3;
+  box-shadow: 0 0 20px #4d79c3;
+  color: #eee;
+  font-family: monospace;
+  animation: flicker .005s infinite;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+#logWindow .logHeader {
+  text-align: right;
+
+  animation: flicker .005s infinite;
+  background: rgba(0,0,0,0.3);
+}
+
+#logWindow .logHeader button {
+  background: none;
+  border: none;
+  color: #4d79c3;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 2px 5px;
+}
+
+#closeButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.5);
+  border: 2px solid #4d79c3;
+  color: #4d79c3;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 8px;
+}
+
+#logWindow iframe {
+  width: 100%;
+  height: calc(100% - 0px);
+  border: none;
+}
+#closeBox {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 2px 6px;
+  box-shadow: 0 0 5px #010d1f;
+  border: 2px solid #4d79c3;
+  color: #4d79c3;
+  font-family: monospace;
+  font-size: 18px;
+  cursor: pointer;
+  background: rgba(0,0,0,0.5);
+}
+
+#closeBox:hover {
+  background: rgba(0,0,0,0.7);
+  box-shadow: 0 0 5px #4d79c3;
+}
+#gridOverlayThin {
+  position: fixed;
+  top: 30px;      
+  left: 30px;
+  width: calc(100% - 60px);
+  height: calc(100% - 60px);
+  pointer-events: none;
+  z-index: 0;     
+
+  background-color: rgba(0, 40, 100, 0.05);
+
+  background-image:
+
+    repeating-linear-gradient(
+      to right,
+      rgba(77, 120, 195, 0.075),
+      rgba(77, 120, 195, 0.075) 1px,
+      transparent 1px,
+      transparent 99px
+    ),
+   
+    repeating-linear-gradient(
+      to bottom,
+      rgba(77, 120, 195, 0.075),
+      rgba(77, 120, 195, 0.075) 1px,
+      transparent 1px,
+      transparent 99px
+    );
+
+  background-position:
+    -58px 0,
+    0 73px;
+    border: 1px solid rgba(77, 121, 195, 0.4);
+box-sizing: border-box;
+}
+#gridOverlayCenter {
+  position: fixed;
+  top: 30px;     
+  left: 30px;
+  width: calc(100% - 60px);
+  height: calc(100% - 60px);
+  pointer-events: none;
+  z-index: 15;   
+
+  background-image:
+    linear-gradient(
+      to right,
+      transparent 50.0%,
+      rgba(77, 120, 195, 0.075) 50%,
+      rgba(77, 120, 195, 0.075) 50.4%,
+      transparent 50.0%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 50.0%,
+      rgba(77, 120, 195, 0.075) 50%,
+      rgba(77, 120, 195, 0.075) 50.8%,
+      transparent 50.0%
+    );
+
+  background-position:
+    center,
+    center;
+}
+.arrow-img {
+  position: absolute;
+  transform-origin: 0% 50%;
+  height: 6px; /* or your desired thickness */
+  pointer-events: none;
+  z-index: -1; /* This puts it behind frames */
+}
+.connection-line {
+  position: absolute;
+  height: 6px; /* or your desired thickness */
+  background: #aaa; /* or any color */
+  transform-origin: 0% 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+.popup-window {
+  position: fixed;
+  top: 100px;
+  left: 100px;
+  width: 500px;
+  height: 400px;
+  background: rgba(10, 10, 20, 0.9);
+  border: 2px solid #4d79c3;
+  box-shadow: 0 0 10px #4d79c3;
+  animation: flicker .05s infinite;
+  color: #f6f5ff;
+  font-family: monospace;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  resize: both;
+  overflow: auto;
+  transform-origin: center center;
+}
+
+@keyframes flicker {
+  0% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
+  20% {
+    text-shadow: none;
+  }
+  40% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
+  60% {
+    text-shadow: none;
+  }
+  80% {
+    text-shadow: 0 0 4px #00eeff, 0 0 4px #00eeff;
+  }
+  100% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
+}
+
+.popup-header {
+  background: rgba(0,0,0,0.3);
+  padding: 1px;
+  cursor: move;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.5rem;
+  font-weight: 400;
+  border: #4d79c3;
+  border-radius: 1px;
+}
+
+.popup-header button {
+  background: none;
+  border: 2px solid #4d79c3;
+  color: #4d79c3;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 2px 6px;
+  animation: flicker .005s infinite;
+}
+
+.popup-content {
+  flex: 1;
+  overflow: auto;
+}
+.popup-header span {
+  padding-left: 10px;
+}
+@keyframes crtStartup {
+  0% { transform: scaleY(0); opacity: 0; }
+  40% { transform: scaleY(0.1); opacity: .3; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes crtShutdown {
+  0% { transform: scaleY(1); opacity: 1; }
+  60% { transform: scaleY(0.1); opacity: .3; }
+  100% { transform: scaleY(0); opacity: 0; }
+}
+#screenPadding {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  border: 29px solid rgba(10, 10, 20, 0.76);
+  z-index: 5000;
+  outline: 4px solirgb(208, 255, 0)ck;
+  outline-offset: -4px; /* moves outline inside the element's border box */
+  /* interior glow */
+  box-shadow: inset 0 0 5px #4d79c3, 
+              inset 0 0 5px rgba(77,121,195,0.6);
+}
+</style>
+</head>
+<body>
+
+<!-- audio -->
+<audio id="hoverSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
+<audio id="clickSound" src="altsite/fx/1selectentry.wav" preload="auto"></audio>
+<audio id="clickOutSound" src="altsite/fx/1leaventry.wav" preload="auto"></audio>
+<audio id="zoomSound" src="altsite/fx/zoom.wav" preload="auto"></audio>
+<audio id="revealSound" src="altsite/fx/newentry.wav" preload="auto"></audio>
+
+
+<div id="screenPadding"></div>
+<div id="gridOverlayThin"></div>
+<div id="parallax"></div>
+
+<!-- viewer -->
+<div id="viewportContainer">
+<div class="viewport" id="viewport">
+  <div class="content" id="content">
+      <!--add 70 on x, 100 on y--> 
+    <div id="line-container" style="position: relative; width: 90000px; height: 90000px;">
+    
+  </div>
+
+
+    <!--entries--> 
+    <div class="frame color-gray" style="left: 880px; top: 400px;" data-page="welcome.html"> <!-- welcome 0 -->
+        <h2>Welcome</h2>
+        <img src="altsite/entrypng/welcome.png" alt="welcome">
+    </div>
+    <div class="frame color-gray" style="left: -50px; top: -30px;" data-page="bio.html"> <!-- me 1 -->
+        <h2>Me</h2>
+        <img src="altsite/entrypng/me.png" alt="me">
+    </div>
+    <div class="frame color-gray" style="left: 520px; top: -580px;" data-page="thesite.html"> <!-- the site 2 -->
+        <h2>The Site</h2>
+        <img src="altsite/entrypng/me.png" alt="the site">
+    </div>
+    <div class="frame color-green" style="left: 1600px; top: -390px;" data-page="internetstuf.html"> <!-- internet 3 -->
+        <h2>Internet</h2>
+        <img src="altsite/entrypng/warp.png" alt="my site">
+    </div>
+    <div class="frame color-gray" style="left: 50px; top: 100px; max-width: 90px;" data-page="/altsite/juststatus.html"> <!-- status 4 -->
+        <h2>Status</h2>
+        <img src="assets/placeholder.png" style="size: 90px 90px;" alt="status">
+    </div>
+    <div class="frame color-purple" style="left: 520px; top: 1735px; display:none;" data-page="/wilds.html"> <!-- wilds 5 -->
+        <h2>Outer Wilds</h2>
+        <img src="altsite/entrypng/wilds.jpg" alt="outer wilds">
+    </div>
+    <div class="frame color-blue" style="left: 83px; top: -1280px;" data-page="konsole.html"> <!-- console 6 -->
+        <h2>Console</h2>
+        <img src="altsite/entrypng/me.png" alt="a console?">
+    </div>
+    <div class="frame color-green" style="left: 1786px; top: -490px;" data-page="internetstuf2.html"> <!-- other sites 7 -->
+        <h2>Other Sites!</h2>
+        <img src="altsite/entrypng/warp.png" alt="other sites">
+    </div>
+    <div class="frame color-green" style="left: 1586px; top: 120px;" data-page="foryou.html"> <!-- for you 8 -->
+        <h2>For You</h2>
+        <img src="altsite/entrypng/warp.png" alt="stuffs for you">
+    </div>
+    <div class="frame color-orange" style="left: -700px; top: 370px;" data-page="friends.html"> <!-- friends 9 -->
+        <h2>Friends</h2>
+        <img src="altsite/entrypng/friends.png" alt="friends">
+    </div>
+    <div class="frame color-orange" style="left: -1000px; top: 840px;" data-page="photo.html"> <!-- photo 10 -->
+        <h2>Photos</h2>
+        <img src="altsite/entrypng/photo.jpg" alt="photography">
+    </div>
+    <div class="frame color-orange" style="left: -1245px; top: 800px;" data-page="video.html"> <!-- video 11 -->
+        <h2>Videos</h2>
+        <img src="altsite/entrypng/video.jpg" alt="video">
+    </div>
+    <div class="frame color-green" style="left: 2310px; top: -110px;" data-page="https://kaiasei.atabook.org/"> <!-- guestbook 12 -->
+        <h2>Guestbook</h2>
+        <img src="altsite/entrypng/video.jpg" alt="video">
+    </div>
+    <div class="frame color-green" style="left: 1900px; top: -1000px; display:none;" data-page="internetstuf.html"> <!-- manifesto 13 -->
+        <h2>Manifesto</h2>
+        <img src="altsite/entrypng/warp.png" alt="indie web manifesto">
+    </div>
+    <div class="frame color-purple" style="left: 980px; top: 1500px; max-width: 120%;" data-page="videogames.html"> <!-- video games 14 -->
+        <h2>Video Games</h2>
+        <img src="altsite/entrypng/welcome.png" alt="videogames">
+    </div>
+    <div class="frame color-purple" style="left: 860px; top: 2020px;" data-page="celeste.html"> <!-- celeste 15 -->
+        <h2>Celeste</h2>
+        <img src="altsite/entrypng/welcome.png" alt="celeste">
+    </div>
+    <div class="frame color-purple" style="left: 1535px; top: 1860px;" data-page="minecraft.html"> <!-- minecraft 16 -->
+        <h2>Minecraft</h2>
+        <img src="altsite/entrypng/welcome.png" alt="minecraft">
+    </div>
+    <div class="frame color-yellow" style="left: -560px; top: -570px;" data-page="music.html"> <!-- music 17 -->
+        <h2>Music</h2>
+        <img src="altsite/entrypng/welcome.png" alt="music">
+    </div>
+    <div class="frame color-gray" style="left: 475px; top: -460px; max-width: 90px;" data-page="musicplayer.html"> <!-- musicplayer 18 -->
+        <h2>Audio Player</h2>
+        <img src="assets/placeholder.png" style="size: 90px 90px;" alt="musicplayer">
+    </div>
+
+  </div>
+</div>
+</div>
+<div id="gridOverlayCenter"></div>
+</div>
+
+<script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
+<script>
+const viewport = document.getElementById('viewport');
+const content = document.getElementById('content');
+const parallax = document.getElementById('parallax');
+
+let isPanning = false;
+let startX = 0, startY = 0;
+let translateX = 0, translateY = 0;
+let scale = 1;
+let targetScale = 1;
+let zoomAnimating = false;
+
+let zoomAnchorX = 0;
+let zoomAnchorY = 0;
+
+viewport.addEventListener('mousedown', (e) => {
+  isPanning = true;
+  startX = e.clientX - translateX;
+  startY = e.clientY - translateY;
+  viewport.style.cursor = "grabbing";
+});
+
+viewport.addEventListener('mouseup', () => {
+  isPanning = false;
+  viewport.style.cursor = "grab";
+});
+
+viewport.addEventListener('mouseleave', () => {
+  isPanning = false;
+  viewport.style.cursor = "grab";
+});
+
+viewport.addEventListener('mousemove', (e) => {
+  if (!isPanning) return;
+  translateX = e.clientX - startX;
+  translateY = e.clientY - startY;
+  updateTransform();
+});
+
+viewport.addEventListener('wheel', (e) => {
+  e.preventDefault();
+
+  const scaleAmount = -e.deltaY * 0.001;
+  const newTargetScale = Math.min(Math.max(0.1, targetScale + scaleAmount), 5);
+
+  const rect = viewport.getBoundingClientRect();
+  zoomCursorX = e.clientX - rect.left;
+  zoomCursorY = e.clientY - rect.top;
+
+  zoomAnchorX = (zoomCursorX - translateX) / scale;
+  zoomAnchorY = (zoomCursorY - translateY) / scale;
+
+  targetScale = newTargetScale;
+
+  if (!zoomAnimating) {
+    zoomAnimating = true;
+    animateZoom();
+  }
+
+  const zoomSound = document.getElementById('zoomSound');
+  if (zoomSound && zoomSound.paused) {
+  zoomSound.currentTime = 0;
+  zoomSound.play();
+  }
+
+});
+
+document.querySelectorAll(".frame").forEach(frame => {
+  frame.addEventListener("click", () => {
+    clickSound.currentTime = 0;
+    clickSound.play();
+
+    const targetPage = frame.getAttribute("data-page") || "default.html";
+
+    const windowEl = document.createElement("div");
+    windowEl.className = "popup-window";
+    windowEl.style.animation = "crtStartup 0.4s forwards";
+
+    const headerEl = document.createElement("div");
+    headerEl.className = "popup-header";
+    headerEl.styleanimation = "flicker .005s infinite;"
+
+    const titleEl = document.createElement("span");
+    const frameTitle = frame.querySelector("h2")?.textContent || "Untitled";
+    titleEl.textContent = frameTitle;
+
+
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = " × ";
+    closeBtn.onclick = () => {
+      const clickOutSound = document.getElementById('clickOutSound');
+      clickOutSound.currentTime = 0;
+      clickOutSound.play();
+
+      // Add animation class
+      windowEl.style.animation = "crtShutdown 0.4s forwards";
+
+      // Remove after animation completes
+      setTimeout(() => {
+        windowEl.remove();
+      }, 400);
+    };
+    headerEl.appendChild(titleEl);
+    headerEl.appendChild(closeBtn);
+
+    const contentEl = document.createElement("div");
+    contentEl.className = "popup-content";
+
+    if (targetPage === "juststatus.html") {
+      const iframe = document.createElement("iframe");
+      iframe.src = targetPage;
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      
+      contentEl.appendChild(iframe);
+      windowEl.style.width = "25vw"; //size
+      windowEl.style.height = "14vh"; //size
+      windowEl.style.top = "10vh"; //pos
+      windowEl.style.left = "15vh"; //pos
+      windowEl.style.resize = "none"; //allow resiz
+      //no scroll
+      windowEl.style.overflow = "hidden"; 
+      contentEl.style.overflow = "hidden";
+
+    } else if (targetPage === "konsole.html") { 
+      const iframe = document.createElement("iframe");
+      iframe.src = targetPage;
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      
+      contentEl.appendChild(iframe);
+      windowEl.style.width = "25vw"; //size
+      windowEl.style.height = "14vh"; //size
+      windowEl.style.top = "10vh"; //pos
+      windowEl.style.left = "15vh"; //pos
+      windowEl.style.resize = "none"; //allow resiz
+      //no scroll
+      windowEl.style.overflow = "hidden"; 
+      contentEl.style.overflow = "hidden";
+    } else if (targetPage === "musicplayer.html") { 
+      const iframe = document.createElement("iframe");
+      iframe.src = targetPage;
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      
+      contentEl.appendChild(iframe);
+      windowEl.style.width = "22vw"; //size
+      windowEl.style.height = "18.5vh"; //size
+      windowEl.style.top = "10vh"; //pos
+      windowEl.style.left = "15vh"; //pos
+      windowEl.style.resize = "none"; //allow resiz
+      //no scroll
+      windowEl.style.overflow = "hidden"; 
+      contentEl.style.overflow = "hidden";
+    } else {
+      const iframe = document.createElement("iframe");
+      iframe.src = targetPage;
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "none";
+      
+      contentEl.appendChild(iframe);
+      windowEl.style.width = "80vw"; //size
+      windowEl.style.height = "80vh"; //size
+      windowEl.style.top = "10vh"; //pos
+      windowEl.style.left = "10vw"; //pos
+      windowEl.style.resize = "both";
+    } 
+
+    windowEl.appendChild(headerEl);
+    windowEl.appendChild(contentEl);
+    document.body.appendChild(windowEl);
+
+    makeDraggable(windowEl, headerEl);
+  });
+});
+
+function animateZoom() {
+  const zoomSpeed = 0.15; // adjust to zoom speed
+
+  const scaleDiff = targetScale - scale;
+  scale += scaleDiff * zoomSpeed;
+
+  translateX = zoomCursorX - zoomAnchorX * scale;
+  translateY = zoomCursorY - zoomAnchorY * scale;
+
+  updateTransform();
+
+  if (Math.abs(scaleDiff) < 0.001) {
+    scale = targetScale;
+    updateTransform();
+    zoomAnimating = false;
+    return;
+  }
+
+  requestAnimationFrame(animateZoom);
+}
+
+
+function updateTransform() {
+  content.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  parallax.style.backgroundPosition = `${translateX * 0.2}px ${translateY * 0.2}px`;
+}
+
+
+// Hover sound
+const hoverSound = document.getElementById("hoverSound");
+document.querySelectorAll(".frame").forEach(frame => {
+  frame.addEventListener("mouseenter", () => {
+    hoverSound.currentTime = 0;
+    hoverSound.play();
+  });
+});
+
+function closeLogWindow() {
+  const clickOutSound = document.getElementById('clickOutSound');
+  clickOutSound.currentTime = 0;
+  clickOutSound.play();
+  document.getElementById('logWindow').style.display = "none";
+}
+
+
+
+function makeDraggable(dragTarget, handle) {
+  let offsetX = 0;
+  let offsetY = 0;
+  let isDragging = false;
+
+  handle.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - dragTarget.offsetLeft;
+    offsetY = e.clientY - dragTarget.offsetTop;
+    document.body.style.userSelect = 'none';
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    document.body.style.userSelect = '';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      let newLeft = (e.clientX - offsetX);
+      let newTop = (e.clientY - offsetY);
+
+      // Get window size and element size
+      const elWidth = dragTarget.offsetWidth;
+      const elHeight = dragTarget.offsetHeight;
+
+      // Clamp all sides (50px padding)
+      if (newLeft < 30) newLeft = 30;
+      if (newTop < 30) newTop = 30;
+
+      dragTarget.style.left = newLeft + 'px';
+      dragTarget.style.top = newTop + 'px';
+    }
+  });
+}
+
+// Get the container that holds the entries
+const frames = document.querySelectorAll('.frame');
+const lineContainer = document.getElementById('line-container');
+
+// Example connections: list of pairs of frame indexes
+// For example: connect frame 0 to frame 1, and frame 1 to frame 2
+const connections = [
+  [0, 1],
+  [1, 2],
+  [2, 3],
+  [2, 6],
+  [3, 7],
+  [0, 8],
+  [3, 8],
+  [1, 9],
+  [9, 10],
+  [9, 11],
+  [3,12],
+  [7,13],
+  [5,14],
+  [14,15],
+  [14,16],
+  [0,14],
+  [1, 17]
+
+];
+
+// For each connection, create a line
+connections.forEach(([fromIdx, toIdx]) => {
+  const from = frames[fromIdx];
+  const to = frames[toIdx];
+
+  // Skip drawing if either frame is hidden
+  if (from.style.display === "none" || to.style.display === "none") {
+    return; // skip this line
+  }
+
+  // Get positions relative to the content container
+  const fromRect = from.getBoundingClientRect();
+  const toRect = to.getBoundingClientRect();
+  const contentRect = content.getBoundingClientRect();
+
+  const x1 = from.offsetLeft + from.offsetWidth / 2;
+  const y1 = from.offsetTop + from.offsetHeight / 2;
+  const x2 = to.offsetLeft + to.offsetWidth / 2;
+  const y2 = to.offsetTop + to.offsetHeight / 2;
+
+  // Compute distance and angle
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+  // Create the line image
+  const line = document.createElement('div');
+  line.className = 'connection-line';
+
+  // Style the image to stretch and rotate
+  line.style.left = `${x1}px`;
+  line.style.top = `${y1}px`;
+  line.style.width = `${distance}px`;
+  line.style.transform = `rotate(${angle}deg)`;
+
+
+  lineContainer.appendChild(line);
+});
+
+let mouseDownTime = 0;
+
+document.addEventListener('mousedown', () => {
+  mouseDownTime = Date.now();
+}, true);
+
+document.addEventListener('mouseup', (e) => {
+  const duration = Date.now() - mouseDownTime;
+  
+  // e.button === 0 ensures it's the left mouse button
+  if (duration < 100 && e.button === 0) {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+  }
+}, true);
+
+function drawConnections() {
+  // Clear old lines
+  lineContainer.innerHTML = '';
+
+  const visibleFrames = Array.from(document.querySelectorAll('.frame')).filter(f => f.style.display !== 'none');
+
+  // Only draw lines for visible frames
+  connections.forEach(([fromIdx, toIdx]) => {
+    const from = visibleFrames.find(f => f === frames[fromIdx]);
+    const to = visibleFrames.find(f => f === frames[toIdx]);
+    if (!from || !to) return;
+
+    const x1 = from.offsetLeft + from.offsetWidth / 2;
+    const y1 = from.offsetTop + from.offsetHeight / 2;
+    const x2 = to.offsetLeft + to.offsetWidth / 2;
+    const y2 = to.offsetTop + to.offsetHeight / 2;
+
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    const line = document.createElement('div');
+    line.className = 'connection-line';
+    line.style.left = `${x1}px`;
+    line.style.top = `${y1}px`;
+    line.style.width = `${distance}px`;
+    line.style.transform = `rotate(${angle}deg)`;
+
+    lineContainer.appendChild(line);
+  });
+}
+
+window.addEventListener("message", (event) => {
+  if (event.data?.type === "showEntry") {
+    const command = event.data.command.toLowerCase();
+
+    const map = {
+      "wilds": 5,
+      "Wilds": 5,
+      "manifesto": 13,
+      "Manifesto": 13
+    };
+
+    const idx = map[command];
+    if (idx !== undefined) {
+      const frames = window.parent.document.querySelectorAll(".frame");
+      const frame = frames[idx];
+      const revealSound = window.parent.document.getElementById("revealSound");
+      frame.style.display = "block";
+      frame.style.opacity = "0";
+      void frame.offsetWidth; // trigger reflow
+      frame.style.opacity = "1";
+
+      // Wait until fade completes, then draw connections
+      if (typeof drawConnections === "function") {
+        setTimeout(() => {
+          if (revealSound) {
+            revealSound.volume = 0.2;  // quieter
+            revealSound.currentTime = 0;
+            revealSound.play();
+          }
+          drawConnections();
+        }, 500); // match the CSS transition duration
+      }
+      // Only play the sound if it was hidden before
+      if (frame.style.display === "none") {
+        frame.style.display = "block";
+        if (window.parent.drawConnections) {
+          window.parent.drawConnections();
+        }
+      }
+    }
+    }
+});
+window.addEventListener("DOMContentLoaded", () => {
+  drawConnections()
+});
+
+</script>
+
+
+</body>
+</html>

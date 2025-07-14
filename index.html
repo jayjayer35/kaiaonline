@@ -48,17 +48,17 @@ body {
 }
 .toggle-sidebar {
   position: fixed;
-  top: 10px;
-  left: 10px;
+  top: 3px;
+  left: 3px;
   z-index: 1100;
   background: rgba(92, 31, 107, 0.432);
   color: #e2aadb;
   border: 1px solid #e2aadb;
-  border-radius: 20%;
+  border-radius: 0%;
   padding: 0.4rem 0.6rem;
   cursor: pointer;
-  font-size: 1rem;
-  line-height: 1rem;
+  font-size: .5rem;
+  line-height: .5rem;
 }
 .sidebar:not(.hidden) + .toggle-sidebar {
   left: 250rem; 
@@ -475,10 +475,10 @@ cursor: pointer;
           <summary>home</summary>
           <ul>
             <li><a href="welcome.html" target="main-frame" onclick=" toggleSidebar()">welcome!</a></li>
-            <li><a href="updates.html" target="main-frame" class="flashing-text" onclick=" toggleSidebar()">updates</a></li>
+            <li><a href="updates.html" target="main-frame" onclick=" toggleSidebar()">updates</a></li>
             <li><a href="thesite.html" target="main-frame" onclick=" toggleSidebar()">the site</a></li>
             <li><a href="https://kaiasei.atabook.org/" target="main-frame" class="gradient-text" onclick=" toggleSidebar()">guestbook!</a></li>
-            <li><a href="altsite/log.html" target="_self" onclick=" toggleSidebar()">alt. site view</a></li>
+            <li><a href="indexrm.html" target="_parent" class="flashing-text" onclick=" toggleSidebar();togglePlay()">rumor mode</a></li>
           </ul>
         </details>
       </li>
@@ -900,7 +900,11 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById('mail').volume = 0.2;
   document.getElementById('click').volume = 0.2;
   toggleSidebar();
-  
+
+  // new code to hide toggle button on alt site view click
+  document.getElementById('alt-site-link').addEventListener('click', () => {
+    document.querySelector('.toggle-sidebar').style.display = 'none';
+  });
 });
 </script>
 </body>
