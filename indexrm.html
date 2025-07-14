@@ -394,8 +394,9 @@ box-sizing: border-box;
 }
 </style>
 </head>
-<body>
 
+<body>
+<div id="siteContainer">
 <!-- audio -->
 <audio id="hoverSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
 <audio id="clickSound" src="altsite/fx/1selectentry.wav" preload="auto"></audio>
@@ -504,7 +505,7 @@ box-sizing: border-box;
 </div>
 </div>
 <div id="gridOverlayCenter"></div>
-</div>
+
 
 <script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
 <script>
@@ -895,11 +896,42 @@ window.addEventListener("message", (event) => {
       "jacob": [5],
       "ideas": [13],
       "windows98": [19],
+
+      "sudo shutdown now": "kill",
       "FreedomDive": [5, 13, 19]  //master password
     };
 
     const idxList = map[command];
     if (idxList !== undefined) {
+      if (idxList === "kill") {
+        // Play shutdown sound
+        const shutdownSound = new Audio("assets/poweroff.mp3");
+        shutdownSound.volume = 0.4; // adjust if you want
+        shutdownSound.play();
+
+        // Animate all popup windows with CRT shutdown
+        const popups = document.querySelectorAll(".popup-window");
+        popups.forEach(popup => {
+          popup.style.animation = "crtShutdown 0.4s forwards";
+        });
+
+        // Animate main site container with CRT shutdown
+        const siteContainer = document.getElementById("siteContainer");
+        siteContainer.style.animation = "crtShutdown 0.4s forwards";
+
+        // After animation, wipe everything and set to black
+        setTimeout(() => {
+          siteContainer.innerHTML = "";
+          siteContainer.style.background = "black";
+          document.body.style.background = "black";
+          document.documentElement.style.background = "black";
+          document.title = "";
+        }, 400);
+
+        return;
+      }
+
+
       idxList.forEach(idx => {
         const frames = window.parent.document.querySelectorAll(".frame");
         const frame = frames[idx];
@@ -935,6 +967,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
 </script>
 
-
+</div>
 </body>
 </html>
