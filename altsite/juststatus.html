@@ -14,7 +14,7 @@
     width: 100vw;
     height: 100vh;
     margin: 0;
-    padding: 1em;
+    padding: .5em;
     background-color: rgba(36, 0, 99, 0.2);
     border: 0;
     font-family: 'Courier New', Courier, monospace;
@@ -60,6 +60,11 @@
     text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
   }
   }
+  @keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
 </style>
 </head>
 <body>
@@ -69,28 +74,47 @@
   </div>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Wait for status.cafe to populate the text
-      setTimeout(() => {
-        const contentEl = document.getElementById("statuscafe-content");
-        const originalText = contentEl.textContent.trim();
-        contentEl.textContent = ""; // clear text
+    const typeSound = new Audio("fx/shiplog_highlight2.wav");
+    typeSound.volume = 0.02;
 
-        let i = 0;
+    function waitForStatusText(callback) {
+      const contentEl = document.getElementById("statuscafe-content");
+      const text = contentEl.textContent.trim();
 
-        // Make the element visible now that we start typing
-        contentEl.style.visibility = "visible";
+      if (text.length > 0) {
+        callback(text, contentEl);
+      } else {
+        setTimeout(() => waitForStatusText(callback), 100); // check again in 100ms
+      }
+    }
 
-        function typeWriter() {
-          if (i < originalText.length) {
-            contentEl.textContent += originalText.charAt(i);
-            i++;
-            setTimeout(typeWriter, 50); // typing speed in ms
-          }
+    waitForStatusText((originalText, contentEl) => {
+      contentEl.textContent = "";
+
+      const cursor = document.createElement("span");
+      cursor.textContent = "_";
+      cursor.style.animation = "blink .25s infinite";
+      contentEl.appendChild(cursor);
+
+      contentEl.style.visibility = "visible";
+      setTimeout(5);
+      let i = 0;
+      function typeWriter() {
+        if (i < originalText.length) {
+          const charSpan = document.createTextNode(originalText.charAt(i));
+          contentEl.insertBefore(charSpan, cursor);
+
+          const sound = typeSound.cloneNode();
+          sound.play().catch(() => {});
+
+          i++;
+          setTimeout(typeWriter, 45);
         }
+      }
 
-        typeWriter();
-      }, 400); // adjust delay if needed
+      typeWriter();
     });
+  });
   </script>
 </body>
 </html>
