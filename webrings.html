@@ -2,41 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>My Webrings</title>
+  <title>Webrings</title>
   <link rel="stylesheet" href="galactic-webring.css">
   <style>
     body {
-      background-color: #121212;
-      color: #f0f0f0;
-      font-family: monospace;
+      background: transparent;
+      color: white;
+      font-family: sans-serif;
       margin: 0;
-      padding: 2rem;
-    }
-
-    summary {
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    details {
-      border: 2px solid #555;
       padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 10px;
-      background: #1a1a1a;
-      max-width: 600px;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      width: fit-content;
     }
 
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      margin: 0.75rem 0;
+    .card h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+      color: #aaf;
     }
 
     a {
-      color: #77ddff;
+      color: #aaf;
       text-decoration: none;
       margin: 0 0.5rem;
     }
@@ -46,38 +45,37 @@
     }
 
     object {
-      background: #222;
-      border-radius: 8px;
+      width: 100px;
+      height: 100px;
     }
   </style>
 </head>
 <body>
-  <main>
-    <details open>
-      <summary>🌐 Webrings I'm Part Of</summary>
-      <ul>
-        <!-- Retronauts Webring -->
-        <li>
-          <strong>Retronauts Webring:</strong>
-          <a href="https://webring.dinhe.net/prev/https://kaia.starscene.com">&lt;&lt;&lt;</a>
-          <a href="https://webring.dinhe.net/">Home</a>
-          <a href="https://webring.dinhe.net/next/https://kaia.starscene.com">&gt;&gt;&gt;</a>
-        </li>
 
-        <!-- Melonland Surf Club -->
-        <li>
-          <strong>Melonland Surf Club:</strong><br>
-          <object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#383838" type="image/svg+xml" style="width: 100px; height: 100px;"></object>
-        </li>
+  <div class="card">
+    <h2>Retronauts Webring</h2>
+    <a href='https://webring.dinhe.net/prev/https://kaia.starscene.com'>&lt;&lt;&lt;</a>
+    <a href="https://webring.dinhe.net/">Home</a>
+    <a href='https://webring.dinhe.net/next/https://kaia.starscene.com'>&gt;&gt;&gt;</a>
+  </div>
 
-        <!-- Galactic Webring -->
-        <li id="galactic-webring">
-          <strong>Galactic Webring:</strong><br>
-          <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
-          <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
-        </li>
-      </ul>
-    </details>
-  </main>
+  <div class="card">
+    <h2>Hotline Webring</h2>
+    <a href='https://hotlinewebring.club/kaiaonline/previous'>&lt;&lt;&lt;</a>
+    <a href="https://hotlinewebring.club/">Home</a>
+    <a href='https://hotlinewebring.club/kaiaonline/next'>&gt;&gt;&gt;</a>
+  </div>
+
+  <div class="card">
+    <h2>Melonland Surf Club</h2>
+    <object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#383838" type="image/svg+xml"></object>
+  </div>
+
+  <div class="card" id="galactic-webring">
+    <h2>Galactic Webring</h2>
+    <script src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
+    <script src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
+  </div>
+
 </body>
 </html>
