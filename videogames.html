@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Video Games</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Courier New", monospace;
+    color: #f0e6d2;
+    background: #0b0c2a url('assets/forpara.jpg');
+    background-repeat: repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    height: 100vh;  
+  }
+  header {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: rgba(116, 116, 116, 0.479);
+    border-bottom: 2px solid #000d58;
+  }
+  header h1 {
+    font-size: 2rem;
+    margin: 0;
+    color: #000d58;
+  }
+  .content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background: rgba(56, 92, 109, 0.774);
+    border-radius: 8px;
+  }
+  .content img { /* image borders */
+    max-width: 100%;
+    border: 2px solid #092e3f;  /* change px here */
+    border-radius: 4px; /* change px radius here */
+    display: block;
+    margin: .1rem auto;
+  }
+  h2 {
+    color: #a878a0;
+    text-align: center;
+  }
+  p {
+    line-height: 1.6;
+  }
+  footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #1b124d;
+  }
+  .star {
+    animation: twinkle 2s infinite alternate;
+  }
+  @keyframes twinkle {
+    0% { opacity: 0.9; }
+    100% { opacity: 1; }
+  }
+  p {
+    text-align: center;
+  }
+  .flex-container {
+    display: flex;
+    gap: 1rem; /* space between image and text */
+    align-items: stretch; /* makes them same height */
+    }
+
+    .side-image {
+    flex: 1 1 50%; /* grow, shrink, base 50% */
+    object-fit: cover; /* ensures it fills the area */
+    max-width: 50%;
+    height: auto; /* allows image to scale */
+    }
+
+    .side-text {
+    flex: 1 1 50%;
+    background: rgba(63, 25, 44, 0.726); /* or your existing content style */
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* center text vertically */
+    }
+
+</style>
+</head>
+<body>
+  <div class="content flex-container">
+    <div class="side-text">
+        <h1>on video games</h2>
+        <p style="text-align: left;">
+        video games are definitely one of the top artforms of all time, at least in my opinion. when do you really get to immerse yourself in something so much that you ARE that character?<br><br>
+        anyway, video games definitely something i hold near and dear to my heart. great stories have been told through them, 
+        friends have been made through them, and they make me cry sometimes, so there's that.<br><br>
+
+        to the right is my beautiful computer, as of july 11th at least, it will probably change throughout time. <br><br>
+
+        my first computer i built in like, 2016. it was pretty bad and got outdated within a couple years, but it tought me how to build a pc. before my computer i had this 
+        small dell laptop i got after graduating elementary school, that thing was my whole life, i played so much minecraft on that thing. although the first computer i ever used 
+        was the family computer when i was little, how little? i dont know. but i do remember using it and playing like coolmathgames all the time. goodstuff
+        </p>
+
+        <p>by the way, in the console, type <em style="color: rgb(47, 114, 202);">wilds</em> to find a special hidden page</p>
+    </div>
+    <img src="assets/gamestationbetter.jpg" alt="example image" class="side-image">
+    </div>
+<footer></footer>
+
+
+  
+  <script>
+    document.addEventListener('click', () => {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+}, true);
+  </script>
+</body>
+</html>

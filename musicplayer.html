@@ -75,7 +75,6 @@ button:hover {
   width: 0%;
 }
 #volumeSlider {
-  -webkit-appearance: none;
   height: 4px;
   background: rgba(77,121,195,0.5);
   outline: none;
@@ -98,7 +97,6 @@ button:hover {
   border: none;
 }
 #volumeSlider {
-  -webkit-appearance: none;
   width: 100px;
   height: 8px;
   background: rgba(255,255,255,0.1);
@@ -179,10 +177,14 @@ const songs = [
   { title: "The Ancient Glade - Andrew Prahlow", file: "music/glade.mp3" },
   { title: "Space - Andrew Prahlow", file: "music/space.mp3" },
   { title: "The Sun Station - Andrew Prahlow", file: "music/sun.mp3" },
-  { title: "Castaways - Andrew Prahlow", file: "music/castaways.mp3" }
+  { title: "Castaways - Andrew Prahlow", file: "music/castaways.mp3" },
+  { title: "Beacon - Disasterpiece |           Hidden Song", file: "music/beacon.mp3", hidden: true }
 ];
 
-let currentSong = Math.floor(Math.random() * songs.length);
+const visibleSongs = songs.filter(s => !s.hidden);
+let currentSong = songs.indexOf(
+  visibleSongs[Math.floor(Math.random() * visibleSongs.length)]
+);
 const audio = new Audio();
 audio.volume = 0.07;
 const titleEl = document.getElementById('title');
@@ -215,15 +217,16 @@ function playPause() {
 
 // Next song with recent check
 function nextSong() {
+  const visibleSongs = songs.filter(s => !s.hidden);
   let tries = 0;
   let newSong;
   do {
-    newSong = Math.floor(Math.random() * songs.length);
+    newSong = Math.floor(Math.random() * visibleSongs.length);
     tries++;
-    // In case playlist is very small, break after 10 tries
   } while (recentSongs.includes(newSong) && tries < 10);
 
-  currentSong = newSong;
+  // Map back to the real index in the original songs array
+  currentSong = songs.indexOf(visibleSongs[newSong]);
   addToRecent(currentSong);
   loadSong(currentSong);
   audio.play();
@@ -287,9 +290,27 @@ volumeSlider.addEventListener('input', () => {
   audio.volume = volumeSlider.value;
 });
 
-loadSong(currentSong);
-audio.play();
-playBtn.textContent = "⏸";
+if (!window.musicStarted) {
+  window.musicStarted = true;
+  loadSong(currentSong);
+  audio.play();
+  playBtn.textContent = "⏸";
+} else {
+  titleEl.textContent = songs[currentSong].title;
+}
+
+window.addEventListener("message", (event) => {
+  if (event.data?.type === "playSong") {
+    const songTitle = event.data.title;
+    const song = songs.find(s => s.title === songTitle);
+    if (song) {
+      audio.src = song.file;
+      titleEl.textContent = song.title;
+      audio.play();
+      playBtn.textContent = "⏸";
+    }
+  }
+});
 </script>
 
 </body>

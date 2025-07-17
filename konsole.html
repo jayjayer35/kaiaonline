@@ -63,7 +63,7 @@
           // Optionally: add response
           const response = document.createElement("div");
           response.className = "line";
-          response.textContent = "Command received: " + value;
+          response.textContent = "Command sent: " + value;
           handleCommand(value.toLowerCase());
           consoleDiv.insertBefore(response, document.getElementById("input-line"));
         }

@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>log site test 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
 <style>
   html, body {
     margin: 0;
@@ -18,7 +19,7 @@
     background-repeat: repeat;
     background-position: center center;
     background-size: cover;
-    font-family: monospace;
+    font-family: 'Space Mono' , monospace;
   }
 
 #viewportContainer {
@@ -80,7 +81,20 @@
     border: 0px solid #000;
     transition: transform 0.5s ease, filter 0.5s ease, box-shadow 0.5s ease;
   }
+  .frame-small {
+  font-size: 14px;
+  padding: 2px;
+  }
 
+  .frame-normal {
+    font-size: 20px;
+    padding: 3px;
+  }
+
+  .frame-large {
+    font-size: 24px;
+    padding: 4px;
+  }
   .frame.hidden {
     display: none;
     opacity: 0;
@@ -107,7 +121,15 @@
     83%  { background: #c26dff; } /* indigo */
     100% { background: #ff6868; } /* back to red for smooth loop */
   }
-
+@keyframes rainbowColors {
+  0%   { color: #ff6868; } /* orange */
+  16%  { color: #ffb163; } /* blue */
+  33%  { color: #ffff6f; } /* green */
+  50%  { color: #6dff6d; } /* purple */
+  66%  { color: #6a6aff; } /* red */
+  83%  { color: #c26dff; } /* yellow */
+  100% { color: #ff6868; } /* back to orange */
+}
   .frame h2 {
     margin: 0 0 10px 0;
     font-size: 20px;
@@ -129,8 +151,8 @@
     transform: scale(1.2);
     z-index: 10;
     filter: brightness(1.25);
-    box-shadow: 0 0 6px #9c9c9c85;
   }
+
  #parallax {
   position: absolute;
   top: 0; left: 0; 
@@ -160,7 +182,7 @@
   border: 2px solid #4d79c3;
   box-shadow: 0 0 20px #4d79c3;
   color: #eee;
-  font-family: monospace;
+  font-family: 'Space Mono' , monospace;
   animation: flicker .005s infinite;
   z-index: 10000;
   overflow: hidden;
@@ -207,7 +229,7 @@
   box-shadow: 0 0 5px #010d1f;
   border: 2px solid #4d79c3;
   color: #4d79c3;
-  font-family: monospace;
+  font-family: 'Space Mono' , monospace;
   font-size: 18px;
   cursor: pointer;
   background: rgba(0,0,0,0.5);
@@ -305,9 +327,8 @@ box-sizing: border-box;
   background: rgba(10, 10, 20, 0.9);
   border: 2px solid #4d79c3;
   box-shadow: 0 0 10px #4d79c3;
-  animation: flicker .05s infinite;
-  color: #f6f5ff;
-  font-family: monospace;
+  color: #4d79c3;
+  font-family: 'Space Mono' , monospace;
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -318,25 +339,41 @@ box-sizing: border-box;
 
 @keyframes flicker {
   0% {
-    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+    text-shadow: 0 0 4px #00eeffa1, 0 0 4px #00eeffa1;
   }
   20% {
-    text-shadow: none;
+    text-shadow: 0 0 2px #00eeffa1, 0 0 2px #00eeffa1;
   }
   40% {
-    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+    text-shadow: 0 0 4px #00eeffa1, 0 0 4px #00eeffa1;
   }
   60% {
-    text-shadow: none;
+    text-shadow: 0 0 1px #00eeffa1, 0 0 1px #00eeffa1;
   }
   80% {
-    text-shadow: 0 0 4px #00eeff, 0 0 4px #00eeff;
+    text-shadow: 0 0 3px #00eeffa1, 0 0 3px #00eeffa1;
   }
   100% {
-    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+    text-shadow: 0 0 4px #00eeffa1, 0 0 4px #00eeffa1;
   }
 }
-
+@keyframes lightflicker {
+  0% {
+    text-shadow: 0 0 3px #9ed0ff96, 0 0 3px #9ed0ff96;
+  }
+  25% {
+    text-shadow: 0 0 1px #9ed0ff96, 0 0 1px #9ed0ff96;
+  }
+  50% {
+    text-shadow: 0 0 0px #9ed0ff96, 0 0 0px #9ed0ff96;
+  }
+  75% {
+    text-shadow: 0 0 3px #9ed0ff96, 0 0 3px #9ed0ff96;
+  }
+  100% {
+    text-shadow: 0 0 1px #9ed0ff96, 0 0 1px #9ed0ff96;
+  }
+}
 .popup-header {
   background: rgba(0,0,0,0.3);
   padding: 1px;
@@ -344,18 +381,20 @@ box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'Space Mono' , monospace;
   font-size: 1.5rem;
   font-weight: 400;
-  border: #4d79c3;
+  border: #13336b;
   border-radius: 1px;
+  animation: lightflicker .005s infinite;
 }
 
 .popup-header button {
   background: none;
   border: 2px solid #4d79c3;
-  color: #4d79c3;
-  font-size: 18px;
+  color: #34548b;
+  font-family: 'Space Mono' , monospace;
+  font-size: 20px;
   cursor: pointer;
   padding: 2px 6px;
   animation: flicker .005s infinite;
@@ -387,11 +426,83 @@ box-sizing: border-box;
   border: 29px solid rgba(10, 10, 20, 0.76);
   z-index: 5000;
   outline: 4px solirgb(208, 255, 0)ck;
-  outline-offset: -4px; /* moves outline inside the element's border box */
-  /* interior glow */
+  outline-offset: -4px; 
+
   box-shadow: inset 0 0 5px #4d79c3, 
               inset 0 0 5px rgba(77,121,195,0.6);
 }
+
+.color-orange { background: #c37c4d; color: #c37c4d; }
+.color-blue   { background: #4d79c3; color: #4d79c3; }
+.color-green  { background: #4dc37c; color: #4dc37c; }
+.color-purple { background: #844dc3; color: #844dc3; }
+.color-gray   { background: #a3a3a3; color: #a3a3a3; }
+.color-red    { background: #c34d4d; color: #c34d4d; }
+.color-yellow { background: #c3b74d; color: #c3b74d; }
+.color-special { background: #08ffd6; color: #08ffd6; animation: fadeColors 2s linear infinite;}
+.color-kris { background: #FF5733; color: #FF5733; }
+.color-jacob { background: #7ba5b3; color: #7ba5b3; }
+.color-steven { background: #55ff00; color: #55ff00; }
+
+.question-rainbow {
+  animation: rainbowColors 2s linear infinite;
+  color: #08ffd6;/
+}
+
+
+.frame:not(:has(img))::after {
+  content: "?";
+  display: block;
+  width: 150px;
+  height: 160px;
+  background: #000;
+  font-size: 90px;
+  line-height: 150px;
+  text-align: center;
+  margin: 10px auto 0;
+}
+
+.frame.color-special:not(:has(img))::after {
+  background: #000; /* stays black background */
+  color: #08ffd6; /* fallback */
+  animation: rainbowColors 2s linear infinite;
+}
+/* size adjustments for small frames */
+.frame-small:not(:has(img))::after {
+  width: 90px;
+  height: 90px;
+  font-size: 54px;
+  line-height: 90px;
+}
+
+/* size adjustments for large frames */
+.frame-large:not(:has(img))::after {
+  width: 225px;
+  height: 260px;
+  font-size: 135px;
+  line-height: 225px;
+}
+#musicPlayerContainer .popup-header {
+  background: rgba(0,0,0,0.3);
+  padding: 2px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  color: #4d79c3;
+  animation: flicker .005s infinite;
+}
+
+#musicPlayerContainer .popup-header button {
+  background: none;
+  border: 2px solid #4d79c3;
+  color: #4d79c3;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
 </style>
 </head>
 
@@ -420,95 +531,147 @@ box-sizing: border-box;
 
 
     <!--entries--> 
-    <div class="frame color-gray" style="left: 880px; top: 400px;" data-page="welcome.html"> <!-- welcome 0 -->
+    <div class="frame frame-normal color-gray" style="left: 880px; top: 400px;" data-page="welcome.html"> <!-- welcome 0 -->
         <h2>Welcome</h2>
         <img src="altsite/entrypng/welcome.png" alt="welcome">
     </div>
-    <div class="frame color-gray" style="left: -50px; top: -30px;" data-page="bio.html"> <!-- me 1 -->
+    <div class="frame frame-large color-gray" style="left: -50px; top: 430px;" data-page="bio.html"> <!-- me 1 -->
         <h2>Me</h2>
-        <img src="altsite/entrypng/me.png" alt="me">
+        <img src="assets/sicktrick.png" alt="me">
     </div>
-    <div class="frame color-gray" style="left: 520px; top: -580px;" data-page="thesite.html"> <!-- the site 2 -->
+    <div class="frame frame-normal color-gray" style="left: 520px; top: -580px;" data-page="thesite.html"> <!-- the site 2 -->
         <h2>The Site</h2>
-        <img src="altsite/entrypng/me.png" alt="the site">
+        <!-- <img src="assets/" alt="the site"> -->
     </div>
-    <div class="frame color-green" style="left: 1600px; top: -390px;" data-page="internetstuf.html"> <!-- internet 3 -->
+    <div class="frame frame-normal color-green" style="left: 1600px; top: -390px;" data-page="internetstuf.html"> <!-- internet 3 -->
         <h2>Internet</h2>
         <img src="altsite/entrypng/warp.png" alt="my site">
     </div>
-    <div class="frame color-gray" style="left: 50px; top: 100px; max-width: 90px;" data-page="altsite/juststatus.html"> <!-- status 4 -->
+    <div class="frame frame-small color-gray" style="left: 50px; top: 550px; max-width: 90px;" data-page="altsite/juststatus.html"> <!-- status 4 -->
         <h2>Status</h2>
-        <img src="assets/placeholder.png" style="size: 90px 90px;" alt="status">
+        <!-- <img src="assets/placeholder.png" style="size: 90px 90px;" alt="status"> -->
     </div>
-    <div class="frame color-special" style="left: 520px; top: 1735px; display:none;" data-page="wilds.html"> <!-- wilds 5 -->
+    <div class="frame color-special" style="left: 470px; top: 1335px; display:none;" data-page="wilds.html"> <!-- wilds 5 -->
         <h2>Outer Wilds</h2>
         <img src="altsite/entrypng/wilds.jpg" alt="outer wilds">
     </div>
     <div class="frame color-blue" style="left: 83px; top: -1280px;" data-page="konsole.html"> <!-- console 6 -->
         <h2>Console</h2>
-        <img src="altsite/entrypng/me.png" alt="a console?">
+        <!--<img src="altsite/entrypng/me.png" alt="a console?"> -->
     </div>
     <div class="frame color-green" style="left: 1786px; top: -490px;" data-page="internetstuf2.html"> <!-- other sites 7 -->
         <h2>Other Sites!</h2>
-        <img src="altsite/entrypng/warp.png" alt="other sites">
+        <!-- <img src="altsite/entrypng/warp.png" alt="other sites"> -->
     </div>
     <div class="frame color-green" style="left: 1586px; top: 120px;" data-page="foryou.html"> <!-- for you 8 -->
         <h2>For You</h2>
-        <img src="altsite/entrypng/warp.png" alt="stuffs for you">
+        <!-- <img src="altsite/entrypng/warp.png" alt="stuffs for you"> -->
     </div>
-    <div class="frame color-orange" style="left: -700px; top: 370px;" data-page="friends.html"> <!-- friends 9 -->
+    <div class="frame color-orange" style="left: -845px; top: 1220px;" data-page="friends.html"> <!-- friends 9 -->
         <h2>Friends</h2>
         <img src="altsite/entrypng/friends.png" alt="friends">
     </div>
-    <div class="frame color-orange" style="left: -1000px; top: 840px;" data-page="photo.html"> <!-- photo 10 -->
+    <div class="frame color-orange" style="left: -1100px; top: -540px;" data-page="photo.html"> <!-- photo 10 -->
         <h2>Photos</h2>
         <img src="altsite/entrypng/photo.jpg" alt="photography">
     </div>
-    <div class="frame color-orange" style="left: -1245px; top: 800px;" data-page="video.html"> <!-- video 11 -->
+    <div class="frame color-orange" style="left: -1000px; top: 370px;" data-page="video.html"> <!-- video 11 -->
         <h2>Videos</h2>
         <img src="altsite/entrypng/video.jpg" alt="video">
     </div>
     <div class="frame color-green" style="left: 2310px; top: -110px;" data-page="https://kaiasei.atabook.org/"> <!-- guestbook 12 -->
         <h2>Guestbook</h2>
-        <img src="altsite/entrypng/video.jpg" alt="video">
+        <!-- <img src="altsite/entrypng/video.jpg" alt="video"> -->
     </div>
-    <div class="frame color-special" style="left: 1900px; top: -1000px; display:none;" data-page="internetstuf.html"> <!-- manifesto 13 -->
+    <div class="frame color-special" style="left: 1900px; top: -1000px; display:none;" data-page="manifesto.html"> <!-- manifesto 13 -->
         <h2>Manifesto</h2>
-        <img src="altsite/entrypng/warp.png" alt="indie web manifesto">
+        <!-- <img src="altsite/entrypng/warp.png" alt="indie web manifesto"> -->
     </div>
     <div class="frame color-purple" style="left: 980px; top: 1500px; max-width: 120%;" data-page="videogames.html"> <!-- video games 14 -->
         <h2>Video Games</h2>
-        <img src="altsite/entrypng/welcome.png" alt="videogames">
+        <img src="assets/gamestation.jpg" alt="videogames">
     </div>
     <div class="frame color-purple" style="left: 860px; top: 2020px;" data-page="celeste.html"> <!-- celeste 15 -->
         <h2>Celeste</h2>
-        <img src="altsite/entrypng/welcome.png" alt="celeste">
+        <!-- <img src="altsite/entrypng/welcome.png" alt="celeste"> -->
     </div>
-    <div class="frame color-purple" style="left: 1535px; top: 1860px;" data-page="minecraft.html"> <!-- minecraft 16 -->
+    <div class="frame color-purple" style="left: 520px; top: 1735px" data-page="minecraft.html"> <!-- minecraft 16 -->
         <h2>Minecraft</h2>
-        <img src="altsite/entrypng/welcome.png" alt="minecraft">
+        <!-- <img src="altsite/entrypng/welcome.png" alt="minecraft"> -->
     </div>
-    <div class="frame color-yellow" style="left: -560px; top: -570px;" data-page="music.html"> <!-- music 17 -->
+    <div class="frame color-yellow" style="left: -560px; top: -570px; display:none;" data-page="music.html"> <!-- music 17 -->
         <h2>Music</h2>
-        <img src="altsite/entrypng/welcome.png" alt="music">
+        <!-- <img src="assets/musicplayer.jpg" alt="music"> -->
     </div>
-    <div class="frame color-gray" style="left: 475px; top: -460px; max-width: 90px;" data-page="musicplayer.html"> <!-- musicplayer 18 -->
-        <h2>Audio Player</h2>
-        <img src="assets/placeholder.png" style="size: 90px 90px;" alt="musicplayer">
+    <div class="frame color-gray frame-small" style="left: 475px; top: -460px; max-width: 90px;" data-page="musicplayer.html"> <!-- musicplayer 18 -->
+        <h2>Music Player</h2>
+        <!-- <img src="assets/musicplayer.jpg" style="size: 90px 90px;" alt="musicplayer"> -->
     </div>
     <div class="frame color-special" style="left: 1200px; top: -1090px; display:none;" data-page="jacobonline-old/index.html" > <!-- old site 19 -->
         <h2>Old Site</h2>
-        <img src="altsite/entrypng/warp.png" alt="old site">
+        <img src="assets/mybmp.jpg" alt="old site">
+    </div>
+    <div class="frame color-gray" style="left: -240px; top: 50px;" data-page="bigguy.html" > <!-- big guy 20 -->
+        <h2>Big Guy</h2>
+        <img src="assets/bigposterguy.jpg" alt="big guy">
+    </div>
+    <div class="frame color-jacob" style="left: -470px; top: 1270px; display:none;" data-page="friends/jacob.html" > <!-- jacob 21 -->
+        <h2>Jacob</h2>
+        <!-- <img src="assets/bigposterguy.jpg" alt="jacob"> -->
+    </div>
+    <div class="frame color-kris" style="left: -670px; top: 1620px; display:none;" data-page="friends/kris.html" > <!-- kris 22 -->
+        <h2>Kris</h2>
+        <img src="assets/kris.png" alt="kris">
     </div>
 
   </div>
 </div>
 </div>
 <div id="gridOverlayCenter"></div>
+<div id="musicPlayerContainer" style="
+  display: none;
+  position: fixed;
+  top: 10vh;
+  left: 15vh;
+  width: 22vw;
+  height: 18.5vh;
+  background: rgba(10,10,20,0.9);
+  border: 2px solid #4d79c3;
+  box-shadow: 0 0 10px #4d79c3;
+  z-index: 1000;
+  overflow: hidden;
+  resize: none;
+  flex-direction: column;
+">
+  <div class="popup-header" id="musicPlayerHeader" style="cursor: move;">
+    <span>Audio Player</span>
+    <button onclick="closeMusicPlayer()"> × </button>
+  </div>
+  <iframe id="musicFrame" src="musicplayer.html" style="
+    width: 100%;
+    height: calc(100% - 30px);
+    border: none;
+  "></iframe>
+</div>
+
 
 
 <script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
 <script>
+
+function closeMusicPlayer() {
+  const clickOutSound = document.getElementById('clickOutSound');
+  clickOutSound.currentTime = 0;
+  clickOutSound.play();
+  const container = document.getElementById("musicPlayerContainer");
+  container.style.animation = "crtShutdown 0.4s forwards";
+  setTimeout(() => {
+    container.style.display = "none";
+  }, 400);
+}
+
+
+
 const viewport = document.getElementById('viewport');
 const content = document.getElementById('content');
 const parallax = document.getElementById('parallax');
@@ -547,6 +710,11 @@ viewport.addEventListener('mousemove', (e) => {
   updateTransform();
 });
 
+makeDraggable(
+  document.getElementById("musicPlayerContainer"),
+  document.getElementById("musicPlayerHeader")
+);
+
 viewport.addEventListener('wheel', (e) => {
   e.preventDefault();
 
@@ -582,32 +750,34 @@ document.querySelectorAll(".frame").forEach(frame => {
 
     const targetPage = frame.getAttribute("data-page") || "default.html";
 
+    // Audio Player special handling
+    if (targetPage === "musicplayer.html") {
+      const container = document.getElementById("musicPlayerContainer");
+      container.style.display = "flex";
+      container.style.animation = "crtStartup 0.4s forwards";
+      return;
+    }
+
     const windowEl = document.createElement("div");
     windowEl.className = "popup-window";
     windowEl.style.animation = "crtStartup 0.4s forwards";
 
     const headerEl = document.createElement("div");
     headerEl.className = "popup-header";
-    headerEl.styleanimation = "flicker .005s infinite;"
-
     const titleEl = document.createElement("span");
     const frameTitle = frame.querySelector("h2")?.textContent || "Untitled";
     titleEl.textContent = frameTitle;
 
-
     const closeBtn = document.createElement("button");
-    closeBtn.textContent = " × ";
+    closeBtn.textContent = " × ";
     closeBtn.onclick = () => {
       const clickOutSound = document.getElementById('clickOutSound');
       clickOutSound.currentTime = 0;
       clickOutSound.play();
-
-      // Add animation class
       windowEl.style.animation = "crtShutdown 0.4s forwards";
-
-      // Remove after animation completes
       setTimeout(() => {
         windowEl.remove();
+        drawConnections();
       }, 400);
     };
     headerEl.appendChild(titleEl);
@@ -615,81 +785,68 @@ document.querySelectorAll(".frame").forEach(frame => {
 
     const contentEl = document.createElement("div");
     contentEl.className = "popup-content";
+    const iframe = document.createElement("iframe");
+    iframe.src = targetPage;
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.border = "none";
+    contentEl.appendChild(iframe);
+    //play special song
+    if (targetPage === "wilds.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "14.3 Billion Years - Andrew Prahlow"
+      }, "*");
+    }
+    if (targetPage === "jacobonline-old/index.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "Beacon - Disasterpiece |           Hidden Song"
+      }, "*");
+    }
+    // Default size
+    windowEl.style.width = "80vw";
+    windowEl.style.height = "80vh";
+    windowEl.style.top = "10vh";
+    windowEl.style.left = "10vw";
+    windowEl.style.resize = "both";
 
+    // Special sizing for status
     if (targetPage === "altsite/juststatus.html") {
-      const iframe = document.createElement("iframe");
-      iframe.src = targetPage;
-      iframe.style.width = "100%";
-      iframe.style.height = "100%";
-      iframe.style.border = "none";
-      
-      contentEl.appendChild(iframe);
-      windowEl.style.width = "25vw"; //size
-      windowEl.style.height = "14vh"; //size
-      windowEl.style.top = "10vh"; //pos
-      windowEl.style.left = "15vh"; //pos
-      windowEl.style.resize = "none"; //allow resiz
-      //no scroll
-      windowEl.style.overflow = "hidden"; 
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "17vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
       contentEl.style.overflow = "hidden";
+    }
 
-    } else if (targetPage === "konsole.html") { 
-      const iframe = document.createElement("iframe");
-      iframe.src = targetPage;
-      iframe.style.width = "100%";
-      iframe.style.height = "100%";
-      iframe.style.border = "none";
-      
-      contentEl.appendChild(iframe);
-      windowEl.style.width = "25vw"; //size
-      windowEl.style.height = "14vh"; //size
-      windowEl.style.top = "10vh"; //pos
-      windowEl.style.left = "15vh"; //pos
-      windowEl.style.resize = "none"; //allow resiz
-      //no scroll
-      windowEl.style.overflow = "hidden"; 
+    // Special sizing for console
+    if (targetPage === "konsole.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "14vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
       contentEl.style.overflow = "hidden";
-    } else if (targetPage === "musicplayer.html") { 
-      const iframe = document.createElement("iframe");
-      iframe.src = targetPage;
-      iframe.style.width = "100%";
-      iframe.style.height = "100%";
-      iframe.style.border = "none";
-      
-      contentEl.appendChild(iframe);
-      windowEl.style.width = "22vw"; //size
-      windowEl.style.height = "18.5vh"; //size
-      windowEl.style.top = "10vh"; //pos
-      windowEl.style.left = "15vh"; //pos
-      windowEl.style.resize = "none"; //allow resiz
-      //no scroll
-      windowEl.style.overflow = "hidden"; 
-      contentEl.style.overflow = "hidden";
-    } else {
-      const iframe = document.createElement("iframe");
-      iframe.src = targetPage;
-      iframe.style.width = "100%";
-      iframe.style.height = "100%";
-      iframe.style.border = "none";
-      
-      contentEl.appendChild(iframe);
-      windowEl.style.width = "80vw"; //size
-      windowEl.style.height = "80vh"; //size
-      windowEl.style.top = "10vh"; //pos
-      windowEl.style.left = "10vw"; //pos
-      windowEl.style.resize = "both";
-    } 
+    }
 
     windowEl.appendChild(headerEl);
     windowEl.appendChild(contentEl);
     document.body.appendChild(windowEl);
-
     makeDraggable(windowEl, headerEl);
+    drawConnections();
   });
 });
 
+
+
 function animateZoom() {
-  const zoomSpeed = 0.15; // adjust to zoom speed
+  const zoomSpeed = 0.13; // adjust to zoom speed
 
   const scaleDiff = targetScale - scale;
   scale += scaleDiff * zoomSpeed;
@@ -720,8 +877,9 @@ function updateTransform() {
 const hoverSound = document.getElementById("hoverSound");
 document.querySelectorAll(".frame").forEach(frame => {
   frame.addEventListener("mouseenter", () => {
-    hoverSound.currentTime = 0;
-    hoverSound.play();
+    const hsound = new Audio('altsite/fx/shiplog_highlight.wav');
+    hsound.volume = 0.3;
+    hsound.play();
   });
 });
 
@@ -775,26 +933,31 @@ const frames = document.querySelectorAll('.frame');
 const lineContainer = document.getElementById('line-container');
 
 // Example connections: list of pairs of frame indexes
-// For example: connect frame 0 to frame 1, and frame 1 to frame 2
+// friends is 9
 const connections = [
   [0, 1],
   [1, 2],
+  [1,20],
   [2, 3],
   [2, 6],
   [3, 7],
   [0, 8],
   [3, 8],
-  [1, 9],
-  [9, 10],
-  [9, 11],
-  [3,12],
-  [7,13],
-  [5,14],
+  [3, 12],
+  [7, 13],
+  [5, 14],
   [14,15],
   [14,16],
-  [0,14],
-  [1, 17],
-  [6, 19], [3,19]
+  [0, 14],
+  [6, 19], 
+  [3, 19],
+  [11, 1],
+  [11, 10],
+  [11, 9],
+  [21, 5],
+  [21, 9],
+  [22, 9],
+
 
 ];
 
@@ -893,12 +1056,15 @@ window.addEventListener("message", (event) => {
     const command = event.data.command.toLowerCase();
 
     const map = {
-      "jacob": [5],
+      "wilds": [5],
       "ideas": [13],
       "windows98": [19],
+      "music": [17],
+      "kris": [22],
+      "jacob": [21],
 
+      "FreedomDive": [5,13,19,17,21,22],
       "sudo shutdown now": "kill",
-      "FreedomDive": [5, 13, 19]  //master password
     };
 
     const idxList = map[command];

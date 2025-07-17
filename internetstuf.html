@@ -82,15 +82,17 @@
     0% { color: #9effc8; text-shadow: 0 0 8px #7effc1; }
     100% { color: #d0f7e9; text-shadow: 0 0 12px #b8ffd4; }
   }
-  .link-buttons a {
+.link-buttons a {
   position: relative;
-  }
+  display: inline-block;
+}
 
-  .link-buttons a img {
+.link-buttons a img {
   display: block;
   max-width: 100%;
-  }
-  a {
+}
+
+a {
     transition: transform 0.3s ease;
   }
   a:hover {
@@ -114,35 +116,33 @@
     <p style="text-align: center;">
       okay well, maybe not... <em style="color: #01500e;">but its pretty damn close</em>
       <img src="assets/kaia-bingus.gif" alt="bingus"  style="max-width: 20rem" /><br>
-      whoever on the internet made this gif, thank you.<br><br>
+      whoever on the internet made this gif, thank you.
       <br><br>over my past couple years scraping the web for all its worth, ive found some pretty cool personal sites and i wanna share them. also also, if you're visiting from another site; hello! please
-      be sure to spread my beloved 88x31 button if you enjoyed my site. (i put a lot of work into it!). oh also, these buttons will open up in a new tab, because my site is frame-based, it would be
-      a little weird doing a direct link. just my way of saying i havent figured it out yet! 💫 <br>
-      something to note, with the way my page is styled, it kinda makes the 2px border around the buttons harder to see, but they're there!
-      <br><br><div class="link-buttons"><a href="https://kaia.starscene.com/" target="_blank"><img src="assets/kaiabutton.png" alt="goes to my site!"/></a>
-      <span >such a cool button, right!? <em>((it took me an hour- i am NOT an artist))</em></span></div>
-      
+      be sure to spread my beloved 88x31 button if you enjoyed my site. (i put a lot of work into it!). oh also, with the way my page is styled, it kinda makes the 2px border around the buttons harder to see, but they're there!
+      <br><br>
+      <div class="link-buttons" class="tree" style="text-align: center;">
+          <a href="https://kaia.starscene.com" target="_parent"><img src="assets/kaiabutton.png" alt="kaia online"/></a>
+         <a href="https://kaia.starscene.com" target="_parent"><img src="assets/kaiabutton.gif" alt="kaia online"/></a>
+      </div>
+      <p style="text-align: center;">im so proud of my buttons <em>(they took me an hour- i am NOT an artist)</em>. feel free to hotlink! i dont plan 
+        on moving the button asset, like ever. make sure to point the button to <br>https://kaia.starscene.com</div>
+      </p>
     </p>
   </div>
 
   <div class="content">
-    <h2 class="star">interesting sites</h2>
+    <h2 class="star">easter eggs</h2>
     <p style="text-align: center;">
-      def. some sites to check out while you're exploring the web.<br>some of these are pretty cool, and some are useful, all inbetween!<br><br>
-      wiby!<br><a href="https://wiby.me/" target="_blank"><img src="https://wiby.me/about/wiby.gif"alt="goes to my site!"/></a><br>
-      ok so check this cool site out, its called wiby and you're able to like browse old net sites ,a lot of them are just http and not https so you can view
-      them on old browsers that are not compatible with todays web browsers, which means i can look at old webpages in my windows 98 virtual machine! super cool 
-      site you should definetly check out if u wanna feel like youre browsing the web in the 90s. i put the button there, but its also down below on my <em>button wall.</em>
-      <br><br>
-      <a href="https://kaia.starscene.com/" target="_blank"><img src="assets/kaiabutton.png" alt="goes to my site!"/></a>
-      <span >such a cool button, right!? <em>((it took me an hour- i am NOT an artist))</em></span>
+      if you haven't realized by now, if you poke your head around my site, some pages will have a little thing at the bottom telling you to put something into the console. <br>
+      theres an entry on the screen called console that will let you put words in, try them out if you see it!
+
+      p.s. type in <em style="color: rgb(97, 162, 248);">windows98</em> to the console so you can see what my ancient site looked like. (original 2022 version)
     </p>
   </div>
   
   <footer>
     <span class="star">the internet is yours to mold</span>
   </footer>
-
   <script>
     document.addEventListener('click', () => {
     const sound = new Audio('assets/click.mp3');
