@@ -886,8 +886,8 @@ document.querySelectorAll(".frame").forEach(frame => {
       contentEl.style.overflow = "hidden";
     }
     if (targetPage === "webrings.html") {
-      windowEl.style.width = "340px";
-      windowEl.style.height = "24vh";
+      windowEl.style.width = "400px";
+      windowEl.style.height = "580px";
       windowEl.style.top = "10vh";
       windowEl.style.left = "15vh";
     }
@@ -1188,6 +1188,7 @@ window.addEventListener("message", (event) => {
 });
 
 window.addEventListener("DOMContentLoaded", () => {
+  setTimeout(10)
   drawConnections()
 });
 
