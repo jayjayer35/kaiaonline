@@ -885,6 +885,12 @@ document.querySelectorAll(".frame").forEach(frame => {
       windowEl.style.overflow = "hidden";
       contentEl.style.overflow = "hidden";
     }
+    if (targetPage === "webrings.html") {
+      windowEl.style.width = "340px";
+      windowEl.style.height = "24vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+    }
 
     windowEl.appendChild(headerEl);
     windowEl.appendChild(contentEl);
