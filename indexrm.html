@@ -443,6 +443,7 @@ box-sizing: border-box;
 .color-kris { background: #FF5733; color: #FF5733; }
 .color-jacob { background: #7ba5b3; color: #7ba5b3; }
 .color-steven { background: #55ff00; color: #55ff00; }
+.color-gabe { background: #5b21d8; color: #5b21d8; }
 
 .question-rainbow {
   animation: rainbowColors 2s linear infinite;
@@ -615,13 +616,30 @@ box-sizing: border-box;
         <h2>Big Guy</h2>
         <img src="assets/bigposterguy.jpg" alt="big guy">
     </div>
-    <div class="frame color-jacob" style="left: -470px; top: 1270px; display:none;" data-page="friends/jacob.html" > <!-- jacob 21 -->
+    <div class="frame color-jacob" style="left: -200px; top: 1170px; display:none;" data-page="friends/jacob.html" > <!-- jacob 21 -->
         <h2>Jacob</h2>
         <!-- <img src="assets/bigposterguy.jpg" alt="jacob"> -->
     </div>
-    <div class="frame color-kris" style="left: -670px; top: 1620px; display:none;" data-page="friends/kris.html" > <!-- kris 22 -->
+    <div class="frame color-kris" style="left: -470px; top: 1620px;" data-page="friends/kris.html" > <!-- kris 22 -->
         <h2>Kris</h2>
         <img src="assets/kris.png" alt="kris">
+    </div>
+    <div class="frame color-gabe" style="left: -1570px; top: 920px;" data-page="friends/gabe.html" > <!-- gabe 23 -->
+        <h2>Gabriel</h2>
+        <img src="assets/gabe.png" alt="gabriel">
+    </div>
+
+    <div class="frame color-gray frame-small" style="left: -1540px; top: 1240px;" data-page="miami.html" > <!-- miami box 24 -->
+        <h2>Miami</h2>
+        <img src="assets/miami.jpg" alt="miami">
+    </div>
+    <div class="frame color-gray frame-small" style="left: -170px; top: 1520px;" data-page="daytona.html" > <!-- daytona box 25 -->
+        <h2 style="font-size: 95%;">Daytona<br> Beach</h2>
+        <img src="assets/daytona.jpg" alt="daytona">
+    </div>
+    <div class="frame color-green frame-small" style="left: 1693px; top: 250px;" data-page="webrings.html" > <!-- webrings 26 -->
+        <h2 style="font-size: 95%;">Webrings</h2>
+        <!-- <img src="assets/daytona.jpg" alt="daytona"> -->
     </div>
 
   </div>
@@ -806,6 +824,20 @@ document.querySelectorAll(".frame").forEach(frame => {
         title: "Beacon - Disasterpiece |           Hidden Song"
       }, "*");
     }
+    if (targetPage === "friends/kris.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "Delirious Acting (Twilight Theater) - Pseudoregalia OST"
+      }, "*");
+    }
+    if (targetPage === "friends/gabe.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "Phantom Liberty - Dawid Podsiadło"
+      }, "*");
+    }
     // Default size
     windowEl.style.width = "80vw";
     windowEl.style.height = "80vh";
@@ -823,7 +855,26 @@ document.querySelectorAll(".frame").forEach(frame => {
       windowEl.style.overflow = "hidden";
       contentEl.style.overflow = "hidden";
     }
-
+    // Special sizing for miami
+    if (targetPage === "miami.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "17vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
+    // Special sizing for daytona
+    if (targetPage === "daytona.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "17vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
     // Special sizing for console
     if (targetPage === "konsole.html") {
       windowEl.style.width = "25vw";
@@ -928,35 +979,38 @@ function makeDraggable(dragTarget, handle) {
   });
 }
 
-// Get the container that holds the entries
+// container that holds the entries
 const frames = document.querySelectorAll('.frame');
 const lineContainer = document.getElementById('line-container');
 
-// Example connections: list of pairs of frame indexes
-// friends is 9
+// list of pairs of entries
 const connections = [
-  [0, 1],
-  [1, 2],
-  [1,20],
-  [2, 3],
-  [2, 6],
-  [3, 7],
-  [0, 8],
-  [3, 8],
-  [3, 12],
-  [7, 13],
-  [5, 14],
-  [14,15],
-  [14,16],
-  [0, 14],
-  [6, 19], 
-  [3, 19],
-  [11, 1],
-  [11, 10],
-  [11, 9],
-  [21, 5],
-  [21, 9],
-  [22, 9],
+  [0, 1], // welcome - me
+  [1, 2], // me - the site
+  [1,20], // me - big guy
+  [2, 3], // the site - internet
+  [2, 6], // the site - console
+  [3, 7], // internet - other sites
+  [0, 8], // welcome - for you
+  [3, 8], // internet - for you
+  [3, 12], // internet - guestbook
+  [7, 13], // other sites - manifesto
+  [5, 14], // wilds - video games
+  [14,15], // video games - celeste
+  [14,16], // video games - minecraft
+  [0, 14], // welcome - video games
+  [6, 19],  // console - old site
+  [3, 19], // internet - old site
+  [11, 1], // video - me
+  [11, 10], // video - photo
+  [11, 9], // video - friends
+  [21, 5], // jacob - wilds
+  [21, 25], // jacob - daytona
+  [22, 25], // kris - daytona
+  [24, 23], // miami - gabe
+  [24, 9], // miami - friends
+  [25,9], // daytona - friends
+  [8,12], // for you - guestbook
 
 
 ];

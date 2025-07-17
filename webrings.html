@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>My Webrings</title>
+  <link rel="stylesheet" href="galactic-webring.css">
+  <style>
+    body {
+      background-color: #121212;
+      color: #f0f0f0;
+      font-family: monospace;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    summary {
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    details {
+      border: 2px solid #555;
+      padding: 1rem;
+      border-radius: 10px;
+      background: #1a1a1a;
+      max-width: 600px;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin: 0.75rem 0;
+    }
+
+    a {
+      color: #77ddff;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    object {
+      background: #222;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <details open>
+      <summary>🌐 Webrings I'm Part Of</summary>
+      <ul>
+        <!-- Retronauts Webring -->
+        <li>
+          <strong>Retronauts Webring:</strong>
+          <a href="https://webring.dinhe.net/prev/https://kaia.starscene.com">&lt;&lt;&lt;</a>
+          <a href="https://webring.dinhe.net/">Home</a>
+          <a href="https://webring.dinhe.net/next/https://kaia.starscene.com">&gt;&gt;&gt;</a>
+        </li>
+
+        <!-- Melonland Surf Club -->
+        <li>
+          <strong>Melonland Surf Club:</strong><br>
+          <object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#383838" type="image/svg+xml" style="width: 100px; height: 100px;"></object>
+        </li>
+
+        <!-- Galactic Webring -->
+        <li id="galactic-webring">
+          <strong>Galactic Webring:</strong><br>
+          <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
+          <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
+        </li>
+      </ul>
+    </details>
+  </main>
+</body>
+</html>

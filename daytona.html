@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+  <title>Typewriter List</title>
+  <link rel="preload" href="assets/type.ogg" as="audio" type="audio/ogg">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: black;
+    }
+
+    main {
+      width: 100vw;
+      height: 100vh;
+      padding: 1rem;
+      background-color: rgba(36, 0, 99, 0.2);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 4vw;
+      color: #b5a9d6;
+      text-shadow: 0 0 10px #00d9ff;
+      animation: flicker .005s infinite;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 2rem;
+    }
+
+    li {
+      margin-bottom: 1rem;
+      white-space: pre-wrap;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 0.6ch;
+      color: #00d9ff;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    @keyframes flicker {
+      0% { text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff; }
+      20% { text-shadow: none; }
+      40% { text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff; }
+      60% { text-shadow: none; }
+      80% { text-shadow: 0 0 4px #00eeff, 0 0 4px #00eeff; }
+      100% { text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <ul id="type-list">
+      <!-- JS will type into this -->
+    </ul>
+  </main>
+
+  <script>
+    const lines = [
+      "- I went to uni here for a year.",
+      "- In uni I had a band with some friends, called 'Noise Complaint'"
+    ];
+
+    const list = document.getElementById("type-list");
+    const typeSound = new Audio("altsite/fx/shiplog_highlight2.wav");
+    typeSound.volume = 0.07;
+
+    function playSound() {
+      const s = typeSound.cloneNode();
+      s.play().catch(() => {});
+    }
+
+    function typeLine(lineText, parentEl, cb) {
+      const li = document.createElement("li");
+      const span = document.createElement("span");
+      const cursor = document.createElement("span");
+      cursor.className = "cursor";
+      cursor.textContent = "_";
+
+      li.appendChild(span);
+      li.appendChild(cursor);
+      parentEl.appendChild(li);
+
+      let i = 0;
+
+      function typeChar() {
+        if (i < lineText.length) {
+          span.textContent += lineText[i];
+          if (lineText[i] !== " ") playSound();
+          i++;
+          setTimeout(typeChar, 45);
+        } else {
+          cursor.remove();
+          cb();
+        }
+      }
+
+      typeChar();
+    }
+
+    function typeAllLines(index = 0) {
+      if (index < lines.length) {
+        typeLine(lines[index], list, () => typeAllLines(index + 1));
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      typeAllLines();
+    });
+  </script>
+</body>
+</html>
