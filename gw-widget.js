@@ -57,7 +57,7 @@ else {
   //this is the code that displays the widget - EDIT THIS if you want to change the structure
   tag.insertAdjacentHTML('afterbegin', `
 <div id="galactic-box">
-<img class="gw-logo" src="https://darkosparko.nekoweb.org/webrings%2Fgalactic-webring%2Fimages/gw-logo.png">
+<img class="gw-logo" target="_parent src="https://darkosparko.nekoweb.org/webrings%2Fgalactic-webring%2Fimages/gw-logo.png">
 <div class="gw-content-wrapper">
 <a href="${sites[previousIndex]}"><div class="prevbutton">◀</div></a>
 <div class="spot-container">
@@ -67,9 +67,9 @@ else {
 <a href="${sites[nextIndex]}"><div class="nextbutton">▶</div></a>
 </div>
 <div class="gw-nav-wrapper">
-<div class="gw-link" target="_parent"" ><a href='javascript:void(0)' onclick='galacticrandomSite()'>Random<br>Slingshot</a></div>
-<div class="gw-link" target="_parent"><a href='${indexPage}'>Takeoff to the Stars!</a></div>
-<div class="gw-link" target="_parent"><a href="https://garlic.garden/onionring/">What Is This?</a></div>
+<div class="gw-link"><a href='javascript:void(0)' target="_parent" onclick='galacticrandomSite()'>Random<br>Slingshot</a></div>
+<div class="gw-link"><a href='${indexPage}' target="_parent">Takeoff to the Stars!</a></div>
+<div class="gw-link"><a href="https://garlic.garden/onionring/" target="_parent">What Is This?</a></div>
 </div>
 </div>
   `);
