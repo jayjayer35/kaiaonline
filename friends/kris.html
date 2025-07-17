@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Character Sheet: [Friend's Name]</title>
+  <style>
+    @font-face {
+        font-family: 'Papyrus';
+        src: url('../assets/papyrus.ttf') format('truetype');
+    }
+
+        body {
+        background: #0b0c2a url('../assets/pitofhell.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: #2c2820;
+        font-family: 'Papyrus', serif;
+        font-size: 18px;
+        padding: 20px;
+        max-width: 800px;
+        margin: auto;
+        border: 0px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      border-bottom: 2px dashed #27210d;
+      margin-bottom: 10px;
+    }
+
+    .sheet {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .box {
+      border: 2px solid #000;
+      padding: 8px;
+      background: url(../assets/parchment.jpg);
+        background-size: cover;             /* Fill and crop to cover */
+      background-position: center center; /* Center the image */  
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    ul li::marker {
+      content: "";
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+    p {
+        text-align: center;
+        padding: 20px;
+    }
+    .img {
+        border-radius: 20px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1 style="color: blanchedalmond;"><span> Kris </span></h1>
+
+    <div class="sheet">
+        <div class="box">
+        <h2>Class</h2>
+        <p>Monk</p>
+        </div>
+
+        <div class="box">
+        <h2>Alignment</h2>
+        <p>Lawful Good</p>
+    </div>
+
+    <div class="full" style="text-align: center;">
+        <img src="../assets/fire_a.gif"> 
+    </div>
+    
+    <div class="box full">
+        <h2>About</h2>
+            <p>
+                My 7 int friend, Kris is one of my friends that I met when I was studying at Embry-Riddle for a year. He is a big fantasy nerd 
+                like a handful of my other friends (so i made his page look like this lololol). But yeah, just a big nerd and an artist. You know he sketched 
+                my dnd character once, t'was pretty cool.
+            </p>
+            <p>
+                <span><img class="faded-image" src="../assets/krischin.jpg" style="max-width: 20rem; border-radius: 5px;"></span>
+                <span style="padding-left: 1rem; padding-right: 1rem;"></span>
+                <span><img class="faded-image" src="../assets/elysia.jpg" style="max-width: 20rem; border-radius: 5px;"></span>
+            </p>
+    </div>
+
+    <div class="full" style="text-align: center;">
+        <img src="../assets/fire_a.gif"> 
+    </div>
+
+    <div class="box">
+      <h2>Stats</h2>
+      <ul style="text-align: center;">
+        <li>Strength:       16</li>
+        <li>Dexterity:      10</li>
+        <li>Constitution:   14</li>
+        <li>Intelligence:   7</li>
+        <li>Wisdom:         15</li>
+        <li>Charisma:       14</li>
+      </ul>
+    </div>
+
+    <div class="box">
+      <h2>Inventory</h2>
+      <ul>
+        <li>a <em>lot</em> of food<br><br>
+            
+            a singular blade of grass<br>
+            pencils, some paper<br>
+            a steam deck and controller
+        </li>
+      </ul>
+    </div>
+
+    <div class="full" style="text-align: center;">
+        <img src="../assets/fire_a.gif"> 
+    </div>
+
+    <div class="box full">
+        <p>
+            This dude has some amazing dnd character concepts. One is an Italian goon, and i mean goon as in henchmen. Also his names initials literally spell out G.O.O.N Just a buff Italian henchman, and is like the only character that 
+            my character will listen to (<em>most of the time</em>). His other character is a skeleton cowboy dude named Skelebones Jones, that fires spells out of a gun, which is entirely unecessary, but it's a cool 
+            concept, so it doesn't matter now, DOES IT! (<em>yes, my character disregards the skeleton, but not the italian dude</em>)
+        </p>
+    </div>
+
+    <div class="full" style="text-align: center;">
+        <img src="../assets/fire_a.gif"> 
+    </div>
+
+    <div class="box full">
+      <h2>Notable Features & Abilities</h2>
+      <ul>
+        <li>Rollerblades too!</li>
+        <li>Really likes food (and snacks)</li>
+        <li>Helped me steal a 'road closed' sign once</li>
+        <li>Can draw</li>
+        <li>Part of the group I play dungeons and dragons with</li>
+        <li>Did I mention he likes food</li>
+        <li>Friendly Giant</li>
+        <li>Can whoop my ass in Guilty Gear: Strive</li>
+        <li>His birthday is on Aug 16th (im older)</li>
+      </ul>
+    </div>
+
+    <div class="full" style="text-align: center;">
+        <img src="../assets/fire_a.gif"> 
+    </div>
+
+    <div class="box full">
+      <h2>Last Known Location</h2>
+      <p>probably in a dungeon somewhere, also probably fighting either monsters, or some type of god</p>
+    </div>
+  </div>
+
+  <div class="footer" style="color: bisque;">
+    page last edited on 7/16/25
+  </div>
+
+  <script>
+    document.addEventListener('click', () => {
+    const sound = new Audio('../assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+    }, true);
+  </script>
+</body>
+</html>
