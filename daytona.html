@@ -42,15 +42,15 @@
     .cursor {
       display: inline-block;
       width: 0.6ch;
-      color: #00d9ff;
-      animation: blink 1s infinite;
+      color: #b5a9d6;
+      animation: blink .25s infinite;
     }
 
     @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
     }
-
     @keyframes flicker {
       0% { text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff; }
       20% { text-shadow: none; }

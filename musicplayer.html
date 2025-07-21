@@ -178,15 +178,14 @@ const songs = [
   { title: "Space - Andrew Prahlow", file: "music/space.mp3" },
   { title: "The Sun Station - Andrew Prahlow", file: "music/sun.mp3" },
   { title: "Castaways - Andrew Prahlow", file: "music/castaways.mp3" },
-  { title: "Beacon - Disasterpiece |           Hidden Song", file: "music/beacon.mp3", hidden: true },
+  { title: "Beacon - Disasterpiece", file: "music/beacon.mp3", hidden: true },
   { title: "Delirious Acting (Twilight Theater) - Pseudoregalia OST", file: "music/deliriousacting.mp3", hidden: true },
   { title: "Phantom Liberty - Dawid Podsiadło", file: "music/phantom.mp3", hidden: true }
 ];
 
 const visibleSongs = songs.filter(s => !s.hidden);
-let currentSong = songs.indexOf(
-  visibleSongs[Math.floor(Math.random() * visibleSongs.length)]
-);
+let currentSong = songs.findIndex(s => s.title.includes("Sun Station"));
+
 const audio = new Audio();
 audio.volume = 0.07;
 const titleEl = document.getElementById('title');
@@ -305,6 +304,37 @@ window.addEventListener("message", (event) => {
   if (event.data?.type === "playSong") {
     const songTitle = event.data.title;
     const song = songs.find(s => s.title === songTitle);
+    if (song) {
+      audio.src = song.file;
+      titleEl.textContent = song.title;
+      audio.play();
+      playBtn.textContent = "⏸";
+    }
+  }
+});
+
+window.addEventListener("message", (event) => {
+  const msg = event.data;
+
+  if (msg?.type === "startIntro") {
+    const introSong = songs.find(s => s.title.includes("Main Title")); // or use exact match
+    if (introSong) {
+      audio.src = introSong.file;
+      titleEl.textContent = introSong.title;
+      audio.volume = volumeSlider.value;
+      audio.play();
+      playBtn.textContent = "⏸";
+
+      // When it ends, start normal rotation
+      audio.onended = () => {
+        if (!isLooping) nextSong();
+        audio.onended = null; // restore normal behavior
+      };
+    }
+  }
+
+  if (msg?.type === "playSong") {
+    const song = songs.find(s => s.title === msg.title);
     if (song) {
       audio.src = song.file;
       titleEl.textContent = song.title;

@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="galactic-webring.css">
   <style>
     body {
-      background: transparent;
+      background: url("assets/starsss.gif");
       color: white;
       font-family: 'Courier New', Courier, monospace;
       color: #b5a9d6;
@@ -18,6 +18,18 @@
       flex-direction: column;
       align-items: center;
       gap: 1rem;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      opacity: 0.4; /* adjust this for brightness */
+      pointer-events: none; /* let clicks pass through */
+      z-index: 0;
     }
     @keyframes flicker {
       0% { text-shadow: 0 0 5px #00eeff6c, 0 0 5px #00eeff6c; }
@@ -92,17 +104,17 @@
     <!-- Stack Hotline and Retronauts vertically -->
     <div class="column">
       <div class="card">
-        <h2>Hotline Webring</h2>
-        <a href='https://hotlinewebring.club/kaiaonline/previous' target="_parent">&lt;&lt;&lt;</a>
-        <a href="https://hotlinewebring.club/" target="_parent">Home</a>
-        <a href='https://hotlinewebring.club/kaiaonline/next' target="_parent">&gt;&gt;&gt;</a>
-      </div>
-
-      <div class="card">
         <h2>Retronauts Webring</h2>
         <a href='https://webring.dinhe.net/prev/https://kaia.starscene.com' target="_parent">&lt;&lt;&lt;</a>
         <a href="https://webring.dinhe.net/" target="_parent">Home</a>
         <a href='https://webring.dinhe.net/next/https://kaia.starscene.com' target="_parent">&gt;&gt;&gt;</a>
+      </div>
+
+      <div class="card">
+        <h2>Hotline Webring</h2>
+        <a href='https://hotlinewebring.club/kaiaonline/previous' target="_parent">&lt;&lt;&lt;</a>
+        <a href="https://hotlinewebring.club/" target="_parent">Home</a>
+        <a href='https://hotlinewebring.club/kaiaonline/next' target="_parent">&gt;&gt;&gt;</a>
       </div>
     </div>
   </div>

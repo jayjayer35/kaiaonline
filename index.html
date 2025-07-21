@@ -1,911 +1,1540 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="stylesheet" href="galactic-webring.css">
-<script></script>
-<meta charset="UTF-8"/>
+<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>kaia online</title>
-<style>
-body {
-    margin: 0;
-    padding: 0;
-    background: #1f0a31 url('assets/galaxybkagnd.jpg') repeat;
-    background-size: cover;
-    background-position: center;
-    font-family: "Comic Sans MS","Courier New",monospace;
-  color: #fbd4ff;
-  display: repeat;
-}
-.content-frame {
-  width: 100%;
-  max-width: 800px;
-  height: 500px;
-  border: 2px solid #fff;
-  background: rgba(0,0,0,0.6);
-  margin: 2rem auto;
-  display: block;
-}
-.sidebar {
-  width: 300px;
-  background: rgba(87, 37, 84, 0.9) url('assets/pinkgalaxy.jpg') repeat;
-  background-size: cover;
-  background-position: center;
-  padding: 1rem;
-  box-sizing: border-box;
-  border-right: 2px dashed #fff;
-  height: 100vh;
-  overflow-y: auto;
-  position: fixed;
-  left: 0;
-  top: 0;
-  transition: transform 0.3s ease;
-  z-index: 1000;
-  will-change: transform;
-}
-.sidebar.hidden {
-  transform: translateX(-300px);
-}
-.toggle-sidebar {
-  position: fixed;
-  top: 3px;
-  left: 3px;
-  z-index: 1100;
-  background: rgba(92, 31, 107, 0.432);
-  color: #e2aadb;
-  border: 1px solid #e2aadb;
-  border-radius: 0%;
-  padding: 0.4rem 0.6rem;
-  cursor: pointer;
-  font-size: .5rem;
-  line-height: .5rem;
-}
-.sidebar:not(.hidden) + .toggle-sidebar {
-  left: 250rem; 
-}
-.sidebar h2 {
-  font-size:1.2rem;
-  margin-top:0;
-  text-align:center;
-}
-.tree {
-  list-style:none;
-  padding:0;
-}
-.tree summary {
-  cursor:pointer;
-  font-weight:bold;
-}
-.tree li {
-  margin-bottom:0.5rem;
-}
-.tree a {
-  color:#b3c8f0;
-  text-decoration:none;
-  font-size:0.9rem;
-}
-.tree a:hover {
-  color:#ffadad;
-}
-.main-content {
-  margin-left: 300px;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  transition: margin-left 0.3s ease;
-}
-.sidebar.hidden + .main-content {
-  margin-left: 0;
-}
-h1 {
-  font-size: 2rem;
-  text-align: center;
-  text-shadow:1px 1px 3px #000;
-}
-.blinking-star {
-  display:inline-block;
-  animation:blink 1s infinite alternate;
-}
-@keyframes blink {
-  to {opacity:0.3;}
-}
-p {
-  margin-bottom:1rem;
-  text-align:center;
-}
-.update-log {
-  border: 2px solid #fff;
-  max-width: 800px;
-  width: 100%;
-  margin: 2rem auto;
-  padding: 0;
-  line-height: 0;
-}
-footer {
-  margin-top:1rem;
-  font-size:0.85rem;
-}
-#statuscafe {
-  margin: 2rem auto;
-  max-width: 500px;
-  background-color: rgba(168, 132, 230, 0.2); 
-  border: 1px solid #fff;
-  padding: 1em;
-  font-family: "Comic Sans MS", "Courier New", monospace;
-  color: #fff;
-  border-radius: 4px;
-}
-#statuscafe-username {
-  visibility: hidden;
-  position: relative;
-}
-#statuscafe-username::before {
-  content: "🪐 kaiasei's status";
-  visibility: visible;
-  position: absolute;
-  top: 0;
-  left: 0;
-  font-weight: bold;
-  color: #e2e1ab;
-}
-#statuscafe-content {
-  margin: 0 0.5em;
-}
-#statuscafe:hover {
-  background-color: rgba(201, 191, 243, 0.445);
-}
-#music-player {
-  font-size: 0.9em;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 0.7em;
-  border-radius: 6px;
-  color: #d5a7da;
-}
-#music-player button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid #402f42;
-  color: #c99dbf;
-  padding: 0.3em 0.8em;
-  margin: 0 0.2em;
-  cursor: pointer;
-  font-family: inherit;
-  border-radius: 4px;
-  transition: background 0.2s, color 0.2s;
-}
-#music-player button:hover {
-  background: #c99dbf;
-  color: #000;
-}
-#music-player input[type="range"] {
-  width: 100%;
-  height: 6px;
-  border-radius: 3px;
-  background: #402f42;
-  outline: none;
-  margin: 0.5em 0;
-}
-#music-player input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #c99dbf;
-  cursor: pointer;
-}
-#music-player input[type="range"]::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #c99dbf;
-  cursor: pointer;
-}
-.tree ul {
-  list-style: none;
-  padding-left: 0rem;
-  margin: 0;
-}
-.tree ul li {
-  position: relative;
-  padding-left: 24px;
-  margin-bottom: 0.5rem;
-}
-.tree ul li::before {
-  content: "➤";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  background-image: url('assets/custom-bullet.gif'); 
-  background-size: contain;
-  background-repeat: no-repeat;
-}
-iframe {
-  z-index: 1;
-  position: relative;
-}
-.flashing-text {
-  animation: flashColors 1s infinite alternate;
-  text-decoration: none;
-}
-@keyframes flashColors {
-  0% {
-    color: #ff69b4; 
-  }
-  25% {
-    color: #d0ff00; 
-  }
-  50% {
-    color: #26f8ff; 
-  }
-  75% {
-    color: #d0ff00;
-  }
-  100% {
-    color: #ff69b4;
-  }
-}
-.gradient-text {
-  animation: smoothColors 3s linear infinite;
-  text-decoration: none;
-}
-@keyframes smoothColors {
-  0%   { color: #ffae00; }
-  50%  { color: #00ffff; }
-  100% { color: #ffae00; }
-}
-.mailbox {
-    transition: transform 0.2s ease;
-}
-.mailbox:hover {
-    transform: scale(1.1) rotate(-2deg);
-    animation: shake 0.3s;
-}
-@keyframes shake {
-  0% { transform: scale(1.1) rotate(-2deg) translateX(0); }
-  25% { transform: scale(1.1) rotate(2deg) translateX(2px); }
-  50% { transform: scale(1.1) rotate(-2deg) translateX(-2px); }
-  75% { transform: scale(1.1) rotate(2deg) translateX(2px); }
-  100% { transform: scale(1.1) rotate(-2deg) translateX(0); }
-}
-ul li a {
-  text-decoration: none; 
-  color: #cebdf7;
-  transition: transform 0.2s ease;
-  display: inline-block;
-}
-ul li a:hover {
-  transform: scale(1.1);
-}
-.campfire-container img:hover {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 15px #ffb347);
-}
-.campfire-icon {
-  transition: transform 0.4s ease, filter 0.4s ease;
-}
-.campfire-icon:hover {
-  transform: scale(1.1);
-  filter: brightness(1.6) drop-shadow(0 0 15px orange);
-}
-#galactic-box {
-width: 250px;
-margin: 0 auto !important;
-display: flex;
-align-items: center;
-flex-direction: column;
-position: relative;
-font-family: MS Gothic;
-border: 4px solid #ff00ff;
-background: linear-gradient(180deg, rgba(0, 0, 0, 1) 36%, rgb(54, 0, 47) 100%);
-box-shadow: 0px 0px 8px #ff00ff, 1px 1px 4px #ff00ff inset, -1px -1px 4px #ff00ff inset;
-color: #eba7ce;
-text-shadow: 0px 0px 4px #eba7ce;
-box-sizing: border-box;
-padding: 5px;
-}	
-#galactic-box .gw-logo {
-width: 130px;
-image-rendering: pixelated;
-margin-bottom: 5px;
-}
-#galactic-box .gw-content-wrapper {
-display: flex; 
-align-items: center;
-justify-content: center;
-margin-bottom: 7px;
-}
-#galactic-box .gw-content-wrapper a {
-all: unset;
-cursor: pointer;
-font-size: 35px;
-}
-#galactic-box .spot-container {
-display: flex;
-align-items: center;
-flex-direction: column;
-margin-right: 25px;
-}
-#galactic-box .spot-image {
-width: 130px;
-image-rendering: pixelated;
-margin-bottom: 5px;
-}
-#galactic-box .spot-name {
-width: 130px;
-text-align: center;
-font-size: 12px;
-font-weight: bold;
-transition-duration: 0.5s;
-}
-#galactic-box .spot-name:hover {
-font-style: italic;
-letter-spacing: 1px;
-}
-#galactic-box .prevbutton {
-margin-right: 25px;
-}
-#galactic-box .gw-nav-wrapper {
-display: flex;
-align-items: center;
-justify-content: space-between;
-width: 100%;
-}
-#galactic-box .gw-nav-wrapper .gw-link {
-text-align: center;
-width: 80px;
-font-weight: bold;
-text-decoration: underline;
-font-size: 12px;
-}
-#galactic-box .gw-nav-wrapper .gw-link a {
-all: unset;
-cursor: pointer;
-}
-#start-screen a img:hover {
-    filter: brightness(1.4) drop-shadow(0 0 20px orange);
-    transform: scale(1.25);
-}
-.fade-out {
-  opacity: 0;
-  pointer-events: none;
-}
-
-</style> 
-<!--scrolling title bar-->
+<title>Kaia's Interactive Ship Log</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
 <script>
-  const siteTitle = " ✦ kaia online ✦ my little corner of cyberspace ";
+  const siteTitle = " ✦ kaia's ship log ✦ no snooping around!";
   let scrollTitle = siteTitle;
   setInterval(() => {
     scrollTitle = scrollTitle.substring(1) + scrollTitle.charAt(0);
     document.title = scrollTitle;
   }, 200); //speed
 </script>
-
-</head>
-<body>
-  <audio id="campfire-sound" loop>
-    <source src="assets/ambient.mp3">
-  </audio>
-<div id="start-screen" style="
-  position: fixed;
-  top:0; left:0;
-  width:100%;
-  height:100%;
-  background: #1f0a31 url('assets/galaxybkagnd.jpg') repeat;
-  background-size: cover;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  z-index: 9999;
-  transition: opacity 4s ease;"
->
-  <div class="stars" style="
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
     position: absolute;
-    width: 200%;
-    height: 200%;
-    background: transparent url('assets/pplstar.gif') repeat;
+    top: 0; left: 0; 
+    width: 100vw;
+    height: 100vh;
+    background: url('assets/static.gif');
+    opacity: .98;
+    background-repeat: repeat;
+    background-position: center center;
     background-size: cover;
-    animation: moveStars 60s linear infinite;
-    z-index: 1;
-    opacity: 0.3;
-  "></div>
-  <a onclick="startSite();playTimberSong();setTimeout(toggleSidebar, 450);playSound('campfire')" style="z-index:2;">
-    <img src="assets/campfire.gif" alt="campfire" style="
-      width:150px;
-      cursor:pointer;
-      transition: transform 1s ease, filter 1s ease;">
-  </a>
-  <h1 style="
-    font-size:2rem;
-    color:#fbd4ff;
-    font-family:'Comic Sans MS','Courier New',monospace;
-    text-shadow:2px 2px 5px #000;
-    margin-top:1rem;
-    z-index:2;
-  ">sit by the fire a while...</h1><br>
-  <h3 style="
-    font-size:.8rem;
-    color:#fbd4ff;
-    font-family:'Comic Sans MS','Courier New',monospace;
-    text-shadow:2px 2px 5px #000;
-    margin-top:1rem;
-    z-index:2;
-    text-align:center;
-  ">this site has music! - and some javascript
-  </h3>
-  <h3 style="
-    font-size:.8rem;
-    color:#fbd4ff;
-    font-family:'Comic Sans MS','Courier New',monospace;
-    text-shadow:2px 2px 5px #000;
-    margin-top:0rem;
-    z-index:2;
-    text-align:center;
-  ">(best viewed on a computer)
-  </h3>
+    font-family: 'Space Mono' , monospace;
+  }
+
+#viewportContainer {
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  width: calc(100% - 60px);
+  height: calc(100% - 60px);
+  pointer-events: none; 
+  z-index: 999;
+}
+
+
+#viewportContainer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(77,121,195,0.6);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+#viewportContainer::after {
+  content: "";
+  position: absolute;
+  filter: blur(3px);
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border: 2px solid rgba(77, 121, 195, 0.4);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+.viewport {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; 
+  cursor: grab;
+  z-index: 1;
+  pointer-events: auto; 
+}
+
+
+.content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+  .frame {
+    position: absolute;
+    padding: 3px;
+    text-align: center;
+    width: fit-content;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    border: 0px solid #000;
+    transition: transform 0.5s ease, filter 0.5s ease, box-shadow 0.5s ease;
+  }
+  .frame-small {
+  font-size: 14px;
+  padding: 2px;
+  }
+
+  .frame-normal {
+    font-size: 20px;
+    padding: 3px;
+  }
+
+  .frame-large {
+    font-size: 24px;
+    padding: 4px;
+  }
+  .frame.hidden {
+    display: none;
+    opacity: 0;
+  }
+
+  .frame.fading-in {
+    display: block;
+    opacity: 0;
+  }
+  .color-orange { background: #c37c4d; }
+  .color-blue   { background: #4d79c3; }
+  .color-green  { background: #4dc37c; }
+  .color-purple  { background: #844dc3; }
+  .color-gray  { background: #a3a3a3; }
+  .color-red  { background: #c34d4d; }
+  .color-yellow  { background: #c3b74d; }
+  .color-special  { background: #08ffd6; animation: fadeColors 2s linear infinite;}
+  @keyframes fadeColors {
+    0%   { background: #ff6868; } /* red */
+    16%  { background: #ffb163; } /* orange */
+    33%  { background: #ffff6f; } /* yellow */
+    50%  { background: #6dff6d; } /* green */
+    66%  { background: #6a6aff; } /* blue */
+    83%  { background: #c26dff; } /* indigo */
+    100% { background: #ff6868; } /* back to red for smooth loop */
+  }
+@keyframes rainbowColors {
+  0%   { color: #ff6868; } /* orange */
+  16%  { color: #ffb163; } /* blue */
+  33%  { color: #ffff6f; } /* green */
+  50%  { color: #6dff6d; } /* purple */
+  66%  { color: #6a6aff; } /* red */
+  83%  { color: #c26dff; } /* yellow */
+  100% { color: #ff6868; } /* back to orange */
+}
+  .frame h2 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    color: #000;
+  }
+
+  .frame img {
+    display: block;
+    max-width: 150px;
+    height: auto;
+    border: 0px solid #000;
+  }
+
+  .linething:hover {
+    filter: brightness(1.5);
+  }
+
+  .frame:hover {
+    transform: scale(1.2);
+    z-index: 10;
+    filter: brightness(1.25);
+  }
+
+ #parallax {
+  position: absolute;
+  top: 0; left: 0; 
+  width: 100vw;
+  height: 100vh;
+  background: url('assets/galaxybkgndblue.jpg');
+  filter: blur(2px);
+  background-color: #010d1f;
+  opacity: .8;
+  background-repeat: repeat;
+  background-position: center center;
+  background-size: cover;
+  z-index: -1;
+  transform: translate(0, 0);
+}
+
+
+
+  #logWindow {
+  display: none;
+  position: fixed;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background: rgba(10, 10, 20, 0.9);
+  border: 2px solid #4d79c3;
+  box-shadow: 0 0 20px #4d79c3;
+  color: #eee;
+  font-family: 'Space Mono' , monospace;
+  animation: flicker .005s infinite;
+  z-index: 10000;
+  overflow: hidden;
+}
+
+#logWindow .logHeader {
+  text-align: right;
+
+  animation: flicker .005s infinite;
+  background: rgba(0,0,0,0.3);
+}
+
+#logWindow .logHeader button {
+  background: none;
+  border: none;
+  color: #4d79c3;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 2px 5px;
+}
+
+#closeButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.5);
+  border: 2px solid #4d79c3;
+  color: #4d79c3;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 8px;
+}
+
+#logWindow iframe {
+  width: 100%;
+  height: calc(100% - 0px);
+  border: none;
+}
+#closeBox {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 2px 6px;
+  box-shadow: 0 0 5px #010d1f;
+  border: 2px solid #4d79c3;
+  color: #4d79c3;
+  font-family: 'Space Mono' , monospace;
+  font-size: 18px;
+  cursor: pointer;
+  background: rgba(0,0,0,0.5);
+}
+
+#closeBox:hover {
+  background: rgba(0,0,0,0.7);
+  box-shadow: 0 0 5px #4d79c3;
+}
+#gridOverlayThin {
+  position: fixed;
+  top: 30px;      
+  left: 30px;
+  width: calc(100% - 60px);
+  height: calc(100% - 60px);
+  pointer-events: none;
+  z-index: 0;     
+
+  background-color: rgba(0, 40, 100, 0.05);
+
+  background-image:
+
+    repeating-linear-gradient(
+      to right,
+      rgba(77, 120, 195, 0.075),
+      rgba(77, 120, 195, 0.075) 1px,
+      transparent 1px,
+      transparent 99px
+    ),
+   
+    repeating-linear-gradient(
+      to bottom,
+      rgba(77, 120, 195, 0.075),
+      rgba(77, 120, 195, 0.075) 1px,
+      transparent 1px,
+      transparent 99px
+    );
+
+  background-position:
+    -58px 0,
+    0 73px;
+    border: 1px solid rgba(77, 121, 195, 0.4);
+box-sizing: border-box;
+}
+#gridOverlayCenter {
+  position: fixed;
+  top: 30px;     
+  left: 30px;
+  width: calc(100% - 60px);
+  height: calc(100% - 60px);
+  pointer-events: none;
+  z-index: 15;   
+
+  background-image:
+    linear-gradient(
+      to right,
+      transparent 50.0%,
+      rgba(77, 120, 195, 0.075) 50%,
+      rgba(77, 120, 195, 0.075) 50.4%,
+      transparent 50.0%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 50.0%,
+      rgba(77, 120, 195, 0.075) 50%,
+      rgba(77, 120, 195, 0.075) 50.8%,
+      transparent 50.0%
+    );
+
+  background-position:
+    center,
+    center;
+}
+.arrow-img {
+  position: absolute;
+  transform-origin: 0% 50%;
+  height: 6px; /* or your desired thickness */
+  pointer-events: none;
+  z-index: -1; /* This puts it behind frames */
+}
+.connection-line {
+  position: absolute;
+  height: 6px; /* or your desired thickness */
+  background: #aaa; /* or any color */
+  transform-origin: 0% 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+.popup-window {
+  position: fixed;
+  top: 100px;
+  left: 100px;
+  width: 500px;
+  height: 400px;
+  background: rgba(10, 10, 20, 0.9);
+  border: 2px solid #4d79c3;
+  box-shadow: 0 0 10px #4d79c3;
+  color: #4d79c3;
+  font-family: 'Space Mono' , monospace;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  resize: both;
+  overflow: auto;
+  transform-origin: center center;
+}
+
+@keyframes flicker {
+  0% {
+    text-shadow: 0 0 4px #00eeffa1, 0 0 4px #00eeffa1;
+  }
+  20% {
+    text-shadow: 0 0 2px #00eeffa1, 0 0 2px #00eeffa1;
+  }
+  40% {
+    text-shadow: 0 0 4px #00eeffa1, 0 0 4px #00eeffa1;
+  }
+  60% {
+    text-shadow: 0 0 1px #00eeffa1, 0 0 1px #00eeffa1;
+  }
+  80% {
+    text-shadow: 0 0 3px #00eeffa1, 0 0 3px #00eeffa1;
+  }
+  100% {
+    text-shadow: 0 0 4px #00eeffa1, 0 0 4px #00eeffa1;
+  }
+}
+@keyframes lightflicker {
+  0% {
+    text-shadow: 0 0 3px #9ed0ff96, 0 0 3px #9ed0ff96;
+  }
+  25% {
+    text-shadow: 0 0 1px #9ed0ff96, 0 0 1px #9ed0ff96;
+  }
+  50% {
+    text-shadow: 0 0 0px #9ed0ff96, 0 0 0px #9ed0ff96;
+  }
+  75% {
+    text-shadow: 0 0 3px #9ed0ff96, 0 0 3px #9ed0ff96;
+  }
+  100% {
+    text-shadow: 0 0 1px #9ed0ff96, 0 0 1px #9ed0ff96;
+  }
+}
+.popup-header {
+  background: rgba(0,0,0,0.3);
+  padding: 1px;
+  cursor: move;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Space Mono' , monospace;
+  font-size: 1.5rem;
+  font-weight: 400;
+  border: #13336b;
+  border-radius: 1px;
+  animation: lightflicker .005s infinite;
+}
+
+.popup-header button {
+  background: none;
+  border: 2px solid #4d79c3;
+  color: #34548b;
+  font-family: 'Space Mono' , monospace;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 6px;
+  animation: flicker .005s infinite;
+}
+
+.popup-content {
+  flex: 1;
+  overflow: auto;
+}
+.popup-header span {
+  padding-left: 10px;
+}
+@keyframes crtStartup {
+  0% { transform: scaleY(0); opacity: 0; }
+  40% { transform: scaleY(0.1); opacity: .3; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes crtShutdown {
+  0% { transform: scaleY(1); opacity: 1; }
+  60% { transform: scaleY(0.1); opacity: .3; }
+  100% { transform: scaleY(0); opacity: 0; }
+}
+#screenPadding {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  box-sizing: border-box;
+  border: 29px solid rgba(10, 10, 20, 0.76);
+  z-index: 5000;
+  outline: 4px solirgb(208, 255, 0)ck;
+  outline-offset: -4px; 
+
+  box-shadow: inset 0 0 5px #4d79c3, 
+              inset 0 0 5px rgba(77,121,195,0.6);
+}
+
+.color-orange { background: #c37c4d; color: #c37c4d; }
+.color-blue   { background: #4d79c3; color: #4d79c3; }
+.color-green  { background: #4dc37c; color: #4dc37c; }
+.color-purple { background: #844dc3; color: #844dc3; }
+.color-gray   { background: #a3a3a3; color: #a3a3a3; }
+.color-red    { background: #c34d4d; color: #c34d4d; }
+.color-yellow { background: #c3b74d; color: #c3b74d; }
+.color-special { background: #08ffd6; color: #08ffd6; animation: fadeColors 2s linear infinite;}
+.color-kris { background: #FF5733; color: #FF5733; }
+.color-jacob { background: #7ba5b3; color: #7ba5b3; }
+.color-steven { background: #55ff00; color: #55ff00; }
+.color-gabe { background: #5b21d8; color: #5b21d8; }
+
+.question-rainbow {
+  animation: rainbowColors 2s linear infinite;
+  color: #08ffd6;/
+}
+
+
+.frame:not(:has(img))::after {
+  content: "?";
+  display: block;
+  width: 150px;
+  height: 160px;
+  background: #000;
+  font-size: 90px;
+  line-height: 150px;
+  text-align: center;
+  margin: 10px auto 0;
+}
+
+.frame.color-special:not(:has(img))::after {
+  background: #000; /* stays black background */
+  color: #08ffd6; /* fallback */
+  animation: rainbowColors 2s linear infinite;
+}
+/* size adjustments for small frames */
+.frame-small:not(:has(img))::after {
+  width: 90px;
+  height: 90px;
+  font-size: 54px;
+  line-height: 90px;
+}
+
+/* size adjustments for large frames */
+.frame-large:not(:has(img))::after {
+  width: 225px;
+  height: 260px;
+  font-size: 135px;
+  line-height: 225px;
+}
+#musicPlayerContainer .popup-header {
+  background: rgba(0,0,0,0.3);
+  padding: 2px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 1.5rem;
+  color: #4d79c3;
+  animation: flicker .005s infinite;
+}
+
+#musicPlayerContainer .popup-header button {
+  background: none;
+  border: 2px solid #4d79c3;
+  color: #4d79c3;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+#splashScreen {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(ellipse at center, #000814 0%, #01040d 100%);
+  z-index: 100000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Space Mono', monospace;
+  overflow: hidden;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+#bootTerminal {
+  width: 100%;
+  height: 100%;
+  border: 3px solid #33a3ff;
+  box-shadow:
+    0 0 6px #33a3ff,
+    0 0 12px rgba(51, 173, 255, 0.3) inset,
+    0 0 2px rgba(0, 132, 255, 0.1) inset;
+  background-color: rgba(0, 0, 0, 0.25);
+  animation: flicker .005s infinite;
+  padding: 2rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+#bootText {
+  color: #33a3ff;
+  font-family: 'Space Mono', monospace;
+  font-size: 1.1rem;
+  white-space: pre-wrap;
+  text-shadow: 0 0 4px #33a3ff;
+  animation: flicker .005s infinite;
+}
+
+.scanlines {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(30, 101, 255, 0.644),
+    rgba(0, 119, 255, 0.719) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+@keyframes crtFadeDown {
+  0%   { transform: scaleY(1); opacity: 1; }
+  60%  { transform: scaleY(0.08); opacity: .3; }
+  100% { transform: scaleY(0); opacity: 0; }
+}
+
+.crtFadeDown {
+  animation: crtFadeDown 1.6s ease forwards;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="splashScreen">
+  <div id="bootTerminal">
+    <pre id="bootText"></pre>
+  </div>
+  <div class="scanlines"></div>
 </div>
+<audio id="splashBootSound" src="altsite/sfx/shiplog_switchmode_forward.wav" preload="auto"></audio>
+<audio id="splashSoundOut" src="altsite/sfx/shiplog_switchmode_back.wav" preload="auto"></audio>
+<audio id="typeSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
+<audio id="startupSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
 
-  <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
+
+  <!-- main site -->
+<div id="siteContainer">
+<!-- audio -->
+<audio id="hoverSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
+<audio id="clickSound" src="altsite/fx/1selectentry.wav" preload="auto"></audio>
+<audio id="clickOutSound" src="altsite/fx/1leaventry.wav" preload="auto"></audio>
+<audio id="zoomSound" src="altsite/fx/zoom.wav" preload="auto"></audio>
+<audio id="revealSound" src="altsite/fx/newentry.wav" preload="auto"></audio>
 
 
-  
-  <div class="sidebar" id="sidebar">
-    <div style="display: flex; gap: 1rem; justify-content: center;">
-  
-  <a target="main-frame">
+<div id="screenPadding"></div>
+<div id="gridOverlayThin"></div>
+<div id="parallax"></div>
+
+<!-- viewer -->
+<div id="viewportContainer">
+<div class="viewport" id="viewport">
+  <div class="content" id="content">
+      <!--add 70 on x, 100 on y--> 
+    <div id="line-container" style="position: relative; width: 90000px; height: 90000px;">
     
-  <a target="main-frame">
-      <img src="assets/mailbox3.gif" alt="a mailbox gif" class="mailbox" style="max-width: 10rem;" onclick="playSoundMail()"/>
-    </a> 
-  </a>
-</div>
+  </div>
 
-    <audio id="mail" src="assets/mail.mp3"></audio>
-    <audio id="click" src="assets/click.mp3"></audio>
-</audio>
 
-    <ul class="tree">
-      <li>
-        <details open>
-          <summary>home</summary>
-          <ul>
-            <li><a href="welcome.html" target="main-frame" onclick=" toggleSidebar()">welcome!</a></li>
-            <li><a href="updates.html" target="main-frame" onclick=" toggleSidebar()">updates</a></li>
-            <li><a href="thesite.html" target="main-frame" onclick=" toggleSidebar()">the site</a></li>
-            <li><a href="https://kaiasei.atabook.org/" target="main-frame" class="gradient-text" onclick=" toggleSidebar()">guestbook!</a></li>
-            <li><a href="indexrm.html" target="_parent" class="flashing-text" onclick=" toggleSidebar();togglePlay()">rumor mode</a></li>
-          </ul>
-        </details>
-      </li>
-      <li>
-        <details>
-          <summary>all about me</summary>
-          <ul>
-            <li><a href="bio.html" target="main-frame"onclick="toggleSidebar()">bio</a></li>
-            <li><a href="video.html" target="main-frame"onclick="toggleSidebar()">video</a></li>
-            <li><a href="photo.html" target="main-frame"onclick="toggleSidebar()">photo</a></li>
-            <li><a href="friends.html" target="main-frame"onclick="toggleSidebar()">friends</a></li>
-            <li><a href="music.html" target="main-frame"onclick="toggleSidebar()">music</a></li>
-            <li><a href="bigguy.html" target="main-frame"onclick="toggleSidebar()">big guy</a></li>
-          </ul>
-        </details>
-      </li>
-      <li>
-        <details>
-          <summary>internet</summary>
-          <ul>
-            <li><a href="internetstuf.html" target="main-frame">about internet</a></li>
-            <li><a href="internetstuf2.html" target="main-frame">internet pt.2</a></li>
-            <li><a href="pacman.html" target="main-frame">ms.pac-man</a></li>
-            <li><a href="https://iframe.chat/embed?chat=10669156" target="main-frame">webchat</a></li>
-          </ul>
-        </details>
-      </li>
-      <li>
-        <details>
-          <summary>webrings!!</summary>
-          <ul>
-            <li>
-              <a href='https://webring.dinhe.net/prev/https://kaia.starscene.com'><<<</a>
-              <a href="https://webring.dinhe.net/">Retronauts Webring</a>
-              <a href='https://webring.dinhe.net/next/https://kaia.starscene.com'>>>></a>
-            </li>
-            <li><object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#383838" type="image/svg+xml" style="width: 100px; height: 100px;"></object></li>
-            <li id='galactic-webring'>
-              <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js"></script>
-              <script type="text/javascript" src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-widget.js"></script>
-            </li>
-          </ul>
-        </details>
-      </li>
-      <li>
-        <details>
-          <summary>other</summary>
-          <ul>
-            <li><a href="food.html" target="main-frame">baking / cooking</a></li>
-            <li><a href="arcade.html" target="main-frame">arcade</a></li>
-            <li><a href="wilds.html" target="main-frame" onclick="play143Song()">outer wilds</a></li>
-            <li><a href="celeste.html" target="main-frame">celeste</a></li>
-            <li><a href="https://status.cafe/users/bluejay023" target="main-frame">status.cafe</a></li>
-            <li><a href="template.html" target="main-frame">page template</a></li>
-            
-          </ul>
-        </details>
-      </li>
-    </ul>
-
-    <div id="statuscafe" style="margin-top:1em;">
-      <div id="statuscafe-username"></div>
-      <div id="statuscafe-content"></div>
+    <!--entries--> 
+    <div class="frame frame-normal color-gray" style="left: 880px; top: 400px;" data-page="welcome.html"> <!-- welcome 0 -->
+        <h2>Welcome</h2>
+        <img src="altsite/entrypng/welcome.png" alt="welcome">
     </div>
-    
-    <div id="music-player" style="margin-top: 2em;">
-  <strong>Now Playing:</strong>
-  <div id="now-playing" style="margin-bottom: 0.5em;">hit play...</div>
-
-  <audio id="audio" autoplay></audio>
-
-
-  <input
-    type="range"
-    id="progress"
-    value="0"
-    min="0"
-    max="100"
-    step="1"
-    style="width: 100%; margin: 0.5em 0;"
-  />
-
-  <label style="display:block; margin-bottom: 0.5em;">
-    Volume:
-    <input
-      type="range"
-      id="volume"
-      min="0"
-      max="1"
-      step="0.01"
-      value="1"
-      style="width: 100%;"
-    />
-  </label>
-
-  <div>
-    <button onclick="togglePlay()">▶ / ⏸</button>
-    <button onclick="playRandomSong()">⏭</button>
+    <div class="frame frame-large color-gray" style="left: -50px; top: 430px;" data-page="bio.html"> <!-- me 1 -->
+        <h2>Me</h2>
+        <img src="assets/sicktrick.png" alt="me">
+    </div>
+    <div class="frame frame-normal color-gray" style="left: 520px; top: -580px;" data-page="thesite.html"> <!-- the site 2 -->
+        <h2>The Site</h2>
+        <!-- <img src="assets/" alt="the site"> -->
+    </div>
+    <div class="frame frame-normal color-green" style="left: 1600px; top: -390px;" data-page="internetstuf.html"> <!-- internet 3 -->
+        <h2>Internet</h2>
+        <img src="altsite/entrypng/warp.png" alt="my site">
+    </div>
+    <div class="frame frame-small color-gray" style="left: 50px; top: 550px; max-width: 90px;" data-page="altsite/juststatus.html"> <!-- status 4 -->
+        <h2>Status</h2>
+        <!-- <img src="assets/placeholder.png" style="size: 90px 90px;" alt="status"> -->
+    </div>
+    <div class="frame color-special" style="left: 770px; top: 1335px; display:none;" data-page="wilds.html"> <!-- wilds 5 -->
+        <h2>Outer Wilds</h2>
+        <img src="altsite/entrypng/wilds.jpg" alt="outer wilds">
+    </div>
+    <div class="frame color-blue" style="left: 283px; top: -1500px;" data-page="konsole.html"> <!-- console 6 -->
+        <h2>Console</h2>
+        <!--<img src="altsite/entrypng/me.png" alt="a console?"> -->
+    </div>
+    <div class="frame color-green" style="left: 1786px; top: -490px;" data-page="internetstuf2.html"> <!-- other sites 7 -->
+        <h2>Other Sites!</h2>
+        <!-- <img src="altsite/entrypng/warp.png" alt="other sites"> -->
+    </div>
+    <div class="frame color-green" style="left: 1586px; top: 120px;" data-page="foryou.html"> <!-- for you 8 -->
+        <h2>For You</h2>
+        <!-- <img src="altsite/entrypng/warp.png" alt="stuffs for you"> -->
+    </div>
+    <div class="frame color-orange" style="left: -445px; top: 1620px;" data-page="friends.html"> <!-- friends 9 -->
+        <h2>Friends</h2>
+        <img src="altsite/entrypng/friends.png" alt="friends">
+    </div>
+    <div class="frame color-orange" style="left: -1100px; top: -540px;" data-page="photo.html"> <!-- photo 10 -->
+        <h2>Photos</h2>
+        <img src="altsite/entrypng/photo.jpg" alt="photography">
+    </div>
+    <div class="frame color-orange" style="left: -1030px; top: 720px;" data-page="video.html"> <!-- video 11 -->
+        <h2>Videos</h2>
+        <img src="altsite/entrypng/video.jpg" alt="video">
+    </div>
+    <div class="frame color-green" style="left: 2310px; top: -110px;" data-page="https://kaiasei.atabook.org/"> <!-- guestbook 12 -->
+        <h2>Guestbook</h2>
+        <!-- <img src="altsite/entrypng/video.jpg" alt="video"> -->
+    </div>
+    <div class="frame color-special" style="left: 1900px; top: -1000px; display:none;" data-page="manifesto.html"> <!-- manifesto 13 -->
+        <h2>Manifesto</h2>
+        <!-- <img src="altsite/entrypng/warp.png" alt="indie web manifesto"> -->
+    </div>
+    <div class="frame color-purple" style="left: 1280px; top: 1500px; max-width: 120%;" data-page="videogames.html"> <!-- video games 14 -->
+        <h2>Video Games</h2>
+        <img src="assets/gamestation.jpg" alt="videogames">
+    </div>
+    <div class="frame color-purple" style="left: 1160px; top: 2020px;" data-page="celeste.html"> <!-- celeste 15 -->
+        <h2>Celeste</h2>
+        <!-- <img src="altsite/entrypng/welcome.png" alt="celeste"> -->
+    </div>
+    <div class="frame color-purple" style="left: 820px; top: 1735px" data-page="minecraft.html"> <!-- minecraft 16 -->
+        <h2>Minecraft</h2>
+        <!-- <img src="altsite/entrypng/welcome.png" alt="minecraft"> -->
+    </div>
+    <div class="frame color-yellow" style="left: -560px; top: -570px; display:none;" data-page="music.html"> <!-- music 17 -->
+        <h2>Music</h2>
+        <!-- <img src="assets/musicplayer.jpg" alt="music"> -->
+    </div>
+    <div class="frame color-gray frame-small" style="left: 475px; top: -460px; max-width: 90px;" data-page="musicplayer.html"> <!-- musicplayer 18 -->
+        <h2>Music Player</h2>
+        <!-- <img src="assets/musicplayer.jpg" style="size: 90px 90px;" alt="musicplayer"> -->
+    </div>
+    <div class="frame color-special" style="left: 1200px; top: -1090px; display:none;" data-page="jacobonline-old/index.html" > <!-- old site 19 -->
+        <h2>Old Site</h2>
+        <img src="assets/mybmp.jpg" alt="old site">
+    </div>
+    <div class="frame color-gray" style="left: -240px; top: 50px;" data-page="bigguy.html" > <!-- big guy 20 -->
+        <h2>Big Guy</h2>
+        <img src="assets/bigposterguy.jpg" alt="big guy">
+    </div>
+    <div class="frame color-jacob" style="left: 100px; top: 1300px; display:none;" data-page="friends/jacob.html" > <!-- jacob 21 -->
+        <h2>Jacob</h2>
+        <!-- <img src="assets/bigposterguy.jpg" alt="jacob"> -->
+    </div>
+   <div class="frame color-kris" style="left: -70px; top: 2020px;" data-page="friends/kris.html"> <!-- kris 22 -->
+        <h2>Kris</h2>
+        <img src="assets/kris.png" alt="kris">
+    </div>
+   <div class="frame color-gabe" style="left: -1170px; top: 1320px;" data-page="friends/gabe.html"> <!-- gabe 23 -->
+        <h2>Gabriel</h2>
+        <img src="assets/gabe.png" alt="gabriel">
+    </div>
+    <div class="frame color-gray frame-small" style="left: -1140px; top: 1640px;" data-page="miami.html"> <!-- miami box 24 -->
+        <h2>Miami</h2>
+        <img src="assets/miami.jpg" alt="miami">
+    </div>
+    <div class="frame color-gray frame-small" style="left: 230px; top: 1920px;" data-page="daytona.html"> <!-- daytona box 25 -->
+        <h2 style="font-size: 95%;">Daytona<br> Beach</h2>
+        <img src="assets/daytona.jpg" alt="daytona">
+    </div>
+    <div class="frame color-green frame-small" style="left: 1693px; top: 250px;" data-page="webrings.html" > <!-- webrings 26 -->
+        <h2 style="font-size: 95%;">Webrings</h2>
+        <!-- <img src="assets/daytona.jpg" alt="daytona"> -->
+    </div>
+    <div class="frame color-gray frame-small" style="left: -1000px; top: 430px;" data-page="creative.html" > <!-- creative box 27 -->
+        <h2>Creative</h2>
+        <img src="assets/creative.jpg" alt="creative">
+    </div>
+    <div class="frame color-gray" style="left: 83px; top: -1280px;" data-page="updates.html"> <!-- update log 28 -->
+        <h2>Updates</h2>
+        <!--<img src="altsite/entrypng/me.png" alt="a console?"> -->
+    </div>
   </div>
-  
 </div>
-    <footer>
-<a target="main-frame">
-    <img 
-      id="campfire" 
-      src="assets/campfire.gif" 
-      alt="campfire" 
-      class="campfire-icon"
-      onclick="toggleCampfire()"
-      style="max-width: 5rem;" 
-    />
-  </a>
-  <a target="main-frame">
-    <img 
-      src="assets/computer_explorer-2.png" 
-      alt="a small computer" 
-      class="mailbox"
-      onclick="playSound('winstart');openFakeWindow('jacobonline-old/index.html');"
-    />
-  </a>
-     <br> &copy; 2025 kaia <br> stay safe out there!
-    </footer>
-    
+</div>
+<div id="gridOverlayCenter"></div>
+<div id="musicPlayerContainer" style="
+  display: none;
+  position: fixed;
+  top: 10vh;
+  left: 15vh;
+  width: 22vw;
+  height: 18.5vh;
+  background: rgba(10,10,20,0.9);
+  border: 2px solid #4d79c3;
+  box-shadow: 0 0 10px #4d79c3;
+  z-index: 1000;
+  overflow: hidden;
+  resize: none;
+  flex-direction: column;
+">
+  <div class="popup-header" id="musicPlayerHeader" style="cursor: move;">
+    <span>Audio Player</span>
+    <button onclick="closeMusicPlayer()"> × </button>
   </div>
-  
-  <div class="main-content" id="main-content">
-    
-    <iframe
-  name="main-frame"
-  src="welcome.html"
-  allowtransparency="true"
-  style="flex:1; border:none;"
-  scrolling="auto">
-</iframe>
+  <iframe id="musicFrame" src="musicplayer.html" style="
+    width: 100%;
+    height: calc(100% - 30px);
+    border: none;
+  "></iframe>
+</div>
 
-    
-  </div>
 
-  <script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
 
-  <script>
-    function startSite() {
-      document.getElementById('start-screen').classList.add('fade-out');
-      document.getElementById('start-screen').style.opacity = 0;
-      setTimeout(() => {
-      document.getElementById('start-screen').style.display = "none";
-      document.querySelector('.toggle-sidebar').style.opacity = 1;
-      document.getElementById('sidebar').style.opacity = 1;
-      document.getElementById('main-content').style.opacity = 1;
-      }, 4000);
+<script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
+<script>
+
+function closeMusicPlayer() {
+  const clickOutSound = document.getElementById('clickOutSound');
+  clickOutSound.currentTime = 0;
+  clickOutSound.play();
+  const container = document.getElementById("musicPlayerContainer");
+  container.style.animation = "crtShutdown 0.4s forwards";
+  setTimeout(() => {
+    container.style.display = "none";
+  }, 400);
+}
+
+
+
+const viewport = document.getElementById('viewport');
+const content = document.getElementById('content');
+const parallax = document.getElementById('parallax');
+
+let isPanning = false;
+let startX = 0, startY = 0;
+let translateX = 0, translateY = 0;
+let scale = 1;
+let targetScale = 1;
+let zoomAnimating = false;
+
+let zoomAnchorX = 0;
+let zoomAnchorY = 0;
+
+viewport.addEventListener('mousedown', (e) => {
+  isPanning = true;
+  startX = e.clientX - translateX;
+  startY = e.clientY - translateY;
+  viewport.style.cursor = "grabbing";
+});
+
+viewport.addEventListener('mouseup', () => {
+  isPanning = false;
+  viewport.style.cursor = "grab";
+});
+
+viewport.addEventListener('mouseleave', () => {
+  isPanning = false;
+  viewport.style.cursor = "grab";
+});
+
+viewport.addEventListener('mousemove', (e) => {
+  if (!isPanning) return;
+  translateX = e.clientX - startX;
+  translateY = e.clientY - startY;
+  updateTransform();
+});
+
+makeDraggable(
+  document.getElementById("musicPlayerContainer"),
+  document.getElementById("musicPlayerHeader")
+);
+
+viewport.addEventListener('wheel', (e) => {
+  e.preventDefault();
+
+  const scaleAmount = -e.deltaY * 0.001;
+  const newTargetScale = Math.min(Math.max(0.1, targetScale + scaleAmount), 5);
+
+  const rect = viewport.getBoundingClientRect();
+  zoomCursorX = e.clientX - rect.left;
+  zoomCursorY = e.clientY - rect.top;
+
+  zoomAnchorX = (zoomCursorX - translateX) / scale;
+  zoomAnchorY = (zoomCursorY - translateY) / scale;
+
+  targetScale = newTargetScale;
+
+  if (!zoomAnimating) {
+    zoomAnimating = true;
+    animateZoom();
+  }
+
+  const zoomSound = document.getElementById('zoomSound');
+  if (zoomSound && zoomSound.paused) {
+  zoomSound.currentTime = 0;
+  zoomSound.play();
+  }
+
+});
+
+document.querySelectorAll(".frame").forEach(frame => {
+  frame.addEventListener("click", () => {
+    clickSound.currentTime = 0;
+    clickSound.play();
+
+    const targetPage = frame.getAttribute("data-page") || "default.html";
+
+    // Audio Player special handling
+    if (targetPage === "musicplayer.html") {
+      const container = document.getElementById("musicPlayerContainer");
+      container.style.display = "flex";
+      container.style.animation = "crtStartup 0.4s forwards";
+      return;
     }
 
-  function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('hidden');
+    const windowEl = document.createElement("div");
+    windowEl.className = "popup-window";
+    windowEl.style.animation = "crtStartup 0.4s forwards";
+
+    const headerEl = document.createElement("div");
+    headerEl.className = "popup-header";
+    const titleEl = document.createElement("span");
+    const frameTitle = frame.querySelector("h2")?.textContent || "Untitled";
+    titleEl.textContent = frameTitle;
+
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = " × ";
+    closeBtn.onclick = () => {
+      const clickOutSound = document.getElementById('clickOutSound');
+      clickOutSound.currentTime = 0;
+      clickOutSound.play();
+      windowEl.style.animation = "crtShutdown 0.4s forwards";
+      setTimeout(() => {
+        windowEl.remove();
+        drawConnections();
+      }, 400);
+    };
+    headerEl.appendChild(titleEl);
+    headerEl.appendChild(closeBtn);
+
+    const contentEl = document.createElement("div");
+    contentEl.className = "popup-content";
+    const iframe = document.createElement("iframe");
+    iframe.src = targetPage;
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.border = "none";
+    contentEl.appendChild(iframe);
+    //play special song
+    if (targetPage === "wilds.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "14.3 Billion Years - Andrew Prahlow"
+      }, "*");
+    }
+    if (targetPage === "jacobonline-old/index.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "Beacon - Disasterpiece"
+      }, "*");
+    }
+    if (targetPage === "friends/kris.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "Delirious Acting (Twilight Theater) - Pseudoregalia OST"
+      }, "*");
+    }
+    if (targetPage === "friends/gabe.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "Phantom Liberty - Dawid Podsiadło"
+      }, "*");
+    }
+    // Default size
+    windowEl.style.width = "80vw";
+    windowEl.style.height = "80vh";
+    windowEl.style.top = "10vh";
+    windowEl.style.left = "10vw";
+    windowEl.style.resize = "both";
+
+    // Special sizing for status
+    if (targetPage === "altsite/juststatus.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "17vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
+    // Special sizing for miami
+    if (targetPage === "miami.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "17vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
+    // Special sizing for daytona
+    if (targetPage === "daytona.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "17vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
+    // Special sizing for creative
+    if (targetPage === "creative.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "17vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
+    // Special sizing for console
+    if (targetPage === "konsole.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "14vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
+    if (targetPage === "webrings.html") {
+      windowEl.style.width = "400px";
+      windowEl.style.height = "580px";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+    }
+
+    windowEl.appendChild(headerEl);
+    windowEl.appendChild(contentEl);
+    document.body.appendChild(windowEl);
+    makeDraggable(windowEl, headerEl);
+    drawConnections();
+  });
+});
+
+
+
+function animateZoom() {
+  const zoomSpeed = 0.13; // adjust to zoom speed
+
+  const scaleDiff = targetScale - scale;
+  scale += scaleDiff * zoomSpeed;
+
+  translateX = zoomCursorX - zoomAnchorX * scale;
+  translateY = zoomCursorY - zoomAnchorY * scale;
+
+  updateTransform();
+
+  if (Math.abs(scaleDiff) < 0.001) {
+    scale = targetScale;
+    updateTransform();
+    zoomAnimating = false;
+    return;
   }
-  const songs = [
-  { title: "3AM - Animal Crossing New Leaf", file: "music/3am.mp3" },
-  { title: "Travelers - Andrew Prahlow", file: "music/trav.mp3" },
-  { title: "14.3 Billion Years - Andrew Prahlow", file: "music/14.3.mp3" },
-  { title: "Comforting Memories - Kumi Tanioka", file: "music/memories.mp3" },
-  { title: "Falling Stars - A Shell In The Pit", file: "music/stars.mp3" },
-  { title: "Timber Hearth - Andrew Prahlow", file: "music/timber.mp3" },
-  { title: "serenity - kaiasei", file: "music/serenity.mp3" },
-  { title: "dawn - kaiasei", file: "music/dawn.mp3" },
-  { title: "Main Title - Andrew Prahlow", file: "music/title.mp3" },
-  { title: "Giant's Deep - Andrew Prahlow", file: "music/deep.mp3" },
-  { title: "The Ancient Glade - Andrew Prahlow", file: "music/glade.mp3" },
-  { title: "Space - Andrew Prahlow", file: "music/space.mp3" },
-  { title: "The Sun Station - Andrew Prahlow", file: "music/sun.mp3" },
-  { title: "Castaways - Andrew Prahlow", file: "music/castaways.mp3" }
+
+  requestAnimationFrame(animateZoom);
+}
+
+
+function updateTransform() {
+  content.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  parallax.style.backgroundPosition = `${translateX * 0.2}px ${translateY * 0.2}px`;
+}
+
+
+// Hover sound
+const hoverSound = document.getElementById("hoverSound");
+document.querySelectorAll(".frame").forEach(frame => {
+  frame.addEventListener("mouseenter", () => {
+    const hsound = new Audio('altsite/fx/shiplog_highlight.wav');
+    hsound.volume = 0.3;
+    hsound.play();
+  });
+});
+
+function closeLogWindow() {
+  const clickOutSound = document.getElementById('clickOutSound');
+  clickOutSound.currentTime = 0;
+  clickOutSound.play();
+  document.getElementById('logWindow').style.display = "none";
+}
+
+
+
+function makeDraggable(dragTarget, handle) {
+  let offsetX = 0;
+  let offsetY = 0;
+  let isDragging = false;
+
+  handle.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - dragTarget.offsetLeft;
+    offsetY = e.clientY - dragTarget.offsetTop;
+    document.body.style.userSelect = 'none';
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    document.body.style.userSelect = '';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      let newLeft = (e.clientX - offsetX);
+      let newTop = (e.clientY - offsetY);
+
+      // Get window size and element size
+      const elWidth = dragTarget.offsetWidth;
+      const elHeight = dragTarget.offsetHeight;
+
+      // Clamp all sides (50px padding)
+      if (newLeft < 30) newLeft = 30;
+      if (newTop < 30) newTop = 30;
+
+      dragTarget.style.left = newLeft + 'px';
+      dragTarget.style.top = newTop + 'px';
+    }
+  });
+}
+
+// container that holds the entries
+const frames = document.querySelectorAll('.frame');
+const lineContainer = document.getElementById('line-container');
+
+// list of pairs of entries
+const connections = [
+  [0, 1], // welcome - me
+  [1, 2], // me - the site
+  [1,20], // me - big guy
+  [2, 3], // the site - internet
+  [2, 28], // the site - update log
+  [6, 28], // console - update log
+  [3, 7], // internet - other sites
+  [0, 8], // welcome - for you
+  [3, 8], // internet - for you
+  [3, 12], // internet - guestbook
+  [7, 13], // other sites - manifesto
+  [5, 14], // wilds - video games
+  [14,15], // video games - celeste
+  [14,16], // video games - minecraft
+  [0, 14], // welcome - video games
+  [6, 19],  // console - old site
+  [3, 19], // internet - old site
+  [27, 1], // creative - me
+  [27, 10], // creative - photo
+  [27, 11], // creative - video
+  [21, 5], // jacob - wilds
+  [21, 25], // jacob - daytona
+  [22, 25], // kris - daytona
+  [24, 23], // miami - gabe
+  [24, 9], // miami - friends
+  [25,9], // daytona - friends
+  [8,12], // for you - guestbook
+  [9, 1], // friends - me
+
 
 ];
 
-const audio = document.getElementById("audio");
-const nowPlaying = document.getElementById("now-playing");
-const progress = document.getElementById("progress");
-const volume = document.getElementById("volume");
-let currentSongIndex = -1;
+// For each connection, create a line
+connections.forEach(([fromIdx, toIdx]) => {
+  const from = frames[fromIdx];
+  const to = frames[toIdx];
 
-function playRandomSong() {
-  let newIndex;
-  do {
-    newIndex = Math.floor(Math.random() * songs.length);
-  } while (newIndex === currentSongIndex && songs.length > 1);
-
-  currentSongIndex = newIndex;
-  const song = songs[currentSongIndex];
-  audio.src = song.file;
-  audio.play();
-  nowPlaying.textContent = song.title;
-}
-function playTimberSong() {
-  const timberIndex = songs.findIndex(song => song.file === "music/timber.mp3");
-  if (timberIndex !== -1) {
-    currentSongIndex = timberIndex;
-    const song = songs[currentSongIndex];
-    audio.src = song.file;
-    audio.play();
-    nowPlaying.textContent = song.title;
-  } else {
-    console.error("Timber Hearth not found in songs array.");
+  // Skip drawing if either frame is hidden
+  if (from.style.display === "none" || to.style.display === "none") {
+    return; // skip this line
   }
-}
-function play143Song() {
-  const timberIndex = songs.findIndex(song => song.file === "music/14.3.mp3");
-  if (timberIndex !== -1) {
-    currentSongIndex = timberIndex;
-    const song = songs[currentSongIndex];
-    audio.src = song.file;
-    audio.play();
-    nowPlaying.textContent = song.title;
-  } else {
-    console.error("14.3 Billion Years not found in songs array.");
-  }
-}
 
-function playSoundMail() {
-  document.getElementById('mail').play();
-}
+  // Get positions relative to the content container
+  const fromRect = from.getBoundingClientRect();
+  const toRect = to.getBoundingClientRect();
+  const contentRect = content.getBoundingClientRect();
 
-function playClickSound() {
-  document.getElementById('click').play();
-}
+  const x1 = from.offsetLeft + from.offsetWidth / 2;
+  const y1 = from.offsetTop + from.offsetHeight / 2;
+  const x2 = to.offsetLeft + to.offsetWidth / 2;
+  const y2 = to.offsetTop + to.offsetHeight / 2;
 
-function playSound(name) {
-  const audio = new Audio(`assets/${name}.mp3`);
-  audio.volume = 0.3;
-  audio.play();
-}
+  // Compute distance and angle
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  const angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
-document.addEventListener('click', () => {
+  // Create the line image
+  const line = document.createElement('div');
+  line.className = 'connection-line';
+
+  // Style the image to stretch and rotate
+  line.style.left = `${x1}px`;
+  line.style.top = `${y1}px`;
+  line.style.width = `${distance}px`;
+  line.style.transform = `rotate(${angle}deg)`;
+
+
+  lineContainer.appendChild(line);
+});
+
+let mouseDownTime = 0;
+
+document.addEventListener('mousedown', () => {
+  mouseDownTime = Date.now();
+}, true);
+
+document.addEventListener('mouseup', (e) => {
+  const duration = Date.now() - mouseDownTime;
+  
+  // e.button === 0 ensures it's the left mouse button
+  if (duration < 100 && e.button === 0) {
     const sound = new Audio('assets/click.mp3');
     sound.volume = 0.2;
     sound.play();
+  }
 }, true);
 
+function drawConnections() {
+  // Clear old lines
+  lineContainer.innerHTML = '';
 
-function togglePlay() {
-  if (audio.paused) {
-    audio.play();
-  } else {
-    audio.pause();
-  }
+  const visibleFrames = Array.from(document.querySelectorAll('.frame')).filter(f => f.style.display !== 'none');
+
+  // Only draw lines for visible frames
+  connections.forEach(([fromIdx, toIdx]) => {
+    const from = visibleFrames.find(f => f === frames[fromIdx]);
+    const to = visibleFrames.find(f => f === frames[toIdx]);
+    if (!from || !to) return;
+
+    const x1 = from.offsetLeft + from.offsetWidth / 2;
+    const y1 = from.offsetTop + from.offsetHeight / 2;
+    const x2 = to.offsetLeft + to.offsetWidth / 2;
+    const y2 = to.offsetTop + to.offsetHeight / 2;
+
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    const line = document.createElement('div');
+    line.className = 'connection-line';
+    line.style.left = `${x1}px`;
+    line.style.top = `${y1}px`;
+    line.style.width = `${distance}px`;
+    line.style.transform = `rotate(${angle}deg)`;
+
+    lineContainer.appendChild(line);
+  });
 }
 
-audio.addEventListener("timeupdate", () => {
-  if (audio.duration) {
-    progress.value = (audio.currentTime / audio.duration) * 100;
-  }
-});
+window.addEventListener("message", (event) => {
+  if (event.data?.type === "showEntry") {
+    const command = event.data.command.toLowerCase();
 
-progress.addEventListener("input", () => {
-  if (audio.duration) {
-    audio.currentTime = (progress.value / 100) * audio.duration;
-  }
-});
+    const map = {
+      "wilds": [5],
+      "ideas": [13],
+      "windows98": [19],
+      "music": [17],
+      "kris": [22],
+      "jacob": [21],
 
-volume.addEventListener("input", () => {
-  audio.volume = parseFloat(volume.value);
-});
+      "FreedomDive": [5,13,19,17,21,22],
+      "sudo shutdown now": "kill",
+    };
 
-audio.addEventListener("ended", playRandomSong);
-  
-function toggleCampfire() {
-  const img = document.getElementById('campfire');
-  const sound = document.getElementById('campfire-sound');
+    const idxList = map[command];
+    if (idxList !== undefined) {
+      if (idxList === "kill") {
+        // Play shutdown sound
+        const shutdownSound = new Audio("assets/poweroff.mp3");
+        shutdownSound.volume = 0.4; // adjust if you want
+        shutdownSound.play();
 
-  const filename = img.src.split('/').pop().toLowerCase();
+        // Animate all popup windows with CRT shutdown
+        const popups = document.querySelectorAll(".popup-window");
+        popups.forEach(popup => {
+          popup.style.animation = "crtShutdown 0.4s forwards";
+        });
 
-  if (filename === 'campfire.gif') {
-    // Switching OFF
-    img.src = 'assets/campfire.png';
-    sound.pause();
-    sound.currentTime = 5;
+        // Animate main site container with CRT shutdown
+        const siteContainer = document.getElementById("siteContainer");
+        siteContainer.style.animation = "crtShutdown 0.4s forwards";
 
-    // Play extinguish sound
-    const extinguishSound = new Audio('assets/extinguish.mp3');
-    extinguishSound.volume = 0.3; // adjust volume if needed
-    extinguishSound.play();
+        // After animation, wipe everything and set to black
+        setTimeout(() => {
+          siteContainer.innerHTML = "";
+          siteContainer.style.background = "black";
+          document.body.style.background = "black";
+          document.documentElement.style.background = "black";
+          document.title = "";
+        }, 400);
 
-  } else {
-    // Switching ON
-    img.src = 'assets/campfire.gif';
-    sound.volume = 0.3; 
-    sound.play();
+        return;
+      }
 
-    const lightSound = new Audio('assets/campfire.mp3');
-    lightSound.volume = 0.3; // adjust volume if needed
-    lightSound.play();
-  }
-}
 
-function openFakeWindow(url) {
-  const win = document.createElement('div');
-  win.style.position = 'fixed';
-  win.style.top = '100px';
-  win.style.left = '100px';
-  win.style.width = '400px';
-  win.style.height = '300px';
-  win.style.zIndex = 9999;
-  win.style.opacity = '0';
-  win.style.transition = 'opacity 8s ease';
+      idxList.forEach(idx => {
+        const frames = window.parent.document.querySelectorAll(".frame");
+        const frame = frames[idx];
+        const revealSound = window.parent.document.getElementById("revealSound");
+        
+        if (!frame) return;
 
-  const shadow = win.attachShadow({ mode: 'open' });
+        const wasHidden = frame.style.display === "none" || frame.style.display === "";
 
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'https://unpkg.com/98.css';
+        frame.style.display = "block";
+        frame.style.opacity = "0";
+        void frame.offsetWidth; // trigger reflow
+        frame.style.opacity = "1";
 
-  const windowHtml = document.createElement('div');
-  windowHtml.className = 'window';
-  windowHtml.style.width = '100%';
-  windowHtml.style.height = '100%';
-  windowHtml.style.display = 'flex';
-  windowHtml.style.flexDirection = 'column';
-  windowHtml.style.position = 'relative'; 
-
-  const titleBar = document.createElement('div');
-  titleBar.className = 'title-bar';
-  titleBar.innerHTML = `
-    <div class="title-bar-text">Loading...</div>
-    <div class="title-bar-controls">
-      <button aria-label="Close"></button>
-    </div>
-  `;
-
-  const body = document.createElement('div');
-  body.className = 'window-body';
-  body.style.flex = '1';
-  body.style.overflow = 'hidden';
-  body.style.position = 'relative';
-  const iframe = document.createElement('iframe');
-  iframe.src = url;
-  iframe.style.width = '100%';
-  iframe.style.height = '100%';
-  iframe.style.border = 'none';
-  body.appendChild(iframe);
-
-  const resize = document.createElement('div');
-  resize.style.width = '8px';
-resize.style.height = '8px';
-resize.style.position = 'absolute';
-resize.style.right = '2px';
-resize.style.bottom = '2px';
-resize.style.cursor = 'nwse-resize';
-resize.style.background = `
-  repeating-linear-gradient(
-    45deg,
-    #c0c0c0,
-    #c0c0c0 1px,
-    #808080 1px,
-    #808080 2px
-  )
-`;
-resize.style.borderTop = "1px solid #fff";
-resize.style.borderLeft = "1px solid #fff";
-
-  windowHtml.appendChild(titleBar);
-  windowHtml.appendChild(body);
-  windowHtml.appendChild(resize);
-  shadow.appendChild(link);
-  shadow.appendChild(windowHtml);
-
-  document.body.appendChild(win);
-
-  titleBar.querySelector('button').onclick = () => win.remove();
-
-  let offsetX, offsetY, isDragging = false;
-  titleBar.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    offsetX = e.clientX - win.getBoundingClientRect().left;
-    offsetY = e.clientY - win.getBoundingClientRect().top;
-    e.preventDefault();
-  });
-  document.addEventListener('mousemove', (e) => {
-    if (isDragging) {
-      win.style.left = (e.clientX - offsetX) + 'px';
-      win.style.top = (e.clientY - offsetY) + 'px';
+        setTimeout(() => {
+          if (wasHidden && revealSound) {
+            revealSound.volume = 0.2;
+            revealSound.currentTime = 0;
+            revealSound.play();
+          }
+          if (typeof window.parent.drawConnections === "function") {
+            window.parent.drawConnections();
+          }
+        }, 500);
+      });
     }
-  });
-  document.addEventListener('mouseup', () => isDragging = false);
-
-  let isResizing = false;
-  resize.addEventListener('mousedown', (e) => {
-    isResizing = true;
-    e.preventDefault();
-    e.stopPropagation();
-  });
-  document.addEventListener('mousemove', (e) => {
-    if (isResizing) {
-      win.style.width = (Math.max(200, e.clientX - win.getBoundingClientRect().left)) + 'px';
-      win.style.height = (Math.max(100, e.clientY - win.getBoundingClientRect().top)) + 'px';
-    }
-  });
-  document.addEventListener('mouseup', () => isResizing = false);
-
-  iframe.addEventListener('load', () => {
-  try {
-    let pageTitle = iframe.contentDocument.title;
-    if (!pageTitle) {
-      const parts = iframe.src.split('/');
-      pageTitle = parts[parts.length - 1] || 'Welcome, ';
-    }
-    titleBar.querySelector('.title-bar-text').textContent = pageTitle;
-  } catch (e) {
-    titleBar.querySelector('.title-bar-text').textContent = 'My old site';
   }
-  
-  });
-  setTimeout(() => {
-  win.style.opacity = '1';
-  }, 10);
-}
-
-window.addEventListener("DOMContentLoaded", () => {
-  audio.volume = 0.07;
-  volume.value = 0.07;
-  document.getElementById('mail').volume = 0.2;
-  document.getElementById('click').volume = 0.2;
-  toggleSidebar();
-
-  // new code to hide toggle button on alt site view click
-  document.getElementById('alt-site-link').addEventListener('click', () => {
-    document.querySelector('.toggle-sidebar').style.display = 'none';
-  });
 });
+
+const messages = [
+    "this site is me and i am this site",
+    "'I wanna die on Mars, just not on impact.'",
+    "i coded this place by hand just for you",
+    "explore and get lost like i do in the stars",
+    "my little corner of the internet cosmos",
+    "welcome traveler, sit by the fire",
+    "these pixels are my soul laid bare",
+    "craft OS 1.8",
+    "do you wanna play minecraft?",
+    "can you feel my dysphoria?",
+    "the universe is, and we are",
+    "live to love and love to live",
+    "trans rights are human rights!",
+    "black lives matter!",
+    "glass half full",
+    "be kind, god knows we need more people like that",
+    "to the moon and back",
+    "kaiasei wuz here",
+    "lets have some fun in minecraft",
+    "its jonny's fault!",
+    "its luis' fault!",
+    "its james' fault!",
+    "its carl's fault!",
+    "its gabriel's fault!",
+    "its julian's fault!",
+    "its jose's fault!",
+    "its david's fault!",
+    "its brandon's fault!",
+    "its eric's fault!",
+    "its kris' fault!",
+    "its steven's fault!",
+    "its twig's fault!",
+    "under construction!",
+    "so much to do, so much to explore.",
+    "appreciate life",
+    "appreciate the little things",
+    "orchids are one of my favorite flowers",
+    "give life to music",
+    "frames changed my life",
+    "i miss you jacob",
+    "dnd session when?",
+    "i lost my glasses again",
+    "any methods at all",
+    "does anybody have a method",
+    "freedom dive",
+    "ah... i wanna play SDVX",
+    "AAAAAAAAAAAAAAAAAAAAA",
+    "sudo shutdown now",
+    "sudo rm -fr /",
+    "seraphina my beloved",
+    "elysia my beloved",
+    "emergency tree seeds",
+    "wait- this isnt lua",
+    "a castle built overnight",
+    "there are so many splash texts",
+    "this is the last one im writing! for now",
+    "live your life to the fullest",
+    "go play outer wilds",
+    "August 12th, 2036 Heat death of the Universe",
+    "there's more to explore here",
+    "professional emotional wreck",
+    "est. March 2022",
+    "i luv tonkotsu ramen",
+    "science compels us to explode the sun!",
+    "im gregging it",
+    "highly unmotivated",
+    "support local artists!",
+    "luca is swag",
+    "l love birds!",
+    "22 minutes",
+    "meditate it out",
+    "'We do not have much connection, you and I. Still, this encounter feels special. I hope you won't mind if I think of you as a friend.'",
+    "Every moment before this one depends on this one",
+    "'The future depends on the past, even if we don’t get to see it.'",
+    "'Oh, hello… Come, sit with me, my fellow traveler. Let’s sit together and watch the stars die.'",
+    "It’s time for something new, now.",
+    "what a time to be alive",
+    "what a beautiful sunrise.",
+    "hooray!",
+    "it's a celebration of life.",
+    "relax here with me for a little, and enjoy the music.",
+    "autumn is the best season ever",
+    "gooning",
+    "level up",
+    "Nuke Victim W'wargaz",
+    "power word: shit",
+    "kaia loves bingus",
+    "i like turtles",
+    "strings on my heart",
+    "i dont wanna be jay anymore!",
+    "dain booker",
+    "ill start my own podcast..",
+    "like legit",
+    "late night???",
+    "illithid",
+    "hi kaia",
+    "awoooo",
+    "404 message not found",
+    "i had sex with a squid",
+    "Moving children onto milk cartons since 1902",
+    "fish around and find out",
+    "thore sumb",
+    "1 singular Waffle House exists on Babylon",
+    "fyrir my beloved",
+    "nil",
+    "what a beautiful sunset",
+    "aren't the stars beautiful tonight?",
+    "doze off",
+    "on a perfect planet",
+    "in a perfect solar system",
+    "a perfect time to be alive",
+    "check the webrings tab!",
+    "sign the guestbook!",
+    ":3",
+    "big hugs to you",
+    "it'll all be okay",
+    "where are we?",
+    "SURFACE INTEGRITY: 87%",
+    "Warp core missing",
+    "Of note: Be sure not to wander far from here. Though this area is somewhat unstable, it’s safer than any we’ve found so far.",
+    "I’m afraid for our friends",
+    "Call the shuttle home",
+    "You did? That, that’s incredible, congratulations!",
+    "I’m pretty sure we’ll need the others for this next part. We’ll need, you know... everyone.",
+    "I learned a lot, by the end of everything.",
+    "Ok, I'll wait until you're ready.",
+    "Found coordinates to the eye of the universe!",
+    "Sending coordinates for the eye.",
+    "egg cracked",
+    "Yuri!",
+    "Ah! youre back, I missed you.",
+    "Oh to be at the end of the universe, surrounding a campfire with your friends.",
+    "There you are, remember to- wait you're not- nevermind."
+  ];
+
+  // Boot lines — [SYSTEM MESSAGE] will be replaced
+  const bootLines = [
+    "[BOOT] Initializing Ship Log...",
+    "[OK] Loading frame architecture...",
+    "[OK] Fetching information...",
+    "[OK] Fetching status...",
+    "[INFO] Drawing connection matrix...",
+    "[INFO] Uncovering secrets...",
+    "[STATUS] System Initialized! Handing over user control...",
+    "[READY] User input detected.",
+    "",
+    "[SYSTEM MESSAGE]", // ← this will be replaced below
+    "Welcome, explorer."
+  ];
+
+  window.addEventListener("DOMContentLoaded", () => {
+    drawConnections(); // already present in your site
+
+    const splash = document.getElementById("splashScreen");
+    const bootText = document.getElementById("bootText");
+    const splashSound = document.getElementById("splashSound");
+    const typeSound = document.getElementById("typeSound");
+    const splashSoundOut = document.getElementById("splashSoundOut");
+    const splashBootSound = document.getElementById("splashBootSound");
+      if (splashBootSound) {
+        splashBootSound.volume = 0.3;
+        splashBootSound.currentTime = 0;
+        splashBootSound.play().catch(() => {}); // suppress autoplay errors
+      }
+    let lineIndex = 0;
+    let charIndex = 0;
+    let typingComplete = false;
+    let promptShown = false;
+
+    // 🔁 Replace [NOTICE] with random local message
+    for (let i = 0; i < bootLines.length; i++) {
+      if (bootLines[i].startsWith("[SYSTEM MESSAGE]")) {
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        bootLines[i] = `[SYSTEM MESSAGE] ${randomMessage}`;
+        break;
+      }
+    }
+
+    const typeNextChar = () => {
+      const currentLine = bootLines[lineIndex];
+      if (charIndex < currentLine.length) {
+        bootText.textContent += currentLine.charAt(charIndex);
+
+        // Play sound every 2 characters
+        if (typeSound && charIndex % 2 === 0) {
+          typeSound.currentTime = 0;
+          typeSound.play().catch(() => {}); // suppress autoplay errors
+        }
+
+        charIndex++;
+        setTimeout(typeNextChar, 14);
+      } else {
+        bootText.textContent += '\n';
+        lineIndex++;
+        charIndex = 0;
+        if (lineIndex < bootLines.length) {
+          setTimeout(typeNextChar, 200);
+        } else {
+          typingComplete = true;
+          setTimeout(() => {
+  bootText.textContent += `\n> PRESS [ENTER] OR 'CLICK' TO CONTINUE`;
+  promptShown = true;
+
+  // ✅ Add this block
+  const exitSplash = () => {
+  if (!typingComplete || !promptShown) return;
+
+  splashSoundOut?.play?.();
+
+  if (splash) {
+    // Apply animation class
+    splash.classList.add("crtFadeDown");
+
+    // Wait for the animation to finish before hiding
+    splash.addEventListener("animationend", () => {
+      splash.style.display = "none";
+    }, { once: true }); // Ensure it runs only once
+  }
+
+  document.removeEventListener("keydown", onKeyDown);
+  document.removeEventListener("click", onClick);
+};
+
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") exitSplash();
+  };
+  const onClick = () => exitSplash();
+
+  document.addEventListener("keydown", onKeyDown);
+  document.addEventListener("click", onClick);
+}, 600);
+        }
+      }
+    };
+
+    typeNextChar();
+  });
 </script>
+
+</div>
 </body>
 </html>
