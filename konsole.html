@@ -60,7 +60,6 @@
           output.textContent = "> " + value;
           consoleDiv.insertBefore(output, document.getElementById("input-line"));
           input.value = "";
-          // Optionally: add response
           const response = document.createElement("div");
           response.className = "line";
           response.textContent = "Command sent: " + value;
@@ -69,7 +68,6 @@
         }
 
         handleCommand(value.toLowerCase());
-        // Scroll to bottom
         consoleDiv.scrollTop = consoleDiv.scrollHeight;
       }
     });

@@ -106,15 +106,13 @@ button:hover {
   overflow: hidden;
   position: relative;
 }
-
-/* Webkit (Chrome, Safari) */
+/* account for most browsers, idk if this works, but its good practice, no? */
 #volumeSlider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 0; height: 0;
   box-shadow: -1000px 0 0 1000px #4d79c3;
 }
 
-/* Firefox */
 #volumeSlider::-moz-range-track {
   background: rgba(255,255,255,0.1);
   height: 8px;
@@ -126,7 +124,6 @@ button:hover {
   border-radius: 4px;
 }
 
-/* Edge / IE */
 #volumeSlider::-ms-track {
   background: transparent;
   border-color: transparent;

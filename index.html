@@ -121,22 +121,22 @@
   .color-yellow  { background: #c3b74d; }
   .color-special  { background: #08ffd6; animation: fadeColors 2s linear infinite;}
   @keyframes fadeColors {
-    0%   { background: #ff6868; } /* red */
-    16%  { background: #ffb163; } /* orange */
-    33%  { background: #ffff6f; } /* yellow */
-    50%  { background: #6dff6d; } /* green */
-    66%  { background: #6a6aff; } /* blue */
-    83%  { background: #c26dff; } /* indigo */
-    100% { background: #ff6868; } /* back to red for smooth loop */
+    0%   { background: #ff6868; } 
+    16%  { background: #ffb163; } 
+    33%  { background: #ffff6f; } 
+    50%  { background: #6dff6d; }
+    66%  { background: #6a6aff; } 
+    83%  { background: #c26dff; } 
+    100% { background: #ff6868; } 
   }
 @keyframes rainbowColors {
-  0%   { color: #ff6868; } /* orange */
-  16%  { color: #ffb163; } /* blue */
-  33%  { color: #ffff6f; } /* green */
-  50%  { color: #6dff6d; } /* purple */
-  66%  { color: #6a6aff; } /* red */
-  83%  { color: #c26dff; } /* yellow */
-  100% { color: #ff6868; } /* back to orange */
+  0%   { color: #ff6868; } 
+  16%  { color: #ffb163; } 
+  33%  { color: #ffff6f; } 
+  50%  { color: #6dff6d; } 
+  66%  { color: #6a6aff; } 
+  83%  { color: #c26dff; } 
+  100% { color: #ff6868; } 
 }
   .frame h2 {
     margin: 0 0 10px 0;
@@ -314,14 +314,14 @@ box-sizing: border-box;
 .arrow-img {
   position: absolute;
   transform-origin: 0% 50%;
-  height: 6px; /* or your desired thickness */
+  height: 6px; 
   pointer-events: none;
-  z-index: -1; /* This puts it behind frames */
+  z-index: -1; 
 }
 .connection-line {
   position: absolute;
-  height: 6px; /* or your desired thickness */
-  background: #aaa; /* or any color */
+  height: 6px; 
+  background: #aaa;
   transform-origin: 0% 50%;
   pointer-events: none;
   z-index: -1;
@@ -472,19 +472,16 @@ box-sizing: border-box;
 }
 
 .frame.color-special:not(:has(img))::after {
-  background: #000; /* stays black background */
-  color: #08ffd6; /* fallback */
+  background: #000;
+  color: #08ffd6; 
   animation: rainbowColors 2s linear infinite;
 }
-/* size adjustments for small frames */
 .frame-small:not(:has(img))::after {
   width: 90px;
   height: 90px;
   font-size: 54px;
   line-height: 90px;
 }
-
-/* size adjustments for large frames */
 .frame-large:not(:has(img))::after {
   width: 225px;
   height: 260px;
@@ -599,7 +596,7 @@ box-sizing: border-box;
 
   <!-- main site -->
 <div id="siteContainer">
-<!-- audio -->
+<!-- audio refs -->
 <audio id="hoverSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
 <audio id="clickSound" src="altsite/fx/1selectentry.wav" preload="auto"></audio>
 <audio id="clickOutSound" src="altsite/fx/1leaventry.wav" preload="auto"></audio>
@@ -864,7 +861,7 @@ document.querySelectorAll(".frame").forEach(frame => {
 
     const targetPage = frame.getAttribute("data-page") || "default.html";
 
-    // Audio Player special handling
+    // ap special handling
     if (targetPage === "musicplayer.html") {
       const container = document.getElementById("musicPlayerContainer");
       container.style.display = "flex";
@@ -934,14 +931,14 @@ document.querySelectorAll(".frame").forEach(frame => {
         title: "Phantom Liberty - Dawid Podsiadło"
       }, "*");
     }
-    // Default size
+    // default size
     windowEl.style.width = "80vw";
     windowEl.style.height = "80vh";
     windowEl.style.top = "10vh";
     windowEl.style.left = "10vw";
     windowEl.style.resize = "both";
 
-    // Special sizing for status
+    // special sizing for status
     if (targetPage === "altsite/juststatus.html") {
       windowEl.style.width = "25vw";
       windowEl.style.height = "17vh";
@@ -951,7 +948,7 @@ document.querySelectorAll(".frame").forEach(frame => {
       windowEl.style.overflow = "hidden";
       contentEl.style.overflow = "hidden";
     }
-    // Special sizing for miami
+    // special sizing for miami
     if (targetPage === "miami.html") {
       windowEl.style.width = "25vw";
       windowEl.style.height = "17vh";
@@ -961,7 +958,7 @@ document.querySelectorAll(".frame").forEach(frame => {
       windowEl.style.overflow = "hidden";
       contentEl.style.overflow = "hidden";
     }
-    // Special sizing for daytona
+    // special sizing for daytona
     if (targetPage === "daytona.html") {
       windowEl.style.width = "25vw";
       windowEl.style.height = "17vh";
@@ -971,7 +968,7 @@ document.querySelectorAll(".frame").forEach(frame => {
       windowEl.style.overflow = "hidden";
       contentEl.style.overflow = "hidden";
     }
-    // Special sizing for creative
+    // special sizing for creative
     if (targetPage === "creative.html") {
       windowEl.style.width = "25vw";
       windowEl.style.height = "17vh";
@@ -981,7 +978,7 @@ document.querySelectorAll(".frame").forEach(frame => {
       windowEl.style.overflow = "hidden";
       contentEl.style.overflow = "hidden";
     }
-    // Special sizing for console
+    // special sizing for console
     if (targetPage === "konsole.html") {
       windowEl.style.width = "25vw";
       windowEl.style.height = "14vh";
@@ -1009,7 +1006,7 @@ document.querySelectorAll(".frame").forEach(frame => {
 
 
 function animateZoom() {
-  const zoomSpeed = 0.13; // adjust to zoom speed
+  const zoomSpeed = 0.13; 
 
   const scaleDiff = targetScale - scale;
   scale += scaleDiff * zoomSpeed;
@@ -1035,8 +1032,6 @@ function updateTransform() {
   parallax.style.backgroundPosition = `${translateX * 0.2}px ${translateY * 0.2}px`;
 }
 
-
-// Hover sound
 const hoverSound = document.getElementById("hoverSound");
 document.querySelectorAll(".frame").forEach(frame => {
   frame.addEventListener("mouseenter", () => {
@@ -1077,11 +1072,9 @@ function makeDraggable(dragTarget, handle) {
       let newLeft = (e.clientX - offsetX);
       let newTop = (e.clientY - offsetY);
 
-      // Get window size and element size
       const elWidth = dragTarget.offsetWidth;
       const elHeight = dragTarget.offsetHeight;
 
-      // Clamp all sides (50px padding)
       if (newLeft < 30) newLeft = 30;
       if (newTop < 30) newTop = 30;
 
@@ -1129,17 +1122,17 @@ const connections = [
 
 ];
 
-// For each connection, create a line
+//  each connection, create a line
 connections.forEach(([fromIdx, toIdx]) => {
   const from = frames[fromIdx];
   const to = frames[toIdx];
 
-  // Skip drawing if either frame is hidden
+  // skip drawing if either frame is hidden
   if (from.style.display === "none" || to.style.display === "none") {
-    return; // skip this line
+    return;
   }
 
-  // Get positions relative to the content container
+  // get pos rel. to the content container
   const fromRect = from.getBoundingClientRect();
   const toRect = to.getBoundingClientRect();
   const contentRect = content.getBoundingClientRect();
@@ -1149,23 +1142,23 @@ connections.forEach(([fromIdx, toIdx]) => {
   const x2 = to.offsetLeft + to.offsetWidth / 2;
   const y2 = to.offsetTop + to.offsetHeight / 2;
 
-  // Compute distance and angle
+  // simple distance and angle math
   const dx = x2 - x1;
   const dy = y2 - y1;
   const distance = Math.sqrt(dx * dx + dy * dy);
   const angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
-  // Create the line image
+  // make the line image
   const line = document.createElement('div');
   line.className = 'connection-line';
 
-  // Style the image to stretch and rotate
+  // style the line
   line.style.left = `${x1}px`;
   line.style.top = `${y1}px`;
   line.style.width = `${distance}px`;
   line.style.transform = `rotate(${angle}deg)`;
 
-
+  // finally be happy that EVERYTHING FUCKIGN WORKS
   lineContainer.appendChild(line);
 });
 
@@ -1177,8 +1170,6 @@ document.addEventListener('mousedown', () => {
 
 document.addEventListener('mouseup', (e) => {
   const duration = Date.now() - mouseDownTime;
-  
-  // e.button === 0 ensures it's the left mouse button
   if (duration < 100 && e.button === 0) {
     const sound = new Audio('assets/click.mp3');
     sound.volume = 0.2;
@@ -1187,12 +1178,11 @@ document.addEventListener('mouseup', (e) => {
 }, true);
 
 function drawConnections() {
-  // Clear old lines
   lineContainer.innerHTML = '';
 
   const visibleFrames = Array.from(document.querySelectorAll('.frame')).filter(f => f.style.display !== 'none');
 
-  // Only draw lines for visible frames
+  //ONLY draw lines for visible frames ffs for the last time oh my GOD
   connections.forEach(([fromIdx, toIdx]) => {
     const from = visibleFrames.find(f => f === frames[fromIdx]);
     const to = visibleFrames.find(f => f === frames[toIdx]);
@@ -1238,22 +1228,22 @@ window.addEventListener("message", (event) => {
     const idxList = map[command];
     if (idxList !== undefined) {
       if (idxList === "kill") {
-        // Play shutdown sound
+        //  shutdown sound
         const shutdownSound = new Audio("assets/poweroff.mp3");
         shutdownSound.volume = 0.4; // adjust if you want
         shutdownSound.play();
 
-        // Animate all popup windows with CRT shutdown
+        // anim all popup windows with CRT shutdown
         const popups = document.querySelectorAll(".popup-window");
         popups.forEach(popup => {
           popup.style.animation = "crtShutdown 0.4s forwards";
         });
 
-        // Animate main site container with CRT shutdown
+        // anim main site container with CRT shutdown
         const siteContainer = document.getElementById("siteContainer");
         siteContainer.style.animation = "crtShutdown 0.4s forwards";
 
-        // After animation, wipe everything and set to black
+        // after anim, wipe everything and set to black
         setTimeout(() => {
           siteContainer.innerHTML = "";
           siteContainer.style.background = "black";
@@ -1431,7 +1421,6 @@ const messages = [
     "There you are, remember to- wait you're not- nevermind."
   ];
 
-  // Boot lines — [SYSTEM MESSAGE] will be replaced
   const bootLines = [
     "[BOOT] Initializing Ship Log...",
     "[OK] Loading frame architecture...",
@@ -1442,12 +1431,12 @@ const messages = [
     "[STATUS] System Initialized! Handing over user control...",
     "[READY] User input detected.",
     "",
-    "[SYSTEM MESSAGE]", // ← this will be replaced below
+    "[SYSTEM MESSAGE]", // <- this will be replaced from code bleow (reminder!)
     "Welcome, explorer."
   ];
 
   window.addEventListener("DOMContentLoaded", () => {
-    drawConnections(); // already present in your site
+    drawConnections(); 
 
     const splash = document.getElementById("splashScreen");
     const bootText = document.getElementById("bootText");
@@ -1458,14 +1447,14 @@ const messages = [
       if (splashBootSound) {
         splashBootSound.volume = 0.3;
         splashBootSound.currentTime = 0;
-        splashBootSound.play().catch(() => {}); // suppress autoplay errors
+        splashBootSound.play().catch(() => {}); // stop autoplay errors
       }
     let lineIndex = 0;
     let charIndex = 0;
     let typingComplete = false;
     let promptShown = false;
 
-    // 🔁 Replace [NOTICE] with random local message
+  
     for (let i = 0; i < bootLines.length; i++) {
       if (bootLines[i].startsWith("[SYSTEM MESSAGE]")) {
         const randomMessage = messages[Math.floor(Math.random() * messages.length)];
@@ -1479,10 +1468,9 @@ const messages = [
       if (charIndex < currentLine.length) {
         bootText.textContent += currentLine.charAt(charIndex);
 
-        // Play sound every 2 characters
         if (typeSound && charIndex % 2 === 0) {
           typeSound.currentTime = 0;
-          typeSound.play().catch(() => {}); // suppress autoplay errors
+          typeSound.play().catch(() => {});
         }
 
         charIndex++;
@@ -1499,20 +1487,16 @@ const messages = [
   bootText.textContent += `\n> PRESS [ENTER] OR 'CLICK' TO CONTINUE`;
   promptShown = true;
 
-  // ✅ Add this block
   const exitSplash = () => {
   if (!typingComplete || !promptShown) return;
 
   splashSoundOut?.play?.();
 
   if (splash) {
-    // Apply animation class
     splash.classList.add("crtFadeDown");
-
-    // Wait for the animation to finish before hiding
     splash.addEventListener("animationend", () => {
       splash.style.display = "none";
-    }, { once: true }); // Ensure it runs only once
+    }, { once: true }); 
   }
 
   document.removeEventListener("keydown", onKeyDown);

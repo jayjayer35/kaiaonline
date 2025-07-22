@@ -414,6 +414,18 @@ cursor: pointer;
     width: 90%;
   }
 }
+#hit-counter-container {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999999;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 8px;
+}
 </style> 
 <!--scrolling title bar-->
 <script>
@@ -423,9 +435,12 @@ cursor: pointer;
     scrollTitle = scrollTitle.substring(1) + scrollTitle.charAt(0);
     document.title = scrollTitle;
   }, 200); //speed
+
+  
 </script>
 
 </head>
+
 <body>
   <audio id="campfire-sound" loop>
     <source src="assets/ambient.mp3">
@@ -442,8 +457,7 @@ cursor: pointer;
   align-items:center;
   flex-direction:column;
   z-index: 9999;
-  transition: opacity 4s ease;"
->
+  transition: opacity 4s ease;">
   <div class="stars" style="
     position: absolute;
     width: 200%;
@@ -815,24 +829,24 @@ function toggleCampfire() {
   const filename = img.src.split('/').pop().toLowerCase();
 
   if (filename === 'campfire.gif') {
-    // Switching OFF
+    // switching off
     img.src = 'assets/campfire.png';
     sound.pause();
     sound.currentTime = 5;
 
-    // Play extinguish sound
+    //  extinguish sound
     const extinguishSound = new Audio('assets/extinguish.mp3');
-    extinguishSound.volume = 0.3; // adjust volume if needed
+    extinguishSound.volume = 0.3; 
     extinguishSound.play();
 
   } else {
-    // Switching ON
+    // Switching on
     img.src = 'assets/campfire.gif';
     sound.volume = 0.3; 
     sound.play();
 
     const lightSound = new Audio('assets/campfire.mp3');
-    lightSound.volume = 0.3; // adjust volume if needed
+    lightSound.volume = 0.3; 
     lightSound.play();
   }
 }
@@ -972,5 +986,10 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+
+
+<div id="hit-counter-container">
+  <script type="text/javascript" src="https://counter.websiteout.com/js/8/0/351/0"></script>
+</div>
 </body>
 </html>
