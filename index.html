@@ -14,21 +14,21 @@
   }, 200); //speed
 </script>
 <style>
-  html, body {
-    margin: 0;
-    height: 100%;
-    overflow: hidden;
-    position: absolute;
-    top: 0; left: 0; 
-    width: 100vw;
-    height: 100vh;
-    background: url('assets/static.gif');
-    opacity: .98;
-    background-repeat: repeat;
-    background-position: center center;
-    background-size: cover;
-    font-family: 'Space Mono' , monospace;
-  }
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0; left: 0; 
+  width: 100vw;
+  height: 100vh;
+  background: url('assets/static.gif');
+  opacity: .98;
+  background-repeat: repeat;
+  background-position: center center;
+  background-size: cover;
+  font-family: 'Space Mono' , monospace;
+}
 
 #viewportContainer {
   position: fixed;
@@ -38,8 +38,15 @@
   height: calc(100% - 60px);
   pointer-events: none; 
   z-index: 999;
+  overflow: auto;
+  scrollbar-width: none;    /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
 
 #viewportContainer::before {
   content: "";
@@ -80,55 +87,56 @@
   transform-origin: 0 0;
 }
 
-  .frame {
-    position: absolute;
-    padding: 3px;
-    text-align: center;
-    width: fit-content;
-    transition: transform 0.3s ease, filter 0.3s ease;
-    border: 0px solid #000;
-    transition: transform 0.5s ease, filter 0.5s ease, box-shadow 0.5s ease;
-  }
-  .frame-small {
+
+.frame {
+  position: absolute;
+  padding: 3px;
+  text-align: center;
+  width: fit-content;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  border: 0px solid #000;
+  transition: transform 0.5s ease, filter 0.5s ease, box-shadow 0.5s ease;
+}
+.frame-small {
   font-size: 14px;
   padding: 2px;
-  }
+}
 
-  .frame-normal {
-    font-size: 20px;
-    padding: 3px;
-  }
+.frame-normal {
+  font-size: 20px;
+  padding: 3px;
+}
 
-  .frame-large {
-    font-size: 24px;
-    padding: 4px;
-  }
-  .frame.hidden {
-    display: none;
-    opacity: 0;
-  }
+.frame-large {
+  font-size: 24px;
+  padding: 4px;
+}
+.frame.hidden {
+  display: none;
+  opacity: 0;
+}
 
-  .frame.fading-in {
-    display: block;
-    opacity: 0;
-  }
-  .color-orange { background: #c37c4d; }
-  .color-blue   { background: #4d79c3; }
-  .color-green  { background: #4dc37c; }
-  .color-purple  { background: #844dc3; }
-  .color-gray  { background: #a3a3a3; }
-  .color-red  { background: #c34d4d; }
-  .color-yellow  { background: #c3b74d; }
-  .color-special  { background: #08ffd6; animation: fadeColors 2s linear infinite;}
-  @keyframes fadeColors {
-    0%   { background: #ff6868; } 
-    16%  { background: #ffb163; } 
-    33%  { background: #ffff6f; } 
-    50%  { background: #6dff6d; }
-    66%  { background: #6a6aff; } 
-    83%  { background: #c26dff; } 
-    100% { background: #ff6868; } 
-  }
+.frame.fading-in {
+  display: block;
+  opacity: 0;
+}
+.color-orange { background: #c37c4d; }
+.color-blue   { background: #4d79c3; }
+.color-green  { background: #4dc37c; }
+.color-purple  { background: #844dc3; }
+.color-gray  { background: #a3a3a3; }
+.color-red  { background: #c34d4d; }
+.color-yellow  { background: #c3b74d; }
+.color-special  { background: #08ffd6; animation: fadeColors 2s linear infinite;}
+@keyframes fadeColors {
+  0%   { background: #ff6868; } 
+  16%  { background: #ffb163; } 
+  33%  { background: #ffff6f; } 
+  50%  { background: #6dff6d; }
+  66%  { background: #6a6aff; } 
+  83%  { background: #c26dff; } 
+  100% { background: #ff6868; } 
+}
 @keyframes rainbowColors {
   0%   { color: #ff6868; } 
   16%  { color: #ffb163; } 
@@ -138,30 +146,30 @@
   83%  { color: #c26dff; } 
   100% { color: #ff6868; } 
 }
-  .frame h2 {
-    margin: 0 0 10px 0;
-    font-size: 20px;
-    color: #000;
-  }
+.frame h2 {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  color: #000;
+}
 
-  .frame img {
-    display: block;
-    max-width: 150px;
-    height: auto;
-    border: 0px solid #000;
-  }
+.frame img {
+  display: block;
+  max-width: 150px;
+  height: auto;
+  border: 0px solid #000;
+}
 
-  .linething:hover {
-    filter: brightness(1.5);
-  }
+.linething:hover {
+  filter: brightness(1.5);
+}
 
-  .frame:hover {
-    transform: scale(1.2);
-    z-index: 10;
-    filter: brightness(1.25);
-  }
+.frame:hover {
+  transform: scale(1.2);
+  z-index: 10;
+  filter: brightness(1.25);
+}
 
- #parallax {
+#parallax {
   position: absolute;
   top: 0; left: 0; 
   width: 100vw;
@@ -179,7 +187,7 @@
 
 
 
-  #logWindow {
+#logWindow {
   display: none;
   position: fixed;
   top: 10%;
@@ -411,6 +419,12 @@ box-sizing: border-box;
 .popup-content {
   flex: 1;
   overflow: auto;
+  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer/Edge */
+  scroll-behavior: smooth;
+}
+.popup-content::-webkit-scrollbar {
+  display: none;
 }
 .popup-header span {
   padding-left: 10px;
@@ -452,7 +466,15 @@ box-sizing: border-box;
 .color-jacob { background: #7ba5b3; color: #7ba5b3; }
 .color-steven { background: #55ff00; color: #55ff00; }
 .color-gabe { background: #5b21d8; color: #5b21d8; }
+.color-brandon { background: #F5CF27; color: #F5CF27; }
+.color-eric { background: #004d2d; color: #004d2d; }
+.color-twig { background: #6eff8d; color: #6eff8d; animation: fadeTwig 2s linear infinite;}
 
+@keyframes fadeTwig {
+    0%   { background: #6eff8d; }
+    50%   { background: #6eff8d6e; }
+    100%   { background: #6eff8d; }
+  }
 .question-rainbow {
   animation: rainbowColors 2s linear infinite;
   color: #08ffd6;/
@@ -481,12 +503,14 @@ box-sizing: border-box;
   height: 90px;
   font-size: 54px;
   line-height: 90px;
+  text-align: center;
 }
 .frame-large:not(:has(img))::after {
   width: 225px;
   height: 260px;
   font-size: 135px;
   line-height: 225px;
+  text-align: center;
 }
 #musicPlayerContainer .popup-header {
   background: rgba(0,0,0,0.3);
@@ -625,7 +649,7 @@ box-sizing: border-box;
     </div>
     <div class="frame frame-large color-gray" style="left: -50px; top: 430px;" data-page="bio.html"> <!-- me 1 -->
         <h2>Me</h2>
-        <img src="assets/sicktrick.png" alt="me">
+        <img src="assets/meposter.jpg" alt="me">
     </div>
     <div class="frame frame-normal color-gray" style="left: 520px; top: -580px;" data-page="thesite.html"> <!-- the site 2 -->
         <h2>The Site</h2>
@@ -639,7 +663,7 @@ box-sizing: border-box;
         <h2>Status</h2>
         <!-- <img src="assets/placeholder.png" style="size: 90px 90px;" alt="status"> -->
     </div>
-    <div class="frame color-special" style="left: 770px; top: 1335px; display:none;" data-page="wilds.html"> <!-- wilds 5 -->
+    <div class="frame color-purple" style="left: 770px; top: 1335px;" data-page="wilds.html"> <!-- wilds 5 -->
         <h2>Outer Wilds</h2>
         <img src="altsite/entrypng/wilds.jpg" alt="outer wilds">
     </div>
@@ -647,17 +671,17 @@ box-sizing: border-box;
         <h2>Console</h2>
         <!--<img src="altsite/entrypng/me.png" alt="a console?"> -->
     </div>
-    <div class="frame color-green" style="left: 1786px; top: -490px;" data-page="internetstuf2.html"> <!-- other sites 7 -->
-        <h2>Other Sites!</h2>
+    <div class="frame color-green" style="left: 1586px; top: 120px;" data-page="internetstuf2.html"> <!-- other sites 7 -->
+        <h2>Links</h2>
         <!-- <img src="altsite/entrypng/warp.png" alt="other sites"> -->
     </div>
-    <div class="frame color-green" style="left: 1586px; top: 120px;" data-page="foryou.html"> <!-- for you 8 -->
-        <h2>For You</h2>
+    <div class="frame color-green" style="left: 1786px; top: 1120px; display: none;" data-page="foryou.html"> <!-- for you 8 -->
+        <h2>Meb Graphics</h2>
         <!-- <img src="altsite/entrypng/warp.png" alt="stuffs for you"> -->
     </div>
     <div class="frame color-orange" style="left: -445px; top: 1620px;" data-page="friends.html"> <!-- friends 9 -->
         <h2>Friends</h2>
-        <img src="altsite/entrypng/friends.png" alt="friends">
+        <!-- <img src="altsite/entrypng/friends.png" alt="friends"> -->
     </div>
     <div class="frame color-orange" style="left: -1100px; top: -540px;" data-page="photo.html"> <!-- photo 10 -->
         <h2>Photos</h2>
@@ -693,7 +717,7 @@ box-sizing: border-box;
     </div>
     <div class="frame color-gray frame-small" style="left: 475px; top: -460px; max-width: 90px;" data-page="musicplayer.html"> <!-- musicplayer 18 -->
         <h2>Music Player</h2>
-        <!-- <img src="assets/musicplayer.jpg" style="size: 90px 90px;" alt="musicplayer"> -->
+        <img src="assets/notes.GIF" style="size: 90px 90px;" alt="musicplayer">
     </div>
     <div class="frame color-special" style="left: 1200px; top: -1090px; display:none;" data-page="jacobonline-old/index.html" > <!-- old site 19 -->
         <h2>Old Site</h2>
@@ -705,13 +729,13 @@ box-sizing: border-box;
     </div>
     <div class="frame color-jacob" style="left: 100px; top: 1300px; display:none;" data-page="friends/jacob.html" > <!-- jacob 21 -->
         <h2>Jacob</h2>
-        <!-- <img src="assets/bigposterguy.jpg" alt="jacob"> -->
+        <img src="assets/jacobposter.jpg" alt="jacob">
     </div>
-   <div class="frame color-kris" style="left: -70px; top: 2020px;" data-page="friends/kris.html"> <!-- kris 22 -->
+   <div class="frame color-kris" style="left: -70px; top: 2220px; display:none;" data-page="friends/kris.html"> <!-- kris 22 -->
         <h2>Kris</h2>
         <img src="assets/kris.png" alt="kris">
     </div>
-   <div class="frame color-gabe" style="left: -1170px; top: 1320px;" data-page="friends/gabe.html"> <!-- gabe 23 -->
+   <div class="frame color-gabe" style="left: -1170px; top: 1320px; display:none;" data-page="friends/gabe.html"> <!-- gabe 23 -->
         <h2>Gabriel</h2>
         <img src="assets/gabe.png" alt="gabriel">
     </div>
@@ -734,6 +758,22 @@ box-sizing: border-box;
     <div class="frame color-gray" style="left: 83px; top: -1280px;" data-page="updates.html"> <!-- update log 28 -->
         <h2>Updates</h2>
         <!--<img src="altsite/entrypng/me.png" alt="a console?"> -->
+    </div>
+    <div class="frame color-steven" style="left: -400px; top: 2020px; display:none;" data-page="friends/steven.html"> <!-- steven 29 -->
+        <h2>Steven</h2>
+        <img src="assets/stevenposter.jpg" alt="steven">
+    </div>
+    <div class="frame color-brandon" style="left: -1140px; top: 2120px; display:none;" data-page="friends/brandon.html"> <!-- brandon 30 -->
+        <h2>Brandon</h2>
+        <img src="assets/brandonposter.jpg" alt="brandon">
+    </div>
+    <div class="frame color-twig" style="left: -940px; top: 2320px; display:none;" data-page="friends/twig.html"> <!-- twig 31 -->
+        <h2>Twig</h2>
+        <img src="assets/twigposter.jpg" alt="brandon">
+    </div>
+    <div class="frame color-eric" style="left: -550px; top: 2620px; display:none;" data-page="friends/eric.html"> <!-- eric 32 -->
+        <h2>Eric</h2>
+        <img src="altsite/entrypng/friends.png" alt="brandon">
     </div>
   </div>
 </div>
@@ -931,6 +971,13 @@ document.querySelectorAll(".frame").forEach(frame => {
         title: "Phantom Liberty - Dawid Podsiadło"
       }, "*");
     }
+    if (targetPage === "friends/eric.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "wash my sins away - berlioz"
+      }, "*");
+    }
     // default size
     windowEl.style.width = "80vw";
     windowEl.style.height = "80vh";
@@ -1097,8 +1144,8 @@ const connections = [
   [2, 28], // the site - update log
   [6, 28], // console - update log
   [3, 7], // internet - other sites
-  [0, 8], // welcome - for you
-  [3, 8], // internet - for you
+  [0, 7], // welcome - links
+  [3, 7], // internet - links
   [3, 12], // internet - guestbook
   [7, 13], // other sites - manifesto
   [5, 14], // wilds - video games
@@ -1116,8 +1163,13 @@ const connections = [
   [24, 23], // miami - gabe
   [24, 9], // miami - friends
   [25,9], // daytona - friends
-  [8,12], // for you - guestbook
+  [7,12], // links - guestbook
   [9, 1], // friends - me
+  [29, 25], //steven - daytona
+  [29, 24], //steven - miami
+  [24, 30], // miami - brandon
+  [29, 32], //steven - eric
+  [30, 31], //brandon twig
 
 
 ];
@@ -1214,12 +1266,18 @@ window.addEventListener("message", (event) => {
     const command = event.data.command.toLowerCase();
 
     const map = {
-      "wilds": [5],
       "ideas": [13],
       "windows98": [19],
       "music": [17],
+      "gabriel": [23],
       "kris": [22],
       "jacob": [21],
+      "steven": [29],
+      "webgraphix": [8],
+      "brandon": [30],
+      "twig": [31],
+      "eric": [32],
+
 
       "FreedomDive": [5,13,19,17,21,22],
       "sudo shutdown now": "kill",
@@ -1305,19 +1363,6 @@ const messages = [
     "to the moon and back",
     "kaiasei wuz here",
     "lets have some fun in minecraft",
-    "its jonny's fault!",
-    "its luis' fault!",
-    "its james' fault!",
-    "its carl's fault!",
-    "its gabriel's fault!",
-    "its julian's fault!",
-    "its jose's fault!",
-    "its david's fault!",
-    "its brandon's fault!",
-    "its eric's fault!",
-    "its kris' fault!",
-    "its steven's fault!",
-    "its twig's fault!",
     "under construction!",
     "so much to do, so much to explore.",
     "appreciate life",
@@ -1383,7 +1428,6 @@ const messages = [
     "haia kaia",
     "awoooo",
     "404 message not found",
-    "i had sex with a squid",
     "Moving children onto milk cartons since 1902",
     "fish around and find out",
     "thore sumb",
@@ -1425,10 +1469,8 @@ const messages = [
     "[BOOT] Initializing Ship Log...",
     "[OK] Loading frame architecture...",
     "[OK] Fetching entry information...",
-    "[OK] Fetching status...",
     "[OK] Drawing connection matrix...",
-    "[INFO] Uncovering secrets...",
-    "[INFO] This site must be viewed on a computer! Designed for 1920x1080.",
+    "[INFO] This site is mobile UN-friendly, made for PC",
     "[INFO] Mild swearing.",
     "[STATUS] System Initialized! Handing over user control...",
     "[READY] User input detected.",

@@ -45,8 +45,8 @@
 
   .content img {
     max-width: 100%;
-    border: 2px solid #71e7b3;
-    border-radius: 6px;
+    border: 0px solid #71e7b3;
+    border-radius: 3px;
     display: block;
     margin: 1rem auto;
   }
@@ -82,17 +82,47 @@
     0% { color: #9effc8; text-shadow: 0 0 8px #7effc1; }
     100% { color: #d0f7e9; text-shadow: 0 0 12px #b8ffd4; }
   }
-.link-buttons a {
-  position: relative;
-  display: inline-block;
-}
+  .link-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem; /* controls spacing between buttons */
+    padding: 0; /* remove extra vertical padding */
+    margin: 0 auto;
+  }
 
-.link-buttons a img {
-  display: block;
-  max-width: 100%;
-}
+  .link-buttons a {
+    display: inline-block;
+    margin: 0; /* remove unwanted margin */
+    padding: 0; /* remove unwanted padding */
+    line-height: 0; /* remove inline spacing artifacts */
+  }
 
-a {
+  .link-buttons a img {
+    display: block;
+    height: 31px; /* consistent badge/button height */
+    width: auto;
+    max-width: 100%;
+    border: none;
+  }
+  .tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: rgba(17, 60, 47, 0.95);
+    color: #b8ffd4;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    font-family: "Courier New", monospace;
+    border-radius: 6px;
+    box-shadow: 0 0 8px #55ff9d70;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    white-space: normal;     /* allow text to wrap */
+    max-width: 240px;        /* force wrap at this width */
+    line-height: 1.2;
+  }
+  a {
     transition: transform 0.3s ease;
   }
   a:hover {
@@ -106,6 +136,8 @@ a {
   }
 </style>
 </head>
+
+
 <body>
   <header>
     <h1>useful pages & the indie web</h1>
@@ -113,66 +145,95 @@ a {
   <div class="content" style="max-width: 900px;">
     <h2 class="star">surf city</h2>
     <p style="text-align: center;"> going so soon??<br><br>
-      these people create sites out of passion, out of
-      no reason other than their own heart. they were/are on this earth, just like you and me. though insignificant to the world at large, these little personal sites <em>are</em> the world
-      to some people, just as mine is to me. its your duty to continue this tradition learn to make a site, learn the basics, add your own flair to it, make it yours! <br><br>
-      now its time for you to surf the web, clicking hyperlink through hyperlink you may find a cool site, maybe i havent even found yet. <em>(probably so)</em><br>
-      some of these sites are really cool, my humble little site is NOTHING in comparison to them, so please look at them, check them out!!!!<br><br>
+      to me, the indie web is a very important part of me, an archive of my own life, an archive of others' lives! it's a beautiful tradition that must go on. <br><br>
 
-      These will open in this tab, come back soon!!!
+      try to make your own site, learn what you can, and put yourself out there. theres always an audience! leave your mark on the web, and let everyone know that you were here on this planet, creating to create, and bringing joy to those you love. 
+      art is a beautiful thing, and we need it more than ever. <br><br>
+
+      <textarea readonly="" onclick="this.select()"><a href="https://kaia.starscene.com" target="_parent"><img src="assets/kaiabutton.png" alt="kaia online"/></a></textarea><img src="assets/kaiabutton.png" alt="kaia online"/>
+      <textarea readonly="" onclick="this.select()"><a href="https://kaia.starscene.com" target="_parent"><img src="assets/kaiabutton.gif" alt="kaia online"/></a></textarea><img src="assets/kaiabutton.gif" alt="kaia online"/>
+      <br>link back if you so please!!! i may change the image later on, gif will be the gif and the img will be the img, but it will always be here so you dont need to save on your server.<br><br>
+
+      below are buttons to a variety of sites that are fun, inspiring, cute, interactive, awesome, unique, helpful, and everything in between. check them out! people poured their hearts and 
+      souls into these. <3
+
+      
+     <br> these will open in this tab, so come back soon! <em style="font-size: x-small;">(hopefully)</em>
     </p>
     <div class="link-buttons" class="tree">
-      <a href="https://lu.tiny-universes.net/index.html" target="_parent"><img src="assets/lulu2.gif"alt="lu tiny universes"/></a>
-      <a href="https://biggulpsupreme.neocities.org/" target="_parent"><img src="https://i.imgur.com/ZU3CcjO.gif" alt="biggulp"></a>
-      <a href="https://purplehello98.neocities.org/" target="_parent"><img src="https://purplehello98.neocities.org/graphics/buttons/purplehello98.gif" alt="purple hello 98"/></a>
-      <a href="https://the-simple-site.neocities.org/" target="_parent"><img src="https://the-simple-site.neocities.org/images/simpdark88.gif" alt="simple site"/></a>
-      <a href="https://aegi.neocities.org/" target="_parent"><img src="https://aegi.neocities.org/images/aegi_button.gif" alt="aegi"/></a>
-      <a href="https://2bit.neocities.org/" target="_parent"><img src="https://2bit.neocities.org/2bit_button.png" alt="2bit"/></a>
-      <a href="https://devils.neocities.org/" target="_parent"><img src="https://66.media.tumblr.com/777717d122b4e7d3ae82524b44d21f67/tumblr_inline_pswuk76Sda1w1xdc5_1280.gif" alt="devils"/></a>
-      <a href="https://wiby.me/" target="_parent"><img src="https://wiby.me/about/wiby.gif" alt="wiby"/></a>
-      <a href="https://yumeoi.skin/" target="_parent"><img src="https://yumeoi.skin/image-files/my-buttons/yumeoiskin.gif" alt="yumeoi"/></a>
-      <a href="https://layercake.nekoweb.org/" target="_parent"><img src="assets/layercake3.gif" alt="an 88 x 31 button it has a cake pixel on the left and the word 'layercake' written three times"></a>
-      <a href="https://cyberdemon.nekoweb.org/" target="_parent"><img src="https://cyberdemon.nekoweb.org/button.png" alt="the button of cyberdemon"></a>
-      <a href="https://beaniepines.neocities.org/garden" target="_parent"><img src="assets/bpdusk.gif" alt="beanie pies"></a>
-      <a href="https://starrs.neocities.org/" target="_parent"><img src="assets/tiny_space.gif" alt="tiny space"></a>
-      <a href="https://pastelhello.com/" target="_parent"><img src="https://pastelhello.com/mybuttons/b2.png" alt="pastel hell"></a>
-      <a href="https://s1m0n3.neocities.org" target="_parent"><img src="https://s1m0n3.neocities.org/buttons/s1m0n3-bt1.gif" alt="s1m0n3"></a>
-      <a href="https://www.lejlart.com/apple.html" target="_parent"><img src="assets/ad_skullsprinkles.gif" alt="appledust"></a>
-      <a href="https://exo.pet/" target="_parent"><img src="assets/exopetbutton1.png" alt="exo pet"></a>
-      <a href="https://frutigeraeroarchive.org/" target="_parent"><img src="assets/frutigeraeroarchive_button.png" alt="frutiger aero archive"></a>
-      <a href="https://petrapixel.neocities.org/" target="_parent"><img src="https://cdn.jsdelivr.net/gh/petracoding/petrapixel.neocities.org@latest/public/assets/img/linkback.gif" alt="petrapixel"></a>
-      <a href='https://alynxolotl.neocities.org' target="_parent"><img src='https://files.catbox.moe/di03jx.gif'></a>
+      <a href="https://lu.tiny-universes.net/index.html" target="_parent" data-title="one of my first interactions with the indie web, and a big inspiration for me. some of my web assets are graciously from her, check out her page!"><img src="assets/lulu2.gif" alt="lu tiny universes" /></a>
+      <a href="https://biggulpsupreme.neocities.org/" target="_parent" data-title=""><img src="https://i.imgur.com/ZU3CcjO.gif" alt="biggulp"/></a>
+      <a href="https://purplehello98.neocities.org/" target="_parent" data-title=""><img src="https://purplehello98.neocities.org/graphics/buttons/purplehello98.gif" alt="purple hello 98"/></a>
+      <a href="https://the-simple-site.neocities.org/" target="_parent" data-title=""><img src="https://the-simple-site.neocities.org/images/simpdark88.gif" alt="simple site"/></a>
+      <a href="https://aegi.neocities.org/" target="_parent" data-title="aegi's personal site, a cute little page a stumbled across"><img src="https://aegi.neocities.org/images/aegi_button.gif" alt="aegi"/></a>
+      <a href="https://2bit.neocities.org/" target="_parent" data-title=""><img src="https://2bit.neocities.org/2bit_button.png" alt="2bit"/></a>
+      <a href="https://devils.neocities.org/" target="_parent" data-title=""><img src="https://66.media.tumblr.com/777717d122b4e7d3ae82524b44d21f67/tumblr_inline_pswuk76Sda1w1xdc5_1280.gif" alt="devils"/></a>
+      <a href="https://wiby.me/" target="_parent" data-title="wiby - old web search engine!"><img src="https://wiby.me/about/wiby.gif" alt="wiby"/></a>
+      <a href="https://yumeoi.skin/" target="_parent" data-title=""><img src="https://yumeoi.skin/image-files/my-buttons/yumeoiskin.gif" alt="yumeoi"/></a>
+      <a href="https://layercake.nekoweb.org/" target="_parent" data-title=""><img src="assets/layercake3.gif" alt="layercake"/></a>
+      <a href="https://cyberdemon.nekoweb.org/" target="_parent" data-title="i like the way this site looks a lot, makes me all comfy :3"><img src="https://cyberdemon.nekoweb.org/button.png" alt="cyberdemon"/></a>
+      <a href="https://beaniepines.neocities.org/garden" target="_parent" data-title=""><img src="assets/bpdusk.gif" alt="beanie pines"/></a>
+      <a href="https://starrs.neocities.org/" target="_parent" data-title=""><img src="assets/tiny_space.gif" alt="tiny space"/></a>
+      <a href="https://pastelhello.com/" target="_parent" data-title=""><img src="https://pastelhello.com/mybuttons/b2.png" alt="pastel hello"/></a>
+      <a href="https://s1m0n3.neocities.org" target="_parent" data-title=""><img src="https://s1m0n3.neocities.org/buttons/s1m0n3-bt1.gif" alt="s1m0n3"/></a>
+      <a href="https://www.lejlart.com/apple.html" target="_parent" data-title=""><img src="assets/ad_skullsprinkles.gif" alt="appledust"/></a>
+      <a href="https://exo.pet/" target="_parent" data-title=""><img src="assets/exopetbutton1.png" alt="exo pet"/></a>
+      <a href="https://frutigeraeroarchive.org/" target="_parent" data-title="THE fruitger aero archive!!!"><img src="assets/frutigeraeroarchive_button.png" alt="frutiger aero archive"/></a>
+      <a href="https://petrapixel.neocities.org/" target="_parent" data-title="such a unique site, so much to click and do, it inspires me!"><img src="https://cdn.jsdelivr.net/gh/petracoding/petrapixel.neocities.org@latest/public/assets/img/linkback.gif" alt="petrapixel"/></a>
+      <a href="https://alynxolotl.neocities.org" target="_parent" data-title=""><img src="https://files.catbox.moe/di03jx.gif" alt="alynxolotl"/></a>
+      <a href="https://astrito.nekoweb.org" target="_parent" data-title="a cool personality quiz lies on this page! (i got an empanada), check it out!"><img src="https://astrito.nekoweb.org/astrito_sitebutton.gif" alt="astrito"/></a>
+      <a href="https://aoki553.nekoweb.org/" target="_parent" data-title=""><img src="https://aoki553.neocities.org/nekoweb/deco/aoki553button.gif" alt="aoki553"/></a>
+      <a href="https://status.cafe" target="_parent" data-title="this is how im able to upload my own statuses without needing to manually update my site each time!!"><img src="https://status.cafe/assets/button.png" alt="Status Cafe"/></a>
+      <a href="https://neocities.org/" target="_parent" data-title="a great place to start when working with the indie web."><img src="assets/neocities.gif" alt="neocities!"/></a>
+      <a href="https://www.w3schools.com/" target="_parent" data-title="helped me a lot with making my site, i was rusty on my CSS and JS"><img src="assets/w3schools_site-btn.gif" alt="w3 schools"/></a>
     </div>
     
   <br><br>
   </div>
-  <div class="content" style="max-width: 900px;">
-    <div class="link-buttons" class="tree">
-    <h2 class="star">utility</h2>
-      <p style="text-align: center;">most of these helped me build this site, and theres also some other useful links here too</p><br>
 
-      <p style="text-align: center;">
-        Status Cafe: lets you upload custom little statuses!<br>
-      <a href="https://status.cafe" target="_blank"><img src="https://status.cafe/assets/button.png" alt="Status Cafe"/></a><br>
-
-        GifCities: an archive of a bunch of gifs from the old geocities era, really useful for finding random fun gifs to slap on your site!<br>
-      <a href="https://gifcities.org/" target="_blank"><img src="https://gifcities.org/static/gifsearch/ia-logo.svg" alt="gifcities"/></a><br>
-
-        Neocities: speaking of geocities, neocities is revival of the old geocities before yahoo shot it in the head. you can find a lot of<br>
-        personal homepages, and similar things like this on that site. long live the indie web! got a handful of inspiration from these sites a couple years ago when i was starting out, it would be wrong to not link it here!<br>
-      <a href="https://neocities.org/" target="_blank"><img src="assets/neocities.gif" alt="neocities!"/></a><br>
-
-        Status Cafe: lets you upload custom little statuses!<br>
-      <a href="https://status.cafe" target="_blank"><img src="https://status.cafe/assets/button.png" alt="Status Cafe"/></a><br>
-
-        Status Cafe: lets you upload custom little statuses!<br>
-      <a href="https://status.cafe" target="_blank"><img src="https://status.cafe/assets/button.png" alt="Status Cafe"/></a><br>
-      </p>
-    </div>
-  </div>
 <footer>
   <span class="star">its time to say goodbye now i guess ?</span>
 </footer>
+<script>
+  const tooltip = document.createElement('div');
+  tooltip.className = 'tooltip';
+  document.body.appendChild(tooltip);
+
+  // wait for all DOM content to be loaded before attaching event listeners
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.link-buttons a').forEach(el => {
+      const titleText = el.getAttribute('title') || el.dataset.title;
+      if (!titleText) return;
+
+      el.removeAttribute('title'); // disable native tooltip
+      el.dataset.title = titleText;
+
+      el.addEventListener('mouseenter', () => {
+        tooltip.textContent = el.dataset.title;
+        tooltip.style.opacity = '1';
+      });
+
+      el.addEventListener('mousemove', e => {
+        tooltip.style.left = `${e.clientX + 12}px`;
+        tooltip.style.top = `${e.clientY + 12}px`;
+      });
+
+      el.addEventListener('mouseleave', () => {
+        tooltip.style.opacity = '0';
+      });
+    });
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.link-buttons a').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        const hoverSound = new Audio('altsite/fx/shiplog_highlight2.wav');
+        hoverSound.volume = 0.4; // optional: adjust volume
+        hoverSound.play();
+      });
+    });
+  });
+</script>
 
 <script>
   document.addEventListener('click', () => {
