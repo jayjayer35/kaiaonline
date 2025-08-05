@@ -9,19 +9,25 @@ exports.handler = async function (event, context) {
   try {
     const response = await fetch(url);
     const json = await response.json();
-
     const player = json.response.players?.[0];
 
     if (!player) {
       return {
         statusCode: 404,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        },
         body: JSON.stringify({ error: "Player not found" }),
       };
     }
 
     return {
       statusCode: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      },
       body: JSON.stringify({
         game: player.gameextrainfo || "None",
         status: player.personastate?.toString() || "unknown",
@@ -30,6 +36,10 @@ exports.handler = async function (event, context) {
   } catch (err) {
     return {
       statusCode: 500,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      },
       body: JSON.stringify({ error: "Failed to fetch Steam data", detail: err.message }),
     };
   }
