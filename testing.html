@@ -38,7 +38,7 @@
 
     .container {
         display: grid;
-        grid-template-columns: 200px 1fr 240px;
+        grid-template-columns: 200px 1fr 260px;
         height: 100vh;
     }
 
@@ -204,6 +204,7 @@
     #statuscafe-username {
         visibility: hidden;
         position: relative;
+        margin-bottom: 1rem;
     }
     #statuscafe-username::before {
         content: "LAST TRANSMISSION";
@@ -211,10 +212,9 @@
         position: absolute;
         top: 0;
         left: 0;
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 1000;
         color: #9ed0ff;
-        margin-bottom: 0rem;
     }
     #statuscafe-content {
         margin: 0 0em;
@@ -236,7 +236,8 @@
       <a onclick="loadPage('internetstuf2.html')">Links</a>
       <a onclick="loadPage('webrings.html')">Webrings</a>
       <a onclick="loadPage('https://kaiasei.atabook.org/')">Guestbook</a>
-      <a onclick="loadPage('jacobonline-old/index.html')">Old Site</a>
+      <a onclick="loadPage('thesite.html')">This Site</a>
+      <a onclick="loadPage('jacobonline-old/index.html')">My Original Site</a>
       <h2>Creative</h2>
       <a onclick="loadPage('video.html')">Videos</a>
       <a onclick="loadPage('photo.html')">Photos</a>
@@ -244,12 +245,7 @@
       <h2>Ramblings</h2>
       <a onclick="loadPage('wilds.html')">Outer Wilds</a>
       <h2>Other</h2>
-      <a onclick="loadPage('welcome.html')">Timber Hearth</a>
-      <a onclick="loadPage('giantsdeep.html')">Giant's Deep</a>
-      <a onclick="loadPage('quantum.html')">Quantum Moon</a>
-      <a onclick="loadPage('ashtwin.html')">Ash Twin</a>
-      <a onclick="loadPage('interloper.html')">The Interloper</a>
-      <a onclick="loadPage('eye.html')">The Eye</a>
+      <a onclick="loadPage('template.html')">My site template</a>
       <h2>Friends</h2>
       <a onclick="loadPage('friends/kris.html')">Kris</a>
       <a onclick="loadPage('friends/gabe.html')">Gabriel</a>
@@ -288,7 +284,7 @@
             <div id="statuscafe-content"></div>
         </div>
         <script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
-        <h2>VITALS</h2>
+        <h2>KAIA'S VITALS (live)</h2>
         <div class="status" id="kaia-status">
             <p id="health">- Health: --%</p>
             <p id="battery">- Social Battery: --%</p>
@@ -303,10 +299,9 @@
             <p>- Atmosphere: Breathable</p>
             <p id="loop-timer">- Time: 0:00 of 22:00 minutes</p>
         </div>
-        
-        
-    </div>
-  </div>
+        <br>
+        <h2>TODAY'S MOON</h2>
+        <!-- © wdisseny --><div id="contain_moon" style="text-align:center;padding-bottom:14px;"><div style="font-weight:bold"></div><div style="margin-bottom:25px;padding:10px;filter:drop-shadow(0 0 36px hsla(0, 0%, 62%, 0.24))"></div><div>.</div><div style="font-size:small"></div></div><script>(function(){var d=new Date().getDate();var m=document.querySelectorAll("#contain_moon div");var a=new XMLHttpRequest();var url="https://www.icalendar37.net/lunar/api/?lang=en&month="+(new Date().getMonth()+1)+"&year="+(new Date().getFullYear())+"&size=120&lightColor=rgb(154,153,150)&shadeColor=rgb(4,7,31)&t&LDZ="+new Date(new Date().getFullYear(),new Date().getMonth(),1)/1000+"";m[1].style.height="120px";a.onreadystatechange=function(){if(a.readyState==4&&a.status==200){var b=JSON.parse(a.responseText);m[1].innerHTML=b.phase[d].svg;if(typeof moon_widget_loaded=="function")moon_widget_loaded(b);m[2].innerHTML=b.phase[d].npWidget}};a.open("GET",url,true);a.send()})()</script>
 
   <script>
     //loading page script -===========================================================-
