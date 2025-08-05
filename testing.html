@@ -343,7 +343,8 @@
         document.getElementById("battery").textContent = `Social Battery: ${battery}%`;
 
         // Replace this with YOUR Netlify site URL
-        const endpoint = "https://kaiaonline.netlify.app/.netlify/functions/getSteamStatus";
+        const endpoint = "https://kaia.starscene.com/.netlify/functions/getSteamStatus";
+
 
         fetch(endpoint)
         .then(res => res.json())
