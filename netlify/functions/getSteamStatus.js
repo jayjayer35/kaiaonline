@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 
-exports.handler = async function(event, context) {
+exports.handler = async function (event, context) {
   const STEAM_API_KEY = process.env.STEAM_API_KEY;
   const STEAM_ID = process.env.STEAM_ID;
 
@@ -8,21 +8,29 @@ exports.handler = async function(event, context) {
 
   try {
     const response = await fetch(url);
-    const data = await response.json();
-    const player = data.response.players[0];
+    const json = await response.json();
+
+    const player = json.response.players?.[0];
+
+    if (!player) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ error: "Player not found" }),
+      };
+    }
 
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        game: player?.gameextrainfo || "Offline",
-        status: player?.personastate || "unknown",
-      })
+        game: player.gameextrainfo || "None",
+        status: player.personastate?.toString() || "unknown",
+      }),
     };
   } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Failed to fetch Steam data" })
+      body: JSON.stringify({ error: "Failed to fetch Steam data", detail: err.message }),
     };
   }
 };
