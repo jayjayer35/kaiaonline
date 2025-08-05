@@ -335,50 +335,43 @@
 
     //vitals script -===========================================================-
     function updateKaiaStatus() {
-        // Randomize health (70–100%) and battery (0–100%)
+        // Randomized values
         const health = Math.floor(Math.random() * 31) + 70; // 70–100
-        const battery = Math.floor(Math.random() * 101); // 0–100
+        const battery = Math.floor(Math.random() * 101);     // 0–100
 
         document.getElementById("health").textContent = `Health: ${health}%`;
         document.getElementById("battery").textContent = `Social Battery: ${battery}%`;
 
-        // disc fallback
-        document.getElementById("availability").textContent = "Availability: ???";
+        // Replace this with YOUR Netlify site URL
+        const endpoint = "https://your-site-name.netlify.app/.netlify/functions/getSteamStatus";
 
-        // steam game data
-        const steamApiKey = "72C7559D71182F614384B7D09DA025CC"; // DONT share this ffs
-        const steamId = "76561198256786828"; //  DONT share this ffs
+        fetch(endpoint)
+            .then(res => res.json())
+            .then(data => {
+                // Set game name
+                document.getElementById("game").textContent = `Current Game: ${data.game}`;
 
-        fetch(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${steamApiKey}&steamids=${steamId}`)
-        .then(res => res.json())
-        .then(data => {
-            const player = data.response.players[0];
-            const game = player?.gameextrainfo || "None";
-            document.getElementById("game").textContent = `Current Game: ${game}`;
-        })
-        .catch(() => {
-            document.getElementById("game").textContent = "Current Game: Unknown";
-        });
-        
-        fetch("https://your-site-name.netlify.app/.netlify/functions/getSteamStatus")
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("game").textContent = `Current Game: ${data.game}`;
-            let availabilityText = "Offline";
-            if (data.status === 1) availabilityText = "Online";
-            else if (data.status === 3) availabilityText = "Busy";
-            else if (data.status === 4) availabilityText = "Away";
-            else if (data.status === 5) availabilityText = "Snooze";
-            else if (data.status === 6) availabilityText = "Looking to Trade";
-            else if (data.status === 7) availabilityText = "Looking to Play";
+                // Map presence status to readable string
+                const stateMap = {
+                    "0": "Offline",
+                    "1": "Online",
+                    "2": "Busy",
+                    "3": "Away",
+                    "4": "Snooze",
+                    "5": "Looking to Trade",
+                    "6": "Looking to Play",
+                    "unknown": "Unknown"
+                };
 
-            document.getElementById("availability").textContent = `Availability: ${availabilityText}`;
-        })
-        .catch(() => {
-            document.getElementById("game").textContent = "Current Game: ???";
-            document.getElementById("availability").textContent = "Availability: ???";
-        });
+                const status = stateMap[data.status.toString()] || "Unknown";
+                document.getElementById("availability").textContent = `Availability: ${status}`;
+            })
+            .catch(() => {
+                document.getElementById("game").textContent = "Current Game: ???";
+                document.getElementById("availability").textContent = "Availability: ???";
+            });
     }
+
 
     //music player script -===========================================================-
 
