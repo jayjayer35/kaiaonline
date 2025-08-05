@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kaia’s Log Site</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Space Mono', monospace;
+      background: url('assets/galaxybkgndblue.jpg') center center / cover no-repeat fixed;
+      color: #e0e0e0;
+      overflow: hidden;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url('assets/static.gif');
+      opacity: 0.05;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 200px 1fr 240px;
+      height: 100vh;
+    }
+
+    .panel {
+      backdrop-filter: blur(4px);
+      background: rgba(10, 10, 20, 0.65);
+      padding: 16px;
+      overflow-y: auto;
+      height: 100%;
+      border-right: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .panel.right {
+      border-left: 1px solid rgba(255,255,255,0.05);
+      border-right: none;
+    }
+
+    h2 {
+      font-size: 1rem;
+      color: #9ed0ff;
+      margin-bottom: 1rem;
+    }
+
+    .left a {
+      display: block;
+      text-decoration: none;
+      color: #aaa;
+      margin-bottom: 0.6rem;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .left a:hover {
+      color: white;
+      border-left: 3px solid #88c0d0;
+      background: rgba(255, 255, 255, 0.05);
+      padding-left: 5px;
+    }
+
+    .middle {
+      padding: 24px;
+      background: rgba(0,0,0,0.4);
+      overflow: hidden;
+      position: relative;
+    }
+
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+    }
+
+    .log-window {
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 0 8px rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
+      height: 100%;
+    }
+
+    .log-title {
+      background: rgba(0,0,0,0.7);
+      padding: 8px 12px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: #c2f0ff;
+    }
+
+    .status, .music {
+      font-size: 0.85rem;
+      color: #bbb;
+      line-height: 1.4;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(100,100,150,0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Left Panel -->
+    <div class="panel left">
+      <h2>SHIP LOG</h2>
+      <a onclick="loadPage('welcome.html')">Welcome</a>
+      <a onclick="loadPage('bio.html')">Bio</a>
+      <a onclick="loadPage('quantum.html')">Quantum Moon</a>
+      <a onclick="loadPage('ashtwin.html')">Ash Twin</a>
+      <a onclick="loadPage('interloper.html')">The Interloper</a>
+      <a onclick="loadPage('eye.html')">The Eye</a>
+      <h2>SHIP LOG</h2>
+      <a onclick="loadPage('welcome.html')">Timber Hearth</a>
+      <a onclick="loadPage('giantsdeep.html')">Giant's Deep</a>
+      <a onclick="loadPage('quantum.html')">Quantum Moon</a>
+      <a onclick="loadPage('ashtwin.html')">Ash Twin</a>
+      <a onclick="loadPage('interloper.html')">The Interloper</a>
+      <a onclick="loadPage('eye.html')">The Eye</a>
+    </div>
+
+    <!-- Middle Panel -->
+    <div class="middle">
+      <div class="log-window">
+        <div class="log-title" id="log-title">Log Entry</div>
+        <iframe id="logframe" src="entries/timber.html"></iframe>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="panel right">
+      <h2>NOW PLAYING</h2>
+      <div class="music">
+        <p><strong>"22 Minutes"</strong> – A melody from beyond the loop.<br> Source: The Eye.</p>
+      </div>
+      <br>
+      <h2>SHIP STATUS</h2>
+      <div class="status">
+        <p>Oxygen: Nominal</p>
+        <p>Fuel: Full</p>
+        <p>Autopilot: Offline</p>
+        <p>Hull Integrity: Stable</p>
+        <p>Signal Scope: Tuned</p>
+      </div>
+      <br>
+      <h2>TELEMETRY</h2>
+      <div class="status">
+        <p>Deep Space Satellite 3<br>Status: Offline</p>
+        <p>Memory loop: 12 of 22 minutes</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function loadPage(path) {
+      const logframe = document.getElementById("logframe");
+      logframe.src = path;
+    }
+
+    function loadPage(path) {
+        const logframe = document.getElementById("logframe");
+        logframe.src = path;
+    }
+
+    const iframe = document.getElementById("logframe");
+    iframe.addEventListener("load", () => {
+        try {
+        const title = iframe.contentDocument.title;
+        document.getElementById("log-title").textContent = "Log Entry: " + title;
+        } catch (e) {
+        document.getElementById("log-title").textContent = "Log Entry: [undefined]";
+        }
+    });   
+  </script>
+
+</body>
+</html>
