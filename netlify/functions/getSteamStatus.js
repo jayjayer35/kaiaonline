@@ -3,11 +3,11 @@ exports.handler = async function (event, context) {
   const STEAM_ID = process.env.STEAM_ID;
 
   const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Content-Type": "application/json"
-  };
+  "Access-Control-Allow-Origin": "https://kaia.starscene.com",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Methods": "GET,OPTIONS",
+  "Content-Type": "application/json"
+};
 
   if (event.httpMethod === "OPTIONS") {
     return {
