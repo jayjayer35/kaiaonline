@@ -346,30 +346,26 @@
         const endpoint = "https://kaiaonline.netlify.app/.netlify/functions/getSteamStatus";
 
         fetch(endpoint)
-            .then(res => res.json())
-            .then(data => {
-                // Set game name
-                document.getElementById("game").textContent = `Current Game: ${data.game}`;
-
-                // Map presence status to readable string
-                const stateMap = {
-                    "0": "Offline",
-                    "1": "Online",
-                    "2": "Busy",
-                    "3": "Away",
-                    "4": "Snooze",
-                    "5": "Looking to Trade",
-                    "6": "Looking to Play",
-                    "unknown": "Unknown"
-                };
-
-                const status = stateMap[data.status.toString()] || "Unknown";
-                document.getElementById("availability").textContent = `Availability: ${status}`;
-            })
-            .catch(() => {
-                document.getElementById("game").textContent = "Current Game: ???";
-                document.getElementById("availability").textContent = "Availability: ???";
-            });
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("game").textContent = `Current Game: ${data.game}`;     
+            const stateMap = {
+                "0": "Offline",
+                "1": "Online",
+                "2": "Busy",
+                "3": "Away",
+                "4": "Snooze",
+                "5": "Looking to Trade",
+                "6": "Looking to Play",
+                "unknown": "Unknown"
+            };
+            const status = stateMap[data.status?.toString()] || "Unknown";
+            document.getElementById("availability").textContent = `Availability: ${status}`;
+        })
+        .catch(() => {
+        document.getElementById("game").textContent = "Current Game: ???";
+        document.getElementById("availability").textContent = "Availability: ???";
+        });
     }
 
 
