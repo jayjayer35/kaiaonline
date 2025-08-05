@@ -335,33 +335,31 @@
 
     //vitals script -===========================================================-
     function updateKaiaStatus() {
-        // Randomized values
-        const health = Math.floor(Math.random() * 31) + 70; // 70–100
-        const battery = Math.floor(Math.random() * 101);     // 0–100
+    const health = Math.floor(Math.random() * 31) + 70;
+    const battery = Math.floor(Math.random() * 101);
+    document.getElementById("health").textContent = `Health: ${health}%`;
+    document.getElementById("battery").textContent = `Social Battery: ${battery}%`;
 
-        document.getElementById("health").textContent = `Health: ${health}%`;
-        document.getElementById("battery").textContent = `Social Battery: ${battery}%`;
+    const endpoint = "https://kaiaonline.netlify.app/.netlify/functions/getSteamStatus";
 
-        // Replace this with YOUR Netlify site URL
-        const endpoint = "https://kaia.starscene.com/.netlify/functions/getSteamStatus";
-
-
-        fetch(endpoint)
+    fetch(endpoint)
         .then(res => res.json())
         .then(data => {
-            document.getElementById("game").textContent = `Current Game: ${data.game}`;     
-            const stateMap = {
-                "0": "Offline",
-                "1": "Online",
-                "2": "Busy",
-                "3": "Away",
-                "4": "Snooze",
-                "5": "Looking to Trade",
-                "6": "Looking to Play",
-                "unknown": "Unknown"
-            };
-            const status = stateMap[data.status?.toString()] || "Unknown";
-            document.getElementById("availability").textContent = `Availability: ${status}`;
+        document.getElementById("game").textContent = `Current Game: ${data.game}`;
+        
+        const stateMap = {
+            "0": "Offline",
+            "1": "Online",
+            "2": "Busy",
+            "3": "Away",
+            "4": "Snooze",
+            "5": "Looking to Trade",
+            "6": "Looking to Play",
+            "unknown": "Unknown"
+        };
+
+        const status = stateMap[data.status?.toString()] || "Unknown";
+        document.getElementById("availability").textContent = `Availability: ${status}`;
         })
         .catch(() => {
         document.getElementById("game").textContent = "Current Game: ???";
