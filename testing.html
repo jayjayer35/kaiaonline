@@ -2,63 +2,519 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>KAIA Status Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kaia’s Log Site</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet" />
+
   <style>
-    body {
-      background: #111;
-      color: #0f0;
-      font-family: monospace;
-      padding: 2rem;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
-    .line {
-      margin: 1rem 0;
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        font-family: 'Space Mono', monospace;
+        background: url('assets/galaxybkgndblue.jpg') center center / cover no-repeat fixed;
+        color: #e0e0e0;
+        overflow: hidden;
     }
+
+    body::after {
+        content: '';
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: url('assets/static.gif');
+        opacity: 0.05;
+        mix-blend-mode: screen;
+        pointer-events: none;
+        z-index: 100;
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: 200px 1fr 240px;
+        height: 100vh;
+    }
+
+    .panel {
+        backdrop-filter: blur(4px);
+        background: rgba(10, 10, 20, 0.65);
+        padding: 16px;
+        overflow-y: auto;
+        height: 100%;
+        border-right: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .panel.right {
+        border-left: 1px solid rgba(255,255,255,0.05);
+        border-right: none;
+    }
+
+    h2 {
+        font-size: 1rem;
+        color: #9ed0ff;
+        margin-bottom: 1rem;
+    }
+
+    .left a {
+        display: block;
+        text-decoration: none;
+        color: #aaa;
+        margin-bottom: 0.6rem;
+        transition: 0.2s;
+        cursor: pointer;
+    }
+
+    .left a:hover {
+        color: white;
+        border-left: 3px solid #88c0d0;
+        background: rgba(255, 255, 255, 0.05);
+        padding-left: 5px;
+    }
+
+    .middle {
+        padding: 24px;
+        background: rgba(0,0,0,0.4);
+        overflow: hidden;
+        position: relative;
+    }
+
+    iframe {
+        border: none;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+    }
+
+    .log-window {
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 0 8px rgba(0,0,0,0.5);
+        background: rgba(0,0,0,0.6);
+        height: 100%;
+    }
+
+    .log-title {
+        background: rgba(0,0,0,0.7);
+        padding: 8px 12px;
+        font-weight: bold;
+        font-size: 0.95rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        color: #c2f0ff;
+    }
+
+    .status, .music {
+        font-size: 0.85rem;
+        color: #bbb;
+        line-height: 1.4;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(100,100,150,0.4);
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        outline: none;
+        transition: background 0.2s ease;
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 14px;
+        width: 14px;
+        background: #9ed0ff;
+        border: 2px solid #0e1a2b;
+        border-radius: 50%;
+        box-shadow: 0 0 6px #88c0d0;
+        transition: background 0.3s ease;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        height: 14px;
+        width: 14px;
+        background: #9ed0ff;
+        border: 2px solid #0e1a2b;
+        border-radius: 50%;
+        box-shadow: 0 0 6px #88c0d0;
+        cursor: pointer;
+    }
+
+    /* Hover effect for slider track */
+    input[type="range"]:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    button {
+        font-family: 'Space Mono', monospace;
+        background: rgba(50, 100, 150, 0.15);
+        border: 1px solid #88c0d0;
+        color: #c2f0ff;
+        padding: 6px 12px;
+        border-radius: 3px;
+        box-shadow: 0 0 6px rgba(100, 200, 255, 0.2);
+        transition: 0.2s ease;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: rgba(100, 180, 255, 0.3);
+        color: white;
+        border-color: #aeefff;
+    }
+    #fadeout-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        opacity: 0;
+        pointer-events: none; /* default state: non-blocking */
+        z-index: 9999;
+        transition: opacity 3s ease-in-out;
+    }
+
+    #fadeout-overlay.active {
+        opacity: 1;
+        pointer-events: all; /* blocks clicks when active */
+    }
+    input[type="range"]:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
   </style>
 </head>
 <body>
-  <div class="line" id="health">Health: ...</div>
-  <div class="line" id="battery">Social Battery: ...</div>
-  <div class="line" id="game">Current Game: ...</div>
-  <div class="line" id="availability">Availability: ...</div>
+
+  <div class="container">
+    <!-- Left Panel -->
+    <div class="panel left">
+      <h2>Entry</h2>
+      <a onclick="loadPage('welcome.html')">Welcome</a>
+      <a onclick="loadPage('bio.html')">Bio</a>
+      <h2>The Web</h2>
+      <a onclick="loadPage('internetstuf.html')">Internet</a>
+      <a onclick="loadPage('internetstuf2.html')">Links</a>
+      <a onclick="loadPage('webrings.html')">Webrings</a>
+      <a onclick="loadPage('https://kaiasei.atabook.org/')">Guestbook</a>
+      <a onclick="loadPage('jacobonline-old/index.html')">Old Site</a>
+      <h2>Creative</h2>
+      <a onclick="loadPage('video.html')">Videos</a>
+      <a onclick="loadPage('photo.html')">Photos</a>
+      <a onclick="loadPage('music.html')">Music</a>
+      <h2>Ramblings</h2>
+      <a onclick="loadPage('wilds.html')">Outer Wilds</a>
+      <a onclick="loadPage('giantsdeep.html')">Giant's Deep</a>
+      <a onclick="loadPage('quantum.html')">Quantum Moon</a>
+      <a onclick="loadPage('ashtwin.html')">Ash Twin</a>
+      <a onclick="loadPage('interloper.html')">The Interloper</a>
+      <a onclick="loadPage('eye.html')">The Eye</a>
+      <h2>Other</h2>
+      <a onclick="loadPage('welcome.html')">Timber Hearth</a>
+      <a onclick="loadPage('giantsdeep.html')">Giant's Deep</a>
+      <a onclick="loadPage('quantum.html')">Quantum Moon</a>
+      <a onclick="loadPage('ashtwin.html')">Ash Twin</a>
+      <a onclick="loadPage('interloper.html')">The Interloper</a>
+      <a onclick="loadPage('eye.html')">The Eye</a>
+      <h2>Friends</h2>
+      <a onclick="loadPage('welcome.html')">Timber Hearth</a>
+      <a onclick="loadPage('giantsdeep.html')">Giant's Deep</a>
+      <a onclick="loadPage('quantum.html')">Quantum Moon</a>
+      <a onclick="loadPage('ashtwin.html')">Ash Twin</a>
+      <a onclick="loadPage('interloper.html')">The Interloper</a>
+      <a onclick="loadPage('eye.html')">The Eye</a>
+      <h2>Other</h2>
+      <a onclick="loadPage('welcome.html')">Timber Hearth</a>
+      <a onclick="loadPage('giantsdeep.html')">Giant's Deep</a>
+      <a onclick="loadPage('quantum.html')">Quantum Moon</a>
+      <a onclick="loadPage('ashtwin.html')">Ash Twin</a>
+      <a onclick="loadPage('interloper.html')">The Interloper</a>
+      <a onclick="loadPage('eye.html')">The Eye</a>
+    </div>
+
+    <!-- Middle Panel -->
+    <div class="middle">
+      <div class="log-window">
+        <div class="log-title" id="log-title">Log Entry</div>
+        <iframe id="logframe" src="welcome.html"></iframe>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="panel right">
+        <h2>NOW PLAYING</h2>
+        <div class="music">
+        <p id="song-title"><strong>Loading...</strong></p>
+
+        <audio id="musicPlayer" preload="auto"></audio>
+
+        <div style="margin: 8px 0;">
+            <input type="range" id="progressBar" value="0" step="1" min="0" max="100" style="width: 100%;">
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+            <button id="pauseButton">⏸</button>
+            <button id="skipButton">⏭</button>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3" />
+
+        </div>
+        <br>
+        <h2>KAIA'S STATUS</h2>
+        <div class="status" id="kaia-status">
+            <p id="health">Health: --%</p>
+            <p id="battery">Social Battery: --%</p>
+            <p id="availability">Availability: Loading...</p>
+            <p id="game">Current Game: Loading...</p>
+            <p>Instrument: Guitar</p>
+        </div>
+        <br>
+        <h2>TELEMETRY</h2>
+        <div class="status">
+            <p>Deep Space Satellite 3<br>Status: Offline</p>
+            <p id="loop-timer">Time: 0:00 of 22:00 minutes</p>
+        </div>
+    </div>
+  </div>
 
   <script>
-    const endpoint = "https://kaia.starscene.com/.netlify/functions/getSteamStatus";
+    //loading page script -===========================================================-
+    function loadPage(path) {
+        const logframe = document.getElementById("logframe");
+        logframe.src = path;
+    }
+    //title on frame script -===========================================================-
+    const iframe = document.getElementById("logframe");
+    iframe.addEventListener("load", () => {
+        try {
+        const title = iframe.contentDocument.title;
+        document.getElementById("log-title").textContent = "Log Entry: " + title;
+        } catch (e) {
+        document.getElementById("log-title").textContent = "Log Entry: [undefined]";
+        }
+    }); 
+    //timer script -===========================================================-
+    let totalSeconds = 0; //set to like 1310 for testing
+    const maxSeconds = 22 * 60; // 22 minutes in seconds
+    const loopDisplay = document.getElementById("loop-timer");
 
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    let loopEnded = false;
+
+    function updateTimer() {
+        if (totalSeconds < maxSeconds) {
+            totalSeconds++;
+            loopDisplay.textContent = `Time: ${formatTime(totalSeconds)} of 22:00 minutes`;
+        } else if (!loopEnded) {
+            loopEnded = true;
+            playFinalSong();
+        }
+    }
+
+
+    setInterval(updateTimer, 1000); // update every second  
+
+    //vitals script -===========================================================-
     function updateKaiaStatus() {
-      const health = Math.floor(Math.random() * 31) + 70;
-      const battery = Math.floor(Math.random() * 101);
-      document.getElementById("health").textContent = `Health: ${health}%`;
-      document.getElementById("battery").textContent = `Social Battery: ${battery}%`;
+        // Randomized values
+        const health = Math.floor(Math.random() * 31) + 70; // 70–100
+        const battery = Math.floor(Math.random() * 101);     // 0–100
 
-      fetch(endpoint)
+        document.getElementById("health").textContent = `Health: ${health}%`;
+        document.getElementById("battery").textContent = `Social Battery: ${battery}%`;
+
+        // Replace this with YOUR Netlify site URL
+        const endpoint = "https://kaia.starscene.com/.netlify/functions/getSteamStatus";
+
+
+        fetch(endpoint)
         .then(res => res.json())
         .then(data => {
-          console.log("Steam function data:", data);
-
-          document.getElementById("game").textContent = `Current Game: ${data.game}`;
-
-          const stateMap = {
-            "0": "Offline",
-            "1": "Online",
-            "2": "Busy",
-            "3": "Away",
-            "4": "Snooze",
-            "5": "Looking to Trade",
-            "6": "Looking to Play",
-            "unknown": "Unknown"
-          };
-
-          const status = stateMap[data.status?.toString()] || "Unknown";
-          document.getElementById("availability").textContent = `Availability: ${status}`;
+            document.getElementById("game").textContent = `Current Game: ${data.game}`;     
+            const stateMap = {
+                "0": "Offline",
+                "1": "Online",
+                "2": "Busy",
+                "3": "Away",
+                "4": "Snooze",
+                "5": "Looking to Trade",
+                "6": "Looking to Play",
+                "unknown": "Unknown"
+            };
+            const status = stateMap[data.status?.toString()] || "Unknown";
+            document.getElementById("availability").textContent = `Availability: ${status}`;
         })
-        .catch(err => {
-          console.error("Fetch error:", err);
-          document.getElementById("game").textContent = "Current Game: ???";
-          document.getElementById("availability").textContent = "Availability: ???";
+        .catch(() => {
+        document.getElementById("game").textContent = "Current Game: ???";
+        document.getElementById("availability").textContent = "Availability: ???";
         });
     }
 
+
+    //music player script -===========================================================-
+
+    const musicPlayer = document.getElementById('musicPlayer');
+    musicPlayer.volume = 0.07; // vol start
+    const songTitle = document.getElementById('song-title');
+    const skipButton = document.getElementById('skipButton');
+    const pauseButton = document.getElementById('pauseButton');
+    const progressBar = document.getElementById('progressBar');
+    const volumeSlider = document.getElementById('volumeSlider');
+
+  
+
+    const songs = [
+        { title: "14.3 Billion Years - Andrew Prahlow", file: "14.3.mp3" },
+        { title: "Comforting Memories - Kumi Tanioka", file: "memories.mp3" },
+        { title: "Falling Stars - A Shell In The Pit", file: "stars.mp3" },
+        { title: "Timber Hearth - Andrew Prahlow", file: "timber.mp3" },
+        { title: "serenity - kaiasei", file: "serenity.mp3" },
+        { title: "dawn - kaiasei", file: "dawn.mp3" },
+        { title: "Main Title - Andrew Prahlow", file: "title.mp3" },
+        { title: "The Ancient Glade - Andrew Prahlow", file: "glade.mp3" },
+        { title: "The Sun Station - Andrew Prahlow", file: "sun.mp3" },
+        { title: "Castaways - Andrew Prahlow", file: "castaways.mp3" },
+        { title: "Beacon - Disasterpiece", file: "beacon.mp3" },
+        { title: "Xeno Arcadia - Mason Lindroth & Chuck Salamone", file: "xeno.mp3"},
+        { title: "Outer Wilds - Reprise - Andrew Prahlow", file: "reprise.mp3" },
+        { title: "Something to Look For - Andrew Prahlow", file: "look.mp3" },
+        { title: "Before the Story - Toby Fox", file: "story.mp3" },
+
+
+    ];
+
+    const finalSong = {
+        file: "endtimes.mp3",
+        title: "End Times - Andrew Prahlow"
+    };
+    const historyLimit = 5;
+    let playHistory = [];
+
+    function getRandomSong() {
+        let candidates = songs.filter(song => !playHistory.includes(song.file));
+        if (candidates.length === 0) {
+        playHistory = [];
+        candidates = [...songs];
+        }
+        const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+        playHistory.push(chosen.file);
+        if (playHistory.length > historyLimit) {
+        playHistory.shift();
+        }
+        return chosen;
+    }
+
+    function loadAndPlaySong() {
+        const song = getRandomSong();
+        musicPlayer.src = `music/${song.file}`;
+        musicPlayer.play();
+        songTitle.innerHTML = `<strong>${song.title}</strong>`;
+    }
+
+    musicPlayer.addEventListener('ended', loadAndPlaySong);
+    skipButton.addEventListener('click', loadAndPlaySong);
+
+    musicPlayer.addEventListener('timeupdate', () => {
+        if (musicPlayer.duration) {
+        progressBar.value = (musicPlayer.currentTime / musicPlayer.duration) * 100;
+        }
+    });
+
+    progressBar.addEventListener('input', () => {
+        if (musicPlayer.duration) {
+        musicPlayer.currentTime = (progressBar.value / 100) * musicPlayer.duration;
+        }
+    });
+
+    volumeSlider.addEventListener('input', () => {
+        musicPlayer.volume = volumeSlider.value;
+    });
+
+
+    pauseButton.addEventListener('click', () => {
+    if (musicPlayer.paused) {
+        musicPlayer.play();
+        pauseButton.textContent = '⏸';
+    } else {
+        musicPlayer.pause();
+        pauseButton.textContent = '▶';
+    }
+    });
+
+    function playFinalSong() {
+        // Store current song
+        const oldSong = musicPlayer;
+
+        // Create a new audio element for the final song
+        const newSong = new Audio(`music/${finalSong.file}`);
+        newSong.volume = 0;
+        newSong.loop = false;
+        newSong.preload = 'auto';
+        newSong.play();
+
+        songTitle.innerHTML = `<strong>${finalSong.title}</strong>`;
+
+        // Disable controls
+        skipButton.disabled = true;
+        pauseButton.disabled = true;
+        progressBar.disabled = true;
+
+        // Crossfade logic
+        let fadeDuration = 3000; // 3 seconds
+        let fadeSteps = 30;
+        let stepTime = fadeDuration / fadeSteps;
+        let oldVolume = oldSong.volume;
+        let currentStep = 0;
+
+        let fadeInterval = setInterval(() => {
+            currentStep++;
+            let progress = currentStep / fadeSteps;
+
+            // Fade out old song
+            oldSong.volume = oldVolume * (1 - progress);
+
+            // Fade in new song
+            newSong.volume = 0.07 * progress; // Your default volume
+
+            if (currentStep >= fadeSteps) {
+                clearInterval(fadeInterval);
+                oldSong.pause();
+            }
+        }, stepTime);
+
+        // After 1 min 30 sec, fade screen and close
+        setTimeout(() => {
+            document.getElementById('fadeout-overlay').classList.add('active');
+            setTimeout(() => {
+                window.close();
+            }, 3000);
+        }, 90000); // 1:30 = 90000 ms
+    }
+    // Initial load
+    loadAndPlaySong();
     updateKaiaStatus();
+    setInterval(updateKaiaStatus, 120000); // every 120s
+
   </script>
+  <div id="fadeout-overlay"></div>
 </body>
 </html>
