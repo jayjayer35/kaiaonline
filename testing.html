@@ -196,7 +196,29 @@
         opacity: 0.4;
         cursor: not-allowed;
     }
-
+    #statuscafe {
+        margin: 1rem auto;
+        max-width: 700px;
+        padding: 0em;
+    }
+    #statuscafe-username {
+        visibility: hidden;
+        position: relative;
+    }
+    #statuscafe-username::before {
+        content: "LAST TRANSMISSION";
+        visibility: visible;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 1rem;
+        font-weight: 1000;
+        color: #9ed0ff;
+        margin-bottom: 0rem;
+    }
+    #statuscafe-content {
+        margin: 0 0em;
+    }
   </style>
 </head>
 <body>
@@ -207,6 +229,8 @@
       <h2>Entry</h2>
       <a onclick="loadPage('welcome.html')">Welcome</a>
       <a onclick="loadPage('bio.html')">Bio</a>
+      <a onclick="loadPage('bigguy.html')">Bird</a>
+
       <h2>The Web</h2>
       <a onclick="loadPage('internetstuf.html')">Internet</a>
       <a onclick="loadPage('internetstuf2.html')">Links</a>
@@ -219,11 +243,6 @@
       <a onclick="loadPage('music.html')">Music</a>
       <h2>Ramblings</h2>
       <a onclick="loadPage('wilds.html')">Outer Wilds</a>
-      <a onclick="loadPage('giantsdeep.html')">Giant's Deep</a>
-      <a onclick="loadPage('quantum.html')">Quantum Moon</a>
-      <a onclick="loadPage('ashtwin.html')">Ash Twin</a>
-      <a onclick="loadPage('interloper.html')">The Interloper</a>
-      <a onclick="loadPage('eye.html')">The Eye</a>
       <h2>Other</h2>
       <a onclick="loadPage('welcome.html')">Timber Hearth</a>
       <a onclick="loadPage('giantsdeep.html')">Giant's Deep</a>
@@ -232,19 +251,9 @@
       <a onclick="loadPage('interloper.html')">The Interloper</a>
       <a onclick="loadPage('eye.html')">The Eye</a>
       <h2>Friends</h2>
-      <a onclick="loadPage('welcome.html')">Timber Hearth</a>
-      <a onclick="loadPage('giantsdeep.html')">Giant's Deep</a>
-      <a onclick="loadPage('quantum.html')">Quantum Moon</a>
-      <a onclick="loadPage('ashtwin.html')">Ash Twin</a>
-      <a onclick="loadPage('interloper.html')">The Interloper</a>
-      <a onclick="loadPage('eye.html')">The Eye</a>
+      <a onclick="loadPage('friends/kris.html')">Kris</a>
+      <a onclick="loadPage('friends/gabe.html')">Gabriel</a>
       <h2>Other</h2>
-      <a onclick="loadPage('welcome.html')">Timber Hearth</a>
-      <a onclick="loadPage('giantsdeep.html')">Giant's Deep</a>
-      <a onclick="loadPage('quantum.html')">Quantum Moon</a>
-      <a onclick="loadPage('ashtwin.html')">Ash Twin</a>
-      <a onclick="loadPage('interloper.html')">The Interloper</a>
-      <a onclick="loadPage('eye.html')">The Eye</a>
     </div>
 
     <!-- Middle Panel -->
@@ -274,20 +283,28 @@
 
         </div>
         <br>
-        <h2>KAIA'S STATUS</h2>
+        <div id="statuscafe" style="margin-top:1em;">
+            <div id="statuscafe-username"></div>
+            <div id="statuscafe-content"></div>
+        </div>
+        <script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
+        <h2>VITALS</h2>
         <div class="status" id="kaia-status">
-            <p id="health">Health: --%</p>
-            <p id="battery">Social Battery: --%</p>
-            <p id="availability">Availability: Loading...</p>
-            <p id="game">Current Game: Loading...</p>
-            <p>Instrument: Guitar</p>
+            <p id="health">- Health: --%</p>
+            <p id="battery">- Social Battery: --%</p>
+            <p id="game">- Current Game: Loading...</p>
+            <p id="availability">- Status: Loading...</p>
+            <p>- Instrument: Guitar</p>
         </div>
         <br>
-        <h2>TELEMETRY</h2>
+        <h2>INFO</h2>
         <div class="status">
-            <p>Deep Space Satellite 3<br>Status: Offline</p>
-            <p id="loop-timer">Time: 0:00 of 22:00 minutes</p>
+            <p>- Location: Starlit Marble</p>
+            <p>- Atmosphere: Breathable</p>
+            <p id="loop-timer">- Time: 0:00 of 22:00 minutes</p>
         </div>
+        
+        
     </div>
   </div>
 
@@ -323,7 +340,7 @@
     function updateTimer() {
         if (totalSeconds < maxSeconds) {
             totalSeconds++;
-            loopDisplay.textContent = `Time: ${formatTime(totalSeconds)} of 22:00 minutes`;
+            loopDisplay.textContent = `- Time: ${formatTime(totalSeconds)} of 22:00 minutes`;
         } else if (!loopEnded) {
             loopEnded = true;
             playFinalSong();
@@ -334,39 +351,43 @@
     setInterval(updateTimer, 1000); // update every second  
 
     //vitals script -===========================================================-
+    
+      const endpoint = "/.netlify/functions/getSteamStatus";
+
     function updateKaiaStatus() {
-    const health = Math.floor(Math.random() * 31) + 70;
-    const battery = Math.floor(Math.random() * 101);
-    document.getElementById("health").textContent = `Health: ${health}%`;
-    document.getElementById("battery").textContent = `Social Battery: ${battery}%`;
+        const health = Math.floor(Math.random() * 31) + 70;
+        const battery = Math.floor(Math.random() * 101);
+        document.getElementById("health").textContent = `- Health: ${health}%`;
+        document.getElementById("battery").textContent = `- Social Battery: ${battery}%`;
 
-    const endpoint = "https://kaiaonline.netlify.app/.netlify/functions/getSteamStatus";
-
-    fetch(endpoint)
+        fetch(endpoint)
         .then(res => res.json())
         .then(data => {
-        document.getElementById("game").textContent = `Current Game: ${data.game}`;
-        
-        const stateMap = {
-            "0": "Offline",
+            console.log("Fetched Steam data:", data);
+
+            document.getElementById("game").textContent = `- Current Game: ${data.game}`;
+
+            const stateMap = {
+            "0": "Radio-silent",
             "1": "Online",
-            "2": "Busy",
-            "3": "Away",
-            "4": "Snooze",
+            "2": "Preoccupied",
+            "3": "Exploring the Stars",
+            "4": "Half-asleep",
             "5": "Looking to Trade",
             "6": "Looking to Play",
-            "unknown": "Unknown"
-        };
+            };
 
-        const status = stateMap[data.status?.toString()] || "Unknown";
-        document.getElementById("availability").textContent = `Availability: ${status}`;
+            const status = stateMap[data.status?.toString()] || "Unknown";
+            document.getElementById("availability").textContent = `- Status: ${status}`;
         })
-        .catch(() => {
-        document.getElementById("game").textContent = "Current Game: ???";
-        document.getElementById("availability").textContent = "Availability: ???";
+        .catch((err) => {
+            console.error("Fetch error:", err);
+            document.getElementById("game").textContent = "Current Game: ???";
+            document.getElementById("availability").textContent = "- Status: ???";
         });
     }
 
+  updateKaiaStatus();
 
     //music player script -===========================================================-
 
