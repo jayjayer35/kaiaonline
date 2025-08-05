@@ -274,7 +274,7 @@
 
         </div>
         <br>
-        <h2>KAIA STATUS</h2>
+        <h2>KAIA'S STATUS</h2>
         <div class="status" id="kaia-status">
             <p id="health">Health: --%</p>
             <p id="battery">Social Battery: --%</p>
@@ -286,7 +286,7 @@
         <h2>TELEMETRY</h2>
         <div class="status">
             <p>Deep Space Satellite 3<br>Status: Offline</p>
-            <p id="loop-timer">Status: 0:00 of 22:00 minutes</p>
+            <p id="loop-timer">Time: 0:00 of 22:00 minutes</p>
         </div>
     </div>
   </div>
@@ -323,7 +323,7 @@
     function updateTimer() {
         if (totalSeconds < maxSeconds) {
             totalSeconds++;
-            loopDisplay.textContent = `Status: ${formatTime(totalSeconds)} of 22:00 minutes`;
+            loopDisplay.textContent = `Time: ${formatTime(totalSeconds)} of 22:00 minutes`;
         } else if (!loopEnded) {
             loopEnded = true;
             playFinalSong();
@@ -350,15 +350,34 @@
         const steamId = "76561198256786828"; //  DONT share this ffs
 
         fetch(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${steamApiKey}&steamids=${steamId}`)
-            .then(res => res.json())
-            .then(data => {
-                const player = data.response.players[0];
-                const game = player?.gameextrainfo || "None";
-                document.getElementById("game").textContent = `Current Game: ${game}`;
-            })
-            .catch(() => {
-                document.getElementById("game").textContent = "Current Game: Unknown";
-            });
+        .then(res => res.json())
+        .then(data => {
+            const player = data.response.players[0];
+            const game = player?.gameextrainfo || "None";
+            document.getElementById("game").textContent = `Current Game: ${game}`;
+        })
+        .catch(() => {
+            document.getElementById("game").textContent = "Current Game: Unknown";
+        });
+        
+        fetch("https://your-site-name.netlify.app/.netlify/functions/getSteamStatus")
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("game").textContent = `Current Game: ${data.game}`;
+            let availabilityText = "Offline";
+            if (data.status === 1) availabilityText = "Online";
+            else if (data.status === 3) availabilityText = "Busy";
+            else if (data.status === 4) availabilityText = "Away";
+            else if (data.status === 5) availabilityText = "Snooze";
+            else if (data.status === 6) availabilityText = "Looking to Trade";
+            else if (data.status === 7) availabilityText = "Looking to Play";
+
+            document.getElementById("availability").textContent = `Availability: ${availabilityText}`;
+        })
+        .catch(() => {
+            document.getElementById("game").textContent = "Current Game: ???";
+            document.getElementById("availability").textContent = "Availability: ???";
+        });
     }
 
     //music player script -===========================================================-
