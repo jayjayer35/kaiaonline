@@ -68,6 +68,12 @@
         margin-bottom: 1rem;
     }
 
+    summary {
+        font-size: 1rem;
+        color: #9ed0ff;
+        margin-bottom: 1rem;
+    }
+
     .left a {
         display: block;
         text-decoration: none;
@@ -284,7 +290,37 @@
         0 0 10px #88c0d0;
     }
     }
+    ul {
+        list-style: none; /* removes bullet points */
+        padding-left: 0;  /* removes default indent */
+        padding-bottom: 10px;
+    }
+    summary {
+        cursor: pointer;
+        list-style: none; /* removes bullet points */
+        color: rgb(176, 208, 255);
+        transition: 0.3s;
+    }
+    details[open] > summary {
+        background-color: #7caecf1e; /* example */
+        color: rgb(255, 255, 255);
+        font-weight: bold;
+        border-left: 6px solid #88c0d0;
+        background: rgba(255, 255, 255, 0.05);
+        padding-left: 4px;
+        transition: 0.3s;
+    }
 
+    li {
+    cursor: pointer; /* optional, if you want list items clickable too */
+    }
+    summary:hover {
+        color: rgb(105, 165, 255);
+        border-left: 3px solid #88c0d0;
+        background: rgba(255, 255, 255, 0.05);
+        padding-left: 4px;
+        transition: 0.3s;
+    }
   </style>
 </head>
 <body>
@@ -292,35 +328,69 @@
 <div class="container">
     <!-- Left Panel -->
     <div class="panel left">
-      <h2>Entry</h2>
-      <a onclick="loadPage('welcome.html')">Welcome</a>
-      <a onclick="loadPage('updates.html')">Updates</a>
-      <a onclick="loadPage('bio.html')">Bio</a>
-      <a onclick="loadPage('bigguy.html')">Bird</a>
+        <h2 style="text-align: center; font-size: 1.2rem;">Navigator</h2>
+        <details open>
+            <summary>Entry</summary>
+            <ul>
+                <li><a onclick="loadPage('welcome.html')">Welcome</a></li>
+                <li><a onclick="loadPage('updates.html')">Updates</a></li>
+                <li><a onclick="loadPage('bio.html')">Bio</a></li>
+                <li><a onclick="loadPage('bigguy.html')">Bird</a></li>
+            </ul>
+        </details>
+    
+        <details open>
+            <summary>The Web</summary>
+            <ul>
+                <li><a onclick="loadPage('internetstuf.html')">Internet</a></li>
+                <li><a onclick="loadPage('internetstuf2.html')">Links</a></li>
+                <li><a onclick="loadPage('webrings.html')">Webrings</a></li>
+                <li><a onclick="loadPage('https://kaiasei.atabook.org/')" class="glow">Guestbook</a></li>
+                <li><a onclick="loadPage('thesite.html')">This Site</a></li>
+                <li><a onclick="loadPage('jacobonline-old/index.html')">My Original Site</a></li>
+            </ul>
+        </details>
 
+        <details>
+            <summary>Creative</summary>
+            <ul>
+                <li><a onclick="loadPage('video.html')">Videos</a></li>
+                <li><a onclick="loadPage('photo.html')">Photos</a></li>
+                <li><a onclick="loadPage('baking.html')">Baking</a></li>
+                <li><a onclick="loadPage('music.html')">Music</a></li>
+            </ul>
+        </details>
 
-      <h2>The Web</h2>
-      <a onclick="loadPage('internetstuf.html')">Internet</a>
-      <a onclick="loadPage('internetstuf2.html')">Links</a>
-      <a onclick="loadPage('webrings.html')">Webrings</a>
-      <a onclick="loadPage('https://kaiasei.atabook.org/')" class="glow">Guestbook</a>
-      <a onclick="loadPage('thesite.html')">This Site</a>
-      <a onclick="loadPage('jacobonline-old/index.html')">My Original Site</a>
-      <h2>Creative</h2>
-      <a onclick="loadPage('video.html')">Videos</a>
-      <a onclick="loadPage('photo.html')">Photos</a>
-      <a onclick="loadPage('music.html')">Music</a>
-      <h2>Ramblings</h2>
-      <a onclick="loadPage('wilds.html')">Outer Wilds</a>
-      <h2>Other</h2>
-      <a onclick="loadPage('template.html')">My site template</a>
-      <h2>Friends</h2>
-      <a onclick="loadPage('friends.html')">On friends</a>
-      <a onclick="loadPage('friends/kris.html')">Kris</a>
-      <a onclick="loadPage('friends/gabe.html')">Gabriel</a>
-      <h2>Other</h2>
-      <a href="indexrm.html" target="_parent">Load layout 2 (outdated!)</a>
-      <a href="indexlog.html" target="_parent">Load layout 3 (outdated!)</a>
+        <details>
+            <summary>Ramblings</summary>
+            <ul>
+                <li><a onclick="loadPage('wilds.html')">Outer Wilds</a></li>
+            </ul>
+        </details>
+    
+        <details>
+            <summary>Other</summary>
+            <ul>
+                <li><a onclick="loadPage('template.html')">My site template</a></li>
+            </ul>
+        </details>
+    
+        <details>
+            <summary>Friends</summary>
+            <ul>
+                <li><a onclick="loadPage('friends.html')">On friends</a></li>
+                <li><a onclick="loadPage('friends/kris.html')">Kris</a></li>
+                <li><a onclick="loadPage('friends/gabe.html')">Gabriel</a></li>
+            </ul>
+        </details>
+    
+        <details>
+            <summary>Old Site Layouts</summary>
+            <ul>
+                <li><a href="indexrm.html" target="_parent">Load layout 2 (outdated!)</a></li>
+                <li><a href="indexlog.html" target="_parent">Load layout 3 (outdated!)</a></li>
+            </ul>
+        </details>
     </div>
 
     <!-- Middle Panel -->
@@ -361,14 +431,13 @@
             <p id="battery">- Social Battery: --%</p>
             <p id="game">- Current Game: Loading...</p>
             <p id="availability">- Status: Loading...</p>
-            <p>- Instrument: Guitar</p>
         </div>
         <br>
         <h2>INFO</h2>
         <div class="status">
             <p>- Location: Starlit Marble</p>
             <p>- Visitor: #<span id="visit-count">Loading...</span></p>
-            <p id="loop-timer">- Time: 0:00 of 22:00 minutes</p>
+            <p id="loop-timer">- Time: 0:00 of 22:00 min.</p>
         </div>
         <br>
         <h2>TODAY'S MOON</h2>
@@ -426,7 +495,7 @@
         const title = iframe.contentDocument.title;
         document.getElementById("log-title").textContent = "Log Entry: " + title;
         } catch (e) {
-        document.getElementById("log-title").textContent = "Log Entry: [undefined]";
+        document.getElementById("log-title").textContent = "Log Entry: Guestbook";
         }
     }); 
 
@@ -447,7 +516,7 @@
     function updateTimer() {
         if (totalSeconds < maxSeconds) {
             totalSeconds++;
-            loopDisplay.textContent = `- Time: ${formatTime(totalSeconds)} of 22:00 minutes`;
+            loopDisplay.textContent = `- Time: ${formatTime(totalSeconds)} of 22:00 min.`;
         } else if (!loopEnded) {
             loopEnded = true;
             loopDisplay.innerHTML = `<span>- </span><span style="color: #ff7070; font-weight: bold; animation: blink 1s step-start infinite;">
@@ -502,7 +571,7 @@
     //music player script -===========================================================-
 
     const musicPlayer = document.getElementById('musicPlayer');
-    musicPlayer.volume = 0.07; // vol start
+    musicPlayer.volume = 0.03; // vol start
     const songTitle = document.getElementById('song-title');
     const skipButton = document.getElementById('skipButton');
     const pauseButton = document.getElementById('pauseButton');
@@ -601,7 +670,7 @@
 
         // Create a new audio element for the final song
         const newSong = new Audio(`music/${finalSong.file}`);
-        newSong.volume = 0;
+        newSong.volume = musicPlayer.volume;
         newSong.loop = false;
         newSong.preload = 'auto';
         newSong.play();
@@ -643,7 +712,7 @@
             oldSong.volume = oldVolume * (1 - progress);
 
             // Fade in new song
-            newSong.volume = 0.07 * progress; // Your default volume
+            newSong.volume = 0.03 * progress; // Your default volume
 
             if (currentStep >= fadeSteps) {
                 clearInterval(fadeInterval);
@@ -653,13 +722,14 @@
 
         // After 1 min 30 sec, fade screen and close
         newSong.addEventListener('ended', () => {
-    setTimeout(() => {
-        document.body.style.overflow = 'hidden'; // block scroll
-        document.getElementById('fadeout-overlay').classList.add('active');
         setTimeout(() => {
-            window.history.back(); //send back a page
-        }, 3000); // wait for fade animation
-    }, 16000); // 16 sec after song ends
+            document.body.style.overflow = 'hidden'; // block scroll
+            document.getElementById('fadeout-overlay').classList.add('active');
+            setTimeout(() => {
+                window.history.back(); //send back a page
+            }, 3000); // wait for fade animation
+            musicPlayer.pause()
+        }, 16000); // 16 sec after song ends
     });
 
     }
