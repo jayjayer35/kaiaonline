@@ -20,6 +20,17 @@ async function getLocation(ip) {
   }
 }
 
+const gifs = [
+  "https://tenor.com/view/absolute-cinema-absolute-cinema-meme-spamton-absolute-cinema-spamton-deltarune-gif-10667192312374960411",
+  "https://tenor.com/view/dog-mouth-funny-doggo-get-tf-outta-here-gif-17940358",
+  "https://tenor.com/view/asgore-undertale-deltarune-gif-8006577193793263180",
+  "https://tenor.com/view/outer-wilds-hearthian-gif-27399732",
+  "https://tenor.com/view/outer-wilds-echoes-of-the-eye-eote-spoilers-prisoner-gif-27048450",
+  "https://tenor.com/view/outer-wilds-slate-you-got-games-on-your-phone-frag-gif-8462655660521155524",
+  "https://tenor.com/view/outer-wilds-echoes-of-the-eye-outer-wilds-echoes-of-the-eye-owlk-the-stranger-gif-4445104551402153996",
+  "https://tenor.com/view/rat-showering-showering-rat-showering-mouse-mouse-gif-22365797"
+];
+
 exports.handler = async (event) => {
   try {
     // Get visitor IP from headers
@@ -59,36 +70,8 @@ exports.handler = async (event) => {
     const newCount = count + 1;
 
     // Update count in JSON bin
-    await fetch(BIN_URL, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': BIN_API_KEY
-      },
-      body: JSON.stringify({ count: newCount })
-    });
+   const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
 
-    const visitMessages = [
-        "A new visitor!",
-        "Frequency spike! A new signal has been found.",
-        "Someone stopped by.",
-        "Welcome, adventurous soul..",
-        "THAT'S RIGHT!! NOW'S YOUR CHANCE TO BE A [[BIG SHOT]]!!",
-        "The Eye whispers…",
-        "Signalscope detects an incoming transmission.",
-        "A new traveler has entered the solar system!",
-        "CHAOS!! CHAOS!!",
-        "Welcome home",
-        "I'm watching...",
-        "guh",
-        "A strange light fills the room...",
-        "Welcome! Someone new is here."
-    ];
-    // random message
-    function getRandomMessage() {
-        return visitMessages[Math.floor(Math.random() * visitMessages.length)];
-    }
-    // Send embed to Discord webhook
     await fetch(DISCORD_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -111,7 +94,7 @@ exports.handler = async (event) => {
               }
             ],
             image: {
-              url: "https://cdn.discordapp.com/attachments/1183670150252208208/1404282802178101329/image0.gif?ex=689a9fc6&is=68994e46&hm=ce86c6319b2d4df4b06353311d05cc83eae6560dc8344d8fff8b9f25cf4718a3&"
+              url: randomGif
             },
             timestamp: new Date().toISOString()
           }
