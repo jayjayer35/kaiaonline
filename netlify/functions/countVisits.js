@@ -27,14 +27,14 @@ function getRandomMessage() {
 
 // Direct GIF URLs (so Discord shows them properly)
 const gifs = [
-  "https://tenor.com/view/absolute-cinema-absolute-cinema-meme-spamton-absolute-cinema-spamton-deltarune-gif-10667192312374960411",
-  "https://tenor.com/view/dog-mouth-funny-doggo-get-tf-outta-here-gif-17940358",
-  "https://tenor.com/view/asgore-undertale-deltarune-gif-8006577193793263180",
-  "https://tenor.com/view/outer-wilds-hearthian-gif-27399732",
-  "https://tenor.com/view/outer-wilds-echoes-of-the-eye-eote-spoilers-prisoner-gif-27048450",
-  "https://tenor.com/view/outer-wilds-slate-you-got-games-on-your-phone-frag-gif-8462655660521155524",
-  "https://tenor.com/view/outer-wilds-echoes-of-the-eye-outer-wilds-echoes-of-the-eye-owlk-the-stranger-gif-4445104551402153996",
-  "https://tenor.com/view/rat-showering-showering-rat-showering-mouse-mouse-gif-22365797"
+  "https://media1.tenor.com/m/lAl65BHjIRsAAAAd/absolute-cinema-absolute-cinema-meme.gif",
+  "https://media1.tenor.com/m/FaLFxRsx6vMAAAAd/dog-mouth.gif",
+  "https://media1.tenor.com/m/bx0TiX7KlkwAAAAd/asgore-undertale.gif",
+  "https://media1.tenor.com/m/fn_-3mvSyVcAAAAd/outer-wilds-hearthian.gif",
+  "https://media1.tenor.com/m/ui3Wy47A6WoAAAAd/outer-wilds-echoes-of-the-eye.gif",
+  "https://media1.tenor.com/m/dXFkfHXP68QAAAAd/outer-wilds-slate.gif",
+  "https://media1.tenor.com/m/PbAvCc_MKAwAAAAd/outer-wilds-echoes-of-the-eye.gif",
+  "https://media1.tenor.com/m/G_x7omtMDHYAAAAd/rat-showering.gif"
 ];
 
 async function getLocation(ip) {
