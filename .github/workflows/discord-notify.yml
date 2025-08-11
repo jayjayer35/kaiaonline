@@ -24,7 +24,6 @@ jobs:
               "color": 5636604,
               "fields": [
                 {"name": "Author", "value": "kaiasei", "inline": true},
-                {"name": "Commit", "value": "\`${COMMIT_HASH}\`", "inline": true},
                 {"name": "Message", "value": "${COMMIT_MSG}"}
               ],
               "footer": {"text": "GitHub Actions"}
