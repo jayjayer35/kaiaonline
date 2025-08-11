@@ -28,6 +28,26 @@ exports.handler = async (event) => {
     // Get location info from IP
     const location = await getLocation(visitorIP);
 
+    // Prepare location text
+    const locationText = location
+      ? `${location.city}, ${location.region}, ${location.country}`
+      : 'Unknown location';
+
+    // Skip counting and Discord message if visitor is from Ashburn, Virginia, US
+    if (
+      location &&
+      location.city.toLowerCase() === 'ashburn' &&
+      location.region.toLowerCase() === 'virginia' &&
+      location.country.toLowerCase() === 'us'
+    ) {
+      // Return early without incrementing count or sending message
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ skipped: true }),
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      };
+    }
+
     // Get current count
     const getRes = await fetch(BIN_URL, {
       headers: { 'X-Master-Key': BIN_API_KEY }
@@ -47,11 +67,6 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify({ count: newCount })
     });
-
-    // Prepare location text
-    const locationText = location
-      ? `${location.city}, ${location.region}, ${location.country}`
-      : 'Unknown location';
 
     const visitMessages = [
         "A new visitor!",
