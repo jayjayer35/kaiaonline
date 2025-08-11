@@ -1,0 +1,16 @@
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get last commit message
+        id: commit
+        run: echo "::set-output name=message::$(git log -1 --pretty=%B)"
+      
+      - name: Send Discord webhook via curl
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          COMMIT_AUTHOR: ${{ github.actor }}
+          COMMIT_HASH: ${{ github.sha }}
+          COMMIT_MSG: ${{ steps.commit.outputs.message }}
+        run: |
+          curl -H "Content-Type: application/json" -X POST -d "{\"content\": \" Repo updated by $COMMIT_AUTHOR: $COMMIT_HASH\nMessage: $COMMIT_MSG\"}" $WEBHOOK_URL

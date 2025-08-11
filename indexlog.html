@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kaia's Interactive Ship Log</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="index.css">
+<script>
+  const siteTitle = " ✦ kaia's ship log ✦ no snooping around!";
+  let scrollTitle = siteTitle;
+  setInterval(() => {
+    scrollTitle = scrollTitle.substring(1) + scrollTitle.charAt(0);
+    document.title = scrollTitle;
+  }, 200); //speed
+</script>
+</head>
+<body>
+<div id="splashScreen">
+  <div id="bootTerminal">
+    <pre id="bootText"></pre>
+  </div>
+  <div class="scanlines"></div>
+</div>
+<audio id="splashBootSound" src="altsite/sfx/shiplog_switchmode_forward.wav" preload="auto"></audio>
+<audio id="splashSoundOut" src="altsite/sfx/shiplog_switchmode_back.wav" preload="auto"></audio>
+<audio id="typeSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
+<audio id="startupSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
+
+
+  <!-- main site -->
+<div id="siteContainer">
+<!-- audio refs -->
+<audio id="hoverSound" src="altsite/fx/shiplog_highlight2.wav" preload="none"></audio>
+<audio id="clickSound" src="altsite/fx/1selectentry.wav" preload="none"></audio>
+<audio id="clickOutSound" src="altsite/fx/1leaventry.wav" preload="none"></audio>
+<audio id="zoomSound" src="altsite/fx/zoom.wav" preload="none"></audio>
+<audio id="revealSound" src="altsite/fx/newentry.wav" preload="none"></audio>
+
+
+<div id="screenPadding"></div>
+<div id="gridOverlayThin"></div>
+<div id="parallax"></div>
+
+<!-- viewer -->
+<div id="viewportContainer">
+<div class="viewport" id="viewport">
+  <div class="content" id="content">
+      <!--add 70 on x, 100 on y--> 
+    <div id="line-container" style="position: relative; width: 20000px; height: 20000px;">
+    
+  </div>
+
+
+    <!--entries--> 
+    <div class="frame frame-normal color-gray" style="left: 880px; top: 400px;" data-page="welcome.html"> <!-- welcome 0 -->
+        <h2>Welcome</h2>
+        <img src="altsite/entrypng/welcome.png" alt="welcome">
+    </div>
+    <div class="frame frame-large color-gray" style="left: -50px; top: 430px;" data-page="bio.html"> <!-- me 1 -->
+        <h2>Me</h2>
+        <img src="assets/meposter.jpg" alt="me">
+    </div>
+    <div class="frame frame-normal color-gray" style="left: 520px; top: -580px;" data-page="thesite.html"> <!-- the site 2 -->
+        <h2>The Site</h2>
+        <!-- <img src="assets/" alt="the site"> -->
+    </div>
+    <div class="frame frame-normal color-green" style="left: 1600px; top: -390px;" data-page="internetstuf.html"> <!-- internet 3 -->
+        <h2>Internet</h2>
+        <img src="altsite/entrypng/warp.png" alt="my site">
+    </div>
+    <div class="frame frame-small color-gray" style="left: 50px; top: 550px; max-width: 90px;" data-page="altsite/juststatus.html"> <!-- status 4 -->
+        <h2>Status</h2>
+        <!-- <img src="assets/placeholder.png" style="size: 90px 90px;" alt="status"> -->
+    </div>
+    <div class="frame color-purple" style="left: 770px; top: 1335px;" data-page="wilds.html"> <!-- wilds 5 -->
+        <h2>Outer Wilds</h2>
+        <img src="altsite/entrypng/wilds.jpg" alt="outer wilds">
+    </div>
+    <div class="frame color-blue" style="left: 283px; top: -1500px;" data-page="konsole.html"> <!-- console 6 -->
+        <h2>Console</h2>
+        <!--<img src="altsite/entrypng/me.png" alt="a console?"> -->
+    </div>
+    <div class="frame color-green" style="left: 1586px; top: 120px;" data-page="internetstuf2.html"> <!-- other sites 7 -->
+        <h2>Links</h2>
+        <!-- <img src="altsite/entrypng/warp.png" alt="other sites"> -->
+    </div>
+    <div class="frame color-green" style="left: 1786px; top: 1120px; display: none;" data-page="foryou.html"> <!-- for you 8 -->
+        <h2>Meb Graphics</h2>
+        <!-- <img src="altsite/entrypng/warp.png" alt="stuffs for you"> -->
+    </div>
+    <div class="frame color-orange" style="left: -445px; top: 1620px;" data-page="friends.html"> <!-- friends 9 -->
+        <h2>Friends</h2>
+        <!-- <img src="altsite/entrypng/friends.png" alt="friends"> -->
+    </div>
+    <div class="frame color-orange" style="left: -1100px; top: -540px;" data-page="photo.html"> <!-- photo 10 -->
+        <h2>Photos</h2>
+        <img src="altsite/entrypng/photo.jpg" alt="photography">
+    </div>
+    <div class="frame color-orange" style="left: -1030px; top: 720px;" data-page="video.html"> <!-- video 11 -->
+        <h2>Videos</h2>
+        <img src="altsite/entrypng/video.jpg" alt="video">
+    </div>
+    <div class="frame color-green" style="left: 2310px; top: -110px;" data-page="https://kaiasei.atabook.org/"> <!-- guestbook 12 -->
+        <h2>Guestbook</h2>
+        <!-- <img src="altsite/entrypng/video.jpg" alt="video"> -->
+    </div>
+    <div class="frame color-special" style="left: 1900px; top: -1000px; display:none;" data-page="manifesto.html"> <!-- manifesto 13 -->
+        <h2>Manifesto</h2>
+        <!-- <img src="altsite/entrypng/warp.png" alt="indie web manifesto"> -->
+    </div>
+    <div class="frame color-purple" style="left: 1280px; top: 1500px; max-width: 120%;" data-page="videogames.html"> <!-- video games 14 -->
+        <h2>Video Games</h2>
+        <img src="assets/gamestation.jpg" alt="videogames">
+    </div>
+    <div class="frame color-purple" style="left: 1160px; top: 2020px;" data-page="celeste.html"> <!-- celeste 15 -->
+        <h2>Celeste</h2>
+        <!-- <img src="altsite/entrypng/welcome.png" alt="celeste"> -->
+    </div>
+    <div class="frame color-purple" style="left: 820px; top: 1735px" data-page="minecraft.html"> <!-- minecraft 16 -->
+        <h2>Minecraft</h2>
+        <!-- <img src="altsite/entrypng/welcome.png" alt="minecraft"> -->
+    </div>
+    <div class="frame color-yellow" style="left: -560px; top: -570px; display:none;" data-page="music.html"> <!-- music 17 -->
+        <h2>Music</h2>
+        <!-- <img src="assets/musicplayer.jpg" alt="music"> -->
+    </div>
+    <div class="frame color-gray frame-small" style="left: 475px; top: -460px; max-width: 90px;" data-page="musicplayer.html"> <!-- musicplayer 18 -->
+        <h2>Music Player</h2>
+        <img src="assets/notes.GIF" style="size: 90px 90px;" alt="musicplayer">
+    </div>
+    <div class="frame color-special" style="left: 1200px; top: -1090px; display:none;" data-page="jacobonline-old/index.html" > <!-- old site 19 -->
+        <h2>Old Site</h2>
+        <img src="assets/mybmp.jpg" alt="old site">
+    </div>
+    <div class="frame color-gray" style="left: -240px; top: 50px;" data-page="bigguy.html" > <!-- big guy 20 -->
+        <h2>Big Guy</h2>
+        <img src="assets/bigposterguy.jpg" alt="big guy">
+    </div>
+    <div class="frame color-jacob" style="left: 100px; top: 1300px; display:none;" data-page="friends/jacob.html" > <!-- jacob 21 -->
+        <h2>Jacob</h2>
+        <img src="assets/jacobposter.jpg" alt="jacob">
+    </div>
+   <div class="frame color-kris" style="left: -70px; top: 2220px; display:none;" data-page="friends/kris.html"> <!-- kris 22 -->
+        <h2>Kris</h2>
+        <img src="assets/kris.png" alt="kris">
+    </div>
+   <div class="frame color-gabe" style="left: -1170px; top: 1320px; display:none;" data-page="friends/gabe.html"> <!-- gabe 23 -->
+        <h2>Gabriel</h2>
+        <img src="assets/gabe.png" alt="gabriel">
+    </div>
+    <div class="frame color-gray frame-small" style="left: -1140px; top: 1640px;" data-page="miami.html"> <!-- miami box 24 -->
+        <h2>Miami</h2>
+        <img src="assets/miami.jpg" alt="miami">
+    </div>
+    <div class="frame color-gray frame-small" style="left: 230px; top: 1920px;" data-page="daytona.html"> <!-- daytona box 25 -->
+        <h2 style="font-size: 95%;">Daytona<br> Beach</h2>
+        <img src="assets/daytona.jpg" alt="daytona">
+    </div>
+    <div class="frame color-green frame-small" style="left: 1693px; top: 250px;" data-page="webrings.html" > <!-- webrings 26 -->
+        <h2 style="font-size: 95%;">Webrings</h2>
+        <!-- <img src="assets/daytona.jpg" alt="daytona"> -->
+    </div>
+    <div class="frame color-gray frame-small" style="left: -1000px; top: 430px;" data-page="creative.html" > <!-- creative box 27 -->
+        <h2>Creative</h2>
+        <img src="assets/creative.jpg" alt="creative">
+    </div>
+    <div class="frame color-gray" style="left: 83px; top: -1280px;" data-page="updates.html"> <!-- update log 28 -->
+        <h2>Updates</h2>
+        <!--<img src="altsite/entrypng/me.png" alt="a console?"> -->
+    </div>
+    <div class="frame color-steven" style="left: -400px; top: 2020px; display:none;" data-page="friends/steven.html"> <!-- steven 29 -->
+        <h2>Steven</h2>
+        <img src="assets/stevenposter.jpg" alt="steven">
+    </div>
+    <div class="frame color-brandon" style="left: -1140px; top: 2120px; display:none;" data-page="friends/brandon.html"> <!-- brandon 30 -->
+        <h2>Brandon</h2>
+        <img src="assets/brandonposter.jpg" alt="brandon">
+    </div>
+    <div class="frame color-twig" style="left: -940px; top: 2320px; display:none;" data-page="friends/twig.html"> <!-- twig 31 -->
+        <h2>Twig</h2>
+        <img src="assets/twigposter.jpg" alt="brandon">
+    </div>
+    <div class="frame color-eric" style="left: -550px; top: 2620px; display:none;" data-page="friends/eric.html"> <!-- eric 32 -->
+        <h2>Eric</h2>
+        <img src="altsite/entrypng/friends.png" alt="brandon">
+    </div>
+  </div>
+</div>
+</div>
+<div id="gridOverlayCenter"></div>
+<div id="musicPlayerContainer" style="
+  display: none;
+  position: fixed;
+  top: 10vh;
+  left: 15vh;
+  width: 22vw;
+  height: 18.5vh;
+  background: rgba(10,10,20,0.9);
+  border: 2px solid #4d79c3;
+  box-shadow: 0 0 10px #4d79c3;
+  z-index: 1000;
+  overflow: hidden;
+  resize: none;
+  flex-direction: column;
+">
+  <div class="popup-header" id="musicPlayerHeader" style="cursor: move;">
+    <span>Audio Player</span>
+    <button onclick="closeMusicPlayer()"> × </button>
+  </div>
+  <iframe id="musicFrame" src="musicplayer.html" style="
+    width: 100%;
+    height: calc(100% - 30px);
+    border: none;
+  "></iframe>
+</div>
+
+
+
+<script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
+<script>
+
+function closeMusicPlayer() {
+  const clickOutSound = document.getElementById('clickOutSound');
+  clickOutSound.currentTime = 0;
+  clickOutSound.play();
+  const container = document.getElementById("musicPlayerContainer");
+  container.style.animation = "crtShutdown 0.4s forwards";
+  setTimeout(() => {
+    container.style.display = "none";
+  }, 400);
+}
+
+
+
+const viewport = document.getElementById('viewport');
+const content = document.getElementById('content');
+const parallax = document.getElementById('parallax');
+
+let isPanning = false;
+let startX = 0, startY = 0;
+let translateX = 0, translateY = 0;
+let scale = 1;
+let targetScale = 1;
+let zoomAnimating = false;
+
+let zoomAnchorX = 0;
+let zoomAnchorY = 0;
+
+viewport.addEventListener('mousedown', (e) => {
+  isPanning = true;
+  startX = e.clientX - translateX;
+  startY = e.clientY - translateY;
+  viewport.style.cursor = "grabbing";
+});
+
+viewport.addEventListener('mouseup', () => {
+  isPanning = false;
+  viewport.style.cursor = "grab";
+});
+
+viewport.addEventListener('mouseleave', () => {
+  isPanning = false;
+  viewport.style.cursor = "grab";
+});
+
+viewport.addEventListener('mousemove', (e) => {
+  if (!isPanning) return;
+  translateX = e.clientX - startX;
+  translateY = e.clientY - startY;
+  updateTransform();
+});
+
+makeDraggable(
+  document.getElementById("musicPlayerContainer"),
+  document.getElementById("musicPlayerHeader")
+);
+
+viewport.addEventListener('wheel', (e) => {
+  e.preventDefault();
+
+  const scaleAmount = -e.deltaY * 0.001;
+  const newTargetScale = Math.min(Math.max(0.1, targetScale + scaleAmount), 5);
+
+  const rect = viewport.getBoundingClientRect();
+  zoomCursorX = e.clientX - rect.left;
+  zoomCursorY = e.clientY - rect.top;
+
+  zoomAnchorX = (zoomCursorX - translateX) / scale;
+  zoomAnchorY = (zoomCursorY - translateY) / scale;
+
+  targetScale = newTargetScale;
+
+  if (!zoomAnimating) {
+    zoomAnimating = true;
+    animateZoom();
+  }
+
+  const zoomSound = document.getElementById('zoomSound');
+  if (zoomSound && zoomSound.paused) {
+  zoomSound.currentTime = 0;
+  zoomSound.play();
+  }
+
+});
+
+document.querySelectorAll(".frame").forEach(frame => {
+  frame.addEventListener("click", () => {
+    clickSound.currentTime = 0;
+    clickSound.play();
+
+    const targetPage = frame.getAttribute("data-page") || "default.html";
+
+    // ap special handling
+    if (targetPage === "musicplayer.html") {
+      const container = document.getElementById("musicPlayerContainer");
+      container.style.display = "flex";
+      container.style.animation = "crtStartup 0.4s forwards";
+      return;
+    }
+
+    const windowEl = document.createElement("div");
+    windowEl.className = "popup-window";
+    windowEl.style.animation = "crtStartup 0.4s forwards";
+
+    const headerEl = document.createElement("div");
+    headerEl.className = "popup-header";
+    const titleEl = document.createElement("span");
+    const frameTitle = frame.querySelector("h2")?.textContent || "Untitled";
+    titleEl.textContent = frameTitle;
+
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = " × ";
+    closeBtn.onclick = () => {
+      const clickOutSound = document.getElementById('clickOutSound');
+      clickOutSound.currentTime = 0;
+      clickOutSound.play();
+      windowEl.style.animation = "crtShutdown 0.4s forwards";
+      setTimeout(() => {
+        windowEl.remove();
+        drawConnections();
+      }, 400);
+    };
+    headerEl.appendChild(titleEl);
+    headerEl.appendChild(closeBtn);
+
+    const contentEl = document.createElement("div");
+    contentEl.className = "popup-content";
+    const iframe = document.createElement("iframe");
+    iframe.src = targetPage;
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.border = "none";
+    contentEl.appendChild(iframe);
+    //play special song
+    if (targetPage === "wilds.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "14.3 Billion Years - Andrew Prahlow"
+      }, "*");
+    }
+    if (targetPage === "jacobonline-old/index.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "Beacon - Disasterpiece"
+      }, "*");
+    }
+    if (targetPage === "friends/kris.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "Delirious Acting (Twilight Theater) - Pseudoregalia OST"
+      }, "*");
+    }
+    if (targetPage === "friends/gabe.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "Phantom Liberty - Dawid Podsiadło"
+      }, "*");
+    }
+    if (targetPage === "friends/eric.html") {
+      const musicFrame = document.getElementById("musicFrame");
+      musicFrame.contentWindow.postMessage({
+        type: "playSong",
+        title: "wash my sins away - berlioz"
+      }, "*");
+    }
+    // default size
+    windowEl.style.width = "80vw";
+    windowEl.style.height = "80vh";
+    windowEl.style.top = "10vh";
+    windowEl.style.left = "10vw";
+    windowEl.style.resize = "both";
+
+    // special sizing for status
+    if (targetPage === "altsite/juststatus.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "17vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
+    // special sizing for miami
+    if (targetPage === "miami.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "17vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
+    // special sizing for daytona
+    if (targetPage === "daytona.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "17vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
+    // special sizing for creative
+    if (targetPage === "creative.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "17vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
+    // special sizing for console
+    if (targetPage === "konsole.html") {
+      windowEl.style.width = "25vw";
+      windowEl.style.height = "14vh";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+      windowEl.style.resize = "none";
+      windowEl.style.overflow = "hidden";
+      contentEl.style.overflow = "hidden";
+    }
+    if (targetPage === "webrings.html") {
+      windowEl.style.width = "400px";
+      windowEl.style.height = "580px";
+      windowEl.style.top = "10vh";
+      windowEl.style.left = "15vh";
+    }
+
+    windowEl.appendChild(headerEl);
+    windowEl.appendChild(contentEl);
+    document.body.appendChild(windowEl);
+    makeDraggable(windowEl, headerEl);
+    drawConnections();
+  });
+});
+
+
+
+function animateZoom() {
+  const zoomSpeed = 0.13; 
+
+  const scaleDiff = targetScale - scale;
+  scale += scaleDiff * zoomSpeed;
+
+  translateX = zoomCursorX - zoomAnchorX * scale;
+  translateY = zoomCursorY - zoomAnchorY * scale;
+
+  updateTransform();
+
+  if (Math.abs(scaleDiff) < 0.001) {
+    scale = targetScale;
+    updateTransform();
+    zoomAnimating = false;
+    return;
+  }
+
+  requestAnimationFrame(animateZoom);
+}
+
+
+function updateTransform() {
+  content.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  parallax.style.backgroundPosition = `${translateX * 0.2}px ${translateY * 0.2}px`;
+}
+
+const hoverSound = document.getElementById("hoverSound");
+document.querySelectorAll(".frame").forEach(frame => {
+  frame.addEventListener("mouseenter", () => {
+    const hsound = new Audio('altsite/fx/shiplog_highlight.wav');
+    hsound.volume = 0.3;
+    hsound.play();
+  });
+});
+
+function closeLogWindow() {
+  const clickOutSound = document.getElementById('clickOutSound');
+  clickOutSound.currentTime = 0;
+  clickOutSound.play();
+  document.getElementById('logWindow').style.display = "none";
+}
+
+
+
+function makeDraggable(dragTarget, handle) {
+  let offsetX = 0;
+  let offsetY = 0;
+  let isDragging = false;
+
+  handle.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - dragTarget.offsetLeft;
+    offsetY = e.clientY - dragTarget.offsetTop;
+    document.body.style.userSelect = 'none';
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    document.body.style.userSelect = '';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      let newLeft = (e.clientX - offsetX);
+      let newTop = (e.clientY - offsetY);
+
+      const elWidth = dragTarget.offsetWidth;
+      const elHeight = dragTarget.offsetHeight;
+
+      if (newLeft < 30) newLeft = 30;
+      if (newTop < 30) newTop = 30;
+
+      dragTarget.style.left = newLeft + 'px';
+      dragTarget.style.top = newTop + 'px';
+    }
+  });
+}
+
+// container that holds the entries
+const frames = document.querySelectorAll('.frame');
+const lineContainer = document.getElementById('line-container');
+
+// list of pairs of entries
+const connections = [
+  [0, 1], // welcome - me
+  [1, 2], // me - the site
+  [1,20], // me - big guy
+  [2, 3], // the site - internet
+  [2, 28], // the site - update log
+  [6, 28], // console - update log
+  [3, 7], // internet - other sites
+  [0, 7], // welcome - links
+  [3, 7], // internet - links
+  [3, 12], // internet - guestbook
+  [7, 13], // other sites - manifesto
+  [5, 14], // wilds - video games
+  [14,15], // video games - celeste
+  [14,16], // video games - minecraft
+  [0, 14], // welcome - video games
+  [6, 19],  // console - old site
+  [3, 19], // internet - old site
+  [27, 1], // creative - me
+  [27, 10], // creative - photo
+  [27, 11], // creative - video
+  [21, 5], // jacob - wilds
+  [21, 25], // jacob - daytona
+  [22, 25], // kris - daytona
+  [24, 23], // miami - gabe
+  [24, 9], // miami - friends
+  [25,9], // daytona - friends
+  [7,12], // links - guestbook
+  [9, 1], // friends - me
+  [29, 25], //steven - daytona
+  [29, 24], //steven - miami
+  [24, 30], // miami - brandon
+  [29, 32], //steven - eric
+  [30, 31], //brandon twig
+
+
+];
+
+//  each connection, create a line
+connections.forEach(([fromIdx, toIdx]) => {
+  const from = frames[fromIdx];
+  const to = frames[toIdx];
+
+  // skip drawing if either frame is hidden
+  if (from.style.display === "none" || to.style.display === "none") {
+    return;
+  }
+
+  // get pos rel. to the content container
+  const fromRect = from.getBoundingClientRect();
+  const toRect = to.getBoundingClientRect();
+  const contentRect = content.getBoundingClientRect();
+
+  const x1 = from.offsetLeft + from.offsetWidth / 2;
+  const y1 = from.offsetTop + from.offsetHeight / 2;
+  const x2 = to.offsetLeft + to.offsetWidth / 2;
+  const y2 = to.offsetTop + to.offsetHeight / 2;
+
+  // simple distance and angle math
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+  // make the line image
+  const line = document.createElement('div');
+  line.className = 'connection-line';
+
+  // style the line
+  line.style.left = `${x1}px`;
+  line.style.top = `${y1}px`;
+  line.style.width = `${distance}px`;
+  line.style.transform = `rotate(${angle}deg)`;
+
+  // finally be happy that EVERYTHING FUCKIGN WORKS
+  lineContainer.appendChild(line);
+});
+
+let mouseDownTime = 0;
+
+document.addEventListener('mousedown', () => {
+  mouseDownTime = Date.now();
+}, true);
+
+document.addEventListener('mouseup', (e) => {
+  const duration = Date.now() - mouseDownTime;
+  if (duration < 100 && e.button === 0) {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+  }
+}, true);
+
+function drawConnections() {
+  lineContainer.innerHTML = '';
+
+  const visibleFrames = Array.from(document.querySelectorAll('.frame')).filter(f => f.style.display !== 'none');
+
+  //ONLY draw lines for visible frames ffs for the last time oh my GOD
+  connections.forEach(([fromIdx, toIdx]) => {
+    const from = visibleFrames.find(f => f === frames[fromIdx]);
+    const to = visibleFrames.find(f => f === frames[toIdx]);
+    if (!from || !to) return;
+
+    const x1 = from.offsetLeft + from.offsetWidth / 2;
+    const y1 = from.offsetTop + from.offsetHeight / 2;
+    const x2 = to.offsetLeft + to.offsetWidth / 2;
+    const y2 = to.offsetTop + to.offsetHeight / 2;
+
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    const line = document.createElement('div');
+    line.className = 'connection-line';
+    line.style.left = `${x1}px`;
+    line.style.top = `${y1}px`;
+    line.style.width = `${distance}px`;
+    line.style.transform = `rotate(${angle}deg)`;
+
+    lineContainer.appendChild(line);
+  });
+}
+
+window.addEventListener("message", (event) => {
+  if (event.data?.type === "showEntry") {
+    const command = event.data.command.toLowerCase();
+
+    const map = {
+      "ideas": [13],
+      "windows98": [19],
+      "music": [17],
+      "gabriel": [23],
+      "kris": [22],
+      "jacob": [21],
+      "steven": [29],
+      "webgraphix": [8],
+      "brandon": [30],
+      "twig": [31],
+      "eric": [32],
+
+
+      "FreedomDive": [5,13,19,17,21,22],
+      "sudo shutdown now": "kill",
+    };
+
+    const idxList = map[command];
+    if (idxList !== undefined) {
+      if (idxList === "kill") {
+        //  shutdown sound
+        const shutdownSound = new Audio("assets/poweroff.mp3");
+        shutdownSound.volume = 0.4; // adjust if you want
+        shutdownSound.play();
+
+        // anim all popup windows with CRT shutdown
+        const popups = document.querySelectorAll(".popup-window");
+        popups.forEach(popup => {
+          popup.style.animation = "crtShutdown 0.4s forwards";
+        });
+
+        // anim main site container with CRT shutdown
+        const siteContainer = document.getElementById("siteContainer");
+        siteContainer.style.animation = "crtShutdown 0.4s forwards";
+
+        // after anim, wipe everything and set to black
+        setTimeout(() => {
+          siteContainer.innerHTML = "";
+          siteContainer.style.background = "black";
+          document.body.style.background = "black";
+          document.documentElement.style.background = "black";
+          document.title = "";
+        }, 400);
+
+        return;
+      }
+
+
+      idxList.forEach(idx => {
+        const frames = window.parent.document.querySelectorAll(".frame");
+        const frame = frames[idx];
+        const revealSound = window.parent.document.getElementById("revealSound");
+        
+        if (!frame) return;
+
+        const wasHidden = frame.style.display === "none" || frame.style.display === "";
+
+        frame.style.display = "block";
+        frame.style.opacity = "0";
+        void frame.offsetWidth; // trigger reflow
+        frame.style.opacity = "1";
+
+        setTimeout(() => {
+          if (wasHidden && revealSound) {
+            revealSound.volume = 0.2;
+            revealSound.currentTime = 0;
+            revealSound.play();
+          }
+          if (typeof window.parent.drawConnections === "function") {
+            window.parent.drawConnections();
+          }
+        }, 500);
+      });
+    }
+  }
+});
+
+const messages = [
+    "this site is me and i am this site",
+    "'I wanna die on Mars, just not on impact.'",
+    "i coded this place by hand just for you",
+    "explore and get lost like i do in the stars",
+    "my little corner of the internet cosmos",
+    "welcome traveler, sit by the fire",
+    "these pixels are my soul laid bare",
+    "craft OS 1.8",
+    "do you wanna play minecraft?",
+    "can you feel my dysphoria?",
+    "the universe is, and we are",
+    "live to love and love to live",
+    "trans rights are human rights!",
+    "black lives matter!",
+    "glass half full",
+    "be kind, god knows we need more people like that",
+    "to the moon and back",
+    "kaiasei wuz here",
+    "lets have some fun in minecraft",
+    "under construction!",
+    "so much to do, so much to explore.",
+    "appreciate life",
+    "appreciate the little things",
+    "orchids are one of my favorite flowers",
+    "give life to music",
+    "frames changed my life",
+    "i miss you jacob",
+    "dnd session when?",
+    "i lost my glasses again",
+    "any methods at all",
+    "does anybody have a method",
+    "freedom dive",
+    "ah... i wanna play SDVX",
+    "AAAAAAAAAAAAAAAAAAAAA",
+    "type 'sudo shutdown now' in the console, its pretty funny.",
+    "sudo rm -fr /",
+    "seraphina my beloved",
+    "elysia my beloved",
+    "emergency tree seeds",
+    "wait- this isnt lua",
+    "a castle built overnight",
+    "there are so many splash texts",
+    "this is the last one im writing! for now",
+    "live your life to the fullest",
+    "go play outer wilds",
+    "August 12th, 2036 Heat death of the Universe",
+    "there's more to explore here",
+    "professional emotional wreck",
+    "est. March 2022",
+    "i luv tonkotsu ramen",
+    "science compels us to explode the sun!",
+    "im gregging it",
+    "highly unmotivated",
+    "support local artists!",
+    "luca is swag",
+    "l love birds!",
+    "22 minutes",
+    "meditate it out",
+    "'We do not have much connection, you and I. Still, this encounter feels special. I hope you won't mind if I think of you as a friend.'",
+    "Every moment before this one depends on this one",
+    "'The future depends on the past, even if we don’t get to see it.'",
+    "'Oh, hello… Come, sit with me, my fellow traveler. Let’s sit together and watch the stars die.'",
+    "It’s time for something new, now.",
+    "what a time to be alive",
+    "what a beautiful sunrise.",
+    "hooray!",
+    "it's a celebration of life.",
+    "relax here with me for a little, and enjoy the music.",
+    "autumn is the best season ever",
+    "gooning",
+    "level up",
+    "power word: shit",
+    "kaia loves bingus",
+    "i like turtles",
+    "strings on my heart",
+    "i dont wanna be jay anymore!",
+    "dain booker",
+    "ill start my own podcast..",
+    "like legit",
+    "late night???",
+    "illithid",
+    "haia kaia",
+    "awoooo",
+    "404 message not found",
+    "Moving children onto milk cartons since 1902",
+    "fish around and find out",
+    "thore sumb",
+    "1 singular Waffle House exists on Babylon",
+    "fyrir my beloved",
+    "nil",
+    "what a beautiful sunset",
+    "aren't the stars beautiful tonight?",
+    "doze off",
+    "on a perfect planet",
+    "in a perfect solar system",
+    "a perfect time to be alive",
+    "check the webrings tab!",
+    "sign the guestbook!",
+    ":3",
+    "big hugs to you",
+    "it'll all be okay",
+    "where are we?",
+    "SURFACE INTEGRITY: 87%",
+    "Warp core missing",
+    "Of note: Be sure not to wander far from here. Though this area is somewhat unstable, it’s safer than any we’ve found so far.",
+    "I’m afraid for our friends",
+    "Call the shuttle home",
+    "You did? That, that’s incredible, congratulations!",
+    "I’m pretty sure we’ll need the others for this next part. We’ll need, you know... everyone.",
+    "I learned a lot, by the end of everything.",
+    "Ok, I'll wait until you're ready.",
+    "Found coordinates to the eye of the universe!",
+    "Sending coordinates for the eye.",
+    "egg cracked",
+    "Yuri!",
+    "Ah! youre back, I missed you.",
+    "Oh to be at the end of the universe, surrounding a campfire with your friends.",
+    "There you are, remember to- wait you're not- nevermind.",
+    "Site 2821 on the Melonland Surf Club!"
+  ];
+
+  const bootLines = [
+    "[BOOT] Initializing Ship Log...",
+    "[OK] Loading frame architecture...",
+    "[OK] Fetching entry information...",
+    "[OK] Drawing connection matrix...",
+    "[INFO] This site is mobile UN-friendly, made for PC",
+    "[INFO] Mild swearing.",
+    "[STATUS] System Initialized! Handing over user control...",
+    "[READY] User input detected.",
+    "",
+    "[SYSTEM MESSAGE]", // <- this will be replaced from code bleow (reminder!)
+    "Welcome, explorer."
+  ];
+
+  window.addEventListener("DOMContentLoaded", () => {
+    drawConnections(); 
+
+    const splash = document.getElementById("splashScreen");
+    const bootText = document.getElementById("bootText");
+    const splashSound = document.getElementById("splashSound");
+    const typeSound = document.getElementById("typeSound");
+    const splashSoundOut = document.getElementById("splashSoundOut");
+    const splashBootSound = document.getElementById("splashBootSound");
+      if (splashBootSound) {
+        splashBootSound.volume = 0.3;
+        splashBootSound.currentTime = 0;
+        splashBootSound.play().catch(() => {}); // stop autoplay errors
+      }
+    let lineIndex = 0;
+    let charIndex = 0;
+    let typingComplete = false;
+    let promptShown = false;
+
+  
+    for (let i = 0; i < bootLines.length; i++) {
+      if (bootLines[i].startsWith("[SYSTEM MESSAGE]")) {
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        bootLines[i] = `[SYSTEM MESSAGE] ${randomMessage}`;
+        break;
+      }
+    }
+
+    const typeNextChar = () => {
+      const currentLine = bootLines[lineIndex];
+      if (charIndex < currentLine.length) {
+        bootText.textContent += currentLine.charAt(charIndex);
+
+        if (typeSound && charIndex % 2 === 0) {
+          typeSound.currentTime = 0;
+          typeSound.play().catch(() => {});
+        }
+
+        charIndex++;
+        setTimeout(typeNextChar, 14);
+      } else {
+        bootText.textContent += '\n';
+        lineIndex++;
+        charIndex = 0;
+        if (lineIndex < bootLines.length) {
+          setTimeout(typeNextChar, 200);
+        } else {
+          typingComplete = true;
+          setTimeout(() => {
+  bootText.textContent += `\n> PRESS [ENTER] OR 'CLICK' TO CONTINUE`;
+  promptShown = true;
+
+  const exitSplash = () => {
+  if (!typingComplete || !promptShown) return;
+
+  splashSoundOut?.play?.();
+
+  if (splash) {
+    splash.classList.add("crtFadeDown");
+    splash.addEventListener("animationend", () => {
+      splash.style.display = "none";
+    }, { once: true }); 
+  }
+
+  document.removeEventListener("keydown", onKeyDown);
+  document.removeEventListener("click", onClick);
+};
+
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") exitSplash();
+  };
+  const onClick = () => exitSplash();
+
+  document.addEventListener("keydown", onKeyDown);
+  document.addEventListener("click", onClick);
+}, 600);
+        }
+      }
+    };
+
+    typeNextChar();
+  });
+</script>
+
+</div>
+</body>
+</html>

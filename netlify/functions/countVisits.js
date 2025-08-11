@@ -53,6 +53,26 @@ exports.handler = async (event) => {
       ? `${location.city}, ${location.region}, ${location.country}`
       : 'Unknown location';
 
+    const visitMessages = [
+        "A new visitor!",
+        "Frequency spike! A new signal has been found.",
+        "Someone stopped by.",
+        "Welcome, adventurous soul..",
+        "THAT'S RIGHT!! NOW'S YOUR CHANCE TO BE A [[BIG SHOT]]!!",
+        "The Eye whispers…",
+        "Signalscope detects an incoming transmission.",
+        "A new traveler has entered the solar system!",
+        "CHAOS!! CHAOS!!",
+        "Welcome home",
+        "I'm watching...",
+        "guh",
+        "A strange light fills the room...",
+        "Welcome! Someone new is here."
+    ];
+    // random message
+    function getRandomMessage() {
+        return visitMessages[Math.floor(Math.random() * visitMessages.length)];
+    }
     // Send embed to Discord webhook
     await fetch(DISCORD_WEBHOOK_URL, {
       method: 'POST',
@@ -60,8 +80,8 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         embeds: [
           {
-            title: "New Website Visit lololololol",
-            description: `Visitor number **${newCount}** just visited.`,
+            title: getRandomMessage(),
+            description: `Visitor #**${newCount}** just visited.`,
             color: 0x00ff00,
             fields: [
               {
