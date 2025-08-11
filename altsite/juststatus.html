@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Status</title>
+<script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  #statuscafe {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: .5em;
+    background-color: rgba(36, 0, 99, 0.2);
+    border: 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 4vw;
+    color: #b5a9d6;
+    text-shadow: 0 0 10px #00d9ff;
+    animation: flicker .005s infinite;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  #statuscafe-username {
+    visibility: hidden;
+    
+  }
+  #statuscafe-content {
+    visibility: hidden; 
+    text-align: left;
+  }
+  #statuscafe:hover {
+    background-color: rgba(0, 5, 92, 0.164);
+  }
+  @keyframes flicker {
+  0% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
+  20% {
+    text-shadow: none;
+  }
+  40% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
+  60% {
+    text-shadow: none;
+  }
+  80% {
+    text-shadow: 0 0 4px #00eeff, 0 0 4px #00eeff;
+  }
+  100% {
+    text-shadow: 0 0 5px #00eeff, 0 0 5px #00eeff;
+  }
+  }
+  @keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+</style>
+</head>
+<body>
+  <div id="statuscafe">
+    <div id="statuscafe-content"></div>
+    <div id="statuscafe-username"></div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const typeSound = new Audio("fx/shiplog_highlight2.wav");
+    typeSound.volume = 0.02;
+
+    function waitForStatusText(callback) {
+      const contentEl = document.getElementById("statuscafe-content");
+      const text = contentEl.textContent.trim();
+
+      if (text.length > 0) {
+        callback(text, contentEl);
+      } else {
+        setTimeout(() => waitForStatusText(callback), 100); // check again in 100ms
+      }
+    }
+
+    waitForStatusText((originalText, contentEl) => {
+      contentEl.textContent = "";
+
+      const cursor = document.createElement("span");
+      cursor.textContent = "_";
+      cursor.style.animation = "blink .25s infinite";
+      contentEl.appendChild(cursor);
+
+      contentEl.style.visibility = "visible";
+      setTimeout(5);
+      let i = 0;
+      function typeWriter() {
+        if (i < originalText.length) {
+          const charSpan = document.createTextNode(originalText.charAt(i));
+          contentEl.insertBefore(charSpan, cursor);
+
+          const sound = typeSound.cloneNode();
+          sound.play().catch(() => {});
+
+          i++;
+          setTimeout(typeWriter, 45);
+        }
+      }
+
+      typeWriter();
+    });
+  });
+  </script>
+</body>
+</html>
