@@ -1,16 +1,19 @@
-jobs:
-  notify-discord:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get last commit message
-        id: commit
-        run: echo "::set-output name=message::$(git log -1 --pretty=%B)"
-      
-      - name: Send Discord webhook via curl
-        env:
-          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          COMMIT_AUTHOR: ${{ github.actor }}
-          COMMIT_HASH: ${{ github.sha }}
-          COMMIT_MSG: ${{ steps.commit.outputs.message }}
-        run: |
-          curl -H "Content-Type: application/json" -X POST -d "{\"content\": \" Repo updated by $COMMIT_AUTHOR: $COMMIT_HASH\nMessage: $COMMIT_MSG\"}" $WEBHOOK_URL
+- name: Send Discord webhook embed via curl
+  env:
+    WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+    COMMIT_AUTHOR: ${{ github.actor }}
+    COMMIT_HASH: ${{ github.sha }}
+    COMMIT_MSG: ${{ steps.commit.outputs.message }}
+  run: |
+    curl -H "Content-Type: application/json" -X POST -d "{
+      \"embeds\": [{
+        \"title\": \"Site update successful\",
+        \"color\": 5636604,
+        \"fields\": [
+          {\"name\": \"Author\", \"value\": \"$COMMIT_AUTHOR\", \"inline\": true},
+          {\"name\": \"Commit\", \"value\": \"\`$COMMIT_HASH\`\", \"inline\": true},
+          {\"name\": \"Message\", \"value\": \"$COMMIT_MSG\"}
+        ],
+        \"footer\": {\"text\": \"GitHub Actions\"}
+      }]
+    }" $WEBHOOK_URL

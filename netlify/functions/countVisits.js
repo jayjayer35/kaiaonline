@@ -82,7 +82,7 @@ exports.handler = async (event) => {
           {
             title: getRandomMessage(),
             description: `Visitor #**${newCount}** just visited.`,
-            color: 0x00ff00,
+            color: 0xffb6c1,
             fields: [
               {
                 name: "Location",
