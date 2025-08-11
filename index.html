@@ -3,976 +3,758 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Kaia's Interactive Ship Log</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="index.css">
 <script>
-  const siteTitle = " ✦ kaia's ship log ✦ no snooping around!";
+  const siteTitle = " ✦ y u look at the titlebar! look at my";
   let scrollTitle = siteTitle;
   setInterval(() => {
     scrollTitle = scrollTitle.substring(1) + scrollTitle.charAt(0);
     document.title = scrollTitle;
-  }, 200); //speed
+  }, 300); //speed
 </script>
+  <!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet" />
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        font-family: 'Space Mono', monospace;
+        background: url('assets/galaxybkgndblue.jpg') center center / cover no-repeat fixed;
+        color: #e0e0e0;
+        overflow: hidden;
+    }
+
+    body::after {
+        content: '';
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: url('assets/static.gif');
+        opacity: 0.05;
+        mix-blend-mode: screen;
+        pointer-events: none;
+        z-index: 100;
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: 200px 1fr 260px;
+        height: 100vh;
+    }
+
+    .panel {
+        backdrop-filter: blur(4px);
+        background: rgba(10, 10, 20, 0.65);
+        padding: 16px;
+        overflow-y: auto;
+        height: 100%;
+        border-right: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .panel.right {
+        border-left: 1px solid rgba(255,255,255,0.05);
+        border-right: none;
+    }
+
+    h2 {
+        font-size: 1rem;
+        color: #9ed0ff;
+        margin-bottom: 1rem;
+    }
+
+    .left a {
+        display: block;
+        text-decoration: none;
+        color: #aaa;
+        margin-bottom: 0.6rem;
+        transition: 0.2s;
+        cursor: pointer;
+    }
+
+    .left a:hover {
+        color: white;
+        border-left: 3px solid #88c0d0;
+        background: rgba(255, 255, 255, 0.05);
+        padding-left: 5px;
+    }
+
+    .middle {
+        padding: 24px;
+        background: rgba(0,0,0,0.4);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .log-window {
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 0 8px rgba(0,0,0,0.5);
+        background: rgba(0,0,0,0.6);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* keep content inside */
+    }
+
+    iframe {
+        flex: 1;              /* fill available space */
+        border: none;
+        width: 100%;
+        height: auto;         /* don’t force full height */
+        background: transparent;
+    }
+
+    .log-title {
+        background: rgba(0,0,0,0.7);
+        padding: 8px 12px;
+        font-weight: bold;
+        font-size: 0.95rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        color: #c2f0ff;
+    }
+
+    .status, .music {
+        font-size: 0.85rem;
+        color: #bbb;
+        line-height: 1.4;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(100,100,150,0.4);
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        outline: none;
+        transition: background 0.2s ease;
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 14px;
+        width: 14px;
+        background: #9ed0ff;
+        border: 2px solid #0e1a2b;
+        border-radius: 50%;
+        box-shadow: 0 0 6px #88c0d0;
+        transition: background 0.3s ease;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        height: 14px;
+        width: 14px;
+        background: #9ed0ff;
+        border: 2px solid #0e1a2b;
+        border-radius: 50%;
+        box-shadow: 0 0 6px #88c0d0;
+        cursor: pointer;
+    }
+
+    /* Hover effect for slider track */
+    input[type="range"]:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    button {
+        font-family: 'Space Mono', monospace;
+        background: rgba(50, 100, 150, 0.15);
+        border: 1px solid #88c0d0;
+        color: #c2f0ff;
+        padding: 6px 12px;
+        border-radius: 3px;
+        box-shadow: 0 0 6px rgba(100, 200, 255, 0.2);
+        transition: 0.2s ease;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: rgba(100, 180, 255, 0.3);
+        color: white;
+        border-color: #aeefff;
+    }
+    #fadeout-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        opacity: 0;
+        pointer-events: none; /* default state: non-blocking */
+        z-index: 9999;
+        transition: opacity 3s ease-in-out;
+    }
+
+    #fadeout-overlay.active {
+        opacity: 1;
+        pointer-events: all; /* blocks clicks when active */
+    }
+    input[type="range"]:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+    #statuscafe {
+        margin: 1rem auto;
+        max-width: 700px;
+        padding: 0em;
+    }
+    #statuscafe-username {
+        visibility: hidden;
+        position: relative;
+        margin-bottom: 1rem;
+    }
+    #statuscafe-username::before {
+        content: "LAST TRANSMISSION";
+        visibility: visible;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 1.1rem;
+        font-weight: 1000;
+        color: #9ed0ff;
+    }
+    #statuscafe-content {
+        margin: 0 0em;
+    }
+    @keyframes blink {
+        50% { opacity: 0; }
+    }
+    #nomai-end-effect {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,0,0,1) 100%);
+        background-size: 200% 200%;
+        background-position: center;
+        z-index: 999999;
+        opacity: 0;
+        transform: scale(0.5) rotate(0deg);
+        filter: blur(0px);
+        pointer-events: none;
+    }
+
+    @keyframes nomai-flash {
+        0% {
+            opacity: 0;
+            transform: scale(0.5) rotate(0deg);
+            filter: blur(0px);
+        }
+        30% {
+            opacity: 1;
+            transform: scale(1.3) rotate(180deg);
+            filter: blur(8px);
+        }
+        60% {
+            opacity: 1;
+            transform: scale(2) rotate(540deg);
+            filter: blur(15px);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(3) rotate(1080deg);
+            filter: blur(25px);
+        }
+    }
+    .glow {
+    color: #aeefff;
+    animation: pulseGlowOff 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlowOff {
+    0%, 100% {
+        text-shadow: none;
+    }
+    50% {
+        text-shadow:
+        0 0 5px #aeefff,
+        0 0 10px #88c0d0;
+    }
+    }
+
+  </style>
 </head>
 <body>
-<div id="splashScreen">
-  <div id="bootTerminal">
-    <pre id="bootText"></pre>
-  </div>
-  <div class="scanlines"></div>
-</div>
-<audio id="splashBootSound" src="altsite/sfx/shiplog_switchmode_forward.wav" preload="auto"></audio>
-<audio id="splashSoundOut" src="altsite/sfx/shiplog_switchmode_back.wav" preload="auto"></audio>
-<audio id="typeSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
-<audio id="startupSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
+
+<div class="container">
+    <!-- Left Panel -->
+    <div class="panel left">
+      <h2>Entry</h2>
+      <a onclick="loadPage('welcome.html')">Welcome</a>
+      <a onclick="loadPage('updates.html')">Updates</a>
+      <a onclick="loadPage('bio.html')">Bio</a>
+      <a onclick="loadPage('bigguy.html')">Bird</a>
 
 
-  <!-- main site -->
-<div id="siteContainer">
-<!-- audio refs -->
-<audio id="hoverSound" src="altsite/fx/shiplog_highlight2.wav" preload="none"></audio>
-<audio id="clickSound" src="altsite/fx/1selectentry.wav" preload="none"></audio>
-<audio id="clickOutSound" src="altsite/fx/1leaventry.wav" preload="none"></audio>
-<audio id="zoomSound" src="altsite/fx/zoom.wav" preload="none"></audio>
-<audio id="revealSound" src="altsite/fx/newentry.wav" preload="none"></audio>
-
-
-<div id="screenPadding"></div>
-<div id="gridOverlayThin"></div>
-<div id="parallax"></div>
-
-<!-- viewer -->
-<div id="viewportContainer">
-<div class="viewport" id="viewport">
-  <div class="content" id="content">
-      <!--add 70 on x, 100 on y--> 
-    <div id="line-container" style="position: relative; width: 20000px; height: 20000px;">
-    
-  </div>
-
-
-    <!--entries--> 
-    <div class="frame frame-normal color-gray" style="left: 880px; top: 400px;" data-page="welcome.html"> <!-- welcome 0 -->
-        <h2>Welcome</h2>
-        <img src="altsite/entrypng/welcome.png" alt="welcome">
+      <h2>The Web</h2>
+      <a onclick="loadPage('internetstuf.html')">Internet</a>
+      <a onclick="loadPage('internetstuf2.html')">Links</a>
+      <a onclick="loadPage('webrings.html')">Webrings</a>
+      <a onclick="loadPage('https://kaiasei.atabook.org/')" class="glow">Guestbook</a>
+      <a onclick="loadPage('thesite.html')">This Site</a>
+      <a onclick="loadPage('jacobonline-old/index.html')">My Original Site</a>
+      <h2>Creative</h2>
+      <a onclick="loadPage('video.html')">Videos</a>
+      <a onclick="loadPage('photo.html')">Photos</a>
+      <a onclick="loadPage('music.html')">Music</a>
+      <h2>Ramblings</h2>
+      <a onclick="loadPage('wilds.html')">Outer Wilds</a>
+      <h2>Other</h2>
+      <a onclick="loadPage('template.html')">My site template</a>
+      <h2>Friends</h2>
+      <a onclick="loadPage('friends.html')">On friends</a>
+      <a onclick="loadPage('friends/kris.html')">Kris</a>
+      <a onclick="loadPage('friends/gabe.html')">Gabriel</a>
+      <h2>Other</h2>
+      <a href="indexrm.html" target="_parent">Load layout 2 (outdated!)</a>
+      <a href="indexlog.html" target="_parent">Load layout 3 (outdated!)</a>
     </div>
-    <div class="frame frame-large color-gray" style="left: -50px; top: 430px;" data-page="bio.html"> <!-- me 1 -->
-        <h2>Me</h2>
-        <img src="assets/meposter.jpg" alt="me">
+
+    <!-- Middle Panel -->
+    <div class="middle">
+      <div class="log-window">
+        <div class="log-title" id="log-title">Log Entry</div>
+        <iframe id="logframe" src="welcome.html"></iframe>
+      </div>
     </div>
-    <div class="frame frame-normal color-gray" style="left: 520px; top: -580px;" data-page="thesite.html"> <!-- the site 2 -->
-        <h2>The Site</h2>
-        <!-- <img src="assets/" alt="the site"> -->
+
+    <!-- Right Panel -->
+    <div class="panel right">
+        <h2>NOW PLAYING</h2>
+        <div class="music">
+        <p id="song-title"><strong>Loading...</strong></p>
+
+        <audio id="musicPlayer" preload="auto"></audio>
+
+        <div style="margin: 8px 0;">
+            <input type="range" id="progressBar" value="0" step="1" min="0" max="100" style="width: 100%;">
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+            <button id="pauseButton">⏸</button>
+            <button id="skipButton">⏭</button>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3" />
+
+        </div>
+        <br>
+        <div id="statuscafe" style="margin-top:1em;">
+            <div id="statuscafe-username"></div>
+            <div id="statuscafe-content"></div>
+        </div>
+        <script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
+        <h2>KAIA'S VITALS (live)</h2>
+        <div class="status" id="kaia-status">
+            <p id="health">- Health: --%</p>
+            <p id="battery">- Social Battery: --%</p>
+            <p id="game">- Current Game: Loading...</p>
+            <p id="availability">- Status: Loading...</p>
+            <p>- Instrument: Guitar</p>
+        </div>
+        <br>
+        <h2>INFO</h2>
+        <div class="status">
+            <p>- Location: Starlit Marble</p>
+            <p>- Visitor: #<span id="visit-count">Loading...</span></p>
+            <p id="loop-timer">- Time: 0:00 of 22:00 minutes</p>
+        </div>
+        <br>
+        <h2>TODAY'S MOON</h2>
+        <!-- © wdisseny --><div id="contain_moon" style="text-align:center;padding-bottom:14px;"><div style="font-weight:bold"></div><div style="margin-bottom:25px;padding:10px;filter:drop-shadow(0 0 36px hsla(0, 0%, 62%, 0.24))"></div><div>.</div><div style="font-size:small"></div></div><script>(function(){var d=new Date().getDate();var m=document.querySelectorAll("#contain_moon div");var a=new XMLHttpRequest();var url="https://www.icalendar37.net/lunar/api/?lang=en&month="+(new Date().getMonth()+1)+"&year="+(new Date().getFullYear())+"&size=120&lightColor=rgb(154,153,150)&shadeColor=rgb(4,7,31)&t&LDZ="+new Date(new Date().getFullYear(),new Date().getMonth(),1)/1000+"";m[1].style.height="120px";a.onreadystatechange=function(){if(a.readyState==4&&a.status==200){var b=JSON.parse(a.responseText);m[1].innerHTML=b.phase[d].svg;if(typeof moon_widget_loaded=="function")moon_widget_loaded(b);m[2].innerHTML=b.phase[d].npWidget}};a.open("GET",url,true);a.send()})()</script>
+        <h2>TO-DO</h2>
+        <div class="status">
+            <p>- Add mor pages</p>
+            <p>- Cleanup code</p>
+            <p>- Link old layouts</p>
+            <p>- add fun stuff</p>
+            <p>- browse the web</p>
+            <p>- 50% twig</p>
+            <p>- special css effects</p>
+            <p>- fix music player</p>
+            <p>- add intro</p>
+            <p>- revamp framed pages</p>
+        </div>
+        </div>
     </div>
-    <div class="frame frame-normal color-green" style="left: 1600px; top: -390px;" data-page="internetstuf.html"> <!-- internet 3 -->
-        <h2>Internet</h2>
-        <img src="altsite/entrypng/warp.png" alt="my site">
-    </div>
-    <div class="frame frame-small color-gray" style="left: 50px; top: 550px; max-width: 90px;" data-page="altsite/juststatus.html"> <!-- status 4 -->
-        <h2>Status</h2>
-        <!-- <img src="assets/placeholder.png" style="size: 90px 90px;" alt="status"> -->
-    </div>
-    <div class="frame color-purple" style="left: 770px; top: 1335px;" data-page="wilds.html"> <!-- wilds 5 -->
-        <h2>Outer Wilds</h2>
-        <img src="altsite/entrypng/wilds.jpg" alt="outer wilds">
-    </div>
-    <div class="frame color-blue" style="left: 283px; top: -1500px;" data-page="konsole.html"> <!-- console 6 -->
-        <h2>Console</h2>
-        <!--<img src="altsite/entrypng/me.png" alt="a console?"> -->
-    </div>
-    <div class="frame color-green" style="left: 1586px; top: 120px;" data-page="internetstuf2.html"> <!-- other sites 7 -->
-        <h2>Links</h2>
-        <!-- <img src="altsite/entrypng/warp.png" alt="other sites"> -->
-    </div>
-    <div class="frame color-green" style="left: 1786px; top: 1120px; display: none;" data-page="foryou.html"> <!-- for you 8 -->
-        <h2>Meb Graphics</h2>
-        <!-- <img src="altsite/entrypng/warp.png" alt="stuffs for you"> -->
-    </div>
-    <div class="frame color-orange" style="left: -445px; top: 1620px;" data-page="friends.html"> <!-- friends 9 -->
-        <h2>Friends</h2>
-        <!-- <img src="altsite/entrypng/friends.png" alt="friends"> -->
-    </div>
-    <div class="frame color-orange" style="left: -1100px; top: -540px;" data-page="photo.html"> <!-- photo 10 -->
-        <h2>Photos</h2>
-        <img src="altsite/entrypng/photo.jpg" alt="photography">
-    </div>
-    <div class="frame color-orange" style="left: -1030px; top: 720px;" data-page="video.html"> <!-- video 11 -->
-        <h2>Videos</h2>
-        <img src="altsite/entrypng/video.jpg" alt="video">
-    </div>
-    <div class="frame color-green" style="left: 2310px; top: -110px;" data-page="https://kaiasei.atabook.org/"> <!-- guestbook 12 -->
-        <h2>Guestbook</h2>
-        <!-- <img src="altsite/entrypng/video.jpg" alt="video"> -->
-    </div>
-    <div class="frame color-special" style="left: 1900px; top: -1000px; display:none;" data-page="manifesto.html"> <!-- manifesto 13 -->
-        <h2>Manifesto</h2>
-        <!-- <img src="altsite/entrypng/warp.png" alt="indie web manifesto"> -->
-    </div>
-    <div class="frame color-purple" style="left: 1280px; top: 1500px; max-width: 120%;" data-page="videogames.html"> <!-- video games 14 -->
-        <h2>Video Games</h2>
-        <img src="assets/gamestation.jpg" alt="videogames">
-    </div>
-    <div class="frame color-purple" style="left: 1160px; top: 2020px;" data-page="celeste.html"> <!-- celeste 15 -->
-        <h2>Celeste</h2>
-        <!-- <img src="altsite/entrypng/welcome.png" alt="celeste"> -->
-    </div>
-    <div class="frame color-purple" style="left: 820px; top: 1735px" data-page="minecraft.html"> <!-- minecraft 16 -->
-        <h2>Minecraft</h2>
-        <!-- <img src="altsite/entrypng/welcome.png" alt="minecraft"> -->
-    </div>
-    <div class="frame color-yellow" style="left: -560px; top: -570px; display:none;" data-page="music.html"> <!-- music 17 -->
-        <h2>Music</h2>
-        <!-- <img src="assets/musicplayer.jpg" alt="music"> -->
-    </div>
-    <div class="frame color-gray frame-small" style="left: 475px; top: -460px; max-width: 90px;" data-page="musicplayer.html"> <!-- musicplayer 18 -->
-        <h2>Music Player</h2>
-        <img src="assets/notes.GIF" style="size: 90px 90px;" alt="musicplayer">
-    </div>
-    <div class="frame color-special" style="left: 1200px; top: -1090px; display:none;" data-page="jacobonline-old/index.html" > <!-- old site 19 -->
-        <h2>Old Site</h2>
-        <img src="assets/mybmp.jpg" alt="old site">
-    </div>
-    <div class="frame color-gray" style="left: -240px; top: 50px;" data-page="bigguy.html" > <!-- big guy 20 -->
-        <h2>Big Guy</h2>
-        <img src="assets/bigposterguy.jpg" alt="big guy">
-    </div>
-    <div class="frame color-jacob" style="left: 100px; top: 1300px; display:none;" data-page="friends/jacob.html" > <!-- jacob 21 -->
-        <h2>Jacob</h2>
-        <img src="assets/jacobposter.jpg" alt="jacob">
-    </div>
-   <div class="frame color-kris" style="left: -70px; top: 2220px; display:none;" data-page="friends/kris.html"> <!-- kris 22 -->
-        <h2>Kris</h2>
-        <img src="assets/kris.png" alt="kris">
-    </div>
-   <div class="frame color-gabe" style="left: -1170px; top: 1320px; display:none;" data-page="friends/gabe.html"> <!-- gabe 23 -->
-        <h2>Gabriel</h2>
-        <img src="assets/gabe.png" alt="gabriel">
-    </div>
-    <div class="frame color-gray frame-small" style="left: -1140px; top: 1640px;" data-page="miami.html"> <!-- miami box 24 -->
-        <h2>Miami</h2>
-        <img src="assets/miami.jpg" alt="miami">
-    </div>
-    <div class="frame color-gray frame-small" style="left: 230px; top: 1920px;" data-page="daytona.html"> <!-- daytona box 25 -->
-        <h2 style="font-size: 95%;">Daytona<br> Beach</h2>
-        <img src="assets/daytona.jpg" alt="daytona">
-    </div>
-    <div class="frame color-green frame-small" style="left: 1693px; top: 250px;" data-page="webrings.html" > <!-- webrings 26 -->
-        <h2 style="font-size: 95%;">Webrings</h2>
-        <!-- <img src="assets/daytona.jpg" alt="daytona"> -->
-    </div>
-    <div class="frame color-gray frame-small" style="left: -1000px; top: 430px;" data-page="creative.html" > <!-- creative box 27 -->
-        <h2>Creative</h2>
-        <img src="assets/creative.jpg" alt="creative">
-    </div>
-    <div class="frame color-gray" style="left: 83px; top: -1280px;" data-page="updates.html"> <!-- update log 28 -->
-        <h2>Updates</h2>
-        <!--<img src="altsite/entrypng/me.png" alt="a console?"> -->
-    </div>
-    <div class="frame color-steven" style="left: -400px; top: 2020px; display:none;" data-page="friends/steven.html"> <!-- steven 29 -->
-        <h2>Steven</h2>
-        <img src="assets/stevenposter.jpg" alt="steven">
-    </div>
-    <div class="frame color-brandon" style="left: -1140px; top: 2120px; display:none;" data-page="friends/brandon.html"> <!-- brandon 30 -->
-        <h2>Brandon</h2>
-        <img src="assets/brandonposter.jpg" alt="brandon">
-    </div>
-    <div class="frame color-twig" style="left: -940px; top: 2320px; display:none;" data-page="friends/twig.html"> <!-- twig 31 -->
-        <h2>Twig</h2>
-        <img src="assets/twigposter.jpg" alt="brandon">
-    </div>
-    <div class="frame color-eric" style="left: -550px; top: 2620px; display:none;" data-page="friends/eric.html"> <!-- eric 32 -->
-        <h2>Eric</h2>
-        <img src="altsite/entrypng/friends.png" alt="brandon">
-    </div>
-  </div>
-</div>
-</div>
-<div id="gridOverlayCenter"></div>
-<div id="musicPlayerContainer" style="
-  display: none;
-  position: fixed;
-  top: 10vh;
-  left: 15vh;
-  width: 22vw;
-  height: 18.5vh;
-  background: rgba(10,10,20,0.9);
-  border: 2px solid #4d79c3;
-  box-shadow: 0 0 10px #4d79c3;
-  z-index: 1000;
-  overflow: hidden;
-  resize: none;
-  flex-direction: column;
-">
-  <div class="popup-header" id="musicPlayerHeader" style="cursor: move;">
-    <span>Audio Player</span>
-    <button onclick="closeMusicPlayer()"> × </button>
-  </div>
-  <iframe id="musicFrame" src="musicplayer.html" style="
-    width: 100%;
-    height: calc(100% - 30px);
-    border: none;
-  "></iframe>
-</div>
-
-
-
-<script src="https://status.cafe/current-status.js?name=bluejay023" defer></script>
-<script>
-
-function closeMusicPlayer() {
-  const clickOutSound = document.getElementById('clickOutSound');
-  clickOutSound.currentTime = 0;
-  clickOutSound.play();
-  const container = document.getElementById("musicPlayerContainer");
-  container.style.animation = "crtShutdown 0.4s forwards";
-  setTimeout(() => {
-    container.style.display = "none";
-  }, 400);
-}
-
-
-
-const viewport = document.getElementById('viewport');
-const content = document.getElementById('content');
-const parallax = document.getElementById('parallax');
-
-let isPanning = false;
-let startX = 0, startY = 0;
-let translateX = 0, translateY = 0;
-let scale = 1;
-let targetScale = 1;
-let zoomAnimating = false;
-
-let zoomAnchorX = 0;
-let zoomAnchorY = 0;
-
-viewport.addEventListener('mousedown', (e) => {
-  isPanning = true;
-  startX = e.clientX - translateX;
-  startY = e.clientY - translateY;
-  viewport.style.cursor = "grabbing";
-});
-
-viewport.addEventListener('mouseup', () => {
-  isPanning = false;
-  viewport.style.cursor = "grab";
-});
-
-viewport.addEventListener('mouseleave', () => {
-  isPanning = false;
-  viewport.style.cursor = "grab";
-});
-
-viewport.addEventListener('mousemove', (e) => {
-  if (!isPanning) return;
-  translateX = e.clientX - startX;
-  translateY = e.clientY - startY;
-  updateTransform();
-});
-
-makeDraggable(
-  document.getElementById("musicPlayerContainer"),
-  document.getElementById("musicPlayerHeader")
-);
-
-viewport.addEventListener('wheel', (e) => {
-  e.preventDefault();
-
-  const scaleAmount = -e.deltaY * 0.001;
-  const newTargetScale = Math.min(Math.max(0.1, targetScale + scaleAmount), 5);
-
-  const rect = viewport.getBoundingClientRect();
-  zoomCursorX = e.clientX - rect.left;
-  zoomCursorY = e.clientY - rect.top;
-
-  zoomAnchorX = (zoomCursorX - translateX) / scale;
-  zoomAnchorY = (zoomCursorY - translateY) / scale;
-
-  targetScale = newTargetScale;
-
-  if (!zoomAnimating) {
-    zoomAnimating = true;
-    animateZoom();
-  }
-
-  const zoomSound = document.getElementById('zoomSound');
-  if (zoomSound && zoomSound.paused) {
-  zoomSound.currentTime = 0;
-  zoomSound.play();
-  }
-
-});
-
-document.querySelectorAll(".frame").forEach(frame => {
-  frame.addEventListener("click", () => {
-    clickSound.currentTime = 0;
-    clickSound.play();
-
-    const targetPage = frame.getAttribute("data-page") || "default.html";
-
-    // ap special handling
-    if (targetPage === "musicplayer.html") {
-      const container = document.getElementById("musicPlayerContainer");
-      container.style.display = "flex";
-      container.style.animation = "crtStartup 0.4s forwards";
-      return;
-    }
-
-    const windowEl = document.createElement("div");
-    windowEl.className = "popup-window";
-    windowEl.style.animation = "crtStartup 0.4s forwards";
-
-    const headerEl = document.createElement("div");
-    headerEl.className = "popup-header";
-    const titleEl = document.createElement("span");
-    const frameTitle = frame.querySelector("h2")?.textContent || "Untitled";
-    titleEl.textContent = frameTitle;
-
-    const closeBtn = document.createElement("button");
-    closeBtn.textContent = " × ";
-    closeBtn.onclick = () => {
-      const clickOutSound = document.getElementById('clickOutSound');
-      clickOutSound.currentTime = 0;
-      clickOutSound.play();
-      windowEl.style.animation = "crtShutdown 0.4s forwards";
-      setTimeout(() => {
-        windowEl.remove();
-        drawConnections();
-      }, 400);
-    };
-    headerEl.appendChild(titleEl);
-    headerEl.appendChild(closeBtn);
-
-    const contentEl = document.createElement("div");
-    contentEl.className = "popup-content";
-    const iframe = document.createElement("iframe");
-    iframe.src = targetPage;
-    iframe.style.width = "100%";
-    iframe.style.height = "100%";
-    iframe.style.border = "none";
-    contentEl.appendChild(iframe);
-    //play special song
-    if (targetPage === "wilds.html") {
-      const musicFrame = document.getElementById("musicFrame");
-      musicFrame.contentWindow.postMessage({
-        type: "playSong",
-        title: "14.3 Billion Years - Andrew Prahlow"
-      }, "*");
-    }
-    if (targetPage === "jacobonline-old/index.html") {
-      const musicFrame = document.getElementById("musicFrame");
-      musicFrame.contentWindow.postMessage({
-        type: "playSong",
-        title: "Beacon - Disasterpiece"
-      }, "*");
-    }
-    if (targetPage === "friends/kris.html") {
-      const musicFrame = document.getElementById("musicFrame");
-      musicFrame.contentWindow.postMessage({
-        type: "playSong",
-        title: "Delirious Acting (Twilight Theater) - Pseudoregalia OST"
-      }, "*");
-    }
-    if (targetPage === "friends/gabe.html") {
-      const musicFrame = document.getElementById("musicFrame");
-      musicFrame.contentWindow.postMessage({
-        type: "playSong",
-        title: "Phantom Liberty - Dawid Podsiadło"
-      }, "*");
-    }
-    if (targetPage === "friends/eric.html") {
-      const musicFrame = document.getElementById("musicFrame");
-      musicFrame.contentWindow.postMessage({
-        type: "playSong",
-        title: "wash my sins away - berlioz"
-      }, "*");
-    }
-    // default size
-    windowEl.style.width = "80vw";
-    windowEl.style.height = "80vh";
-    windowEl.style.top = "10vh";
-    windowEl.style.left = "10vw";
-    windowEl.style.resize = "both";
-
-    // special sizing for status
-    if (targetPage === "altsite/juststatus.html") {
-      windowEl.style.width = "25vw";
-      windowEl.style.height = "17vh";
-      windowEl.style.top = "10vh";
-      windowEl.style.left = "15vh";
-      windowEl.style.resize = "none";
-      windowEl.style.overflow = "hidden";
-      contentEl.style.overflow = "hidden";
-    }
-    // special sizing for miami
-    if (targetPage === "miami.html") {
-      windowEl.style.width = "25vw";
-      windowEl.style.height = "17vh";
-      windowEl.style.top = "10vh";
-      windowEl.style.left = "15vh";
-      windowEl.style.resize = "none";
-      windowEl.style.overflow = "hidden";
-      contentEl.style.overflow = "hidden";
-    }
-    // special sizing for daytona
-    if (targetPage === "daytona.html") {
-      windowEl.style.width = "25vw";
-      windowEl.style.height = "17vh";
-      windowEl.style.top = "10vh";
-      windowEl.style.left = "15vh";
-      windowEl.style.resize = "none";
-      windowEl.style.overflow = "hidden";
-      contentEl.style.overflow = "hidden";
-    }
-    // special sizing for creative
-    if (targetPage === "creative.html") {
-      windowEl.style.width = "25vw";
-      windowEl.style.height = "17vh";
-      windowEl.style.top = "10vh";
-      windowEl.style.left = "15vh";
-      windowEl.style.resize = "none";
-      windowEl.style.overflow = "hidden";
-      contentEl.style.overflow = "hidden";
-    }
-    // special sizing for console
-    if (targetPage === "konsole.html") {
-      windowEl.style.width = "25vw";
-      windowEl.style.height = "14vh";
-      windowEl.style.top = "10vh";
-      windowEl.style.left = "15vh";
-      windowEl.style.resize = "none";
-      windowEl.style.overflow = "hidden";
-      contentEl.style.overflow = "hidden";
-    }
-    if (targetPage === "webrings.html") {
-      windowEl.style.width = "400px";
-      windowEl.style.height = "580px";
-      windowEl.style.top = "10vh";
-      windowEl.style.left = "15vh";
-    }
-
-    windowEl.appendChild(headerEl);
-    windowEl.appendChild(contentEl);
-    document.body.appendChild(windowEl);
-    makeDraggable(windowEl, headerEl);
-    drawConnections();
-  });
-});
-
-
-
-function animateZoom() {
-  const zoomSpeed = 0.13; 
-
-  const scaleDiff = targetScale - scale;
-  scale += scaleDiff * zoomSpeed;
-
-  translateX = zoomCursorX - zoomAnchorX * scale;
-  translateY = zoomCursorY - zoomAnchorY * scale;
-
-  updateTransform();
-
-  if (Math.abs(scaleDiff) < 0.001) {
-    scale = targetScale;
-    updateTransform();
-    zoomAnimating = false;
-    return;
-  }
-
-  requestAnimationFrame(animateZoom);
-}
-
-
-function updateTransform() {
-  content.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-  parallax.style.backgroundPosition = `${translateX * 0.2}px ${translateY * 0.2}px`;
-}
-
-const hoverSound = document.getElementById("hoverSound");
-document.querySelectorAll(".frame").forEach(frame => {
-  frame.addEventListener("mouseenter", () => {
-    const hsound = new Audio('altsite/fx/shiplog_highlight.wav');
-    hsound.volume = 0.3;
-    hsound.play();
-  });
-});
-
-function closeLogWindow() {
-  const clickOutSound = document.getElementById('clickOutSound');
-  clickOutSound.currentTime = 0;
-  clickOutSound.play();
-  document.getElementById('logWindow').style.display = "none";
-}
-
-
-
-function makeDraggable(dragTarget, handle) {
-  let offsetX = 0;
-  let offsetY = 0;
-  let isDragging = false;
-
-  handle.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    offsetX = e.clientX - dragTarget.offsetLeft;
-    offsetY = e.clientY - dragTarget.offsetTop;
-    document.body.style.userSelect = 'none';
-  });
-
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
-    document.body.style.userSelect = '';
-  });
-
-  document.addEventListener('mousemove', (e) => {
-    if (isDragging) {
-      let newLeft = (e.clientX - offsetX);
-      let newTop = (e.clientY - offsetY);
-
-      const elWidth = dragTarget.offsetWidth;
-      const elHeight = dragTarget.offsetHeight;
-
-      if (newLeft < 30) newLeft = 30;
-      if (newTop < 30) newTop = 30;
-
-      dragTarget.style.left = newLeft + 'px';
-      dragTarget.style.top = newTop + 'px';
-    }
-  });
-}
-
-// container that holds the entries
-const frames = document.querySelectorAll('.frame');
-const lineContainer = document.getElementById('line-container');
-
-// list of pairs of entries
-const connections = [
-  [0, 1], // welcome - me
-  [1, 2], // me - the site
-  [1,20], // me - big guy
-  [2, 3], // the site - internet
-  [2, 28], // the site - update log
-  [6, 28], // console - update log
-  [3, 7], // internet - other sites
-  [0, 7], // welcome - links
-  [3, 7], // internet - links
-  [3, 12], // internet - guestbook
-  [7, 13], // other sites - manifesto
-  [5, 14], // wilds - video games
-  [14,15], // video games - celeste
-  [14,16], // video games - minecraft
-  [0, 14], // welcome - video games
-  [6, 19],  // console - old site
-  [3, 19], // internet - old site
-  [27, 1], // creative - me
-  [27, 10], // creative - photo
-  [27, 11], // creative - video
-  [21, 5], // jacob - wilds
-  [21, 25], // jacob - daytona
-  [22, 25], // kris - daytona
-  [24, 23], // miami - gabe
-  [24, 9], // miami - friends
-  [25,9], // daytona - friends
-  [7,12], // links - guestbook
-  [9, 1], // friends - me
-  [29, 25], //steven - daytona
-  [29, 24], //steven - miami
-  [24, 30], // miami - brandon
-  [29, 32], //steven - eric
-  [30, 31], //brandon twig
-
-
-];
-
-//  each connection, create a line
-connections.forEach(([fromIdx, toIdx]) => {
-  const from = frames[fromIdx];
-  const to = frames[toIdx];
-
-  // skip drawing if either frame is hidden
-  if (from.style.display === "none" || to.style.display === "none") {
-    return;
-  }
-
-  // get pos rel. to the content container
-  const fromRect = from.getBoundingClientRect();
-  const toRect = to.getBoundingClientRect();
-  const contentRect = content.getBoundingClientRect();
-
-  const x1 = from.offsetLeft + from.offsetWidth / 2;
-  const y1 = from.offsetTop + from.offsetHeight / 2;
-  const x2 = to.offsetLeft + to.offsetWidth / 2;
-  const y2 = to.offsetTop + to.offsetHeight / 2;
-
-  // simple distance and angle math
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  const distance = Math.sqrt(dx * dx + dy * dy);
-  const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-
-  // make the line image
-  const line = document.createElement('div');
-  line.className = 'connection-line';
-
-  // style the line
-  line.style.left = `${x1}px`;
-  line.style.top = `${y1}px`;
-  line.style.width = `${distance}px`;
-  line.style.transform = `rotate(${angle}deg)`;
-
-  // finally be happy that EVERYTHING FUCKIGN WORKS
-  lineContainer.appendChild(line);
-});
-
-let mouseDownTime = 0;
-
-document.addEventListener('mousedown', () => {
-  mouseDownTime = Date.now();
-}, true);
-
-document.addEventListener('mouseup', (e) => {
-  const duration = Date.now() - mouseDownTime;
-  if (duration < 100 && e.button === 0) {
-    const sound = new Audio('assets/click.mp3');
-    sound.volume = 0.2;
-    sound.play();
-  }
-}, true);
-
-function drawConnections() {
-  lineContainer.innerHTML = '';
-
-  const visibleFrames = Array.from(document.querySelectorAll('.frame')).filter(f => f.style.display !== 'none');
-
-  //ONLY draw lines for visible frames ffs for the last time oh my GOD
-  connections.forEach(([fromIdx, toIdx]) => {
-    const from = visibleFrames.find(f => f === frames[fromIdx]);
-    const to = visibleFrames.find(f => f === frames[toIdx]);
-    if (!from || !to) return;
-
-    const x1 = from.offsetLeft + from.offsetWidth / 2;
-    const y1 = from.offsetTop + from.offsetHeight / 2;
-    const x2 = to.offsetLeft + to.offsetWidth / 2;
-    const y2 = to.offsetTop + to.offsetHeight / 2;
-
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
-
-    const line = document.createElement('div');
-    line.className = 'connection-line';
-    line.style.left = `${x1}px`;
-    line.style.top = `${y1}px`;
-    line.style.width = `${distance}px`;
-    line.style.transform = `rotate(${angle}deg)`;
-
-    lineContainer.appendChild(line);
-  });
-}
-
-window.addEventListener("message", (event) => {
-  if (event.data?.type === "showEntry") {
-    const command = event.data.command.toLowerCase();
-
-    const map = {
-      "ideas": [13],
-      "windows98": [19],
-      "music": [17],
-      "gabriel": [23],
-      "kris": [22],
-      "jacob": [21],
-      "steven": [29],
-      "webgraphix": [8],
-      "brandon": [30],
-      "twig": [31],
-      "eric": [32],
-
-
-      "FreedomDive": [5,13,19,17,21,22],
-      "sudo shutdown now": "kill",
-    };
-
-    const idxList = map[command];
-    if (idxList !== undefined) {
-      if (idxList === "kill") {
-        //  shutdown sound
-        const shutdownSound = new Audio("assets/poweroff.mp3");
-        shutdownSound.volume = 0.4; // adjust if you want
-        shutdownSound.play();
-
-        // anim all popup windows with CRT shutdown
-        const popups = document.querySelectorAll(".popup-window");
-        popups.forEach(popup => {
-          popup.style.animation = "crtShutdown 0.4s forwards";
-        });
-
-        // anim main site container with CRT shutdown
-        const siteContainer = document.getElementById("siteContainer");
-        siteContainer.style.animation = "crtShutdown 0.4s forwards";
-
-        // after anim, wipe everything and set to black
-        setTimeout(() => {
-          siteContainer.innerHTML = "";
-          siteContainer.style.background = "black";
-          document.body.style.background = "black";
-          document.documentElement.style.background = "black";
-          document.title = "";
-        }, 400);
-
+  <script>
+
+    //loading page script -===========================================================-
+
+    async function loadPage(path) {
+    const logframe = document.getElementById("logframe");
+    logframe.src = path;
+
+    const matchedSongFile = pageSongMap[path];
+    if (matchedSongFile) {
+        // Check if currently playing this song already
+        if (!musicPlayer.src.includes(matchedSongFile)) {
+        const matchedSong = songs.find(s => s.file === matchedSongFile);
+        if (matchedSong) {
+            await crossfadeToSong(matchedSong.file, matchedSong.title);
+            return;
+        }
+        } else {
+        // Same song playing, do nothing special
         return;
-      }
-
-
-      idxList.forEach(idx => {
-        const frames = window.parent.document.querySelectorAll(".frame");
-        const frame = frames[idx];
-        const revealSound = window.parent.document.getElementById("revealSound");
-        
-        if (!frame) return;
-
-        const wasHidden = frame.style.display === "none" || frame.style.display === "";
-
-        frame.style.display = "block";
-        frame.style.opacity = "0";
-        void frame.offsetWidth; // trigger reflow
-        frame.style.opacity = "1";
-
-        setTimeout(() => {
-          if (wasHidden && revealSound) {
-            revealSound.volume = 0.2;
-            revealSound.currentTime = 0;
-            revealSound.play();
-          }
-          if (typeof window.parent.drawConnections === "function") {
-            window.parent.drawConnections();
-          }
-        }, 500);
-      });
+        }
     }
-  }
-});
 
-const messages = [
-    "this site is me and i am this site",
-    "'I wanna die on Mars, just not on impact.'",
-    "i coded this place by hand just for you",
-    "explore and get lost like i do in the stars",
-    "my little corner of the internet cosmos",
-    "welcome traveler, sit by the fire",
-    "these pixels are my soul laid bare",
-    "craft OS 1.8",
-    "do you wanna play minecraft?",
-    "can you feel my dysphoria?",
-    "the universe is, and we are",
-    "live to love and love to live",
-    "trans rights are human rights!",
-    "black lives matter!",
-    "glass half full",
-    "be kind, god knows we need more people like that",
-    "to the moon and back",
-    "kaiasei wuz here",
-    "lets have some fun in minecraft",
-    "under construction!",
-    "so much to do, so much to explore.",
-    "appreciate life",
-    "appreciate the little things",
-    "orchids are one of my favorite flowers",
-    "give life to music",
-    "frames changed my life",
-    "i miss you jacob",
-    "dnd session when?",
-    "i lost my glasses again",
-    "any methods at all",
-    "does anybody have a method",
-    "freedom dive",
-    "ah... i wanna play SDVX",
-    "AAAAAAAAAAAAAAAAAAAAA",
-    "type 'sudo shutdown now' in the console, its pretty funny.",
-    "sudo rm -fr /",
-    "seraphina my beloved",
-    "elysia my beloved",
-    "emergency tree seeds",
-    "wait- this isnt lua",
-    "a castle built overnight",
-    "there are so many splash texts",
-    "this is the last one im writing! for now",
-    "live your life to the fullest",
-    "go play outer wilds",
-    "August 12th, 2036 Heat death of the Universe",
-    "there's more to explore here",
-    "professional emotional wreck",
-    "est. March 2022",
-    "i luv tonkotsu ramen",
-    "science compels us to explode the sun!",
-    "im gregging it",
-    "highly unmotivated",
-    "support local artists!",
-    "luca is swag",
-    "l love birds!",
-    "22 minutes",
-    "meditate it out",
-    "'We do not have much connection, you and I. Still, this encounter feels special. I hope you won't mind if I think of you as a friend.'",
-    "Every moment before this one depends on this one",
-    "'The future depends on the past, even if we don’t get to see it.'",
-    "'Oh, hello… Come, sit with me, my fellow traveler. Let’s sit together and watch the stars die.'",
-    "It’s time for something new, now.",
-    "what a time to be alive",
-    "what a beautiful sunrise.",
-    "hooray!",
-    "it's a celebration of life.",
-    "relax here with me for a little, and enjoy the music.",
-    "autumn is the best season ever",
-    "gooning",
-    "level up",
-    "power word: shit",
-    "kaia loves bingus",
-    "i like turtles",
-    "strings on my heart",
-    "i dont wanna be jay anymore!",
-    "dain booker",
-    "ill start my own podcast..",
-    "like legit",
-    "late night???",
-    "illithid",
-    "haia kaia",
-    "awoooo",
-    "404 message not found",
-    "Moving children onto milk cartons since 1902",
-    "fish around and find out",
-    "thore sumb",
-    "1 singular Waffle House exists on Babylon",
-    "fyrir my beloved",
-    "nil",
-    "what a beautiful sunset",
-    "aren't the stars beautiful tonight?",
-    "doze off",
-    "on a perfect planet",
-    "in a perfect solar system",
-    "a perfect time to be alive",
-    "check the webrings tab!",
-    "sign the guestbook!",
-    ":3",
-    "big hugs to you",
-    "it'll all be okay",
-    "where are we?",
-    "SURFACE INTEGRITY: 87%",
-    "Warp core missing",
-    "Of note: Be sure not to wander far from here. Though this area is somewhat unstable, it’s safer than any we’ve found so far.",
-    "I’m afraid for our friends",
-    "Call the shuttle home",
-    "You did? That, that’s incredible, congratulations!",
-    "I’m pretty sure we’ll need the others for this next part. We’ll need, you know... everyone.",
-    "I learned a lot, by the end of everything.",
-    "Ok, I'll wait until you're ready.",
-    "Found coordinates to the eye of the universe!",
-    "Sending coordinates for the eye.",
-    "egg cracked",
-    "Yuri!",
-    "Ah! youre back, I missed you.",
-    "Oh to be at the end of the universe, surrounding a campfire with your friends.",
-    "There you are, remember to- wait you're not- nevermind.",
-    "Site 2821 on the Melonland Surf Club!"
-  ];
+    // For pages with no special song or already playing matched song:
+    if (musicPlayer.paused || !musicPlayer.src) {
+        loadAndPlaySong();
+    }
+    }
 
-  const bootLines = [
-    "[BOOT] Initializing Ship Log...",
-    "[OK] Loading frame architecture...",
-    "[OK] Fetching entry information...",
-    "[OK] Drawing connection matrix...",
-    "[INFO] This site is mobile UN-friendly, made for PC",
-    "[INFO] Mild swearing.",
-    "[STATUS] System Initialized! Handing over user control...",
-    "[READY] User input detected.",
-    "",
-    "[SYSTEM MESSAGE]", // <- this will be replaced from code bleow (reminder!)
-    "Welcome, explorer."
-  ];
 
-  window.addEventListener("DOMContentLoaded", () => {
-    drawConnections(); 
+    //title on frame script -===========================================================-
 
-    const splash = document.getElementById("splashScreen");
-    const bootText = document.getElementById("bootText");
-    const splashSound = document.getElementById("splashSound");
-    const typeSound = document.getElementById("typeSound");
-    const splashSoundOut = document.getElementById("splashSoundOut");
-    const splashBootSound = document.getElementById("splashBootSound");
-      if (splashBootSound) {
-        splashBootSound.volume = 0.3;
-        splashBootSound.currentTime = 0;
-        splashBootSound.play().catch(() => {}); // stop autoplay errors
-      }
-    let lineIndex = 0;
-    let charIndex = 0;
-    let typingComplete = false;
-    let promptShown = false;
+    const iframe = document.getElementById("logframe");
+    iframe.addEventListener("load", () => {
+        try {
+        const title = iframe.contentDocument.title;
+        document.getElementById("log-title").textContent = "Log Entry: " + title;
+        } catch (e) {
+        document.getElementById("log-title").textContent = "Log Entry: [undefined]";
+        }
+    }); 
+
+    //timer script -===========================================================-
+
+    let totalSeconds = 0; //set to like 1310 for testing
+    const maxSeconds = 22 * 60; // 22 minutes in seconds
+    const loopDisplay = document.getElementById("loop-timer");
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    let loopEnded = false;
+
+    function updateTimer() {
+        if (totalSeconds < maxSeconds) {
+            totalSeconds++;
+            loopDisplay.textContent = `- Time: ${formatTime(totalSeconds)} of 22:00 minutes`;
+        } else if (!loopEnded) {
+            loopEnded = true;
+            loopDisplay.innerHTML = `<span>- </span><span style="color: #ff7070; font-weight: bold; animation: blink 1s step-start infinite;">
+                22 minutes over
+            </span>`;
+            playFinalSong();
+        }
+    }
+
+
+    setInterval(updateTimer, 1000); // update every second  
+
+    //vitals script -===========================================================-
+    
+    const endpoint = "/.netlify/functions/getSteamStatus";
+
+    function updateKaiaStatus() {
+        const health = Math.floor(Math.random() * 31) + 70;
+        const battery = Math.floor(Math.random() * 101);
+        document.getElementById("health").textContent = `- Health: ${health}%`;
+        document.getElementById("battery").textContent = `- Social Battery: ${battery}%`;
+
+        fetch(endpoint)
+        .then(res => res.json())
+        .then(data => {
+            console.log("Fetched Steam data:", data);
+
+            document.getElementById("game").textContent = `- Current Game: ${data.game}`;
+
+            const stateMap = {
+            "0": "Radio-silent",
+            "1": "Online",
+            "2": "Preoccupied",
+            "3": "Exploring the Stars",
+            "4": "Half-asleep",
+            "5": "Looking to Trade",
+            "6": "Looking to Play",
+            };
+
+            const status = stateMap[data.status?.toString()] || "Unknown";
+            document.getElementById("availability").textContent = `- Status: ${status}`;
+        })
+        .catch((err) => {
+            console.error("Fetch error:", err);
+            document.getElementById("game").textContent = "- Current Game: ???";
+            document.getElementById("availability").textContent = "- Status: ???";
+        });
+    }
+
+    updateKaiaStatus();
+
+    //music player script -===========================================================-
+
+    const musicPlayer = document.getElementById('musicPlayer');
+    musicPlayer.volume = 0.07; // vol start
+    const songTitle = document.getElementById('song-title');
+    const skipButton = document.getElementById('skipButton');
+    const pauseButton = document.getElementById('pauseButton');
+    const progressBar = document.getElementById('progressBar');
+    const volumeSlider = document.getElementById('volumeSlider');
 
   
-    for (let i = 0; i < bootLines.length; i++) {
-      if (bootLines[i].startsWith("[SYSTEM MESSAGE]")) {
-        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-        bootLines[i] = `[SYSTEM MESSAGE] ${randomMessage}`;
-        break;
-      }
+
+    const songs = [
+        { title: "14.3 Billion Years - Andrew Prahlow", file: "14.3.mp3" },
+        { title: "Comforting Memories - Kumi Tanioka", file: "memories.mp3" },
+        { title: "Falling Stars - A Shell In The Pit", file: "stars.mp3" },
+        { title: "Timber Hearth - Andrew Prahlow", file: "timber.mp3" },
+        { title: "serenity - kaiasei", file: "serenity.mp3" },
+        { title: "dawn - kaiasei", file: "dawn.mp3" },
+        { title: "Main Title - Andrew Prahlow", file: "title.mp3" },
+        { title: "The Ancient Glade - Andrew Prahlow", file: "glade.mp3" },
+        { title: "The Sun Station - Andrew Prahlow", file: "sun.mp3" },
+        { title: "Castaways - Andrew Prahlow", file: "castaways.mp3" },
+        { title: "Beacon - Disasterpiece", file: "beacon.mp3" },
+        { title: "Xeno Arcadia - Mason Lindroth & Chuck Salamone", file: "xeno.mp3"},
+        { title: "Outer Wilds - Reprise - Andrew Prahlow", file: "reprise.mp3" },
+        { title: "Something to Look For - Andrew Prahlow", file: "look.mp3" },
+        { title: "Before the Story - Toby Fox", file: "story.mp3" },
+
+
+    ];
+
+    const finalSong = {
+        file: "endtimes.mp3",
+        title: "End Times - Andrew Prahlow"
+    };
+    const historyLimit = 5;
+    let playHistory = [];
+
+    function getRandomSong() {
+        let candidates = songs.filter(song => !playHistory.includes(song.file));
+        if (candidates.length === 0) {
+        playHistory = [];
+        candidates = [...songs];
+        }
+        const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+        playHistory.push(chosen.file);
+        if (playHistory.length > historyLimit) {
+        playHistory.shift();
+        }
+        return chosen;
     }
 
-    const typeNextChar = () => {
-      const currentLine = bootLines[lineIndex];
-      if (charIndex < currentLine.length) {
-        bootText.textContent += currentLine.charAt(charIndex);
+    function loadAndPlaySong() {
+        const song = getRandomSong();
+        musicPlayer.src = `music/${song.file}`;
+        musicPlayer.play();
+        songTitle.innerHTML = `<strong>${song.title}</strong>`;
+    }
 
-        if (typeSound && charIndex % 2 === 0) {
-          typeSound.currentTime = 0;
-          typeSound.play().catch(() => {});
+    musicPlayer.addEventListener('ended', () => {
+        if (!musicPlayer.src.includes(finalSong.file)) {
+                loadAndPlaySong();
+            }
+    });
+    skipButton.addEventListener('click', loadAndPlaySong);
+
+    musicPlayer.addEventListener('timeupdate', () => {
+        if (musicPlayer.duration) {
+        progressBar.value = (musicPlayer.currentTime / musicPlayer.duration) * 100;
         }
+    });
 
-        charIndex++;
-        setTimeout(typeNextChar, 14);
-      } else {
-        bootText.textContent += '\n';
-        lineIndex++;
-        charIndex = 0;
-        if (lineIndex < bootLines.length) {
-          setTimeout(typeNextChar, 200);
-        } else {
-          typingComplete = true;
-          setTimeout(() => {
-  bootText.textContent += `\n> PRESS [ENTER] OR 'CLICK' TO CONTINUE`;
-  promptShown = true;
-
-  const exitSplash = () => {
-  if (!typingComplete || !promptShown) return;
-
-  splashSoundOut?.play?.();
-
-  if (splash) {
-    splash.classList.add("crtFadeDown");
-    splash.addEventListener("animationend", () => {
-      splash.style.display = "none";
-    }, { once: true }); 
-  }
-
-  document.removeEventListener("keydown", onKeyDown);
-  document.removeEventListener("click", onClick);
-};
-
-  const onKeyDown = (e) => {
-    if (e.key === "Enter") exitSplash();
-  };
-  const onClick = () => exitSplash();
-
-  document.addEventListener("keydown", onKeyDown);
-  document.addEventListener("click", onClick);
-}, 600);
+    progressBar.addEventListener('input', () => {
+        if (musicPlayer.duration) {
+        musicPlayer.currentTime = (progressBar.value / 100) * musicPlayer.duration;
         }
-      }
+    });
+
+    volumeSlider.addEventListener('input', () => {
+        musicPlayer.volume = volumeSlider.value;
+    });
+
+
+    pauseButton.addEventListener('click', () => {
+    if (musicPlayer.paused) {
+        musicPlayer.play();
+        pauseButton.textContent = '⏸';
+    } else {
+        musicPlayer.pause();
+        pauseButton.textContent = '▶';
+    }
+    });
+
+    // end times logic -===========================================================-
+
+    function playFinalSong() {
+        // Store current song
+        const oldSong = musicPlayer;
+
+        // Create a new audio element for the final song
+        const newSong = new Audio(`music/${finalSong.file}`);
+        newSong.volume = 0;
+        newSong.loop = false;
+        newSong.preload = 'auto';
+        newSong.play();
+        newSong.addEventListener('timeupdate', () => {
+        if (newSong.duration) {
+                progressBar.value = (newSong.currentTime / newSong.duration) * 100;
+            }
+        });
+        newSong.volume = volumeSlider.value; // match current volume
+        volumeSlider.addEventListener('input', () => {
+            newSong.volume = volumeSlider.value;
+        });
+        newSong.addEventListener('timeupdate', () => {
+        if (newSong.currentTime >= 80 && !specialFX.hasPlayed) {
+                specialFX.play();
+                specialFX.hasPlayed = true; // prevent it from triggering again
+            }
+        });
+
+        songTitle.innerHTML = `<strong>${finalSong.title}</strong>`;
+
+        // Disable controls
+        skipButton.disabled = true;
+        pauseButton.disabled = true;
+        progressBar.disabled = true;
+
+        // Crossfade logic
+        let fadeDuration = 5000; // 3 seconds
+        let fadeSteps = 30;
+        let stepTime = fadeDuration / fadeSteps;
+        let oldVolume = oldSong.volume;
+        let currentStep = 0;
+
+        let fadeInterval = setInterval(() => {
+            currentStep++;
+            let progress = currentStep / fadeSteps;
+
+            // Fade out old song
+            oldSong.volume = oldVolume * (1 - progress);
+
+            // Fade in new song
+            newSong.volume = 0.07 * progress; // Your default volume
+
+            if (currentStep >= fadeSteps) {
+                clearInterval(fadeInterval);
+                oldSong.pause();
+            }
+        }, stepTime);
+
+        // After 1 min 30 sec, fade screen and close
+        newSong.addEventListener('ended', () => {
+    setTimeout(() => {
+        document.body.style.overflow = 'hidden'; // block scroll
+        document.getElementById('fadeout-overlay').classList.add('active');
+        setTimeout(() => {
+            window.history.back(); //send back a page
+        }, 3000); // wait for fade animation
+    }, 16000); // 16 sec after song ends
+    });
+
+    }
+
+    //supernoca logic -===========================================================-
+
+    const specialFX = new Audio('music/supernova.mp3');
+    specialFX.addEventListener('ended', () => {
+        document.body.style.overflow = 'hidden'; // block scroll
+        document.getElementById('fadeout-overlay').classList.add('active');
+        setTimeout(() => {
+            window.history.back(); //send back a page
+        }, 3000); // wait for fade animation
+    }, 16000); // 16 sec after song ends
+
+    specialFX.volume = volumeSlider.value; // match current volume
+    volumeSlider.addEventListener('input', () => {
+        specialFX.volume = volumeSlider.value;
+    });
+
+    // Initial load
+    loadAndPlaySong();
+    updateKaiaStatus();
+    setInterval(updateKaiaStatus, 120000); // every 120s
+
+    //custom page music -===========================================================-
+
+    const pageSongMap = {
+    "wilds.html": "reprise.mp3",
+    "friends.html": "14.3.mp3",
     };
+    function crossfadeToSong(songFile, songTitleText) {
+    return new Promise((resolve) => {
+        const fadeDuration = 3000; // ms
+        const steps = 30;
+        const stepTime = fadeDuration / steps;
+        let currentStep = 0;
+        const targetVolume = musicPlayer.volume || 0.07; // use current musicPlayer volume!
 
-    typeNextChar();
-  });
-</script>
+        // Fade out current song
+        let fadeOutInterval = setInterval(() => {
+        currentStep++;
+        const progress = currentStep / steps;
+        musicPlayer.volume = targetVolume * (1 - progress);
 
+        if (currentStep >= steps) {
+            clearInterval(fadeOutInterval);
+
+            // Swap src & play new song at volume 0
+            musicPlayer.src = `music/${songFile}`;
+            musicPlayer.volume = 0;
+            musicPlayer.play();
+            songTitle.innerHTML = `<strong>${songTitleText}</strong>`;
+
+            // Fade in new song
+            currentStep = 0;
+            let fadeInInterval = setInterval(() => {
+            currentStep++;
+            const progressIn = currentStep / steps;
+            musicPlayer.volume = targetVolume * progressIn;
+
+            if (currentStep >= steps) {
+                clearInterval(fadeInInterval);
+                musicPlayer.volume = targetVolume;
+                resolve();
+            }
+            }, stepTime);
+        }
+        }, stepTime);
+    });
+    }
+
+    //click sound -===========================================================-
+
+    document.addEventListener('click', () => {
+      try {
+        const sound = new Audio('assets/click.mp3');
+        sound.volume = 0.18;
+        sound.play().catch(()=>{});
+      } catch(e){}
+    }, true);
+
+    fetch('/.netlify/functions/countVisits')
+    .then(response => response.json())
+    .then(data => {
+        // Update the count in the span
+        document.getElementById('visit-count').innerText = data.count;
+    })
+    .catch(err => {
+        console.error('Error fetching visit count:', err);
+        document.getElementById('visit-count').innerText = 'N/A';
+    });
+
+  </script>
 </div>
+<div id="fadeout-overlay"></div>
 </body>
 </html>
