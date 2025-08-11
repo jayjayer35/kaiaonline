@@ -27,14 +27,14 @@ function getRandomMessage() {
 
 // Direct GIF URLs (so Discord shows them properly)
 const gifs = [
-  "https://media1.tenor.com/m/lAl65BHjIRsAAAAd/absolute-cinema-absolute-cinema-meme.gif",
-  "https://media1.tenor.com/m/FaLFxRsx6vMAAAAd/dog-mouth.gif",
-  "https://media1.tenor.com/m/bx0TiX7KlkwAAAAd/asgore-undertale.gif",
-  "https://media1.tenor.com/m/fn_-3mvSyVcAAAAd/outer-wilds-hearthian.gif",
-  "https://media1.tenor.com/m/ui3Wy47A6WoAAAAd/outer-wilds-echoes-of-the-eye.gif",
-  "https://media1.tenor.com/m/dXFkfHXP68QAAAAd/outer-wilds-slate.gif",
-  "https://media1.tenor.com/m/PbAvCc_MKAwAAAAd/outer-wilds-echoes-of-the-eye.gif",
-  "https://media1.tenor.com/m/G_x7omtMDHYAAAAd/rat-showering.gif"
+  "https://kaia.starscene.com/assets/spamton.gif",
+  "https://kaia.starscene.com/assets/outtahere.gif",
+  "https://kaia.starscene.com/assets/mycar.gif",
+  "https://kaia.starscene.com/assets/owspin.gif",
+  "https://kaia.starscene.com/assets/owdance.gif",
+  "https://kaia.starscene.com/assets/owgames.gif",
+  "https://kaia.starscene.com/assets/owlk.gif",
+  "https://kaia.starscene.com/assets/ratsss.gif",
 ];
 
 async function getLocation(ip) {
