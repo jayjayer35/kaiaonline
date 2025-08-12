@@ -48,26 +48,26 @@
   }
 
   #recipe-buttons button {
-    background: #c58fbc;
+    background: #998fc5;
     border: none;
     border-radius: 20px;
     padding: 0.5em 1.5em;
     color: #ffffff;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(195, 143, 197, 0.5);
+    box-shadow: 0 4px 8px rgba(144, 143, 197, 0.5);
     transition: background 0.3s ease;
     font-family: 'Comfortaa', cursive;
     user-select: none;
   }
 
   #recipe-buttons button:hover {
-    background: #bf6eb8;
+    background: #736ebf;
   }
 
   #recipe-buttons button.active {
-    background: #8d3f8d;
-    box-shadow: 0 5px 15px rgba(141, 63, 137, 0.8);
+    background: #473f8d;
+    box-shadow: 0 5px 15px rgba(75, 63, 141, 0.8);
   }
 
   main {
@@ -140,14 +140,14 @@
 
   /* Button style inside cards */
   button.card-button {
-    background: #c58fc5;
+    background: #938fc5;
     border: none;
     border-radius: 20px;
     padding: 0.5em 1.5em;
     color: #fff;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(197, 143, 194, 0.5);
+    box-shadow: 0 4px 8px rgba(147, 143, 197, 0.5);
     transition: background 0.3s ease;
     font-family: 'Comfortaa', cursive;
     margin-top: 1rem;
@@ -181,7 +181,10 @@
 <body>
    <header>
     <h1>kitchen nightmare</h1>
-    <p>i shouldnt be here</p>
+    <p>i bake yummy things, and i log them here<br>
+      i am by NO means a chef, and these recipes fail like half the time, but theyre so good.<br>
+      please be safe when using an oven and like, dont be an idiot <3
+    </p>
   </header>
   <div class="sun"></div>
    
@@ -240,20 +243,44 @@
     </article>
 
     <article id="gsnap" class="recipe-card" tabindex="0" aria-label="Ginger Snaps!">
-      <h2 class="recipe-title">Gingersnap Cookies mmm.... (Molassess Cookies)</h2>
+      <h2 class="recipe-title">Gingersnap Cookies</h2>
+      <p>these i used to make a lot more during high school around december. i would go around and give cookies to my friends who i feel deserved them LOL, they are pretty good, and are constantly requested every christmas haha<br><br>
+      
+          * = cookie coating
+      </p>
       <div class="subtitle">Ingredients:</div>
       <ul>
-        <li><em>ingredient goes here.....</em></li>
+        <li>3/4 cup margarine melted</li>
+        <li>1 cup white sugar</li>
+        <li>1 egg</li>
+        <li>1/4 cup molasses</li>
+        <li>2 cups flour</li>
+        <li>2 tsp baking soda</li>
+        <li>1/2 tsp salt</li>
+        <li>1 tsp ground cinnamon</li>
+        <li>1/2 tsp ground cloves</li>
+        <li>1/2 tsp ground ginger</li>
+        <li>1/2 cup white sugar*</li>
       </ul>
       <div class="subtitle">Instructions:</div>
       <p class="instructions">
-        <em>instruction go here.......</em>
+        1. Combine the dry ingredients <em>(flour, white sugar, baking soda, salt, and the spices)</em> into a big bowl. Sift them in if you want, not entirely necessary.<br><br>
+        2. Combine the wet ingredients <em>(melted margarine, egg, molasses)</em>in a seperate bowl, becareful cause that molasses stuff smells TERRIBLE right now, but it makes the cookie so good, just trust me.<br><br>
+        3. COMBINE THEM ALLLLL, then once the dough is nice and uniform, let it chill in the fridge for like and hour.<br><br>
+        4. Preheat the oven to like 375°F. Dont worry, you will have to do something while it's preheating, so youll be busy<br><br>
+        5. Take the dough out of the fridge and roll them into like, walnut sized balls, and roll them in the sugar* and place onto ungreased baking sheets.<br><br>
+        6. Once you've done that (i usually end up with like 36-ish balls of dough), pop them in the oven for 8-10 mins OR until the tops look like theyre cracking.<br><br>
+        7. Let cool on a wire rack or whatever you cool cookies on<br><br>
+        8. Enjoy the cinnamon-y goodness!
       </p>
       <button class="card-button" onclick="alert('Thank you fo... i uh... already told you this doesnt do anything... stop clicking it, okay?')"><3 recipe, again!!</button>
     </article>
 
     <article id="bwcookie" class="recipe-card" tabindex="0" aria-label="Black and White Cookies">
       <h2 class="recipe-title">Black and White Cookies</h2>
+      <p>
+        something to note about these
+      </p>
       <div class="subtitle">Ingredients:</div>
       <ul>
         <li><em>ingredient goes here.....</em></li>
@@ -262,7 +289,7 @@
       <p class="instructions">
         <em>instruction go here.......</em>
       </p>
-      <button class="card-button" onclick="alert('Thank you for ANNOYING ME, can you stop clicking me? you know it doesnt do anything')"><3 the recipe! <3 it!!!!</button>
+      <button class="card-button" onclick="alert('you already know this doesnt do anything, yet you keep clicking. wha')"><3 the recipe! <3 it!!!!</button>
     </article>
   </main>
 

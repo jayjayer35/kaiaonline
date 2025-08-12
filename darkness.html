@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>? ? ?</title>
+  <style>
+    html, body {
+      margin: 0; 
+      height: 100%;
+      width: 100%;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
+      cursor: default;
+    }
+    body {
+      overflow-x: visible;
+      cursor: default; 
+    }
+
+    #img-container {
+      position: relative;
+      display: inline-block;
+      max-width: 80vw;
+      max-height: 80vh;
+      cursor: default;
+      transform-origin: center center;
+      transition: transform 0.3s ease;
+      padding: 60px;
+      box-sizing: content-box;
+      overflow: visible;
+      z-index: 1;
+      cursor: default;
+    }
+    #glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 250%;
+      height: 130%;
+      transform: translate(-50%, -50%);
+      border-radius: 60% / 50%; 
+      pointer-events: none;
+      filter: blur(70px);
+      background: rgba(255, 140, 0, 0.7);
+      animation: pulseFlicker 2.5s infinite;
+      z-index: -1;
+      transition: opacity 1s ease;
+      cursor: default; 
+    }
+
+    #interactive-img {
+      position: relative;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      user-select: none;
+      cursor: default; 
+      z-index: 2;
+    }
+
+    @keyframes pulseFlicker {
+      0%, 100% {
+        opacity: 0.15;
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow:
+          0 0 40px 25px rgba(255, 140, 0, 0.2),
+          0 0 60px 40px rgba(255, 140, 0, 0.1);
+      }
+      50% {
+        opacity: 0.2;
+        transform: translate(-50%, -50%) scale(1.05);
+        box-shadow:
+          0 0 70px 45px rgba(255, 165, 0, 0.3),
+          0 0 100px 60px rgba(255, 165, 0, 0.2);
+      }
+      30%, 70% {
+        opacity: 0.1;
+        transform: translate(-50%, -50%) scale(1.02);
+        box-shadow:
+          0 0 50px 30px rgba(255, 140, 0, 0.3),
+          0 0 80px 50px rgba(255, 140, 0, 0.1);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="img-container">
+    <div id="glow"></div>
+    <img id="interactive-img" src="assets/campfire.gif" alt="Campfire GIF" style="image-rendering: pixelated;"/>
+  </div>
+
+  <audio id="background-audio" autoplay loop>
+    <source src="assets/lostgirl.mp3" type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <audio id="sound-effect" src="assets/extinguish.mp3" preload="auto"></audio>
+
+  <script>
+    const container = document.getElementById('img-container');
+    const glow = document.getElementById('glow');
+    const img = document.getElementById('interactive-img');
+    const audio = document.getElementById('background-audio');
+    const soundEffect = document.getElementById('sound-effect');
+
+    audio.volume = 0.2;
+    soundEffect.volume = 0.2;
+
+    let clickCount = 0;
+    const maxClicks = 5;
+    const scaleStep = 1.2;
+    let finalScale = 1;
+
+    let clickCooldown = false;
+
+    container.addEventListener('click', () => {
+      if (clickCooldown) return;
+      clickCooldown = true;
+      setTimeout(() => {
+        clickCooldown = false;
+      }, 4000);
+
+      clickCount++;
+
+      if (clickCount < maxClicks) {
+        let currentScale = getCurrentScale(container);
+        let newScale = currentScale * scaleStep;
+        finalScale = newScale;
+        container.style.transform = `scale(${newScale})`;
+
+      } else if (clickCount === maxClicks) {
+        audio.pause();
+
+        glow.style.transition = 'opacity 1s ease';
+        glow.style.opacity = 0;
+        glow.style.animation = 'none';
+
+        soundEffect.currentTime = 0;
+        soundEffect.play();
+
+        container.style.transform = `scale(${finalScale})`;
+        img.src = 'assets/campfire.png';
+
+        container.style.cursor = 'pointer';
+
+      } else {
+        window.location.href = "";
+      }
+    });
+
+    function getCurrentScale(element) {
+      const style = window.getComputedStyle(element);
+      const matrix = new WebKitCSSMatrix(style.transform);
+      return matrix.a || 1;
+    }
+  </script>
+
+</body>
+</html>

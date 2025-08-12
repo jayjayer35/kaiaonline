@@ -115,8 +115,7 @@ exports.handler = async (event) => {
             description: `Visitor #**${newCount}** just visited.`,
             color: 0xffb6c1,
             fields: [
-              { name: "Location", value: locationText, inline: true },
-              { name: "IP Address", value: visitorIP, inline: true }
+              { name: "Location", value: locationText, inline: true }
             ],
             image: { url: randomGif },
             timestamp: new Date().toISOString()

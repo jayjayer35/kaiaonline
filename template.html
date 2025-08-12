@@ -14,7 +14,6 @@
     background-repeat: repeat;    
     background-position: center center; 
     background-attachment: fixed;      
-    margin: 0;                        
     height: 100vh;  
   }
   header {
@@ -63,20 +62,34 @@
     0% { opacity: 0.9; }
     100% { opacity: 1; }
   }
+  /* Side-by-side box row */
+  .content-row {
+    display: flex;
+    gap: 1rem;
+    max-width: 900px;
+    margin: 2rem auto;
+    flex-wrap: wrap;
+  }
+  .content-row .content {
+    flex: 1;
+    min-width: 250px;
+    margin: 0; /* override default .content margin so gap works */
+  }
 </style>
 </head>
 <body>
   <header>
-    <h1>this is the main header btw</h1>
+    <h1>completely optional header</h1>
   </header>
+  
   <div class="content">
-    <h2 class="star">Yeah, Im lazy</h2>
+    <h2 class="star">yeah, Im lazy</h2>
     <img src="assets/progress.gif" alt="progress" />
     <p>
       I made this page template because, believe it or not, yes im lazy and i dont wanna write an entire page from scratch over and over again.<br>Feel free to rip this from my site if you so choose, 
     but this is just here so i don't forget anything that ive learned. In the html file theres probably a bunch of comments too, unless i forgot to add them. 
     
-    <br><br>Just a heads up to future me, this text is NOT centered, might wanna get around to that.</button>
+    <br><br>Just a heads up to future me, this text is NOT centered, might wanna get around to that.
     </p>
     <img src="assets/htmlbut.gif" alt="alt text here" /><br>
     <h2 class="star">In case you wanted to section things out, you can use headers like this lolololol</h2>
@@ -85,6 +98,17 @@
     </p>
   </div>
 
+  <!-- Side-by-side content row -->
+  <div class="content-row">
+    <div class="content">
+      <h2 class="star">this is a box</h2>
+      <p></p>
+    </div>
+    <div class="content">
+      <h2 class="star">this is... another box</h2>
+      <p><em>you can set them horizonal now!</em></p>
+    </div>
+  </div>
 
   <div class="content" style="max-width: 900px;">
     <h2 class="star">oh you can make other box things</h2>
@@ -93,15 +117,15 @@
   
   <footer>
     <br>
-    <span class="star">In case you wanted to add a little text down here as well you can too.</span>
+    <span class="starr">in case you wanted to add a little text down here as well you can too.</span>
   </footer>
   
   <script>
     document.addEventListener('click', () => {
-    const sound = new Audio('assets/click.mp3');
-    sound.volume = 0.2;
-    sound.play();
-}, true);
+      const sound = new Audio('assets/click.mp3');
+      sound.volume = 0.2;
+      sound.play();
+    }, true);
   </script>
 </body>
 </html>
