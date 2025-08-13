@@ -19,13 +19,15 @@ function getRandomMessage() {
     "A mysterious figure is across the horizon",
     "Welcome home!",
     "gay person located",
-
-
+    "Who can this be?",
+    "guh",
+    "wowow! someone new!",
+    "i dont know what to write here",
+    "!!!"
   ];
   return messages[Math.floor(Math.random() * messages.length)];
 }
 
-// Direct GIF URLs (so Discord shows them properly)
 const gifs = [
   "https://kaia.starscene.com/assets/spamton.gif",
   "https://kaia.starscene.com/assets/outtahere.gif",
@@ -55,6 +57,19 @@ async function getLocation(ip) {
 
 exports.handler = async (event) => {
   try {
+    // --- COOKIE CHECK (client must send cookies for this to work) ---
+    const cookieHeader = event.headers.cookie || "";
+    if (cookieHeader.includes("visited_this_month=true")) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ skipped: true, reason: "Already visited this month" }),
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Set-Cookie': 'visited_this_month=true; Max-Age=2592000; Path=/; SameSite=None; Secure'
+        }
+      };
+    }
+
     // Get visitor IP
     const visitorIP =
       event.headers['x-nf-client-connection-ip'] ||
@@ -127,10 +142,12 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       body: JSON.stringify({ count: newCount }),
-      headers: { 'Access-Control-Allow-Origin': '*' }
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Set-Cookie': 'visited_this_month=true; Max-Age=2592000; Path=/; SameSite=None; Secure'
+      }
     };
   } catch (error) {
     return { statusCode: 500, body: error.toString() };
   }
 };
-

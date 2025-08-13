@@ -817,16 +817,22 @@
       } catch(e){}
     }, true);
 
-    fetch('/.netlify/functions/countVisits')
-    .then(response => response.json())
-    .then(data => {
-        // Update the count in the span
-        document.getElementById('visit-count').innerText = data.count;
+    fetch('/.netlify/functions/countVisits', {
+    method: 'GET',
+    credentials: 'include' // IMPORTANT: sends and saves the cookie
     })
-    .catch(err => {
-        console.error('Error fetching visit count:', err);
-        document.getElementById('visit-count').innerText = 'N/A';
-    });
+    .then(res => res.json())
+    .then(data => {
+        console.log(data);
+        // If you want, you can check if visit was skipped:
+        if (data.skipped) {
+        console.log('Visit not counted: already visited this month.');
+        } else {
+        console.log(`New count: ${data.count}`);
+        }
+    })
+    .catch(err => console.error(err));
+
 
     function splat() {
         try {
