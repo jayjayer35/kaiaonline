@@ -128,7 +128,7 @@ exports.handler = async (event) => {
           embeds: [
             {
               title: getRandomMessage(),
-              description: `Unique visitor #**${record.count}** just visited.`,
+              description: `Visitor #**${record.count}** just visited.`,
               color: 0xffb6c1,
               fields: [
                 { name: "Location", value: locationText, inline: true },
