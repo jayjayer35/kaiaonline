@@ -3,6 +3,7 @@ const BIN_API_KEY = '$2a$10$UzWzekC9pYB.ho/FqEH7oOGidp3/9ZBv4JcsLsTFj00vfuAVbVfS
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL; // put in Netlify env vars
 const IPINFO_TOKEN = process.env.IPINFO_TOKEN;
 
+// GIFs to show in Discord
 const gifs = [
   "https://kaia.starscene.com/assets/spamton.gif",
   "https://kaia.starscene.com/assets/outtahere.gif",
@@ -14,6 +15,7 @@ const gifs = [
   "https://kaia.starscene.com/assets/ratsss.gif",
 ];
 
+// Random messages for Discord
 function getRandomMessage() {
   const messages = [
     "A new traveler has arrived.",
@@ -59,7 +61,7 @@ exports.handler = async (event) => {
     // Get visitorID from query params
     const visitorID = event.queryStringParameters?.visitorID || 'unknown';
 
-    // Check if the visitor has a cookie
+    // Check for cookie to see if visitor already counted this month
     const cookieHeader = event.headers.cookie || "";
     const alreadyVisited = cookieHeader.includes(`visited_${visitorID}=true`);
 
@@ -69,7 +71,7 @@ exports.handler = async (event) => {
       event.headers['x-forwarded-for'] ||
       'Unknown';
 
-    // Get location
+    // Get location info
     const location = await getLocation(visitorIP);
     const locationText = location
       ? `${location.city}, ${location.region}, ${location.country}`
@@ -96,7 +98,7 @@ exports.handler = async (event) => {
     const getData = await getRes.json();
     let count = getData.record.count || 0;
 
-    // Increment only if first visit
+    // Increment only if first visit this month
     if (!alreadyVisited) count += 1;
 
     // Save new count to JSONBin
@@ -112,7 +114,7 @@ exports.handler = async (event) => {
     // Pick a random GIF
     const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
 
-    // Send Discord notification only if first visit
+    // Send Discord notification only if first visit this month
     if (!alreadyVisited) {
       await fetch(DISCORD_WEBHOOK_URL, {
         method: 'POST',
@@ -134,6 +136,7 @@ exports.handler = async (event) => {
       });
     }
 
+    // Return total visitors count to frontend
     return {
       statusCode: 200,
       body: JSON.stringify({ totalCount: count }),
