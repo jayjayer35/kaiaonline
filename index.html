@@ -819,15 +819,22 @@
 
     let visitorID = localStorage.getItem('visitorID');
     if (!visitorID) {
-    visitorID = crypto.randomUUID();
-    localStorage.setItem('visitorID', visitorID);
+        visitorID = crypto.randomUUID();
+        localStorage.setItem('visitorID', visitorID);
     }
 
     fetch(`/.netlify/functions/countVisits?visitorID=${visitorID}`)
-    .then(res => res.json())
-    .then(data => console.log(data))
-    .catch(err => console.error(err));
-
+        .then(res => res.json())
+        .then(data => {
+            // Always show the total visitor count
+            const el = document.getElementById('visitor-count');
+            if (data.visitorNumber) {
+                el.textContent = `Total visitors so far: ${data.visitorNumber}`;
+            } else {
+                el.textContent = `Total visitors so far: ???`;
+            }
+        })
+        .catch(err => console.error(err));
 
     function splat() {
         try {
