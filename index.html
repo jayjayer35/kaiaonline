@@ -444,7 +444,7 @@
         <h2>INFO</h2>
         <div class="status">
             <p>- Location: Starlit Marble</p>
-            <p>- Visitors: <span id="visit-count">Loading...</span></p>
+            <p>- <span id="visit-count">Loading...</span></p>
             <p id="loop-timer">- Time: 0:00 of 22:00 min.</p>
         </div>
         <br>
@@ -538,27 +538,36 @@
     
     const endpoint = "/.netlify/functions/getSteamStatus";
 
-    function updateKaiaStatus() {
-        const health = Math.floor(Math.random() * 31) + 70;
-        const battery = Math.floor(Math.random() * 101);
-        document.getElementById("health").textContent = `- Health: ${health}%`;
-        document.getElementById("battery").textContent = `- Social Battery: ${battery}%`;
+    let health = Math.floor(Math.random() * 31) + 70;      // 70-100%
+    let battery = Math.floor(Math.random() * 101);         // 0-100%
 
-        fetch(endpoint)
+    function updateKaiaStatus() {
+    // Random change between -4 and -1 OR 1 and 4
+    const changeHealth = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1);
+    const changeBattery = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1);
+
+    // Update values
+    health = Math.min(100, Math.max(0, health + changeHealth));
+    battery = Math.min(100, Math.max(0, battery + changeBattery));
+
+    // Update DOM
+    document.getElementById("health").textContent = `- Health: ${health}%`;
+    document.getElementById("battery").textContent = `- Social Battery: ${battery}%`;
+
+    fetch(endpoint)
         .then(res => res.json())
         .then(data => {
             console.log("Fetched Steam data:", data);
-
             document.getElementById("game").textContent = `- Current Game: ${data.game}`;
 
             const stateMap = {
-            "0": "Radio-silent",
-            "1": "Online",
-            "2": "Preoccupied",
-            "3": "Exploring the Stars",
-            "4": "Half-asleep",
-            "5": "Looking to Trade",
-            "6": "Looking to Play",
+                "0": "Radio-silent",
+                "1": "Online",
+                "2": "Preoccupied",
+                "3": "Exploring the Stars",
+                "4": "Half-asleep",
+                "5": "Looking to Trade",
+                "6": "Looking to Play",
             };
 
             const status = stateMap[data.status?.toString()] || "Unknown";
