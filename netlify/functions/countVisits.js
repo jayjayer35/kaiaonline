@@ -3,6 +3,17 @@ const BIN_API_KEY = '$2a$10$UzWzekC9pYB.ho/FqEH7oOGidp3/9ZBv4JcsLsTFj00vfuAVbVfS
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL; // put in Netlify env vars
 const IPINFO_TOKEN = process.env.IPINFO_TOKEN;
 
+const gifs = [
+  "https://kaia.starscene.com/assets/spamton.gif",
+  "https://kaia.starscene.com/assets/outtahere.gif",
+  "https://kaia.starscene.com/assets/mycar.gif",
+  "https://kaia.starscene.com/assets/owspin.gif",
+  "https://kaia.starscene.com/assets/owdance.gif",
+  "https://kaia.starscene.com/assets/owgames.gif",
+  "https://kaia.starscene.com/assets/owlk.gif",
+  "https://kaia.starscene.com/assets/ratsss.gif",
+];
+
 function getRandomMessage() {
   const messages = [
     "A new traveler has arrived.",
@@ -27,17 +38,6 @@ function getRandomMessage() {
   return messages[Math.floor(Math.random() * messages.length)];
 }
 
-const gifs = [
-  "https://kaia.starscene.com/assets/spamton.gif",
-  "https://kaia.starscene.com/assets/outtahere.gif",
-  "https://kaia.starscene.com/assets/mycar.gif",
-  "https://kaia.starscene.com/assets/owspin.gif",
-  "https://kaia.starscene.com/assets/owdance.gif",
-  "https://kaia.starscene.com/assets/owgames.gif",
-  "https://kaia.starscene.com/assets/owlk.gif",
-  "https://kaia.starscene.com/assets/ratsss.gif",
-];
-
 async function getLocation(ip) {
   if (ip === 'Unknown') return null;
   try {
@@ -56,10 +56,12 @@ async function getLocation(ip) {
 
 exports.handler = async (event) => {
   try {
-    const visitorID = event.queryStringParameters?.visitorID;
-    if (!visitorID) {
-      return { statusCode: 400, body: 'visitorID is required' };
-    }
+    // Get visitorID from query params
+    const visitorID = event.queryStringParameters?.visitorID || 'unknown';
+
+    // Check if the visitor has a cookie
+    const cookieHeader = event.headers.cookie || "";
+    const alreadyVisited = cookieHeader.includes(`visited_${visitorID}=true`);
 
     // Get visitor IP
     const visitorIP =
@@ -82,71 +84,63 @@ exports.handler = async (event) => {
     ) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ skipped: true }),
+        body: JSON.stringify({ totalCount: null, skipped: true }),
         headers: { 'Access-Control-Allow-Origin': '*' }
       };
     }
 
-    // Get JSONBin data (count + visitors)
-    const getRes = await fetch(BIN_URL, { headers: { 'X-Master-Key': BIN_API_KEY } });
+    // Get current count from JSONBin
+    const getRes = await fetch(BIN_URL, {
+      headers: { 'X-Master-Key': BIN_API_KEY }
+    });
     const getData = await getRes.json();
-    let record = getData.record || { count: 0, visitors: {} };
+    let count = getData.record.count || 0;
 
-    const now = Date.now();
-    const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+    // Increment only if first visit
+    if (!alreadyVisited) count += 1;
 
-    // --- CLEANUP OLD VISITOR IDS ---
-    for (const [id, timestamp] of Object.entries(record.visitors)) {
-      if (now - timestamp > THIRTY_DAYS) {
-        delete record.visitors[id];
-      }
-    }
-
-    // Check if this visitorID exists and is within 30 days
-    if (record.visitors[visitorID]) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ skipped: true }),
-        headers: { 'Access-Control-Allow-Origin': '*' }
-      };
-    }
-
-    // Increment counter and add new visitor
-    record.count = (record.count || 0) + 1;
-    record.visitors[visitorID] = now;
-
-    // Save updated record
+    // Save new count to JSONBin
     await fetch(BIN_URL, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': BIN_API_KEY },
-      body: JSON.stringify(record)
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': BIN_API_KEY
+      },
+      body: JSON.stringify({ count })
     });
 
     // Pick a random GIF
     const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
 
-    // Send to Discord
-    await fetch(DISCORD_WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        embeds: [
-          {
-            title: getRandomMessage(),
-            description: `Visitor #**${record.count}** just visited.`,
-            color: 0xffb6c1,
-            fields: [{ name: "Location", value: locationText, inline: true }],
-            image: { url: randomGif },
-            timestamp: new Date().toISOString()
-          }
-        ]
-      })
-    });
+    // Send Discord notification only if first visit
+    if (!alreadyVisited) {
+      await fetch(DISCORD_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          embeds: [
+            {
+              title: getRandomMessage(),
+              description: `Visitor #**${count}** just visited.`,
+              color: 0xffb6c1,
+              fields: [
+                { name: "Location", value: locationText, inline: true }
+              ],
+              image: { url: randomGif },
+              timestamp: new Date().toISOString()
+            }
+          ]
+        })
+      });
+    }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ count: record.count }),
-      headers: { 'Access-Control-Allow-Origin': '*' }
+      body: JSON.stringify({ totalCount: count }),
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Set-Cookie': `visited_${visitorID}=true; Max-Age=2592000; Path=/; SameSite=None; Secure`
+      }
     };
   } catch (error) {
     return { statusCode: 500, body: error.toString() };
