@@ -3,7 +3,6 @@ const BIN_API_KEY = '$2a$10$UzWzekC9pYB.ho/FqEH7oOGidp3/9ZBv4JcsLsTFj00vfuAVbVfS
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL; // put in Netlify env vars
 const IPINFO_TOKEN = process.env.IPINFO_TOKEN;
 
-// Example messages
 function getRandomMessage() {
   const messages = [
     "A new traveler has arrived.",
@@ -57,17 +56,9 @@ async function getLocation(ip) {
 
 exports.handler = async (event) => {
   try {
-    // --- COOKIE CHECK (client must send cookies for this to work) ---
-    const cookieHeader = event.headers.cookie || "";
-    if (cookieHeader.includes("visited_this_month=true")) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ skipped: true, reason: "Already visited this month" }),
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Set-Cookie': 'visited_this_month=true; Max-Age=2592000; Path=/; SameSite=None; Secure'
-        }
-      };
+    const visitorID = event.queryStringParameters?.visitorID;
+    if (!visitorID) {
+      return { statusCode: 400, body: 'visitorID is required' };
     }
 
     // Get visitor IP
@@ -96,24 +87,39 @@ exports.handler = async (event) => {
       };
     }
 
-    // Get current count from JSONBin
-    const getRes = await fetch(BIN_URL, {
-      headers: { 'X-Master-Key': BIN_API_KEY }
-    });
+    // Get JSONBin data (count + visitors)
+    const getRes = await fetch(BIN_URL, { headers: { 'X-Master-Key': BIN_API_KEY } });
     const getData = await getRes.json();
-    const count = getData.record.count || 0;
+    let record = getData.record || { count: 0, visitors: {} };
 
-    // Increment
-    const newCount = count + 1;
+    const now = Date.now();
+    const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
 
-    // Save new count to JSONBin
+    // --- CLEANUP OLD VISITOR IDS ---
+    for (const [id, timestamp] of Object.entries(record.visitors)) {
+      if (now - timestamp > THIRTY_DAYS) {
+        delete record.visitors[id];
+      }
+    }
+
+    // Check if this visitorID exists and is within 30 days
+    if (record.visitors[visitorID]) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ skipped: true }),
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      };
+    }
+
+    // Increment counter and add new visitor
+    record.count = (record.count || 0) + 1;
+    record.visitors[visitorID] = now;
+
+    // Save updated record
     await fetch(BIN_URL, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': BIN_API_KEY
-      },
-      body: JSON.stringify({ count: newCount })
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': BIN_API_KEY },
+      body: JSON.stringify(record)
     });
 
     // Pick a random GIF
@@ -127,11 +133,9 @@ exports.handler = async (event) => {
         embeds: [
           {
             title: getRandomMessage(),
-            description: `Visitor #**${newCount}** just visited.`,
+            description: `Visitor #**${record.count}** just visited.`,
             color: 0xffb6c1,
-            fields: [
-              { name: "Location", value: locationText, inline: true }
-            ],
+            fields: [{ name: "Location", value: locationText, inline: true }],
             image: { url: randomGif },
             timestamp: new Date().toISOString()
           }
@@ -141,11 +145,8 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ count: newCount }),
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Set-Cookie': 'visited_this_month=true; Max-Age=2592000; Path=/; SameSite=None; Secure'
-      }
+      body: JSON.stringify({ count: record.count }),
+      headers: { 'Access-Control-Allow-Origin': '*' }
     };
   } catch (error) {
     return { statusCode: 500, body: error.toString() };

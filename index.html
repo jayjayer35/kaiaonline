@@ -817,20 +817,15 @@
       } catch(e){}
     }, true);
 
-    fetch('/.netlify/functions/countVisits', {
-    method: 'GET',
-    credentials: 'include' // IMPORTANT: sends and saves the cookie
-    })
+    let visitorID = localStorage.getItem('visitorID');
+    if (!visitorID) {
+    visitorID = crypto.randomUUID();
+    localStorage.setItem('visitorID', visitorID);
+    }
+
+    fetch(`/.netlify/functions/countVisits?visitorID=${visitorID}`)
     .then(res => res.json())
-    .then(data => {
-        console.log(data);
-        // If you want, you can check if visit was skipped:
-        if (data.skipped) {
-        console.log('Visit not counted: already visited this month.');
-        } else {
-        console.log(`New count: ${data.count}`);
-        }
-    })
+    .then(data => console.log(data))
     .catch(err => console.error(err));
 
 
