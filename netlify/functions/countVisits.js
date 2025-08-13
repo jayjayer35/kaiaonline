@@ -3,19 +3,7 @@ const BIN_API_KEY = '$2a$10$UzWzekC9pYB.ho/FqEH7oOGidp3/9ZBv4JcsLsTFj00vfuAVbVfS
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL; // put in Netlify env vars
 const IPINFO_TOKEN = process.env.IPINFO_TOKEN;
 
-// GIFs to show in Discord
-const gifs = [
-  "https://kaia.starscene.com/assets/spamton.gif",
-  "https://kaia.starscene.com/assets/outtahere.gif",
-  "https://kaia.starscene.com/assets/mycar.gif",
-  "https://kaia.starscene.com/assets/owspin.gif",
-  "https://kaia.starscene.com/assets/owdance.gif",
-  "https://kaia.starscene.com/assets/owgames.gif",
-  "https://kaia.starscene.com/assets/owlk.gif",
-  "https://kaia.starscene.com/assets/ratsss.gif",
-];
-
-// Random messages for Discord
+// Random messages
 function getRandomMessage() {
   const messages = [
     "A new traveler has arrived.",
@@ -31,15 +19,23 @@ function getRandomMessage() {
     "A mysterious figure is across the horizon",
     "Welcome home!",
     "gay person located",
-    "Who can this be?",
-    "guh",
-    "wowow! someone new!",
-    "i dont know what to write here",
-    "!!!"
   ];
   return messages[Math.floor(Math.random() * messages.length)];
 }
 
+// GIFs
+const gifs = [
+  "https://kaia.starscene.com/assets/spamton.gif",
+  "https://kaia.starscene.com/assets/outtahere.gif",
+  "https://kaia.starscene.com/assets/mycar.gif",
+  "https://kaia.starscene.com/assets/owspin.gif",
+  "https://kaia.starscene.com/assets/owdance.gif",
+  "https://kaia.starscene.com/assets/owgames.gif",
+  "https://kaia.starscene.com/assets/owlk.gif",
+  "https://kaia.starscene.com/assets/ratsss.gif",
+];
+
+// Get location from IP
 async function getLocation(ip) {
   if (ip === 'Unknown') return null;
   try {
@@ -58,12 +54,9 @@ async function getLocation(ip) {
 
 exports.handler = async (event) => {
   try {
-    // Get visitorID from query params
-    const visitorID = event.queryStringParameters?.visitorID || 'unknown';
-
-    // Check for cookie to see if visitor already counted this month
-    const cookieHeader = event.headers.cookie || "";
-    const alreadyVisited = cookieHeader.includes(`visited_${visitorID}=true`);
+    // Get visitorID from query
+    const visitorID = event.queryStringParameters?.visitorID;
+    if (!visitorID) return { statusCode: 400, body: "Missing visitorID" };
 
     // Get visitor IP
     const visitorIP =
@@ -71,7 +64,7 @@ exports.handler = async (event) => {
       event.headers['x-forwarded-for'] ||
       'Unknown';
 
-    // Get location info
+    // Get location
     const location = await getLocation(visitorIP);
     const locationText = location
       ? `${location.city}, ${location.region}, ${location.country}`
@@ -86,36 +79,48 @@ exports.handler = async (event) => {
     ) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ totalCount: null, skipped: true }),
+        body: JSON.stringify({ skipped: true }),
         headers: { 'Access-Control-Allow-Origin': '*' }
       };
     }
 
-    // Get current count from JSONBin
+    // Get current data from JSONBin
     const getRes = await fetch(BIN_URL, {
       headers: { 'X-Master-Key': BIN_API_KEY }
     });
     const getData = await getRes.json();
-    let count = getData.record.count || 0;
+    const record = getData.record || {};
 
-    // Increment only if first visit this month
-    if (!alreadyVisited) count += 1;
+    // Initialize if empty
+    if (!record.count) record.count = 0;
+    if (!record.visitors) record.visitors = {};
 
-    // Save new count to JSONBin
-    await fetch(BIN_URL, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': BIN_API_KEY
-      },
-      body: JSON.stringify({ count })
-    });
+    const now = Date.now();
+    const lastVisit = record.visitors[visitorID] || 0;
+    const oneMonth = 30 * 24 * 60 * 60 * 1000;
 
-    // Pick a random GIF
-    const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
+    let incremented = false;
 
-    // Send Discord notification only if first visit this month
-    if (!alreadyVisited) {
+    // Increment only if first visit or last visit > 1 month
+    if (now - lastVisit > oneMonth) {
+      record.count += 1;
+      record.visitors[visitorID] = now;
+      incremented = true;
+
+      // Save updated record
+      await fetch(BIN_URL, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': BIN_API_KEY
+        },
+        body: JSON.stringify(record)
+      });
+    }
+
+    // Send Discord webhook only if incremented
+    if (incremented) {
+      const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
       await fetch(DISCORD_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -123,10 +128,11 @@ exports.handler = async (event) => {
           embeds: [
             {
               title: getRandomMessage(),
-              description: `Visitor #**${count}** just visited.`,
+              description: `Visitor #**${record.count}** just visited.`,
               color: 0xffb6c1,
               fields: [
-                { name: "Location", value: locationText, inline: true }
+                { name: "Location", value: locationText, inline: true },
+                { name: "IP Address", value: visitorIP, inline: true }
               ],
               image: { url: randomGif },
               timestamp: new Date().toISOString()
@@ -136,16 +142,16 @@ exports.handler = async (event) => {
       });
     }
 
-    // Return total visitors count to frontend
+    // Return total count to frontend
     return {
       statusCode: 200,
-      body: JSON.stringify({ totalCount: count }),
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Set-Cookie': `visited_${visitorID}=true; Max-Age=2592000; Path=/; SameSite=None; Secure`
-      }
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify({ totalCount: record.count })
     };
-  } catch (error) {
-    return { statusCode: 500, body: error.toString() };
+
+  } catch (err) {
+    return { statusCode: 500, body: err.toString() };
   }
 };
