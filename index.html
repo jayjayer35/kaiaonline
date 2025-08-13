@@ -444,7 +444,7 @@
         <h2>INFO</h2>
         <div class="status">
             <p>- Location: Starlit Marble</p>
-            <p>- <span id="visit-count">Loading...</span></p>
+            <p>- Visitors: <span id="visitor-count">Loading...</span></p>
             <p id="loop-timer">- Time: 0:00 of 22:00 min.</p>
         </div>
         <br>
@@ -836,7 +836,7 @@
     .then(res => res.json())
     .then(data => {
         const el = document.getElementById('visitor-count');
-        el.textContent = data.totalCount; // shows the latest total visitors
+        el.textContent = data.totalCount;
     })
     .catch(err => {
         console.error("Visitor count error:", err);
