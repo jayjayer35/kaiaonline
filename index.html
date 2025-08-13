@@ -836,11 +836,11 @@
     .then(res => res.json())
     .then(data => {
         const el = document.getElementById('visitor-count');
+        if (el && data.totalCount !== undefined) {
         el.textContent = data.totalCount;
+        }
     })
-    .catch(err => {
-        console.error("Visitor count error:", err);
-    });
+    .catch(err => console.error(err));
 
     function splat() {
         try {
