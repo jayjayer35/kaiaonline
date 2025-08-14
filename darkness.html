@@ -100,9 +100,26 @@
     const soundEffect = document.getElementById('sound-effect');
     const incrementSound = document.getElementById('increment-sound');
 
-    audio.volume = 0.17;
+    // Start muted so autoplay works
+    audio.volume = 0;
+    audio.muted = true;
     soundEffect.volume = 0.2;
     incrementSound.volume = 0.6; 
+
+    // Fade in music on first click
+    container.addEventListener('click', () => {
+      if (audio.muted) {
+        audio.muted = false;
+        audio.play().catch(() => {});
+        let fade = setInterval(() => {
+          if (audio.volume < 0.17) {
+            audio.volume = Math.min(audio.volume + 0.005, 0.17);
+          } else {
+            clearInterval(fade);
+          }
+        }, 50); // adjust speed here
+      }
+    }, { once: true });
 
     let clickCount = 0;
     const maxClicks = 6;
@@ -156,9 +173,6 @@
       const matrix = new WebKitCSSMatrix(style.transform);
       return matrix.a || 1;
     }
-    window.addEventListener('mousemove', () => {
-    audio.play().catch(() => {});
-  }, { once: true });
   </script>
 
 </body>
