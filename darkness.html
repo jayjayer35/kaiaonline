@@ -107,19 +107,7 @@
     incrementSound.volume = 0.6; 
 
     // Fade in music on first click
-    container.addEventListener('click', () => {
-      if (audio.muted) {
-        audio.muted = false;
-        audio.play().catch(() => {});
-        let fade = setInterval(() => {
-          if (audio.volume < 0.17) {
-            audio.volume = Math.min(audio.volume + 0.005, 0.17);
-          } else {
-            clearInterval(fade);
-          }
-        }, 50); // adjust speed here
-      }
-    }, { once: true });
+
 
     let clickCount = 0;
     const maxClicks = 6;
