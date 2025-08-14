@@ -108,14 +108,14 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        overflow: hidden; /* keep content inside */
+        overflow: hidden; 
     }
 
     iframe {
-        flex: 1;              /* fill available space */
+        flex: 1;             
         border: none;
         width: 100%;
-        height: auto;         /* don’t force full height */
+        height: auto;         
         background: transparent;
     }
 
@@ -174,8 +174,6 @@
         box-shadow: 0 0 6px #88c0d0;
         cursor: pointer;
     }
-
-    /* Hover effect for slider track */
     input[type="range"]:hover {
         background: rgba(255, 255, 255, 0.2);
     }
@@ -203,14 +201,14 @@
         height: 100%;
         background: white;
         opacity: 0;
-        pointer-events: none; /* default state: non-blocking */
+        pointer-events: none; 
         z-index: 9999;
         transition: opacity 3s ease-in-out;
     }
 
     #fadeout-overlay.active {
         opacity: 1;
-        pointer-events: all; /* blocks clicks when active */
+        pointer-events: all; 
     }
     input[type="range"]:disabled {
         opacity: 0.4;
@@ -295,18 +293,18 @@
     }
     }
     ul {
-        list-style: none; /* removes bullet points */
-        padding-left: 0;  /* removes default indent */
+        list-style: none; 
+        padding-left: 0;  
         padding-bottom: 10px;
     }
     summary {
         cursor: pointer;
-        list-style: none; /* removes bullet points */
+        list-style: none; 
         color: rgb(204, 176, 255);
         transition: 0.3s;
     }
     details[open] > summary {
-        background-color: #7caecf1e; /* example */
+        background-color: #7caecf1e;
         color: rgb(255, 255, 255);
         font-weight: bold;
         border-left: 6px solid #a488d0;
@@ -316,7 +314,7 @@
     }
 
     li {
-    cursor: pointer; /* optional, if you want list items clickable too */
+    cursor: pointer; 
     }
     summary:hover {
         color: rgb(158, 105, 255);
@@ -329,8 +327,7 @@
       position: fixed;
       bottom: 0;
       left: 0%;
-      /* transform: translateX(-50%); */
-      width: 300px; /* Adjust size */
+      width: 300px; 
       z-index: 9999;
     }
   </style>
@@ -472,7 +469,6 @@
 
     const matchedSongFile = pageSongMap[path];
     if (matchedSongFile) {
-        // Check if currently playing this song already
         if (!musicPlayer.src.includes(matchedSongFile)) {
         const matchedSong = songs.find(s => s.file === matchedSongFile);
         if (matchedSong) {
@@ -480,12 +476,10 @@
             return;
         }
         } else {
-        // Same song playing, do nothing special
         return;
         }
     }
 
-    // For pages with no special song or already playing matched song:
     if (musicPlayer.paused || !musicPlayer.src) {
         loadAndPlaySong();
     }
@@ -542,15 +536,12 @@
     let battery = Math.floor(Math.random() * 101);         // 0-100%
 
     function updateKaiaStatus() {
-    // Random change between -4 and -1 OR 1 and 4
     const changeHealth = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1);
     const changeBattery = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1);
 
-    // Update values
     health = Math.min(100, Math.max(0, health + changeHealth));
     battery = Math.min(100, Math.max(0, battery + changeBattery));
 
-    // Update DOM
     document.getElementById("health").textContent = `- Health: ${health}%`;
     document.getElementById("battery").textContent = `- Social Battery: ${battery}%`;
 
@@ -679,10 +670,10 @@
     // end times logic -===========================================================-
 
     function playFinalSong() {
-        // Store current song
+        // store current song
         const oldSong = musicPlayer;
 
-        // Create a new audio element for the final song
+        // create a new audio element for the final song
         const newSong = new Audio(`music/${finalSong.file}`);
         newSong.volume = musicPlayer.volume;
         newSong.loop = false;
@@ -706,12 +697,12 @@
 
         songTitle.innerHTML = `<strong>${finalSong.title}</strong>`;
 
-        // Disable controls
+        // disable controls
         skipButton.disabled = true;
         pauseButton.disabled = true;
         progressBar.disabled = true;
 
-        // Crossfade logic
+        // crossfade logic
         let fadeDuration = 5000; // 3 seconds
         let fadeSteps = 30;
         let stepTime = fadeDuration / fadeSteps;
@@ -722,11 +713,11 @@
             currentStep++;
             let progress = currentStep / fadeSteps;
 
-            // Fade out old song
+            // fade out old song
             oldSong.volume = oldVolume * (1 - progress);
 
-            // Fade in new song
-            newSong.volume = 0.03 * progress; // Your default volume
+            // fade in new song
+            newSong.volume = 0.03 * progress; // your default volume
 
             if (currentStep >= fadeSteps) {
                 clearInterval(fadeInterval);
@@ -734,7 +725,7 @@
             }
         }, stepTime);
 
-        // After 1 min 30 sec, fade screen and close
+        // after 1 min 30 sec, fade screen and close
         newSong.addEventListener('ended', () => {
         setTimeout(() => {
             document.body.style.overflow = 'hidden'; // block scroll
@@ -777,13 +768,12 @@
     };
     function crossfadeToSong(songFile, songTitleText) {
     return new Promise((resolve) => {
-        const fadeDuration = 3000; // ms
+        const fadeDuration = 3000; 
         const steps = 30;
         const stepTime = fadeDuration / steps;
         let currentStep = 0;
-        const targetVolume = musicPlayer.volume || 0.07; // use current musicPlayer volume!
+        const targetVolume = musicPlayer.volume || 0.07; 
 
-        // Fade out current song
         let fadeOutInterval = setInterval(() => {
         currentStep++;
         const progress = currentStep / steps;
@@ -792,13 +782,11 @@
         if (currentStep >= steps) {
             clearInterval(fadeOutInterval);
 
-            // Swap src & play new song at volume 0
             musicPlayer.src = `music/${songFile}`;
             musicPlayer.volume = 0;
             musicPlayer.play();
             songTitle.innerHTML = `<strong>${songTitleText}</strong>`;
 
-            // Fade in new song
             currentStep = 0;
             let fadeInInterval = setInterval(() => {
             currentStep++;

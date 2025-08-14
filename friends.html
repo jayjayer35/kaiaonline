@@ -18,20 +18,17 @@
       margin:0;
       padding:0;
       font-family: "Courier Prime", monospace;
-      /* Outer background stays */
       background: var(--desk, #efe8df) url('assets/CANVAS10.JPG') repeat;
     }
 
     .notepad {
       background-color: var(--paper);
       background-image:
-        /* ruled lines */
         linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px),
-        /* paper texture */
         url('assets/SB036.JPG');
-      background-repeat: repeat, no-repeat; /* lines still repeat, texture fits once */
-      background-size: 100% var(--line-gap), cover; /* lines repeat every line-gap, texture covers once */
-      background-blend-mode: multiply; /* keep it subtle */
+      background-repeat: repeat, no-repeat; 
+      background-size: 100% var(--line-gap), cover; 
+      background-blend-mode: multiply;
       padding:48px 48px 72px 72px;
       max-width:800px;
       margin: 2rem auto;
@@ -41,7 +38,6 @@
       position:relative;
     }
 
-    /* left red margin line */
     .notepad::after{
       content:"";
       position:absolute;
@@ -54,7 +50,6 @@
       pointer-events:none;
     }
 
-    /* subtle crinkle top and bottom */
     
 
     h2{

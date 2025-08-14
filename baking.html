@@ -33,7 +33,6 @@
     text-shadow: 1px 1px 3px rgba(90, 58, 86, 0.3);
   }
 
-  /* Buttons container */
   #recipe-buttons {
     display: flex;
     justify-content: center;
@@ -41,7 +40,7 @@
     margin: 1rem 0 2rem;
     flex-wrap: wrap;
     z-index: 20;
-    top: 6.5rem; /* header height + some padding */
+    top: 6.5rem; 
     background: rgba(255, 255, 255, 0.7);
     padding: 0.5rem 1rem;
     box-shadow: 0 2px 8px rgba(90, 58, 87, 0.1);
@@ -85,7 +84,7 @@
     margin-bottom: 2.5rem;
     padding: 1.8rem 2rem;
     transition: transform 0.2s ease;
-    display: none; /* hide all by default */
+    display: none;
   }
   .recipe-card.show {
     display: block;
@@ -118,7 +117,6 @@
     margin-top: 0.6rem;
   }
 
-  /* Sun */
   .sun {
     position: fixed;
     width: 120px;
@@ -138,7 +136,6 @@
   }
 
 
-  /* Button style inside cards */
   button.card-button {
     background: #938fc5;
     border: none;
@@ -157,7 +154,6 @@
     background: #b86ebf;
   }
 
-  /* Responsive */
   @media (max-width: 600px) {
     header h1 {
       font-size: 2.2rem;
@@ -190,7 +186,6 @@
    
   
 
-  <!-- Buttons to switch recipes -->
   <nav id="recipe-buttons" aria-label="Recipe navigation">
     <button class="active" data-target="rolls">Cinnamon Rolls</button>
     <button data-target="gsnap">Gingersnap Cookies</button>
@@ -299,18 +294,15 @@
 
   buttons.forEach(button => {
     button.addEventListener('click', () => {
-      // Remove active class from all buttons
       buttons.forEach(btn => btn.classList.remove('active'));
-      // Add active to clicked button
       button.classList.add('active');
 
       const targetId = button.getAttribute('data-target');
 
-      // Hide all cards
       cards.forEach(card => {
         if (card.id === targetId) {
           card.classList.add('show');
-          card.focus(); // optional: focus for accessibility
+          card.focus(); 
         } else {
           card.classList.remove('show');
         }

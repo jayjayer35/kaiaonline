@@ -13,7 +13,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: hidden; /* disable scrolling */
+      overflow: hidden; 
       cursor: default;
     }
     #img-container {
@@ -22,7 +22,7 @@
       max-width: 80vw;
       max-height: 80vh;
       transform-origin: center center;
-      transition: transform 0.5s ease; /* smooth scaling + movement */
+      transition: transform 0.5s ease; 
       padding: 60px;
       box-sizing: content-box;
       overflow: visible;
@@ -102,7 +102,7 @@
 
     audio.volume = 0.17;
     soundEffect.volume = 0.2;
-    incrementSound.volume = 0.6; // quieter increment sound
+    incrementSound.volume = 0.6; 
 
     let clickCount = 0;
     const maxClicks = 6;
@@ -110,9 +110,8 @@
     let finalScale = 1;
     let clickCooldown = false;
 
-    let yOffset = 0; // track downward movement
-    const yStep = 20; // pixels per click
-
+    let yOffset = 0; 
+    const yStep = 20; 
     container.addEventListener('click', () => {
       if (clickCooldown) return;
       clickCooldown = true;
@@ -121,20 +120,16 @@
       clickCount++;
 
       if (clickCount < maxClicks) {
-        // Play increment sound with random pitch
         incrementSound.currentTime = 0;
-        incrementSound.playbackRate = 1 + (Math.random() * 0.3 - 0.1); // ±10% pitch
+        incrementSound.playbackRate = 1 + (Math.random() * 0.3 - 0.1); 
         incrementSound.play();
 
-        // Fade background music slightly
         audio.volume = Math.max(0, audio.volume - 0.03);
 
-        // Update scale
         let currentScale = getCurrentScale(container);
         let newScale = currentScale * scaleStep;
         finalScale = newScale;
 
-        // Move it down a bit
         yOffset += yStep;
         container.style.transform = `scale(${newScale}) translateY(${yOffset}px)`;
 

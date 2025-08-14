@@ -7,14 +7,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --parallax-speed: 0.2;    /* 0 = static bg, 1 = same speed as content. smaller => slower bg */
-    --overlay-alpha: 0.5;     /* overlay darkness */
+    --parallax-speed: 0.2;   
+    --overlay-alpha: 0.5;    
   }
 
   *{ box-sizing: border-box; }
   html,body{ height:100%; margin:0; font-family:"Courier Prime", monospace; }
 
-  /* PARALLAX LAYERS */
   .parallax-bg {
     position: fixed;
     inset: 0;
@@ -28,11 +27,10 @@
     filter: blur(.8);
     image-rendering: pixelated;
     
-    /* NEW: make it bigger so it covers movement range */
     background-repeat: no-repeat;
-    background-attachment: scroll; /* we’re controlling movement manually */
+    background-attachment: scroll; 
     transform-origin: center;
-    scale: 3.8; /* ~20% larger to hide edges */
+    scale: 3.8; 
     }
 
 
@@ -44,56 +42,50 @@
     z-index: -1;
   }
 
-  /* put page content above the overlay */
   .site {
     position: relative;
     z-index: 1;
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    padding: 6vh 1rem; /* gives breathing room top/bottom */
+    padding: 6vh 1rem; 
   }
 
-  /* NOTEBOOK */
     .frame {
         display: flex;
-        justify-content: center; /* centers horizontally */
-        align-items: flex-start; /* keep content aligned at top */
-        min-height: 100vh; /* full height */
+        justify-content: center; 
+        align-items: flex-start;
+        min-height: 100vh;
     }
 
     .notepad {
         background: rgba(255, 239, 206, 0.678);
-        width: 800px; /* you can change this anytime */
-        max-width: 100%; /* stops overflow on small screens */
+        width: 800px; 
+        max-width: 100%; 
         padding: 1rem;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0,0,0,0.2);
         position: relative;
     }
 
-  /* keep all poem text inside the white area */
   .content p {
     margin: 0;
     font-size: 1.06rem;
-    white-space: pre-line; /* preserve line breaks but ignore extra leading spaces */
-    text-align: left;      /* change to center if you prefer */
+    white-space: pre-line; 
+    text-align: left;     
   }
 
-  /* small responsive tweaks */
   @media (max-width:520px){
     .notepad{ padding: 1.6rem 1.1rem; }
-    :root{ --parallax-speed: 0.0001; } /* slightly slower on small screens */
+    :root{ --parallax-speed: 0.0001; }
   }
 </style>
 </head>
 <body>
 
-  <!-- parallax background + overlay (behind everything) -->
   <div class="parallax-bg" aria-hidden="true"></div>
   <div class="parallax-overlay" aria-hidden="true"></div>
 
-  <!-- actual page content -->
   <div class="site">
     <article class="notepad">
       <div class="content">
@@ -177,8 +169,6 @@
   </div>
 
 <script>
-/* Smooth, performant parallax: background moves upward a fraction of scroll.
-   We use requestAnimationFrame and a CSS var to control speed. */
 
 (() => {
   const bg = document.querySelector('.parallax-bg');
@@ -195,15 +185,12 @@
   }
 
   function update() {
-    // negative: move bg up as the page scrolls down, but slower (parallax effect)
     const y = - lastY * speed;
-    // use transform (GPU-accelerated) for smooth motion
     bg.style.transform = `translate3d(0, ${y}px, 0)`;
     ticking = false;
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
-  // initialize position in case user loads page scrolled
   update();
 })();
 </script>
