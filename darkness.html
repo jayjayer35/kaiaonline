@@ -156,6 +156,9 @@
       const matrix = new WebKitCSSMatrix(style.transform);
       return matrix.a || 1;
     }
+    window.addEventListener('mousemove', () => {
+    audio.play().catch(() => {});
+  }, { once: true });
   </script>
 
 </body>

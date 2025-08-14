@@ -831,11 +831,16 @@
     .catch(err => console.error(err));
 
     function splat() {
-        try {
+    try {
         const sound = new Audio('assets/splat.mp3');
         sound.volume = 0.08;
         sound.play();
-      } catch(e){}
+
+        // 5% chance to go to Lancer page
+        if (Math.random() < 0.05) {
+        window.location.href = "https://deltarune.com/lancer/";
+        }
+    } catch (e) {}
     }
   </script>
 </div>
