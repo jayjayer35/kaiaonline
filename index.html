@@ -373,6 +373,7 @@
     opacity: 0;
     pointer-events: none;
     }
+
   </style>
 </head>
 <body>
@@ -389,6 +390,22 @@
     <!-- Left Panel -->
     <div class="panel left">
         <h2 style="text-align: center; font-size: 1.2rem;">Navigator</h2>
+        <marquee width="100%" direction="left" height="30px" scrollamount="3">
+                <img src="assets/big_shot.gif">
+                <img src="assets/lancered.gif">
+                <img src="assets/x16.gif">
+                <img src="assets/ineedsomesleep.gif">
+                <img src="assets/stillyou.gif">
+                <img src="assets/5.gif">
+                <img src="assets/stargazer.gif">
+                <img src="assets/mycomputer.gif">
+                <img src="assets/gec.gif">
+                <img src="assets/Blinkie_Divorce.gif">
+                <img src="assets/Blinkie_Starwalker.gif">
+                <img src="assets/pixels.gif">
+                <img src="assets/Blinkie_The_Pipis.gif">
+                <img src="assets/l1.gif">
+            </marquee>
         <details open>
             <summary>Entry</summary>
             <ul>
@@ -425,6 +442,7 @@
             <ul>
                 <li><a onclick="loadPage('wilds.html')">Outer Wilds</a></li>
                 <li><a onclick="loadPage('deepestfear.html')">Our Deepest Fear</a></li>
+                <li><a onclick="loadPage('starwalker.html')" style="color: rgb(180, 180, 130);">Starwalker</a></li>
             </ul>
         </details>
 
@@ -497,15 +515,13 @@
         <br>
         <h2>TODAY'S MOON</h2>
         <!-- © wdisseny --><div id="contain_moon" style="text-align:center;padding-bottom:14px;"><div style="font-weight:bold"></div><div style="margin-bottom:25px;padding:10px;filter:drop-shadow(0 0 36px hsla(0, 0%, 62%, 0.24))"></div><div>.</div><div style="font-size:small"></div></div><script>(function(){var d=new Date().getDate();var m=document.querySelectorAll("#contain_moon div");var a=new XMLHttpRequest();var url="https://www.icalendar37.net/lunar/api/?lang=en&month="+(new Date().getMonth()+1)+"&year="+(new Date().getFullYear())+"&size=120&lightColor=rgb(154,153,150)&shadeColor=rgb(4,7,31)&t&LDZ="+new Date(new Date().getFullYear(),new Date().getMonth(),1)/1000+"";m[1].style.height="120px";a.onreadystatechange=function(){if(a.readyState==4&&a.status==200){var b=JSON.parse(a.responseText);m[1].innerHTML=b.phase[d].svg;if(typeof moon_widget_loaded=="function")moon_widget_loaded(b);m[2].innerHTML=b.phase[d].npWidget}};a.open("GET",url,true);a.send()})()</script>
+        <br>
         <h2>TO-DO</h2>
         <div class="status">
-            <p>- redo bio page</p>
-            <p>- add friends pages</p>
-            <p>- cleanup code</p>
-            <p>- add fun stuff</p>
-            <p>- special css effects (1/2 done)</p>
-            <p>- add back on music player</p>
-            <p>- add intro</p>
+            <p>- friend's pages</p>
+            <p>- fun stuff</p>
+            <p>- back on music player</p>
+            <p>- more clutter and stuff to click</p>
         </div>
         </div>
     </div>
@@ -886,7 +902,7 @@
         sound.volume = 0.08;
         sound.play();
 
-        // 5% chance to go to Lancer page
+        // 5% chance to go to lancer page
         if (Math.random() < 0.05) {
         window.location.href = "https://deltarune.com/lancer/";
         }

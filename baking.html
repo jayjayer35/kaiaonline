@@ -12,6 +12,7 @@
     min-height: 100vh;
     background-image: url('assets/BACKGR12.JPG');
     background-size: cover;
+    image-rendering: pixelated;
     font-family: 'Space Mono', cursive;
     color: #3a475a;
     overflow-x: hidden;
@@ -278,11 +279,11 @@
       </p>
       <div class="subtitle">Ingredients:</div>
       <ul>
-        <li><em>ingredient goes here.....</em></li>
+        <li><em>ingredient goe here....but there was nothing.</em></li>
       </ul>
       <div class="subtitle">Instructions:</div>
       <p class="instructions">
-        <em>instruction go here.......</em>
+        <em>instruction goe here...but there's still nothing....</em>
       </p>
       <button class="card-button" onclick="alert('you already know this doesnt do anything, yet you keep clicking. wha')"><3 the recipe! <3 it!!!!</button>
     </article>
@@ -310,6 +311,11 @@
     });
   });
   
+  document.addEventListener('click', () => {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.2;
+    sound.play();
+}, true);
 </script>
 <div id="blossom_container"></div>
 </body>
