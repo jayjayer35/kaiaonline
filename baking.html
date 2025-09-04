@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>recipe book</title>
+<title>baked "goods"</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
@@ -56,13 +56,14 @@
     font-weight: bold;
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(144, 143, 197, 0.5);
-    transition: background 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     font-family: 'Comfortaa', cursive;
     user-select: none;
   }
 
   #recipe-buttons button:hover {
     background: #736ebf;
+    transform: scale(1.1) rotate(-1deg);
   }
 
   #recipe-buttons button.active {
@@ -153,6 +154,7 @@
 
   button.card-button:hover {
     background: #b86ebf;
+    transform: scale(1.1) rotate(-3deg);
   }
 
   @media (max-width: 600px) {
@@ -183,7 +185,6 @@
       please be safe when using an oven and like, dont be an idiot <3
     </p>
   </header>
-  <div class="sun"></div>
    
   
 
@@ -283,7 +284,7 @@
       </ul>
       <div class="subtitle">Instructions:</div>
       <p class="instructions">
-        <em>instruction goe here...but there's still nothing....</em>
+        <em>instruction goe here...but there's still nothing....(i havent gotten around to writing this one down, its somewhere in my recipe book)</em>
       </p>
       <button class="card-button" onclick="alert('you already know this doesnt do anything, yet you keep clicking. wha')"><3 the recipe! <3 it!!!!</button>
     </article>

@@ -86,7 +86,6 @@
 
   <audio id="background-audio" autoplay loop>
     <source src="music/shadowdiver.mp3"/>
-    Your browser does not support the audio element.
   </audio>
 
   <audio id="increment-sound" src="assets/footstep.mp3" preload="auto"></audio>
@@ -104,7 +103,7 @@
     audio.volume = 0.18;
     audio.muted = false;
     soundEffect.volume = 0.2;
-    incrementSound.volume = 0.6; 
+    incrementSound.volume = 0.8; 
 
     // Fade in music on first click
 
@@ -151,8 +150,10 @@
         container.style.transform = `scale(${finalScale}) translateY(${yOffset}px)`;
         img.src = 'assets/campfire.png';
 
+        setTimeout(() => {
+          window.location.href = "forest.html";
+        }, 4000);
       } else {
-        window.location.href = "forest.html";
       }
     });
 
