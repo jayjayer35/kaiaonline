@@ -78,9 +78,10 @@ header h1 {
   box-shadow: 0 0 8px #4bc3ff50;
 }
 
+/* Update your existing rule to use the variable */
 .link-buttons a:hover img {
   transform: scale(1.1) rotate(-3deg);
-  box-shadow: 0 0 12px #88f3ff;
+  box-shadow: 0 0 12px var(--hover-shadow-color, #88f3ff);
 }
 
 .tooltip {
@@ -183,9 +184,10 @@ footer {
       <a href="https://ultrakill.nekoweb.org" target="_parent" data-title="really neat thematic(?) site, gimmie a darkmode though!! lulz"><img src="https://file.garden/ZkRD3wbiZDsBIZnn/solbutton.png" alt="a button of the word ULTRAKILL in all caps and bright blue above two shooting stars and an open black eye with a blue background." style="filter:brightness(3); image-rendering: pixelated;"></a>
       <a href="https://zziz.nekoweb.org/" target="_parent" data-title="CRAZY ALIEN SITE - i luv it so much! so pink uwaa"><img src="https://zziz.nekoweb.org/zzizbutton.gif" style="image-rendering:pixelated"></a>
       <a href="https://r3ckoning.nekoweb.org" target="_parent" data-title="i love the landing page for this site, kinda similar to one of my layouts before and i love it!"><img src="https://r3ckoning.nekoweb.org/fishy-animated.gif" alt="r3ckoner" style="image-rendering:pixelated"></a>
-      <a href="https://sillyfes.neocities.org/" target="_parent" data-title="a really silly and whimsical site. check it check it!!"><img src="https://sillyfes.neocities.org/images/sillybutton.png" alt="sillfes"></a>
-      <a href="https://lazer-bunny.neocities.org/" target="_parent" data-title="cute very pink site, with an amazing collection of so many webgraphics, i also really really love the vibe it gives!!!"><img src="assets/PTTYSwz.gif" alt="lazer-bunny"></a>
-      <a href="https://adnyx.nekoweb.org" target="_parent" data-title="internet friend!!!!! and a lovely site"><img src="https://adnyx.nekoweb.org/images/adnyx_button.gif" alt="adnyx's page"></a>
+      <a href="https://sillyfes.neocities.org/" target="_parent" data-title="a really silly and whimsical site. check it check it!!"><img src="https://sillyfes.neocities.org/images/sillybutton.png" alt="sillfes" style="image-rendering:pixelated"></a>
+      <a href="https://lazer-bunny.neocities.org/" target="_parent" data-title="cute very pink site, with an amazing collection of so many webgraphics, i also really really love the vibe it gives!!!"><img src="assets/PTTYSwz.gif" alt="lazer-bunny" style="image-rendering:pixelated"></a>
+      <a href="https://adnyx.nekoweb.org" target="_parent" data-title="internet friend!!!!! and a lovely site" style="--hover-shadow-color: rgb(255, 81, 0);"><img src="https://adnyx.nekoweb.org/images/adnyx_button.gif" alt="adnyx's page"></a>
+
     </div>
   </div>
 </div>
