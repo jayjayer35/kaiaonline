@@ -45,7 +45,7 @@ else {
   indexText = ""
   //if you've chosen to include an index, this builds the link to that
   if (useIndex) {
-    indexText = `<a href='${indexPage}'>index</a> | `;
+    indexText = `<a href='${indexPage}' target="_parent" >index</a> | `;
   }
 
   randomText = ""
@@ -69,7 +69,7 @@ else {
     <a href="${sites[nextIndex]}" target="_parent"><div class="nextbutton">▶</div></a>
   </div>
   <div class="gw-nav-wrapper">
-    <div class="gw-link"><a href='javascript:void(0)' onclick='galacticrandomSite()' target="_parent">Random<br>Slingshot</a></div>
+    <div class="gw-link"><a href='javascript:void(0)' target="_parent" onclick='galacticrandomSite()' >Random<br>Slingshot</a></div>
     <div class="gw-link"><a href='${indexPage}' target="_parent">Takeoff to the Stars!</a></div>
     <div class="gw-link"><a href="https://garlic.garden/onionring/" target="_parent">What Is This?</a></div>
   </div>
