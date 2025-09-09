@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>grid thing for ttrpgs</title>
+<style>
+    @font-face {
+      font-family: 'Big Shot';
+      src: url('assets/big-shot.ttf') format('truetype');
+    }
+  
+    body {
+    margin: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.658)), url("assets/galaxybkgndblue.jpg") repeat center center;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Big Shot', cursive, sans-serif;
+}
+
+
+  #grid-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    overflow: auto;
+    font-family: 'Big Shot', cursive, sans-serif;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+  }
+
+  #grid {
+    position: relative;
+    background-color: #333333c7;
+    border: 5px solid #999999d0;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.363);
+    width: 1400px;
+    height: 700px;
+    user-select: none;
+    transform-origin: center center;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+
+  #grid::before {
+    content: '';
+    position: absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    pointer-events:none;
+    background-image:
+      repeating-linear-gradient(to right, var(--grid-line-color, rgba(255,255,255,0.2)) 0 1px, transparent 1px 70px),
+      repeating-linear-gradient(to bottom, var(--grid-line-color, rgba(255,255,255,0.2)) 0 1px, transparent 1px 70px);
+  }
+
+  .token {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: #555;
+    color: #fff;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    font-size: 12px;
+    cursor: grab;
+    border: 1px solid #8f8f8f;
+    z-index: 10;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2rem;
+  }
+
+  .wall {
+    position: absolute;
+    background: #aaa;
+    height: 8px;
+    transform-origin: top left;
+    z-index: 5;
+  }
+
+  #toolbar {
+    margin-top: 10px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px; 
+  }
+
+  button {
+    background: #555;
+    color: #eee;
+    border: 4px;
+    border-color: #fff;
+    padding: 8px 14px; 
+    cursor: pointer;
+    border-radius: 0px;
+    transition: background 0.2s, transform 0.2s;
+    font-size: 1em; 
+  }
+
+  button:hover { background: #777; transform: scale(1.1); }
+  button.active.line { background: #339; transform: scale(1.1); }
+  button.active.erase { background: #a33; transform: scale(1.1); }
+
+  input[type=number] {
+    width: 60px;
+    padding: 3px;
+    border-radius: 4px;
+    border: 1px solid #999;
+    background: #333;
+    color: #eee;
+  }
+
+  #command-box {
+  position: fixed;
+  width: 400px;
+  background: #222;
+  color: #eee;
+  border: 4px solid #ffffff;
+  border-radius: 0px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 15px rgba(0,0,0,0.61);
+  z-index: 50;
+  cursor: default;
+  user-select: none;
+  padding-bottom: 20px;
+}
+
+#command-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #444;
+  font-size: 1.5rem;
+  padding-left: 1rem;
+  border-bottom: 1px solid #666;
+  cursor: move;
+}
+
+#command-header button {
+  background: transparent;
+  border: none;
+  color: #eee;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#command-box ul {
+  list-style-type: none; 
+  padding-left: 20px;    
+}
+
+#command-box ul li::before {
+  content: "-";          
+  margin-right: 6px;      
+}
+#command-box li {
+   padding-left: 1rem; 
+   padding-right: 1.2rem;
+}
+#token-box {
+  position: fixed;
+  width: 250px;
+  background: #222;
+  color: #eee;
+  border: 4px solid #ffffff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.61);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 60;
+  cursor: default;
+  user-select: none;
+  padding-bottom: 10px;
+}
+
+#token-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #444;
+  font-size: 1.5rem;
+  padding-left: 1rem;
+  border-bottom: 1px solid #666;
+  cursor: move;
+}
+
+#token-header button {
+  background: transparent;
+  border: none;
+  color: #eee;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+</style>
+</head>
+<body>
+  <h1 style="font-size: 3rem; padding: 0em;">Combat Grid</h1>
+  <div id="toolbar">
+    <button id="add-token">Add Token</button>
+    <button id="line-tool">Line Tool</button>
+    <button id="erase-tool">Eraser</button>
+    <button id="toggle-grid">Toggle Grid Lines</button>
+    <button id="clear">Clear All</button>
+    <button id="show-commands">Help!</button>
+  </div>
+  <div id="toolbar">
+    <label>Columns: <input type="number" id="cols" value="20" min="1"></label>
+    <label>Rows: <input type="number" id="rows" value="10" min="1"></label>
+    <button id="resize-grid">Resize Grid</button>
+  </div>
+  <div id="toolbar">
+    <label>Grid Size: <input type="number" id="grid-scale" value="70" min="10"></label>
+    <button id="scale-grid">Apply Scale</button>
+  </div>
+
+  <div id="command-box" style="display: none;">
+    <div id="command-header">
+        <span>Help</span>
+        <button id="close-command" style="font-family: 'Big Shot', cursive, sans-serif;">X</button>
+    </div>
+    <h3 style="padding-left: .8rem;">Functions</h3>
+    <ul>
+      <li>You can add a <span style="color: chartreuse;">tokens</span> to represent players/enemies or other points of interest.</li>
+      <li>You can draw <span style="color: rgb(155, 155, 250);">lines</span> when line mode is enabled. Hold left-click to draw a line, when you let go it will make the line.</li>
+      <li>Erasing can erase both tokens and lines.</li>
+      <li>Resizing the grid will put more squares on the grid.</li>
+      <li>Grid lines can also be toggled with its respective button.</li>
+      <li>Scaling the grid will let you "zoom in/out", please dont go past 70.</li>
+      <li>You can undo line placement/erasure with CTRL + Z.</li>
+    </ul>
+    <h3 style="padding-left: .8rem;">Info</h3>
+    <ul>
+      <li>Default scale is 70.</li>
+      <li>Default columns & rows are 20 & 10 respectively.</li>
+      <li>This site was made in a day and probably very very buggy.</li>
+      <li>Made by <a href="https://kaia.starscene.com" style="text-decoration: none; color: gold; display: inline-block; transition: transform 0.2s, color 0.2s;" onmouseover="this.style.color='orange'; this.style.transform='scale(1.2)';" onmouseout="this.style.color='gold'; this.style.transform='scale(1)';">Kaia</a> for their friends when playing DND.</li>
+      <li>Yes, I used the UNDERTALE/DELTARUNE font, I like it, and it is easy to read.</li>
+    </ul>
+  </div>
+
+    <div id="token-box" style="display: none;">
+        <div id="token-header">
+            <span>Add Token</span>
+            <button id="close-token" style="font-family: 'Big Shot', cursive, sans-serif;">X</button>
+        </div>
+        <div style="padding: 10px;">
+            <label>Name:<input type="text" id="token-label" style="width: 96%; margin-bottom: 10px;"></label>
+            <label>Size:<br><select id="token-size" style="width: 100%; margin-bottom: 10px;">
+                <option value="Tiny">Tiny (¼ square)</option>
+                <option value="Small">Small (1 square)</option>
+                <option value="Medium" selected>Medium (1 square)</option>
+                <option value="Large">Large (2×2)</option>
+                <option value="Huge">Huge (3×3)</option>
+                <option value="Gargantuan">Gargantuan (4×4)</option>
+                </select>
+            </label>
+            <label>Shape:<br>
+            <select id="token-shape" style="width: 100%; margin-bottom: 10px;">
+                <option value="circle" selected>Circle</option>
+                <option value="square">Square</option>
+            </select>
+            </label>
+            <div style="margin-top: 15px; text-align: right;">
+            <button id="create-token">Add</button>
+            <button id="cancel-token">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+  <div>
+    <div id="grid-container">
+        <div id="grid"></div>
+    </div>
+  </div>
+  <footer style="padding-bottom: 1%; padding-top: 1%; text-align: center;">
+    Please be nice, my code is horrendous.<br> This site has many, many bugs.
+  </footer>
+<script>
+const grid = document.getElementById('grid');
+const gridContainer = document.getElementById('grid-container');
+const addTokenBtn = document.getElementById('add-token');
+const lineToolBtn = document.getElementById('line-tool');
+const eraseToolBtn = document.getElementById('erase-tool');
+const clearBtn = document.getElementById('clear');
+const resizeBtn = document.getElementById('resize-grid');
+const colsInput = document.getElementById('cols');
+const rowsInput = document.getElementById('rows');
+const scaleInput = document.getElementById('grid-scale');
+const scaleBtn = document.getElementById('scale-grid');
+const toggleGridBtn = document.getElementById('toggle-grid');
+
+const showCommandsBtn = document.getElementById('show-commands');
+const commandBox = document.getElementById('command-box');
+const closeCommandBtn = document.getElementById('close-command');
+const commandHeader = document.getElementById('command-header');
+
+let squareSize = 70;
+let currentMode = null;
+let lineStart = null;
+let tempLine = null;
+let isErasing = false;
+let dragToken = null;
+let offsetX = 0;
+let offsetY = 0;
+let gridLinesVisible = true;
+let scaleFactor = 1;
+
+let undoStack = [];
+
+grid.style.setProperty('--grid-line-color', 'rgba(255,255,255,0.2)');
+
+function setActiveButton(button) {
+  lineToolBtn.classList.remove('active', 'line');
+  eraseToolBtn.classList.remove('active', 'erase');
+  grid.style.borderColor = '#999';
+  grid.style.boxShadow = '0 0 5px rgba(255,255,255,0.5)';
+
+  if (button === lineToolBtn) {
+    lineToolBtn.classList.add('active', 'line');
+    grid.style.borderColor = '#339';
+    grid.style.boxShadow = '0 0 10px rgba(51,153,255,0.7)';
+  }
+  if (button === eraseToolBtn) {
+    eraseToolBtn.classList.add('active', 'erase');
+    grid.style.borderColor = '#a33';
+    grid.style.boxShadow = '0 0 10px rgba(255,51,51,0.7)';
+  }
+}
+
+function updateGridBackground() {
+  grid.style.setProperty('--grid-line-color', gridLinesVisible ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0)');
+}
+
+// Erase
+function eraseAt(mouseX, mouseY) {
+  const elements = document.elementsFromPoint(mouseX, mouseY);
+  elements.forEach(el => {
+    if (el.classList.contains('wall') || el.classList.contains('token')) {
+      undoStack.push({ type: el.classList.contains('wall') ? 'line' : 'token', element: el });
+      el.remove();
+    }
+  });
+}
+
+// Add token (UPDATED: now with size prompt)
+/* addTokenBtn.addEventListener('click', () => {
+  const label = prompt('Enter token label:');
+  if (!label) return;
+
+  const sizeCategory = tokenSizeInput.value;
+    let size = 70; // Medium default (1 square)
+    switch (sizeCategory) {
+    case 'Tiny': size = 70 * 0.5; break; // quarter of a square (visual tweak: half-size so easier to see)
+    case 'Small': size = 70; break;
+    case 'Medium': size = 70; break;
+    case 'Large': size = 70 * 2; break;      // 2x2 squares
+    case 'Huge': size = 70 * 3; break;       // 3x3 squares
+    case 'Gargantuan': size = 70 * 4; break; // 4x4 squares
+    }
+
+  const token = document.createElement('div');
+  token.className = 'token';
+  token.textContent = label;
+
+  // Apply size
+  token.style.width = size + 'px';
+  token.style.height = size + 'px';
+  token.style.borderRadius = Math.floor(size / 2) + 'px';
+  token.style.fontSize = Math.floor(size / 5) + 'px';
+
+  const gridWidth = grid.offsetWidth;
+  const gridHeight = grid.offsetHeight;
+  token.style.left = (gridWidth / 2 - size / 2) + 'px';
+  token.style.top = (gridHeight / 2 - size / 2) + 'px';
+
+  // Add to undo stack
+  undoStack.push({ type: 'token', element: token });
+
+  token.addEventListener('mousedown', (ev) => {
+    ev.preventDefault();
+    dragToken = token;
+    const rect = grid.getBoundingClientRect();
+    const mouseX = (ev.clientX - rect.left) / scaleFactor;
+    const mouseY = (ev.clientY - rect.top) / scaleFactor;
+    offsetX = mouseX - parseFloat(token.style.left);
+    offsetY = mouseY - parseFloat(token.style.top);
+  });
+
+  grid.appendChild(token);
+});
+ */
+// Tool buttons
+lineToolBtn.addEventListener('click', () => {
+  currentMode = currentMode === 'line' ? null : 'line';
+  setActiveButton(currentMode === 'line' ? lineToolBtn : null);
+});
+eraseToolBtn.addEventListener('click', () => {
+  currentMode = currentMode === 'erase' ? null : 'erase';
+  setActiveButton(currentMode === 'erase' ? eraseToolBtn : null);
+});
+resizeBtn.addEventListener('click', () => {
+  const cols = parseInt(colsInput.value);
+  const rows = parseInt(rowsInput.value);
+  grid.style.width = cols * squareSize + 'px';
+  grid.style.height = rows * squareSize + 'px';
+});
+scaleBtn.addEventListener('click', () => {
+  const newScale = parseInt(scaleInput.value);
+  if (isNaN(newScale) || newScale < 10) return;
+  scaleFactor = newScale / 70;
+  grid.style.transform = `scale(${scaleFactor})`;
+});
+toggleGridBtn.addEventListener('click', () => {
+  gridLinesVisible = !gridLinesVisible;
+  updateGridBackground();
+});
+
+// Grid interactions
+grid.addEventListener('mousedown', e => {
+  const rect = grid.getBoundingClientRect();
+  const mouseX = (e.clientX - rect.left)/scaleFactor;
+  const mouseY = (e.clientY - rect.top)/scaleFactor;
+
+  if (currentMode === 'line') {
+    lineStart = { x: mouseX, y: mouseY - 10 };
+    tempLine = document.createElement('div');
+    tempLine.classList.add('wall');
+    tempLine.style.left = lineStart.x + 'px';
+    tempLine.style.top = lineStart.y + 'px';
+    tempLine.style.width = '0px';
+    grid.appendChild(tempLine);
+  } else if (currentMode === 'erase') {
+    eraseAt(e.clientX, e.clientY);
+    isErasing = true;
+  }
+});
+
+// Global move & drag
+document.addEventListener('mousemove', e => {
+  if (!dragToken && !isErasing && !lineStart) return;
+
+  const rect = grid.getBoundingClientRect();
+  const mouseX = (e.clientX - rect.left)/scaleFactor;
+  const mouseY = (e.clientY - rect.top)/scaleFactor;
+
+  if (dragToken) {
+    const gridWidth = grid.offsetWidth;
+    const gridHeight = grid.offsetHeight;
+    const size = parseFloat(dragToken.style.width) || squareSize;
+    let x = mouseX - offsetX;
+    let y = mouseY - offsetY;
+    x = Math.max(0, Math.min(gridWidth - size, x));
+    y = Math.max(0, Math.min(gridHeight - size, y));
+    dragToken.style.left = x + 'px';
+    dragToken.style.top = y + 'px';
+  }
+
+  if (isErasing) eraseAt(e.clientX, e.clientY);
+
+  if (lineStart && tempLine) {
+    const dx = mouseX - lineStart.x;
+    const dy = mouseY - (lineStart.y + 10);
+    const length = Math.sqrt(dx*dx + dy*dy);
+    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+    tempLine.style.width = length + 'px';
+    tempLine.style.transform = `rotate(${angle}deg)`;
+  }
+});
+
+// Mouse up
+document.addEventListener('mouseup', () => {
+  dragToken = null;
+  isErasing = false;
+
+  if (lineStart && tempLine) {
+    undoStack.push({ type: 'line', element: tempLine });
+    lineStart = null;
+    tempLine = null;
+  }
+});
+
+// Undo with CTRL+Z
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+    e.preventDefault();
+    const last = undoStack.pop();
+    if (last && last.element) last.element.remove();
+  }
+});
+
+// Clear grid
+clearBtn.addEventListener('click', () => {
+  document.querySelectorAll('.token,.wall').forEach(el => el.remove());
+  undoStack = [];
+});
+
+// Command box
+showCommandsBtn.addEventListener('click', () => {
+  commandBox.style.display = 'block';
+});
+closeCommandBtn.addEventListener('click', () => {
+  commandBox.style.display = 'none';
+});
+
+// Draggable command box
+let isDragging = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+
+commandHeader.addEventListener('mousedown', e => {
+  isDragging = true;
+  const rect = commandBox.getBoundingClientRect();
+  dragOffsetX = e.clientX - rect.left;
+  dragOffsetY = e.clientY - rect.top;
+});
+
+document.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  let x = e.clientX - dragOffsetX;
+  let y = e.clientY - dragOffsetY;
+  const maxX = window.innerWidth - commandBox.offsetWidth;
+  const maxY = window.innerHeight - commandBox.offsetHeight;
+  x = Math.max(0, Math.min(maxX, x));
+  y = Math.max(0, Math.min(maxY, y));
+  commandBox.style.left = x + 'px';
+  commandBox.style.top = y + 'px';
+  commandBox.style.transform = 'none';
+});
+
+document.addEventListener('mouseup', () => {
+  isDragging = false;
+});
+
+const tokenBox = document.getElementById('token-box');
+const tokenLabelInput = document.getElementById('token-label');
+const tokenSizeInput = document.getElementById('token-size');
+const closeTokenBtn = document.getElementById('close-token');
+const cancelTokenBtn = document.getElementById('cancel-token');
+const createTokenBtn = document.getElementById('create-token');
+
+addTokenBtn.addEventListener('click', () => {
+  tokenLabelInput.value = '';
+  tokenSizeInput.value = '70';
+  tokenBox.style.display = 'block';
+});
+
+closeTokenBtn.addEventListener('click', () => tokenBox.style.display = 'none');
+cancelTokenBtn.addEventListener('click', () => tokenBox.style.display = 'none');
+
+createTokenBtn.addEventListener('click', () => {
+  const label = tokenLabelInput.value.trim() || 'Token';
+  
+  // Map size categories to pixels
+  const sizeMap = {
+    Tiny: 35,       // ¼ square
+    Small: 70,      // 1 square
+    Medium: 70,     // 1 square
+    Large: 140,     // 2x2
+    Huge: 210,      // 3x3
+    Gargantuan: 280 // 4x4
+  };
+
+  const sizeCategory = tokenSizeInput.value;
+  const size = sizeMap[sizeCategory] || 70;
+  const shape = document.getElementById('token-shape').value;
+
+  const token = document.createElement('div');
+    token.className = 'token';
+    token.textContent = label;
+    token.style.width = size + 'px';
+    token.style.height = size + 'px';
+
+    // Set border radius based on shape
+    if (shape === 'circle') {
+    token.style.borderRadius = Math.floor(size/2) + 'px';
+    } else { // square
+    token.style.borderRadius = '0px';
+    }
+
+    token.style.fontSize = Math.floor(size/5) + 'px';
+    token.style.left = (grid.offsetWidth/2 - size/2) + 'px';
+    token.style.top = (grid.offsetHeight/2 - size/2) + 'px';
+
+  token.addEventListener('mousedown', (ev) => {
+    ev.preventDefault();
+    dragToken = token;
+    const rect = grid.getBoundingClientRect();
+    const mouseX = (ev.clientX - rect.left) / scaleFactor;
+    const mouseY = (ev.clientY - rect.top) / scaleFactor;
+    offsetX = mouseX - parseFloat(token.style.left);
+    offsetY = mouseY - parseFloat(token.style.top);
+  });
+
+  grid.appendChild(token);
+  undoStack.push({ type: 'token', element: token });
+  tokenBox.style.display = 'none';
+});
+
+
+document.addEventListener('mousemove', (ev) => {
+  if (dragToken) {
+    const rect = grid.getBoundingClientRect();
+    const mouseX = (ev.clientX - rect.left) / scaleFactor;
+    const mouseY = (ev.clientY - rect.top) / scaleFactor;
+    dragToken.style.left = (mouseX - offsetX) + 'px';
+    dragToken.style.top = (mouseY - offsetY) + 'px';
+  }
+});
+document.addEventListener('mouseup', () => { dragToken = null; });
+
+/* --- draggable windows --- */
+function makeDraggable(header, box) {
+  let drag = false, startX=0, startY=0, startLeft=0, startTop=0;
+  header.addEventListener('mousedown', (e) => {
+    drag = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    const rect = box.getBoundingClientRect();
+    startLeft = rect.left;
+    startTop = rect.top;
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!drag) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    box.style.left = (startLeft + dx) + 'px';
+    box.style.top = (startTop + dy) + 'px';
+    box.style.transform = 'none';
+  });
+  document.addEventListener('mouseup', () => drag = false);
+}
+
+makeDraggable(document.getElementById('command-header'), document.getElementById('command-box'));
+makeDraggable(document.getElementById('token-header'), document.getElementById('token-box'));
+
+</script>
+
+</body>
+</html>
