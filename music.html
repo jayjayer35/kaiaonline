@@ -1,116 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>memory bank</title>
+<title>my music space</title>
 <style>
   body {
-     text-align: center;
     margin: 0;
     padding: 0;
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 400;
-    font-size:1rem;
+    font-family: "Courier New", monospace;
     color: #f0e6d2;
-    background: #0b0c2a url('assets/vidback.jpg');
-    background-repeat: repeat;      
+    background: #0b0c2a url('assets/wavestar.jpg');
+    background-repeat: repeat;
     background-position: center center;
-    background-attachment: fixed;         
-    image-rendering: pixelated; 
-    margin: 0;                        
-    height: 100vh;  
+    background-attachment: fixed;
   }
+
   header {
     text-align: center;
-    padding: 3rem 1rem;
-    background: rgba(45, 20, 50, 0.836);
-    border-bottom: 2px solid #691d7c;
+    padding: 4rem 1rem 2rem 1rem;
+    background: rgba(30, 20, 60, 0.8);
+    border-bottom: 2px solid #52273f;
   }
-  header  {
-    text-align: center;
-    font-size: 1.5rem;
+  header h1 {
+    font-size: 2.5rem;
+    color: #c7b8ff;
     margin: 0;
-    color: #f8aee8;
-    text-shadow: 0 0 0px #aee7f8;
+    text-shadow: 0 0 10px #4e273f;
   }
-  h1 {
+  nav {
+    margin-top: 1rem;
+  }
+  nav a {
+    margin: 0 1rem;
+    color: #a878a0;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  nav a:hover {
+    text-decoration: underline;
+  }
+
+  /* Section base */
+  section {
+    max-width: 1100px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: rgba(63, 25, 44, 0.75);
+    border-radius: 10px;
+    border: 2px solid #3a093f;
+  }
+  section h2 {
     text-align: center;
-    font-size: 1.5rem;
-    margin: 0;
-    color: #f8aee8;
-    text-shadow: 0 0 0px #aee7f8;
-  }
-  .content {
-    text-align: center;
-    max-width: 1000px;
-    margin: 2rem auto;
-    padding: 1rem;
-    background: rgba(106, 108, 129, 0.521);
-    border-radius: 7px;
-  }
-  .content img {
-    text-align: center;
-    max-width: 100%;
-    border: 1px solid #2a0e33;
-    border-radius: 0px;
-    display: block;
-    margin: 1rem auto;
-  }
-  h2 {
-    text-align: center;
-    color: #e7b2e9;
-    font-size:2.3rem;
-    text-shadow: 0 0 3px #aee7f8;
-  }
-  p {
-    text-align: center;
-    width: 60%; /* example */
-    margin: 0 auto;
-    line-height: 1.6;
-    font-size: 1.3rem;
-    
-  }
-  h3 {
-    text-align: center;
-    font-size: 1.1rem;
-    margin: 0;
-    color: #f8aee8;
-    text-shadow: 0 0 0px #aee7f8;
-  }
-  footer {
-    text-align: center;
-    padding: 1.5rem;
-    font-size: 0.9rem;
-    color: #ffffff;
-  }
-  .star {
+    margin-top: 0;
+    color: #c7b8ff;
     animation: twinkle 2s infinite alternate;
   }
+  section p {
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* Divider style between sections */
+  .divider {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #52273f;
+    margin: 2rem 0;
+  }
+
+  /* Playlist embeds */
+  iframe.spotify {
+    display: block;
+    margin: 1rem auto;
+    border-radius: 12px;
+  }
+
+  /* YouTube grid */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .video-grid iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: none;
+    border-radius: 8px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.9rem;
+    color: #a878a0;
+  }
+
   @keyframes twinkle {
-    0% { opacity: 0.6; }
+    0% { opacity: 0.9; }
     100% { opacity: 1; }
   }
 </style>
 </head>
 <body>
-  <div class="content">
-    <h2 class="star">the music page is still unfinished</h2>
-    <p> listen i dont wanna hear it im still trying to get an idea for this page... my music means a lot to me!
-    </p>
-  </div>
+  <header>
+    <h1>🎶 welcome to my music space</h1>
+    <nav>
+      <a href="#favorites">favorites</a>
+      <a href="#playlists">playlists</a>
+      <a href="#mymusic">my music</a>
+      <a href="#other">other</a>
+    </nav>
+  </header>
 
+  <section id="favorites">
+    <h2>music i'm into</h2>
+    <p>songs & albums that have been looping in my head lately:</p>
+    <ul>
+      <li>artist / song 1</li>
+      <li>artist / song 2</li>
+      <li>artist / song 3</li>
+    </ul>
+    <img src="assets/albumcover.jpg" alt="album cover" style="max-width:300px;display:block;margin:1rem auto;">
+  </section>
+
+  <div class="divider">✦ ✦ ✦</div>
+
+  <section id="playlists">
+    <h2>my playlists</h2>
+    <p>collections of songs I’ve put together:</p>
+    <iframe class="spotify"
+      src="https://open.spotify.com/embed/playlist/YOURPLAYLISTID" 
+      width="100%" height="380" frameborder="0" 
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+    </iframe>
+  </section>
+
+  <div class="divider">✦ ✦ ✦</div>
+
+  <section id="mymusic">
+    <h2>stuff i made</h2>
+    <p>youtube uploads of my songs + demos:</p>
+    <div class="video-grid">
+      <!-- Example YouTube embeds -->
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/d7rN7BvfWkU?si=5nlv0zjv70PzPP2d" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/wZtaQ0cJkdk?si=Nh3GWRMpP5qG8-5L" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/SmSm-EKQTJk?si=MsIoSxfayyBOHz2Z" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/sVxylE0R_20?si=wfbuhV8Nee03XvUd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/7yQ69-5KPAE?si=dIh7_Q2QwIDKoPaX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/GjjNxGT8Ppo?si=rsItsq7VEpfZiBeB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+  </section>
+
+  <div class="divider">✦ ✦ ✦</div>
+
+  <section id="other">
+    <h2>other stuff</h2>
+    <p>random notes, reviews, thoughts, or side projects go here.</p>
+  </section>
+
+  <footer>
+    <p>made with love + noise ✹</p>
+  </footer>
 </body>
-<footer>
-    <span class="star"></span><br><br>
- </footer>
-
-  <script>
-    document.addEventListener('click', () => {
-    const sound = new Audio('assets/click.mp3');
-    sound.volume = 0.2;
-    sound.play();
-}, true);
-  </script>
 </html>
