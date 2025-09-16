@@ -3,25 +3,30 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>my music space</title>
+<title>music!</title>
 <style>
   body {
     margin: 0;
     padding: 0;
     font-family: "Courier New", monospace;
     color: #f0e6d2;
-    background: #0b0c2a url('assets/wavestar.jpg');
-    background-repeat: repeat;
-    background-position: center center;
-    background-attachment: fixed;
+    background: #0b0c2a url('assets/starsagain.gif');
+    background-repeat: no-repeat;      
+    background-size: cover;           
+    background-attachment: fixed;    /*   
+    image-rendering: pixelated; */
   }
 
+
+
   header {
+    position: relative;
     text-align: center;
     padding: 4rem 1rem 2rem 1rem;
-    background: rgba(30, 20, 60, 0.8);
-    border-bottom: 2px solid #52273f;
+    border-bottom: 2px solid #000000;
+    color: #c7b8ff;
   }
+
   header h1 {
     font-size: 2.5rem;
     color: #c7b8ff;
@@ -33,9 +38,10 @@
   }
   nav a {
     margin: 0 1rem;
-    color: #a878a0;
+    color: #7cb6d8;
     text-decoration: none;
     font-weight: bold;
+    font-size: larger;
   }
   nav a:hover {
     text-decoration: underline;
@@ -46,9 +52,9 @@
     max-width: 1100px;
     margin: 3rem auto;
     padding: 2rem;
-    background: rgba(63, 25, 44, 0.75);
-    border-radius: 10px;
-    border: 2px solid #3a093f;
+    background: rgba(124, 41, 83, 0.75);
+    border-radius: 4px;
+    border: 2px solid  rgba(124, 41, 83, 0.75);
   }
   section h2 {
     text-align: center;
@@ -73,7 +79,7 @@
   iframe.spotify {
     display: block;
     margin: 1rem auto;
-    border-radius: 12px;
+    border-radius: 4px;
   }
 
   /* YouTube grid */
@@ -87,7 +93,7 @@
     width: 100%;
     aspect-ratio: 16 / 9;
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
   }
 
   footer {
@@ -101,12 +107,24 @@
     0% { opacity: 0.9; }
     100% { opacity: 1; }
   }
+
+  .spotify-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .spotify-grid iframe {
+    width: 100%;
+    border-radius: 12px;
+  }
 </style>
 </head>
 <body>
   <header>
-    <h1>🎶 welcome to my music space</h1>
+    <h1>music!</h1>
     <nav>
+      <a href="#voidwalker">voidwalker</a>
       <a href="#favorites">favorites</a>
       <a href="#playlists">playlists</a>
       <a href="#mymusic">my music</a>
@@ -114,34 +132,36 @@
     </nav>
   </header>
 
-  <section id="favorites">
-    <h2>music i'm into</h2>
-    <p>songs & albums that have been looping in my head lately:</p>
-    <ul>
-      <li>artist / song 1</li>
-      <li>artist / song 2</li>
-      <li>artist / song 3</li>
-    </ul>
-    <img src="assets/albumcover.jpg" alt="album cover" style="max-width:300px;display:block;margin:1rem auto;">
-  </section>
-
   <div class="divider">✦ ✦ ✦</div>
 
   <section id="playlists">
-    <h2>my playlists</h2>
-    <p>collections of songs I’ve put together:</p>
-    <iframe class="spotify"
-      src="https://open.spotify.com/embed/playlist/YOURPLAYLISTID" 
-      width="100%" height="380" frameborder="0" 
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
-    </iframe>
+    <h2>my playlists!</h2>
+    <p>some of my playlists :3<br>
+      while these are spotify playlists, i have a lot of this music on my ipod, which is what i usually listen on. the audio can go louder than my stupid phone so
+  </p>
+    <div class="spotify-grid">
+      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/6YMlEYzLf3nZ5Oka4hSTaU?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/4XqPsfNTiQ8xKPGUB7LJji?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0UPZFFllKgvwMk72weKi9g?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/6WFdRfEdwrhNRAsjMR5JMo?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1hdeVg5egtjc9a36jneoOS?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/3bUAW1jlczo09kVnPhIDOz?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
   </section>
 
   <div class="divider">✦ ✦ ✦</div>
 
   <section id="mymusic">
-    <h2>stuff i made</h2>
-    <p>youtube uploads of my songs + demos:</p>
+    <h2>stuff ive made for funsies</h2>
+    <p>nothing here yet...</p>
+    <div class="video-grid">
+    </div>
+  </section>
+
+  <section id="voidwalker">
+    <h2>voidwalker</h2>
+    <p>some of my music (most at the moment) that is on my channel is actually specially made for my friends in our D&D campaign, they're usually the videos with the black hole pixel art in the back. <br><br>
+    all of these songs either relate to characters in the story or the songs were made to be played during the game itself.</p>
     <div class="video-grid">
       <!-- Example YouTube embeds -->
       <iframe width="560" height="315" src="https://www.youtube.com/embed/d7rN7BvfWkU?si=5nlv0zjv70PzPP2d" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -150,6 +170,9 @@
       <iframe width="560" height="315" src="https://www.youtube.com/embed/sVxylE0R_20?si=wfbuhV8Nee03XvUd" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       <iframe width="560" height="315" src="https://www.youtube.com/embed/7yQ69-5KPAE?si=dIh7_Q2QwIDKoPaX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       <iframe width="560" height="315" src="https://www.youtube.com/embed/GjjNxGT8Ppo?si=rsItsq7VEpfZiBeB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/w7c0JcwBZaw?si=I5IwdqzkIFQMWKcv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/1hF8ieJMKOk?si=yDvOJDHyncsnq0Q_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    
     </div>
   </section>
 
@@ -157,11 +180,16 @@
 
   <section id="other">
     <h2>other stuff</h2>
-    <p>random notes, reviews, thoughts, or side projects go here.</p>
+    <p>other things will go here</p>
   </section>
 
   <footer>
-    <p>made with love + noise ✹</p>
+    <p>page last edited on 9/16/25</p>
   </footer>
+  <script>document.addEventListener('click', () => {
+    const sound = new Audio('assets/click.mp3');
+    sound.volume = 0.02;
+    sound.play();
+  }, true);</script>
 </body>
 </html>

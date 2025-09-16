@@ -634,7 +634,7 @@ document.addEventListener('mouseup', (e) => {
   const duration = Date.now() - mouseDownTime;
   if (duration < 100 && e.button === 0) {
     const sound = new Audio('assets/click.mp3');
-    sound.volume = 0.2;
+    sound.volume = 0.02;
     sound.play();
   }
 }, true);
