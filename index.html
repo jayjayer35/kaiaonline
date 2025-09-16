@@ -13,6 +13,9 @@
 </script>
   <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet" />
+<!-- matter -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+
 
 <style>
     * {
@@ -25,7 +28,8 @@
         width: 100%;
         height: 100%;
         font-family: 'Space Mono', monospace;
-        background: url('assets/galaxybkgndblue.jpg') center center / contain;
+        /* background: url('assets/galaxybkgndblue.jpg') center center / contain; */
+        background: url('assets/autumnbkgnd.jpg') center center / contain; /* fall */
         color: #e0e0e0;
         overflow: hidden;
     }
@@ -54,7 +58,8 @@
 
     .panel {
         backdrop-filter: blur(4px);
-        background: rgba(10, 10, 20, 0.65);
+        /* background: rgba(10, 10, 20, 0.65); normal */
+        background: rgba(20, 14, 10, 0.65); /* fall */
         padding: 16px;
         overflow-y: auto;
         height: 100%;
@@ -68,13 +73,15 @@
 
     h2 {
         font-size: 1rem;
-        color: #9ed0ff;
+        /* color: #9ed0ff; */
+        color: #ffc59e; /* fall */
         margin-bottom: 1rem;
     }
 
     summary {
         font-size: 1rem;
-        color: #9ed0ff;
+        /* color: #9ed0ff; */
+        color: #ffc59e; /* fall */
         margin-bottom: 1rem;
     }
 
@@ -89,14 +96,16 @@
 
     .left a:hover {
         color: white;
-        border-left: 3px solid #88c0d0;
+        /* border-left: 3px solid #88c0d0; */
+        border-left: 3px solid #d0b388; /* fall */
         background: rgba(255, 255, 255, 0.05);
         padding-left: 5px;
     }
 
     .middle {
         padding: 24px;
-        background: rgba(0,0,0,0.4);
+        /* background: rgba(0,0,0,0.4); */
+        background: rgba(0, 0, 0, 0.4); /* fall */
         overflow: hidden;
         position: relative;
     }
@@ -125,7 +134,8 @@
         font-weight: bold;
         font-size: 0.95rem;
         border-bottom: 1px solid rgba(255,255,255,0.1);
-        color: #c2f0ff;
+        /* color: #c2f0ff; */
+        color: #ffe3c2; /* fall */
     }
 
     .status, .music {
@@ -139,7 +149,8 @@
     }
 
     ::-webkit-scrollbar-thumb {
-        background: rgba(100,100,150,0.4);
+        /* background: rgba(100,100,150,0.4); */
+        background: rgba(150, 127, 100, 0.4); /* fall */
     }
 
     input[type="range"] {
@@ -151,34 +162,41 @@
         outline: none;
         transition: background 0.2s ease;
         cursor: pointer;
-        box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);
+        /* box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);  */
+        box-shadow: 0 0 5px rgba(255, 136, 0, 0.3); /* fall */
     }
 
     input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none;
         height: 14px;
         width: 14px;
-        background: #9ed0ff;
-        border: 2px solid #0e1a2b;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffcd9e; /* fall */
+        border: 2px solid #2b1e0e; /* fall */
         border-radius: 50%;
-        box-shadow: 0 0 6px #88c0d0;
+        /* box-shadow: 0 0 6px #88c0d0; */
+        box-shadow: 0 0 6px #d0ab88; /* fall */
         transition: background 0.3s ease;
     }
 
     input[type="range"]::-moz-range-thumb {
         height: 14px;
         width: 14px;
-        background: #9ed0ff;
-        border: 2px solid #0e1a2b;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffca9e; /* fall */
+        border: 2px solid #2b1f0e; /* fall */
         border-radius: 50%;
-        box-shadow: 0 0 6px #88c0d0;
+        /* box-shadow: 0 0 6px #88c0d0;  */
+        box-shadow: 0 0 6px #d0ae88;/* fall */
         cursor: pointer;
     }
     input[type="range"]:hover {
         background: rgba(255, 255, 255, 0.2);
     }
     button {
-        font-family: 'Space Mono', monospace;
+        /* font-family: 'Space Mono', monospace;
         background: rgba(50, 100, 150, 0.15);
         border: 1px solid #88c0d0;
         color: #c2f0ff;
@@ -186,13 +204,25 @@
         border-radius: 3px;
         box-shadow: 0 0 6px rgba(100, 200, 255, 0.2);
         transition: 0.2s ease;
+        cursor: pointer; */
+        font-family: 'Space Mono', monospace; /* fall */
+        background: rgba(150, 107, 50, 0.15);
+        border: 1px solid #d0b188;
+        color: #ffe3c2;
+        padding: 6px 12px;
+        border-radius: 3px;
+        box-shadow: 0 0 6px rgba(255, 175, 100, 0.2);
+        transition: 0.2s ease;
         cursor: pointer;
     }
 
     button:hover {
-        background: rgba(100, 180, 255, 0.3);
+        /* background: rgba(100, 180, 255, 0.3);
         color: white;
-        border-color: #aeefff;
+        border-color: #aeefff; */
+        background: rgba(255, 183, 100, 0.3); /* fall */
+        color: white; 
+        border-color: #ffdfae;
     }
     #fadeout-overlay {
         position: fixed;
@@ -232,7 +262,8 @@
         left: 0;
         font-size: 1.1rem;
         font-weight: 1000;
-        color: #9ed0ff;
+        /* color: #9ed0ff;  */
+        color: #ffcd9e; /* fall */
     }
     #statuscafe-content {
         margin: 0 0em;
@@ -240,45 +271,42 @@
     @keyframes blink {
         50% { opacity: 0; }
     }
-    #nomai-end-effect {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,0,0,1) 100%);
-        background-size: 200% 200%;
-        background-position: center;
-        z-index: 999999;
-        opacity: 0;
-        transform: scale(0.5) rotate(0deg);
-        filter: blur(0px);
-        pointer-events: none;
-    }
+    
+#falling-leaves {
+  pointer-events: none; /* So clicks pass through */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 9999; /* make sure it's above content */
+}
 
-    @keyframes nomai-flash {
-        0% {
-            opacity: 0;
-            transform: scale(0.5) rotate(0deg);
-            filter: blur(0px);
-        }
-        30% {
-            opacity: 1;
-            transform: scale(1.3) rotate(180deg);
-            filter: blur(8px);
-        }
-        60% {
-            opacity: 1;
-            transform: scale(2) rotate(540deg);
-            filter: blur(15px);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(3) rotate(1080deg);
-            filter: blur(25px);
-        }
-    }
+.leaf {
+  position: absolute;
+  top: -10%;
+  width: 30px;
+  height: 30px;
+  background-image: url('assets/leaf.png'); /* your leaf graphic */
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(110vh) rotate(360deg);
+  }
+}
+
     .glow {
-    color: #aeefff;
+    /* color: #aeefff; */
+    color: #ffe3ae; /* fall */
     animation: pulseGlowOff 3s ease-in-out infinite;
     }
 
@@ -288,8 +316,10 @@
     }
     50% {
         text-shadow:
-        0 0 5px #aeefff,
-        0 0 10px #88c0d0;
+        /* 0 0 5px #aeefff,
+        0 0 10px #88c0d0; */
+        0 0 5px #ffdcae, /* fall */
+        0 0 10px #d0ab88;
     }
     }
     ul {
@@ -300,14 +330,16 @@
     summary {
         cursor: pointer;
         list-style: none; 
-        color: rgb(204, 176, 255);
+        /* color: rgb(204, 176, 255); */
+        color: rgb(255, 176, 176); /* fall */
         transition: 0.3s;
     }
     details[open] > summary {
         background-color: #7caecf1e;
         color: rgb(255, 255, 255);
         font-weight: bold;
-        border-left: 6px solid #a488d0;
+        /* border-left: 6px solid #a488d0; */
+        border-left: 6px solid #d08888; /* fall */
         background: rgba(255, 255, 255, 0.05);
         padding-left: 4px;
         transition: 0.3s;
@@ -317,8 +349,10 @@
     cursor: pointer; 
     }
     summary:hover {
-        color: rgb(158, 105, 255);
-        border-left: 3px solid #aa88d0;
+        /* color: rgb(158, 105, 255);
+        border-left: 3px solid #aa88d0; */
+        color: rgb(255, 105, 105); /* fall */
+        border-left: 3px solid #d08888;
         background: rgba(255, 255, 255, 0.05);
         padding-left: 4px;
         transition: 0.3s;
@@ -373,7 +407,15 @@
     opacity: 0;
     pointer-events: none;
     }
-
+    #leafCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9998;         /* below overlays like your splash/fade */
+    pointer-events: none;  /* keep UI clickable — we use document-level events */
+    }
   </style>
 </head>
 <body>
@@ -411,7 +453,7 @@
             <summary>Entry</summary>
             <ul>
                 <li><a onclick="loadPage('welcome.html')">Welcome!</a></li>
-                <li><a onclick="loadPage('updates.html')">Updates</a></li>
+                <li><a onclick="loadPage('updates.html')" class="glow">Updates</a></li>
                 <li><a onclick="loadPage('bio.html')">Me Me ME!</a></li>
                 <li><a onclick="loadPage('bigguy.html')">Bird</a></li>
             </ul>
@@ -453,6 +495,9 @@
             <ul>
                 <li><a onclick="loadPage('friends.html')">On friends</a></li>
                 <li><a onclick="loadPage('friends/kris.html')">Kris</a></li>
+                <li><a onclick="loadPage('friends/eric.html')">Eric</a></li>
+                <li><a onclick="loadPage('friends/brandon.html')">Brandon</a></li>
+                <li><a onclick="loadPage('friends/luis.html')">Luis</a></li>
                 <li><a onclick="loadPage('friends/gabe.html')">Gabriel</a></li>
             </ul>
         </details>
@@ -491,7 +536,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
             <button id="pauseButton">⏸</button>
             <button id="skipButton">⏭</button>
-            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3" />
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.03" />
 
         </div>
         <br>
@@ -520,10 +565,11 @@
         <br>
         <h2>TO-DO</h2>
         <div class="status">
-            <p>- friend's pages</p>
+            <p>- friend's pages (still)</p>
             <p>- fun stuff</p>
             <p>- back on music player</p>
             <p>- more clutter and stuff to click</p>
+            <p>- FINISH THE MUSIC PAGE AGH</p>
         </div>
         </div>
     </div>
@@ -568,7 +614,7 @@
 
     //timer script -===========================================================-
 
-    let totalSeconds = 0; //set to like 1310 for testing
+    let totalSeconds = 0; //set to like 1313 for testing
     const maxSeconds = 22 * 60; // 22 minutes in seconds
     const loopDisplay = document.getElementById("loop-timer");
 
@@ -655,22 +701,25 @@
 
     const songs = [
         { title: "14.3 Billion Years - Andrew Prahlow", file: "14.3.mp3" },
-        { title: "Comforting Memories - Kumi Tanioka", file: "memories.mp3" },
+        /* { title: "Comforting Memories - Kumi Tanioka", file: "memories.mp3" }, */
         { title: "Falling Stars - A Shell In The Pit", file: "stars.mp3" },
         { title: "Timber Hearth - Andrew Prahlow", file: "timber.mp3" },
-        { title: "serenity - kaiasei", file: "serenity.mp3" },
-        { title: "dawn - kaiasei", file: "dawn.mp3" },
+        /* { title: "serenity - kaiasei", file: "serenity.mp3" }, */
+        /* { title: "dawn - kaiasei", file: "dawn.mp3" }, */
         { title: "Main Title - Andrew Prahlow", file: "title.mp3" },
-        { title: "The Ancient Glade - Andrew Prahlow", file: "glade.mp3" },
+        /* { title: "The Ancient Glade - Andrew Prahlow", file: "glade.mp3" }, */
         { title: "The Sun Station - Andrew Prahlow", file: "sun.mp3" },
-        { title: "Castaways - Andrew Prahlow", file: "castaways.mp3" },
-        { title: "Beacon - Disasterpiece", file: "beacon.mp3" },
+        /* { title: "Castaways - Andrew Prahlow", file: "castaways.mp3" }, */
+        /* { title: "Beacon - Disasterpiece", file: "beacon.mp3" }, */
         { title: "Xeno Arcadia - Mason Lindroth & Chuck Salamone", file: "xeno.mp3"},
         { title: "Outer Wilds - Reprise - Andrew Prahlow", file: "reprise.mp3" },
         { title: "Something to Look For - Andrew Prahlow", file: "look.mp3" },
         { title: "Before the Story - Toby Fox", file: "story.mp3" },
-
-
+        { title: "Secunda - Jeremy Soule", file: "secunda.mp3" },
+        { title: "Quiet and Falling - Lena Raine", file: "quiet.mp3" },
+        { title: "Cylene - kaiasei", file: "cylene.mp3" },,
+        { title: "Kodoku - Hideki Taniuchi", file: "kodoku.mp3" },
+        { title: "The Millhouse - Talisk", file: "millhouse.mp3" }
     ];
 
     const finalSong = {
@@ -901,7 +950,7 @@
     function splat() {
     try {
         const sound = new Audio('assets/splat.mp3');
-        sound.volume = 0.08;
+        sound.volume = 0.05;
         sound.play();
 
         // 5% chance to go to lancer page
@@ -917,9 +966,183 @@
     splashImage.addEventListener('click', () => {
         splash.classList.add('hidden');
     });
+
+// ---------- AUTUMN LEAF LOGIC (transparent, fall-through) ----------
+window.addEventListener('load', () => {
+  if (!window.Matter) { console.error('Matter.js missing — add the CDN script first.'); return; }
+  const { Engine, Runner, World, Bodies, Body, Constraint, Events, Query } = Matter;
+
+  const canvas = document.getElementById('leafCanvas');
+  if (!canvas) { console.error('Add <canvas id="leafCanvas"></canvas> to your page.'); return; }
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const engine = Engine.create();
+  const world = engine.world;
+  engine.gravity.y = 0.06; // gentle gravity
+
+  // only side walls so leaves don’t drift off screen
+  const leftWall = Bodies.rectangle(-60, window.innerHeight/2, 120, window.innerHeight*3, { isStatic: true });
+  const rightWall = Bodies.rectangle(window.innerWidth+60, window.innerHeight/2, 120, window.innerHeight*3, { isStatic: true });
+  World.add(world, [leftWall, rightWall]);
+
+  const leaves = [];
+  const MAX_LEAVES = 50;
+
+  const leafImg = new Image();
+  leafImg.src = 'assets/leaf.png';
+
+  function spawnLeaf() {
+  const size = 22 + Math.random() * 36;
+  const x = 20 + Math.random() * (canvas.width - 40);
+  const y = -40 - Math.random() * 200;
+
+  // random initial velocity
+  const vx = (Math.random() - 0.5) * 1; // horizontal drift
+  const vy = Math.random() * 1;          // slight vertical speed
+
+  const leaf = Bodies.rectangle(x, y, size * 0.9, size * 0.6, {
+    restitution: 0.18,
+    frictionAir: 0.03,
+    friction: 0.8,
+    density: 0.0008,
+    angle: Math.random() * Math.PI * 2,
+    velocity: { x: vx, y: vy }
+  });
+  leaf.renderSize = size;
+  World.add(world, leaf);
+  leaves.push(leaf);
+}
+
+  // ambient float & wind
+  Events.on(engine, 'beforeUpdate', (ev) => {
+    const t = ev.timestamp;
+    for (let b of leaves) {
+      const windX = Math.sin((b.position.y + t*0.5) / 900) * 0.00002;
+      const floatY = -0.000018 * (0.6 + 0.4 * Math.sin((b.position.x + t) / 1200));
+      Body.applyForce(b, b.position, { x: windX, y: floatY });
+      Body.setAngularVelocity(b, b.angularVelocity * 0.995);
+    }
+
+    // remove leaves below viewport
+    for (let i = leaves.length - 1; i >= 0; i--) {
+      if (leaves[i].position.y > window.innerHeight + 100) {
+        World.remove(world, leaves[i]);
+        leaves.splice(i, 1);
+      }
+    }
+  });
+
+  // push & drag handling (unchanged from your code)
+  let dragConstraint = null;
+  function getLeafAtPoint(pt) {
+    try {
+      const found = Query.point(leaves, pt);
+      return found.length ? found[0] : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  document.addEventListener('pointerdown', (ev) => {
+    const pt = { x: ev.clientX, y: ev.clientY };
+    const hit = getLeafAtPoint(pt);
+    if (hit) {
+      dragConstraint = Constraint.create({
+        pointA: { x: pt.x, y: pt.y },
+        bodyB: hit,
+        pointB: { x: 0, y: 0 },
+        stiffness: 0.12,
+        damping: 0.2,
+        length: 0
+      });
+      World.add(world, dragConstraint);
+      ev.preventDefault();
+    }
+  });
+
+  document.addEventListener('pointermove', (ev) => {
+    const pt = { x: ev.clientX, y: ev.clientY };
+    if (dragConstraint) {
+      dragConstraint.pointA.x = pt.x;
+      dragConstraint.pointA.y = pt.y;
+    }
+
+    // pushing
+    const PUSH_RADIUS = 96;
+    const PUSH_STRENGTH = 0.0009;
+    for (let b of leaves) {
+      const dx = b.position.x - pt.x;
+      const dy = b.position.y - pt.y;
+      const d2 = dx*dx + dy*dy;
+      if (d2 < PUSH_RADIUS * PUSH_RADIUS) {
+        const d = Math.sqrt(d2) || 1;
+        const mag = (1 - d / PUSH_RADIUS) * PUSH_STRENGTH;
+        Body.applyForce(b, b.position, { x: (dx/d)*mag, y: (dy/d)*mag });
+      }
+    }
+  });
+
+  document.addEventListener('pointerup', () => {
+    if (dragConstraint) {
+      World.remove(world, dragConstraint);
+      dragConstraint = null;
+    }
+  });
+
+  // renderer
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let b of leaves) {
+      const size = b.renderSize || 28;
+      ctx.save();
+      ctx.translate(b.position.x, b.position.y);
+      ctx.rotate(b.angle);
+      ctx.globalAlpha = 0.1; // semi-transparent
+      if (leafImg.complete && leafImg.naturalWidth !== 0) {
+        ctx.drawImage(leafImg, -size/2, -size/2, size, size);
+      } else {
+        ctx.fillStyle = 'rgba(200,120,45,0.7)';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, size*0.45, size*0.28, 0, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(render);
+  }
+
+  const runner = Runner.create();
+  Runner.run(runner, engine);
+  render();
+
+  setInterval(() => {
+    if (leaves.length < MAX_LEAVES) spawnLeaf();
+  }, 2000);
+
+  for (let i=0;i<8;i++) spawnLeaf();
+
+  window.addEventListener('resize', () => {
+    Body.setPosition(leftWall, { x: -60, y: window.innerHeight/2 });
+    Body.setPosition(rightWall, { x: window.innerWidth+60, y: window.innerHeight/2 });
+  });
+
+  console.log('Floating leaves active — semi-transparent, fall-through, auto-removed.');
+});
+// ---------- end AUTUMN LEAF LOGIC ----------
+
   </script>
 </div>
 <img src="assets/lancer.gif" id="bottomGif" style="position: fixed; bottom: 0; left: 0%; transform: translateX(-45%); width: 300px; z-index: 9999; image-rendering: pixelated;" onclick="splat()"/>
+<canvas id="leafCanvas"></canvas>
 <div id="fadeout-overlay"></div>
+
 </body>
 </html>
