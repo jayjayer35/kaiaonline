@@ -158,6 +158,7 @@
     }
 
     input[type="range"] {
+        appearance: none;
         -webkit-appearance: none;
         width: 100%;
         height: 6px;
@@ -328,7 +329,7 @@
     }
     ul {
         list-style: none; 
-        padding-left: 0;  
+        padding-left: .2rem;  
         padding-bottom: 10px;
     }
     summary {
@@ -460,25 +461,22 @@
             <img src="assets/l1.gif" class="blinkie" alt="SHUT UP!">
             <img src="assets/vs code.gif" class="blinkie" alt="vs code user!">
         </marquee>
-        <details open>
+        <details>
             <summary>Entry</summary>
             <ul>
                 <li><a onclick="loadPage('welcome.html')">Welcome!</a></li>
                 <li><a onclick="loadPage('updates.html')" class="glow">Updates</a></li>
                 <li><a onclick="loadPage('bio.html')">Me Me ME!</a></li>
                 <li><a onclick="loadPage('blog/index.html')">Blog</a></li>
-                <li><a onclick="loadPage('bigguy.html')">Bird</a></li>
             </ul>
         </details>
     
-        <details open>
+        <details>
             <summary>The Web</summary>
             <ul>
-                <li><a onclick="loadPage('internetstuf.html')">The Internet</a></li>
-                <li><a onclick="loadPage('internetstuf2.html')">Links</a></li>
+                <li><a onclick="loadPage('internetstuf2.html')">Links!</a></li>
                 <li><a onclick="loadPage('webrings.html')">Webrings</a></li>
                 <li><a onclick="loadPage('https://kaiasei.atabook.org/')" class="glow">Guestbook</a></li>
-                <li><a onclick="loadPage('jacobonline-old/index.html')">My Original Site</a></li>
             </ul>
         </details>
 
@@ -493,7 +491,7 @@
         </details>
 
         <details>
-            <summary>Other</summary>
+            <summary>Misc</summary>
             <ul>
                 <li><a onclick="loadPage('wilds.html')">Outer Wilds</a></li>
                 <li><a onclick="loadPage('deepestfear.html')">Our Deepest Fear</a></li>
@@ -519,8 +517,9 @@
             <summary>Dusty Shelf</summary>
             <ul>
                 <li><a onclick="loadPage('template.html')">My blank page template</a></li>
-                <li><a href="indexrm.html" target="_parent">Load layout 2 (outdated!)</a></li>
-                <li><a href="indexlog.html" target="_parent">Load layout 3 (outdated!)</a></li>
+                <li><a onclick="loadPage('jacobonline-old/index.html')">My Original Site <span style="color: indianred;">(outdated!)</span></a></li>
+                <li><a href="indexrm.html" target="_parent">Load layout 2 <span style="color: indianred;">(outdated!)</span></a></li>
+                <li><a href="indexlog.html" target="_parent">Load layout 3 <span style="color: indianred;">(outdated!)</span></a></li>
             </ul>
         </details>
     </div>
@@ -567,7 +566,7 @@
         <br>
         <h2>INFO</h2>
         <div class="status">
-            <p>- Location: Starlit Marble</p>
+            <p>- Location: Aradisia</p>
             <p>- Visitors: <span id="visitor-count">Loading...</span></p>
             <p id="loop-timer">- Time: 0:00 of 22:00 min.</p>
         </div>
@@ -591,11 +590,10 @@
         <br>
         <h2>TO-DO</h2>
         <div class="status">
-            <p>- friend's pages (still)</p>
-            <p>- fun stuff</p>
-            <p>- back on music player</p>
-            <p>- more clutter and stuff to click</p>
-            <p>- FINISH THE MUSIC PAGE AGH</p>
+            <p>- more photos everywhere</p>
+            <p>- update music page</p>
+            <p>- migrate blog posts (?)</p>
+            <p>- pour even more love into the site</p>
         </div>
         </div>
     </div>
