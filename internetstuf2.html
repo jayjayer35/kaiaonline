@@ -62,6 +62,15 @@ header h1 {
   padding: 1rem;
   max-height: 700px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.filler {
+  flex-grow: 1;
+  background: rgba(5, 15, 25, 0.3); /* slightly see-through so it blends */
+  border-radius: 0 0 12px 12px;      /* rounded bottom corners */
+  border-top: 1px solid #3ab0ff44;   /* faint separator line */
 }
 
 .link-buttons {
@@ -128,31 +137,90 @@ footer {
     flex-direction: column;
   }
 }
+
+::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        /* background: rgba(100,100,150,0.4); */
+        background: rgba(53, 92, 143, 0.4); /* fall */
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        outline: none;
+        transition: background 0.2s ease;
+        cursor: pointer;
+        /* box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);  */
+        box-shadow: 0 0 5px rgba(255, 136, 0, 0.3); /* fall */
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 14px;
+        width: 14px;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffcd9e; /* fall */
+        border: 2px solid #2b1e0e; /* fall */
+        border-radius: 50%;
+        /* box-shadow: 0 0 6px #88c0d0; */
+        box-shadow: 0 0 6px #d0ab88; /* fall */
+        transition: background 0.3s ease;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        height: 14px;
+        width: 14px;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffca9e; /* fall */
+        border: 2px solid #2b1f0e; /* fall */
+        border-radius: 50%;
+        /* box-shadow: 0 0 6px #88c0d0;  */
+        box-shadow: 0 0 6px #d0ae88;/* fall */
+        cursor: pointer;
+    }
+    input[type="range"]:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+
+.right-filler {
+  margin-top: 1rem; /* space below buttons */
+  border: 1px solid #3ab0ff; 
+  border-radius: 10px;
+  background: rgba(5, 15, 25, 0.8); /* same bg as your buttons box */
+  flex-grow: 1; /* this makes it stretch down to bottom of content */
+}
 </style>
 </head>
 
 <body>
   <div class="content">
-  <div class="left-panel">
-    <h2 class="star" style="text-align: center;">surf city</h2>
-    <p style="text-align: center;"> going so soon??<br><br>
-      to me, the indie web is extremely important, it's an archive of my own life, an archive of others' lives, and it's a beautiful tradition that must go on. <br><br>
+    <div class="left-panel">
+      <h2 class="star" style="text-align: center;">surf city</h2>
+      <p style="text-align: center;"> going so soon??<br><br>
+        to me, the indie web is extremely important, it's an archive of my own life, an archive of others' lives, and it's a beautiful tradition that must go on! <br><br>
 
-      try to make your own site, learn what you can, and put yourself out there. theres always an audience! leave your mark on the web, and let everyone know that you were here on this planet, creating to create, and bringing joy to those you love. 
-      art is a beautiful thing, and we need it more than ever. <br><br>
+        try to make your own site, learn what you can, and put yourself out there! who cares if it's imperfect, its yours!<br><br>
 
-      <textarea readonly="" onclick="this.select()"><a href="https://kaia.starscene.com" target="_parent"><img src="https://kaia.starscene.com/assets/kaiabutton.png" alt="kaia online"/></a></textarea><img src="assets/kaiabutton.png" alt="kaia online" style="padding-left: 1rem;"/><br>
-      <textarea readonly="" onclick="this.select()"><a href="https://kaia.starscene.com" target="_parent"><img src="https://kaia.starscene.com/assets/kaiabutton.gif" alt="kaia online"/></a></textarea><img src="assets/kaiabutton.gif" alt="kaia online" style="padding-left: 1rem;"/>
-      <br><br>link back if you so please!!! i may change the image later on, gif will be the gif and the img will be the img, but it will always be here so you dont need to save on your server.<br><br>
+        <textarea readonly="" onclick="this.select()"><a href="https://kaia.starscene.com" target="_parent"><img src="https://kaia.starscene.com/assets/kaiabutton.png" alt="kaia online"/></a></textarea><img src="assets/kaiabutton.png" alt="kaia online" style="padding-left: 1rem;"/><br>
+        <textarea readonly="" onclick="this.select()"><a href="https://kaia.starscene.com" target="_parent"><img src="https://kaia.starscene.com/assets/kaiabutton.gif" alt="kaia online"/></a></textarea><img src="assets/kaiabutton.gif" alt="kaia online" style="padding-left: 1rem;"/>
+        <br><br>hotlink hotlink hotlink! so that way if i change my button, it will change everywhereee<br><br>
 
-      if you are still reading this text, to the right are some buttons here that lead to a variety of sites that are fun, inspiring, cute, interactive, awesome, silly, unique, helpful, and everything in between. check them out! people poured their hearts and 
-      souls into these. <3
+        if you are still reading this text, to the right are some buttons here that lead to a variety of sites that are fun, inspiring, cute, interactive, awesome, silly, unique, helpful, and everything in between. check them out! people poured their hearts and 
+        souls into these. <3
 
-      
-     <br> these will open in this tab, so come back soon! <em style="font-size: x-small;">(hopefully)</em>
-    </p>
-  </div>
-
+        
+      <br> these will open in this tab, so come back soon! <em style="font-size: x-small;">(hopefully)</em>
+      </p>
+    </div>
   <div class="right-panel">
     <div class="link-buttons">
       <a href="https://lu.tiny-universes.net/index.html" target="_parent" data-title="one of my first interactions with the indie web, and a big inspiration for me. some of my web assets are graciously from her, check out her page!" style="--hover-shadow-color: rgb(185, 0, 161);"><img src="assets/lulu2.gif" alt="lu tiny universes" style="image-rendering:pixelated"/></a>
@@ -189,8 +257,11 @@ footer {
       <a href="https://adnyx.nekoweb.org" target="_parent" data-title="internet friend!!!!! and a lovely site" style="--hover-shadow-color: rgb(255, 81, 0);"><img src="https://adnyx.nekoweb.org/images/adnyx_button.gif" alt="adnyx's page"></a>
       <a href="https://e10.neocities.org/" target="_parent" data-title="really fun page to look at :D (also a sackboy LOVER)" style="--hover-shadow-color: rgb(255, 0, 157);"><img src="https://e10.neocities.org/imgs/other/e10.neocities-button.gif"/></a> 
       <a href="https://bugkisser.neocities.org/" target="_parent" data-title="" style="--hover-shadow-color: rgb(255, 156, 255);"><img src="https://bugkisser.neocities.org/buttons/bugkisser!.png"></a>            
-    </div>
-  </div>
+      <a href="https://nomnomnami.com/" target="_parent" data-title="where i got my blog template from! plus a comfy site" style="--hover-shadow-color: rgb(148, 148, 148);"><img src="https://nomnomnami.com/images/site_button.gif" alt="nomnomnami"></a>
+    </div> 
+    
+  </div> 
+  <div class="right-panel"></div>
 </div>
 
 

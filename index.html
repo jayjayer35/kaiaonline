@@ -466,6 +466,7 @@
                 <li><a onclick="loadPage('welcome.html')">Welcome!</a></li>
                 <li><a onclick="loadPage('updates.html')" class="glow">Updates</a></li>
                 <li><a onclick="loadPage('bio.html')">Me Me ME!</a></li>
+                <li><a onclick="loadPage('blog/index.html')">Blog</a></li>
                 <li><a onclick="loadPage('bigguy.html')">Bird</a></li>
             </ul>
         </details>
@@ -560,8 +561,8 @@
         <div class="status" id="kaia-status">
             <p id="health">- Health: --%</p>
             <p id="battery">- Social Battery: --%</p>
-            <p id="game">- Current Game: Loading...</p>
-            <p id="availability">- Status: Loading...</p>
+            <p id="availability">- Steam Status: Loading...</p>
+            <p id="game">- Playing: Loading...</p>
         </div>
         <br>
         <h2>INFO</h2>
@@ -607,7 +608,7 @@
     logframe.src = path;
 
     const matchedSongFile = pageSongMap[path];
-    if (matchedSongFile) {
+    /* if (matchedSongFile) {
         if (!musicPlayer.src.includes(matchedSongFile)) {
         const matchedSong = songs.find(s => s.file === matchedSongFile);
         if (matchedSong) {
@@ -621,7 +622,7 @@
 
     if (musicPlayer.paused || !musicPlayer.src) {
         loadAndPlaySong();
-    }
+    } */
     }
 
 
@@ -688,11 +689,11 @@
         .then(res => res.json())
         .then(data => {
             console.log("Fetched Steam data:", data);
-            document.getElementById("game").textContent = `- Current Game: ${data.game}`;
+            document.getElementById("game").textContent = `- Playing: ${data.game}`;
 
             const stateMap = {
                 "0": "Radio-silent",
-                "1": "Online",
+                "1": "Active!",
                 "2": "Preoccupied",
                 "3": "Exploring the Stars",
                 "4": "Half-asleep",
@@ -701,12 +702,11 @@
             };
 
             const status = stateMap[data.status?.toString()] || "Unknown";
-            document.getElementById("availability").textContent = `- Status: ${status}`;
+            document.getElementById("availability").textContent = `- Steam Status: ${status}`;
         })
         .catch((err) => {
             console.error("Fetch error:", err);
-            document.getElementById("game").textContent = "- Current Game: ???";
-            document.getElementById("availability").textContent = "- Status: ???";
+            document.getElementById("game").textContent = "- Playing: ???";
         });
     }
 

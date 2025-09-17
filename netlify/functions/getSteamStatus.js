@@ -23,7 +23,7 @@ exports.handler = async function (event, context) {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        game: player.gameextrainfo || "None",
+        game: player.gameextrainfo || "Nothing",
         status: player.personastate?.toString() || "unknown",
       }),
     };

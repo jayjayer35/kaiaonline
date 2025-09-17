@@ -14,11 +14,11 @@ function getRandomMessage() {
     "Someone just stopped by!",
     "Frequency spike! A new signal has been found.",
     "A new traveler has entered the solar system!",
-    "The Fountain ripples... a visitor appears.",
     "A strange light fills the room...",
     "A mysterious figure is across the horizon",
     "Welcome home!",
-    "gay person located",
+    "A follower of the flame has arrived",
+    "Horizon cracks in light of someone new"
   ];
   return messages[Math.floor(Math.random() * messages.length)];
 }
@@ -75,7 +75,10 @@ exports.handler = async (event) => {
       location &&
       location.city.toLowerCase() === 'ashburn' &&
       location.region.toLowerCase() === 'virginia' &&
-      location.country.toLowerCase() === 'us'
+      location.country.toLowerCase() === 'us' &&
+      location.city.toLowerCase() === 'singapore' &&
+      location.region.toLowerCase() === 'singapore' &&
+      location.country.toLowerCase() === 'sg'
     ) {
       return {
         statusCode: 200,
@@ -132,7 +135,7 @@ exports.handler = async (event) => {
               color: 0xffb6c1,
               fields: [
                 { name: "Location", value: locationText, inline: true },
-                { name: "IP Address", value: visitorIP, inline: true }
+                /* { name: "IP Address", value: visitorIP, inline: true } */
               ],
               image: { url: randomGif },
               timestamp: new Date().toISOString()

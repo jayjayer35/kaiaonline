@@ -31,7 +31,7 @@
     background: #5260FB;
 }
 
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #52A8FB;
-    }
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #52A8FB;
+}

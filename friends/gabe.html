@@ -201,32 +201,56 @@ fieldset.cyberpunk {
 /* Scrollbar */
 
 ::-webkit-scrollbar {
-  background-color: var(--yellow-color);
-}
-::-webkit-scrollbar-button {
-  display: none;
-}
-::-webkit-scrollbar-track {
-  display: none;
-}
-::-webkit-scrollbar-track-piece {
-  display: none;
-}
-::-webkit-scrollbar-thumb {
-  background-color: var(--red-color);
-  border-bottom: 2px solid var(--border-color);
-  border-right: 2px solid var(--border-color);
-  transition: background var(--glitched-duration);
-}
-::-webkit-scrollbar-thumb:hover {
-  background-color: var(--orange-color);
-}
-::-webkit-scrollbar-corner {
-  display: none;
-}
-::-webkit-resizer {
-  display: none;
-}
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        /* background: rgba(100,100,150,0.4); */
+        background: rgba(0, 255, 255, 0.4); /* fall */
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        outline: none;
+        transition: background 0.2s ease;
+        cursor: pointer;
+        /* box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);  */
+        box-shadow: 0 0 5px rgba(255, 136, 0, 0.3); /* fall */
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 14px;
+        width: 14px;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffcd9e; /* fall */
+        border: 2px solid #2b1e0e; /* fall */
+        border-radius: 50%;
+        /* box-shadow: 0 0 6px #88c0d0; */
+        box-shadow: 0 0 6px #d0ab88; /* fall */
+        transition: background 0.3s ease;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        height: 14px;
+        width: 14px;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffca9e; /* fall */
+        border: 2px solid #2b1f0e; /* fall */
+        border-radius: 50%;
+        /* box-shadow: 0 0 6px #88c0d0;  */
+        box-shadow: 0 0 6px #d0ae88;/* fall */
+        cursor: pointer;
+    }
+    input[type="range"]:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
 
 /* Separator */
 
