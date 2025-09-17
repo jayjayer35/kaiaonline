@@ -75,10 +75,20 @@ exports.handler = async (event) => {
       location &&
       location.city.toLowerCase() === 'ashburn' &&
       location.region.toLowerCase() === 'virginia' &&
-      location.country.toLowerCase() === 'us' &&
+      location.country.toLowerCase() === 'us' 
+    ) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ skipped: true }),
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      };
+    }
+
+    if (
+      location &&
       location.city.toLowerCase() === 'singapore' &&
       location.region.toLowerCase() === 'singapore' &&
-      location.country.toLowerCase() === 'sg'
+      location.country.toLowerCase() === 'sg' 
     ) {
       return {
         statusCode: 200,
