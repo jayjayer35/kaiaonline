@@ -12,7 +12,7 @@
   --border-shadow: #27105e80;
   
   --sidebar-text: #4E223D;
-  --sidebar-bg: #c89bd6;
+  --sidebar-bg: #c89bd6da;
   --sidebar-button-bg: #2bff00;
   --sidebar-button-bg-hover: #FFE1C6;
   --sidebar-button-text: #4E223D;
@@ -337,8 +337,8 @@ main {
 .readmore[open] > summary {display:none;}
 /*optional border to denote a border was there before*/
 .readmore[open] {
-  border-top: 2px dashed var(--button-bg);
-  padding-top:1em;
+  border-top: 0px dashed var(--button-bg);
+  padding-top:0em;
 }
 
 .tags {
@@ -369,7 +369,7 @@ main {
 .tagged:has(#intro:checked) article[class~="intro"],
 .tagged:has(#music:checked) article[class~="music"],
 .tagged:has(#games:checked) article[class~="games"],
-/* .tagged:has(#d&d:checked) article[class~="d&d"], */
+.tagged:has(#dnd:checked) article[class~="d&d"],
 .tagged:has(#personal:checked) article[class~="personal"],
 .tagged:has(#secret:checked) article[class~="secret"],
 .tagged:has(#art:checked) article[class~="art"] {display: inline-block;}
