@@ -3,9 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Message</title>
+<title>dream</title>
 <style>
-  /* Page layout + default cursor */
   html,body{
     height:100%;
     margin:0;
@@ -19,17 +18,15 @@
     justify-content:center;
     text-align:center;
     padding:20px;
-    cursor:default; /* only default arrow cursor */
+    cursor:default; 
     overflow:hidden;
   }
 
-  /* Container so we can center and control max width */
   .wrap{
     max-width:90ch;
     width:100%;
   }
 
-  /* Message styling and pulsating glow */
   .message{
     font-size:2rem;
     line-height:1.2;
@@ -38,8 +35,8 @@
     display:inline-block;
     animation:glow 2.4s infinite alternate;
     transition:opacity .5s ease;
-    opacity:0; /* hidden until click -> fade in as typing starts */
-    user-select:none; /* prevents accidental text selection */
+    opacity:0; 
+    user-select:none; 
   }
 
   @keyframes glow{
@@ -54,7 +51,6 @@
     }
   }
 
-  /* click hint (subtle) */
   .hint{
     position:fixed;
     bottom:18px;
@@ -65,7 +61,6 @@
     pointer-events:none;
   }
 
-  /* hide selection highlight when clicking/dragging */
   ::selection{ background: rgba(255,255,255,0.06); }
 </style>
 </head>
@@ -75,7 +70,6 @@
   </div>
   <div class="hint" id="hint"></div>
 
-  <!-- Replace src with your audio file. Keep loop attribute to continuously play. -->
   <audio id="bgAudio" src="music/ECHO_FOR_HER.mp3" loop preload="auto"></audio>
 
 <script>
