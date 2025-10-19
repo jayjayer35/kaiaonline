@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Messages</title>
+<style>
+  html,body{
+    height:100%;
+    margin:0;
+  }
+  body{
+    background:black;
+    color:white;
+    font-family:'Courier New', Courier, monospace;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    cursor:default;
+    overflow:hidden;
+    transition: opacity 2s ease; /* added for fade-out */
+  }
+
+  #container {
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+    text-align:center;
+    max-width:80%;
+  }
+
+  .line {
+    font-size:2rem;
+    white-space:pre-wrap;
+    overflow:hidden;
+    animation:glow 2.4s infinite alternate;
+  }
+
+  @keyframes glow{
+    0%{text-shadow:0 0 2px #fff,0 0 6px rgba(255,255,255,.6);}
+    50%{text-shadow:0 0 6px rgba(255,255,255,.9),0 0 18px rgba(255,200,120,.9),0 0 28px rgba(255,200,120,.4);}
+    100%{text-shadow:0 0 2px #fff,0 0 6px rgba(255,255,255,.6);}
+  }
+
+  .hint{
+    position:fixed;
+    bottom:18px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:.95rem;
+    color:rgba(180,180,180,0.6);
+    pointer-events:none;
+  }
+</style>
+</head>
+<body>
+  <div id="container"></div>
+  <div class="hint" id="hint"></div>
+  <audio id="bgAudio" src="assets/are_people_there.ogg" preload="auto"></audio>
+
+<script>
+const _0x471de4=_0x5812;(function(_0x48874e,_0x1cc5b2){const _0x4200f3=_0x5812,_0x1e4615=_0x48874e();while(!![]){try{const _0x2ade67=parseInt(_0x4200f3(0x125))/0x1*(parseInt(_0x4200f3(0x146))/0x2)+parseInt(_0x4200f3(0x124))/0x3*(-parseInt(_0x4200f3(0x143))/0x4)+-parseInt(_0x4200f3(0x144))/0x5+-parseInt(_0x4200f3(0x147))/0x6+parseInt(_0x4200f3(0x138))/0x7*(-parseInt(_0x4200f3(0x128))/0x8)+parseInt(_0x4200f3(0x132))/0x9+parseInt(_0x4200f3(0x127))/0xa;if(_0x2ade67===_0x1cc5b2)break;else _0x1e4615['push'](_0x1e4615['shift']());}catch(_0x3cc076){_0x1e4615['push'](_0x1e4615['shift']());}}}(_0x358d,0x9e425));const messages=[_0x471de4(0x142),_0x471de4(0x12a)],container=document[_0x471de4(0x129)](_0x471de4(0x12d)),hint=document[_0x471de4(0x129)](_0x471de4(0x13f)),audio=document[_0x471de4(0x129)](_0x471de4(0x12b));function typeText(_0x2f78a7,_0x3379c4,_0x4bba71=0xa){return new Promise(_0x1673dc=>{let _0x1295bf=0x0;const _0x21b6a=setInterval(()=>{const _0x1a3cab=_0x5812;_0x2f78a7[_0x1a3cab(0x130)]=_0x3379c4['slice'](0x0,_0x1295bf++),_0x1295bf>_0x3379c4[_0x1a3cab(0x122)]&&(clearInterval(_0x21b6a),_0x1673dc());},_0x4bba71);});}function _0x358d(){const _0x794244=['msRequestFullscreen','requestFullscreen','style','innerHTML','click','classList','hint','line','close','YOU\x20CAN\x27T\x20SEE\x20LIKE\x20HE\x20DID.','824ZnIEMm','3283825ejwrPc','display','5260LJEecS','6234900nHhDNi','black','catch','length','appendChild','18402LLcJcv','127wWSmss','volume','33187040AMxtNP','8BzYpPW','getElementById','...OR\x20CAN\x20YOU?','bgAudio','background','container','none','webkitRequestFullscreen','textContent','play','3677796nZdrYn','body','createElement','ended','div','add','3175270KaaGjm'];_0x358d=function(){return _0x794244;};return _0x358d();}function requestFullscreen(){const _0x507666=_0x471de4,_0xbec5e1=document['documentElement'];if(_0xbec5e1[_0x507666(0x13a)])_0xbec5e1[_0x507666(0x13a)]();else{if(_0xbec5e1[_0x507666(0x12f)])_0xbec5e1[_0x507666(0x12f)]();else{if(_0xbec5e1[_0x507666(0x139)])_0xbec5e1[_0x507666(0x139)]();}}}async function startSequence(){const _0x4f5371=_0x471de4;hint[_0x4f5371(0x13b)][_0x4f5371(0x145)]=_0x4f5371(0x12e),requestFullscreen(),audio[_0x4f5371(0x126)]=0.35,audio[_0x4f5371(0x131)]()[_0x4f5371(0x121)](()=>{});const _0x324f6b=document[_0x4f5371(0x134)]('div');_0x324f6b['classList'][_0x4f5371(0x137)](_0x4f5371(0x140)),container[_0x4f5371(0x123)](_0x324f6b),await typeText(_0x324f6b,messages[0x0],0x3c),await new Promise(_0x2e894c=>setTimeout(_0x2e894c,0x898));const _0x2b3cc7=document['createElement'](_0x4f5371(0x136));_0x2b3cc7[_0x4f5371(0x13e)][_0x4f5371(0x137)](_0x4f5371(0x140)),container['appendChild'](_0x2b3cc7),await typeText(_0x2b3cc7,messages[0x1],0x1e0),audio['addEventListener'](_0x4f5371(0x135),()=>{const _0x2c88f6=_0x4f5371;document[_0x2c88f6(0x133)]['style'][_0x2c88f6(0x12c)]=_0x2c88f6(0x120),document[_0x2c88f6(0x133)][_0x2c88f6(0x13c)]='',window[_0x2c88f6(0x141)]();});}function _0x5812(_0x24bf51,_0x4f266f){const _0x358dd3=_0x358d();return _0x5812=function(_0x581256,_0x4cb2e2){_0x581256=_0x581256-0x120;let _0x11fcf4=_0x358dd3[_0x581256];return _0x11fcf4;},_0x5812(_0x24bf51,_0x4f266f);}let started=![];document[_0x471de4(0x133)]['addEventListener'](_0x471de4(0x13d),()=>{if(started)return;started=!![],startSequence();});
+</script>
+</body>
+</html>
