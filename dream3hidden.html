@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sundial Crater Dream</title>
+<style>
+  html,body{
+    height:100%;
+    margin:0;
+    background:#040014;
+    color:rgb(255,235,180);
+    font-family:'Courier New',Courier,monospace;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px;
+    cursor:pointer;
+    overflow:hidden;
+  }
+  .wrap{max-width:90ch;width:100%;}
+  .message{font-size:2rem;line-height:1.2;white-space:pre-wrap;word-break:break-word;display:inline-block;transition:opacity .5s ease;opacity:0;user-select:none;}
+  .hint{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);font-size:.95rem;color:rgba(180,180,180,0.6);pointer-events:none;}
+  ::selection{background:rgba(255,255,255,0.06);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="message" class="message" aria-live="polite"><span id="text"></span></div>
+</div>
+<div class="hint"></div>
+<audio id="bgAudio" src="music/neverending_night.mp3" preload="auto"></audio>
+<script>
+const lines = [
+  "The sun bleeds backward through the wound... and yet, it does not close.",  
+  "You stand where time forgot to finish its breath.",  
+  "Do you remember what was promised here?",  
+  "Once, they sought to make the heavens kneel.",  
+  "Forbidden by the Witches, silenced by their own faith.",  
+  "The hour that never came still burns far beneath the glass.",  
+  "Someone must remember.",  
+  "Someone must forget.",  
+  "When the hands move again, will you turn them forward... or back?",  
+  "...",
+  "Will you seek to finish what they began?",  
+];
+
+const textEl = document.getElementById('text');
+const msg = document.getElementById('message');
+const hint = document.querySelector('.hint');
+const bgAudio = document.getElementById('bgAudio');
+
+let running = false;
+let index = 0;
+
+function typeLine(line) {
+  msg.style.opacity = '1';
+  textEl.textContent = '';
+  let i = 0;
+  return new Promise(resolve => {
+    function type() {
+      if (i < line.length) {
+        textEl.textContent += line.charAt(i);
+        i++;
+        setTimeout(type, 118); // slower typing speed
+      } else {
+        resolve();
+      }
+    }
+    type();
+  });
+}
+
+async function playSequence() {
+  running = true;
+  try {
+    bgAudio.volume = 0.2;
+    await bgAudio.play();
+  } catch (err) {
+    console.warn("Audio play blocked by browser:", err);
+  }
+  
+  while (index < lines.length) {
+    msg.style.opacity = '0';
+    await new Promise(r => setTimeout(r, 700));
+    await typeLine(lines[index]);
+    index++;
+    await new Promise(r => setTimeout(r, 3500)); // delay before next line
+  }
+
+  running = false;
+}
+
+document.body.addEventListener('click', () => {
+  if (!running) {
+    hint.style.display = 'none';
+    playSequence();
+  }
+});
+</script>
+</body>
+</html>
