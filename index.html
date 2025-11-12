@@ -34,7 +34,7 @@
         background: url('assets/autumnbkgnd.jpg') center center / contain; /* fall */
         color: #e0e0e0;
         overflow: hidden;
-        -ms-overflow-style: none;  /* IE & Edge legacy */
+        -ms-overflow-style: none; 
         scrollbar-width: none; 
     }
     
@@ -278,7 +278,7 @@
     }
     
 #falling-leaves {
-  pointer-events: none; /* So clicks pass through */
+  pointer-events: none; /* so clicks pass through */
   position: fixed;
   top: 0;
   left: 0;
@@ -293,7 +293,7 @@
   top: -10%;
   width: 30px;
   height: 30px;
-  background-image: url('assets/leaf.png'); /* your leaf graphic */
+  background-image: url('assets/leaf.png'); /*  leaf  */
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0.8;
@@ -471,7 +471,7 @@
             </ul>
         </details>
     
-        <details>
+        <details open>
             <summary>The Web</summary>
             <ul>
                 <li><a onclick="loadPage('internetstuf2.html')">Links!</a></li>
@@ -483,26 +483,26 @@
         <details>
             <summary>Creative</summary>
             <ul>
-                <li><a onclick="loadPage('music.html')">Music</a></li>
+                <!-- <li><a onclick="loadPage('music.html')">Music</a></li> -->
                 <li><a onclick="loadPage('video.html')">Videos</a></li>
-                <li><a onclick="loadPage('baking.html')">Baking</a></li>
+                <!-- <li><a onclick="loadPage('baking.html')">Baking</a></li> -->
                 <li><a onclick="loadPage('photo.html')">Photos</a></li>
             </ul>
         </details>
 
         <details>
-            <summary>Shrines</summary>
+            <summary>Ramblings</summary>
             <ul>
                 <li><a onclick="loadPage('wilds.html')">Outer Wilds</a></li>
-                <li><a onclick="loadPage('undertale.html')">Undertale</a></li>
+                <li><a onclick="loadPage('deepestfear.html')">Our Deepest Fear</a></li>
+                <li><a onclick="loadPage('starwalker.html')" style="color: rgb(180, 180, 130);">Starwalker</a></li>
+                <!-- <li><a onclick="loadPage('undertale.html')">Undertale</a></li> -->
             </ul>
         </details>
 
         <details>
             <summary>Misc</summary>
             <ul>
-                <li><a onclick="loadPage('deepestfear.html')">Our Deepest Fear</a></li>
-                <li><a onclick="loadPage('starwalker.html')" style="color: rgb(180, 180, 130);">Starwalker</a></li>
                 <li><a href="grid.html" target="_parent">Combat Grid</a></li>
                 <li><a href="darkness.html" target="_parent">???</a></li>
             </ul>
@@ -513,8 +513,8 @@
             <ul>
                 <li><a onclick="loadPage('friends.html')">On friends</a></li>
                 <li><a onclick="loadPage('friends/kris.html')">Kris</a></li>
-                <li><a onclick="loadPage('friends/eric.html')">Eric</a></li>
-                <li><a onclick="loadPage('friends/brandon.html')">Brandon</a></li>
+                <!-- <li><a onclick="loadPage('friends/eric.html')">Eric</a></li> -->
+                <!-- <li><a onclick="loadPage('friends/brandon.html')">Brandon</a></li> -->
                 <li><a onclick="loadPage('https://obsidica.com')">Luis</a></li>
                 <li><a onclick="loadPage('friends/gabe.html')">Gabriel</a></li>
             </ul>
@@ -749,7 +749,8 @@
         { title: "Quiet and Falling - Lena Raine", file: "quiet.mp3" },
         { title: "Cylene - kaiasei", file: "cylene.mp3" },
         { title: "Kodoku - Hideki Taniuchi", file: "kodoku.mp3" },
-        { title: "The Millhouse - Talisk", file: "millhouse.mp3" }
+        { title: "The Millhouse - Talisk", file: "millhouse.mp3" },
+        { title: "Kokoro's Oolong Tea - Yusuke Tanaka, agehasprings", file: "tea.mp3" }
     ];
 
     const finalSong = {
@@ -977,18 +978,6 @@
     })
     .catch(err => console.error(err));
 
-    function splat() {
-    try {
-        const sound = new Audio('assets/splat.mp3');
-        sound.volume = 0.05;
-        sound.play();
-
-        // 5% chance to go to lancer page
-        if (Math.random() < 0.05) {
-        window.location.href = "https://deltarune.com/lancer/";
-        }
-    } catch (e) {}
-    }
 
     const splash = document.getElementById('splash');
     const splashImage = document.getElementById('splashImage');
@@ -1170,7 +1159,6 @@ window.addEventListener('load', () => {
 
   </script>
 </div>
-<img src="assets/lancer.gif" id="bottomGif" style="position: fixed; bottom: 0; left: 0%; transform: translateX(-45%); width: 300px; z-index: 9999; image-rendering: pixelated;" onclick="splat()"/>
 <canvas id="leafCanvas"></canvas>
 <div id="fadeout-overlay"></div>
 
