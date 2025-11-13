@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+// const fetch = require("node-fetch");  <-- remove this line
 
 exports.handler = async function (event, context) {
   const STEAM_API_KEY = process.env.STEAM_API_KEY;
@@ -7,7 +7,7 @@ exports.handler = async function (event, context) {
   const url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${STEAM_API_KEY}&steamids=${STEAM_ID}`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url); // Node global fetch
     const json = await response.json();
 
     const player = json.response.players?.[0];
