@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D&D World Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #1b1b1b;
+      overflow: hidden;
+    }
+
+    #map {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      transition: transform 0.5s ease;
+    }
+
+    .map-pushed {
+      transform: translateX(-18vw);
+    }
+
+    .leaflet-container {
+      background: #1b1b1b;
+    }
+
+    #sidebar {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 18vw;
+      height: 100%;
+      background: #272522;
+      color: #f0e6d2;
+      font-family: "Garamond", serif;
+      box-shadow: -0.5vw 0 2vw rgba(0, 0, 0, 0.6);
+      padding: 2vw;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.5s ease;
+      z-index: 1000;
+    }
+
+    #sidebar.open {
+      transform: translateX(0);
+    }
+
+    #sidebar h2 {
+      margin-top: 0;
+      font-size: 1.6em;
+      color: #ffdf91;
+    }
+
+    #sidebar button {
+    background: none;
+    border: 0.1vw solid #ffdf91;
+    color: #ffdf91;
+    padding: 0.3vw 0.6vw;   
+    border-radius: 0.3vw;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9em;       
+    transition: 0.25s ease; 
+    }
+
+    #sidebar button:hover {
+    background: #ffdf91;    
+    color: #272522;         
+    }
+
+    #coords {
+      position: absolute;
+      bottom: 1vw;
+      left: 1vw;
+      background: rgba(0, 0, 0, 0.6);
+      color: #e0e0e0;
+      font-family: monospace;
+      font-size: 1vw;
+      padding: 0.4vw 0.8vw;
+      border-radius: 0.6vw;
+      z-index: 1000;
+      user-select: none;
+    }
+
+    #cityText {
+      line-height: 1.6;
+      font-size: 1em;
+    }
+
+    #cityText h1, #cityText h2, #cityText h3 {
+      color: #ffdf91;
+    }
+    #cityText em { color: #d1c7b3; }
+    #cityText strong { color: #fff1b8; }
+    #cityText a { color: #ffd884; text-decoration: none; }
+    #cityText a:hover { text-decoration: underline; }
+    #cityText ul, #cityText ol { margin-left: 1.2em; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="coords">x: 0, y: 0</div>
+
+  <div id="sidebar">
+    <h2 id="cityName">City Name</h2>
+    <div id="cityText">Click a marker to learn more.</div>
+  </div>
+
+  <script>
+    const mapWidth = 7680;
+    const mapHeight = 4320;
+    const imageUrl = 'assets/thalenrose2.png';
+
+    const map = L.map('map', {
+      minZoom: -2,
+      maxZoom: 2,
+      zoom: 0,
+      center: [0, 0],
+      crs: L.CRS.Simple,
+      maxBoundsViscosity: 1.0,
+    });
+
+    const bounds = [[0, 0], [mapHeight, mapWidth]];
+    L.imageOverlay(imageUrl, bounds).addTo(map);
+    map.setMaxBounds(bounds);
+    map.fitBounds(bounds);
+
+    const sidebar = document.getElementById('sidebar');
+    const cityName = document.getElementById('cityName');
+    const cityText = document.getElementById('cityText');
+    const closeSidebar = document.getElementById('closeSidebar');
+    const mapDiv = document.getElementById('map');
+
+    map.on('click', () => {
+        if (sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open');
+            mapDiv.classList.remove('map-pushed');
+            setTimeout(() => map.invalidateSize(), 500);
+        }
+    });
+
+    const locations = [
+      {
+        name: "Aradisia",
+        x: 3297,
+        y: 2378,
+        color: "#ffdf91",
+        size: 6,
+        text: `
+**(City)**
+- A relatively large city, placed near the north of the Great Expanse.
+- People of Aradisia honor their faith and religion strongly.
+- People usually arrive in town from the south and north, sometimes some elven folk can be seen arriving from the western gates.
+- Aradisia is on the edge of safety, usually dealing with minor annoyances here and there, but very well guarded.
+- The gates of the city close at sundown.
+`
+      },
+      {
+        name: "Cianthus",
+        x: 3694,
+        y: 1638,
+        color: "#ffdf91",
+        size: 6,
+        text: `
+**(City)**
+- A very religious city, they respect both gods and hold them in a very high regard, equally. They do not favor Noctyra or Solryn more than the other, and both gods are equal in the eyes of the city.
+- Compared to Aradisia, Cianthus is a much older city, partially built upon the ruins in the area; though said ruins seem to be more prominent here. The city is much bigger and much more populated than Aradisia, as a result, it is a major center for trade, known as the beating heart of the land, which people from all over can be seen living in.
+- The city is filled with historians, and locals claim at night you can hear whispers from a city beneath, echoes of whatever came before. Religious folk say the world feels to resonate with them in the city as well, when they are there they can feel everyone's heart beating as one during prayer.
+- The city is, and has always been, ruled by a powerful family, the Orientalis family.
+
+`
+      },
+    ];
+
+    locations.forEach(loc => {
+      const marker = L.circleMarker([loc.y, loc.x], {
+        radius: loc.size,
+        fillColor: loc.color,
+        color: "#000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.9,
+      }).addTo(map);
+
+      marker.on('click', (e) => {
+        L.DomEvent.stopPropagation(e); 
+        cityName.textContent = loc.name;
+        cityText.innerHTML = marked.parse(loc.text);
+        sidebar.classList.add('open');
+        mapDiv.classList.add('map-pushed');
+        setTimeout(() => {
+          map.invalidateSize();
+          map.panTo([loc.y, loc.x]);
+        }, 500);
+      });
+    });
+
+    const coordBox = document.getElementById('coords');
+    map.on('mousemove', e => {
+      coordBox.textContent = `x: ${Math.round(e.latlng.lng)}, y: ${Math.round(e.latlng.lat)}`;
+    });
+  </script>
+</body>
+</html>
