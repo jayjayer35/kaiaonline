@@ -8,6 +8,13 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
+    /* Make all elements use border-box to prevent overflow */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
     html, body {
       height: 100%;
       margin: 0;
@@ -33,6 +40,7 @@
       background: #1b1b1b;
     }
 
+    /* Sidebar default (desktop) */
     #sidebar {
       position: absolute;
       top: 0;
@@ -45,11 +53,14 @@
       box-shadow: -0.5vw 0 2vw rgba(0, 0, 0, 0.6);
       padding: 2vw;
       overflow-y: auto;
+      overflow-x: hidden;  /* prevent horizontal scroll */
+      word-wrap: break-word; /* wrap long text */
       transform: translateX(100%);
       transition: transform 0.5s ease;
       z-index: 1000;
     }
 
+    /* Desktop open state */
     #sidebar.open {
       transform: translateX(0);
     }
@@ -58,23 +69,6 @@
       margin-top: 0;
       font-size: 1.6em;
       color: #ffdf91;
-    }
-
-    #sidebar button {
-    background: none;
-    border: 0.1vw solid #ffdf91;
-    color: #ffdf91;
-    padding: 0.3vw 0.6vw;   
-    border-radius: 0.3vw;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.9em;       
-    transition: 0.25s ease; 
-    }
-
-    #sidebar button:hover {
-    background: #ffdf91;    
-    color: #272522;         
     }
 
     #coords {
@@ -104,6 +98,26 @@
     #cityText a { color: #ffd884; text-decoration: none; }
     #cityText a:hover { text-decoration: underline; }
     #cityText ul, #cityText ol { margin-left: 1.2em; }
+
+    /* MOBILE: sidebar slides up */
+    @media (max-width: 768px) {
+      #sidebar {
+        width: 100%;
+        height: 40vh;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        box-shadow: 0 -0.5vw 2vw rgba(0,0,0,0.6);
+        transform: translateY(100%);
+      }
+      #sidebar.open {
+        transform: translateY(0);
+      }
+      .map-pushed {
+        transform: translateX(0); /* no horizontal push on mobile */
+      }
+    }
   </style>
 </head>
 <body>
@@ -137,15 +151,15 @@
     const sidebar = document.getElementById('sidebar');
     const cityName = document.getElementById('cityName');
     const cityText = document.getElementById('cityText');
-    const closeSidebar = document.getElementById('closeSidebar');
     const mapDiv = document.getElementById('map');
 
+    // Close sidebar when clicking anywhere on the map
     map.on('click', () => {
-        if (sidebar.classList.contains('open')) {
-            sidebar.classList.remove('open');
-            mapDiv.classList.remove('map-pushed');
-            setTimeout(() => map.invalidateSize(), 500);
-        }
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        mapDiv.classList.remove('map-pushed');
+        setTimeout(() => map.invalidateSize(), 500);
+      }
     });
 
     const locations = [
@@ -176,7 +190,6 @@
 - Compared to Aradisia, Cianthus is a much older city, partially built upon the ruins in the area; though said ruins seem to be more prominent here. The city is much bigger and much more populated than Aradisia, as a result, it is a major center for trade, known as the beating heart of the land, which people from all over can be seen living in.
 - The city is filled with historians, and locals claim at night you can hear whispers from a city beneath, echoes of whatever came before. Religious folk say the world feels to resonate with them in the city as well, when they are there they can feel everyone's heart beating as one during prayer.
 - The city is, and has always been, ruled by a powerful family, the Orientalis family.
-
 `
       },
     ];
