@@ -3,23 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>D&D World Map</title>
+  <title>Thalenrose</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-    /* Make all elements use border-box to prevent overflow */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
     html, body {
       height: 100%;
       margin: 0;
       background: #1b1b1b;
       overflow: hidden;
+      font-family: "Garamond", serif;
     }
 
     #map {
@@ -32,15 +28,29 @@
       transition: transform 0.5s ease;
     }
 
-    .map-pushed {
-      transform: translateX(-18vw);
+    .leaflet-container { background: #1b1b1b; }
+
+    .leaflet-tooltip {
+    background-color: #272522 !important;
+    color: #ffffff !important;
+    border: 1px solid #ffffff !important;
+    font-family: "Garamond", serif;
+    font-size: 1.2em;
+    padding: 0.2em 0.5em;
+    border-radius: 0.3em;
+
+    opacity: 0;                
+    transition: opacity 0.25s ease;
     }
 
-    .leaflet-container {
-      background: #1b1b1b;
+    .leaflet-tooltip.leaflet-tooltip-open {
+    opacity: 1;                 
     }
 
-    /* Sidebar default (desktop) */
+    .leaflet-tooltip-bottom:after {
+    border-top-color: #272522 !important; 
+    }
+
     #sidebar {
       position: absolute;
       top: 0;
@@ -49,33 +59,24 @@
       height: 100%;
       background: #272522;
       color: #f0e6d2;
-      font-family: "Garamond", serif;
       box-shadow: -0.5vw 0 2vw rgba(0, 0, 0, 0.6);
       padding: 2vw;
       overflow-y: auto;
-      overflow-x: hidden;  /* prevent horizontal scroll */
-      word-wrap: break-word; /* wrap long text */
+      overflow-x: hidden;
+      word-wrap: break-word;
       transform: translateX(100%);
       transition: transform 0.5s ease;
       z-index: 1000;
     }
 
-    /* Desktop open state */
-    #sidebar.open {
-      transform: translateX(0);
-    }
-
-    #sidebar h2 {
-      margin-top: 0;
-      font-size: 1.6em;
-      color: #ffdf91;
-    }
+    #sidebar.open { transform: translateX(0); }
+    #sidebar h2 { margin-top: 0; font-size: 1.6em; color: #ffdf91; }
 
     #coords {
       position: absolute;
       bottom: 1vw;
       left: 1vw;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0,0,0,0.6);
       color: #e0e0e0;
       font-family: monospace;
       font-size: 1vw;
@@ -84,22 +85,18 @@
       z-index: 1000;
       user-select: none;
     }
-
+/*  FUCK THIS FUCK THIS  */
     #cityText {
       line-height: 1.6;
       font-size: 1em;
     }
-
-    #cityText h1, #cityText h2, #cityText h3 {
-      color: #ffdf91;
-    }
+    #cityText h1, #cityText h2, #cityText h3 { color: #ffdf91; }
     #cityText em { color: #d1c7b3; }
     #cityText strong { color: #fff1b8; }
     #cityText a { color: #ffd884; text-decoration: none; }
     #cityText a:hover { text-decoration: underline; }
     #cityText ul, #cityText ol { margin-left: 1.2em; }
 
-    /* MOBILE: sidebar slides up */
     @media (max-width: 768px) {
       #sidebar {
         width: 100%;
@@ -111,11 +108,34 @@
         box-shadow: 0 -0.5vw 2vw rgba(0,0,0,0.6);
         transform: translateY(100%);
       }
-      #sidebar.open {
-        transform: translateY(0);
-      }
-      .map-pushed {
-        transform: translateX(0); /* no horizontal push on mobile */
+      #sidebar.open { transform: translateY(0); }
+    }
+
+    #tagMenu {
+      position: absolute;
+      bottom: 4vw; 
+      left: 1vw;
+      background: rgba(0,0,0,0.6);
+      color: #e0e0e0;
+      font-family: monospace;
+      padding: 0.5vw 1vw;
+      border-radius: 0.6vw;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5vw;
+      font-size: 1.2em;
+    }
+    #tagMenu label {
+      display: flex;
+      align-items: center;
+      gap: 0.3em;
+      cursor: pointer;
+    }
+    @media (max-width: 768px) {
+      #tagMenu {
+        bottom: 6vh; 
+        font-size: 1em;
       }
     }
   </style>
@@ -124,9 +144,16 @@
   <div id="map"></div>
   <div id="coords">x: 0, y: 0</div>
 
+  <div id="tagMenu">
+    <label><input type="checkbox" value="city" unchecked> Cities</label>
+    <label><input type="checkbox" value="camp" unchecked> Camps</label>
+    <label><input type="checkbox" value="landmark" unchecked> Landmarks</label>
+    <label><input type="checkbox" value="other" unchecked> Other</label>
+  </div>
+
   <div id="sidebar">
     <h2 id="cityName">City Name</h2>
-    <div id="cityText">Click a marker to learn more.</div>
+    <div id="cityText">Click a marker.</div>
   </div>
 
   <script>
@@ -143,77 +170,245 @@
       maxBoundsViscosity: 1.0,
     });
 
-    const bounds = [[0, 0], [mapHeight, mapWidth]];
-    L.imageOverlay(imageUrl, bounds).addTo(map);
+    const bounds = [[0,0],[mapHeight,mapWidth]];
+    L.imageOverlay(imageUrl,bounds).addTo(map);
     map.setMaxBounds(bounds);
     map.fitBounds(bounds);
 
     const sidebar = document.getElementById('sidebar');
     const cityName = document.getElementById('cityName');
     const cityText = document.getElementById('cityText');
-    const mapDiv = document.getElementById('map');
 
-    // Close sidebar when clicking anywhere on the map
+    // Map click closes sidebar
     map.on('click', () => {
       if (sidebar.classList.contains('open')) {
         sidebar.classList.remove('open');
-        mapDiv.classList.remove('map-pushed');
-        setTimeout(() => map.invalidateSize(), 500);
       }
     });
 
     const locations = [
-      {
-        name: "Aradisia",
-        x: 3297,
-        y: 2378,
-        color: "#ffdf91",
-        size: 6,
-        text: `
-**(City)**
-- A relatively large city, placed near the north of the Great Expanse.
-- People of Aradisia honor their faith and religion strongly.
-- People usually arrive in town from the south and north, sometimes some elven folk can be seen arriving from the western gates.
-- Aradisia is on the edge of safety, usually dealing with minor annoyances here and there, but very well guarded.
-- The gates of the city close at sundown.
+        {
+        name: "Aradisia", x:3297, y:2378,
+        color:"#15E858", size:6, tags:["city"],
+        text:`### **City**
+
+People of Aradisia honor their faith and religion strongly.
+
+People usually arrive in town from the south, sometimes from the north and west.
+
+Aradisia is on the edge of safety, usually dealing with minor annoyances here and there, but very well guarded.
+
+The city is partially monitored by **Cianthus**.
+
+The gates of the city close at sundown.
 `
-      },
-      {
-        name: "Cianthus",
-        x: 3694,
-        y: 1638,
-        color: "#ffdf91",
-        size: 6,
-        text: `
-**(City)**
-- A very religious city, they respect both gods and hold them in a very high regard, equally. They do not favor Noctyra or Solryn more than the other, and both gods are equal in the eyes of the city.
-- Compared to Aradisia, Cianthus is a much older city, partially built upon the ruins in the area; though said ruins seem to be more prominent here. The city is much bigger and much more populated than Aradisia, as a result, it is a major center for trade, known as the beating heart of the land, which people from all over can be seen living in.
-- The city is filled with historians, and locals claim at night you can hear whispers from a city beneath, echoes of whatever came before. Religious folk say the world feels to resonate with them in the city as well, when they are there they can feel everyone's heart beating as one during prayer.
-- The city is, and has always been, ruled by a powerful family, the Orientalis family.
+        },{
+        name: "Cianthus", x:3694, y:1638,
+        color:"#15E858", size:6, tags:["city"],
+        text:`### **City**
+        
+A very religious city, they respect both gods and hold them in a very high regard, equally. They do not favor Noctyra or Solryn more than the other, and both gods are equal in the eyes of the city.
+
+Compared to Aradisia, Cianthus is a much older city, partially built upon the ruins in the area; though said ruins seem to be more prominent here. The city is much bigger and much more populated than Aradisia, as a result, it is a major center for trade, known as the beating heart of the land, which people from all over can be seen living in.
+
+The city is filled with historians, and locals claim at night you can hear whispers from a city beneath, echoes of whatever came before. Religious folk say the world feels to resonate with them in the city as well, when they are there they can feel everyone's heart beating as one during prayer.
+
+The city is, and has always been, ruled by a powerful family, the **Orientalis** family.
 `
-      },
+        },{
+        name: "Reed", x:4430, y:2102,
+        color:"#58B010", size:6, tags:["city"],
+        text:`### **City**
+        
+A slightly smaller city located on the southern end of the Marsh.
+
+Reed’s population doesn’t only consist of Grung, as there are small groups of other races here as well.
+
+Grung of Reed are more welcoming of outsiders, though they still do not like them. 
+_(they are racist lol)_
+
+While the caste system is not in effect here, they still only allow a strong gold Grung to be the head of the city.
+
+These Grung hold no worship, and they do not like the Grung of **Riphwater**.
+
+`
+        },{
+        name: "Riphwater", x:4597, y:3043,
+        color:"#58B010", size:6, tags:["city"],
+        text:`### **City**
+        
+This is the largest Grung settlement in the marsh, located in the center of Duskmire.
+
+The city is ruled by the strongest of their kin, a golden Grung named **Unc’Unc**.
+
+The buildings are built all on stilts. Buildings and roads are all being connected through wooden walkways and bridges.
+
+The Grung who live here all favor Solryn, but they twist his teachings for their own personal gain and manipulation of the lesser castes.
+
+The lower caste of Riphwater are basically treated as slaves.
+
+It is a very oppressive city and they are not allowed to leave unless exiled or permitted.
+
+They do not welcome outsiders, unless you are a Grung of Riphwater itself.
+
+`
+        },{
+        name: "Leydon", x:3778, y:3464,
+        color:"#8CAFCF", size:6, tags:["city"],
+        text:`### **City**
+        
+The largest city of the Vitruvian Highlands, placed directly at the base of the Sèlean Mountains. It is only slightly smaller than Cianthus.
+
+Leydon is the largest hub of trade and art North of the Sunscorched Wastes, and it is the home of the **Cathedral of the Moon**.
+
+This city boasts some of the best artisans on the continent, as innumerable resources flow into the city allowing the artisans to make truly magnificent works. The Cathedral of the Moon is the single largest structure dedicated to the worship of Noctyra, and it is the center of her church. The head of the clergy of Noctyra can be found here.
+
+This city is directly ruled by the **Clergy of Noctyra**.
+
+`
+        },{
+        name: "Winter's Bluff", x:2863, y:3775,
+        color:"#8CAFCF", size:6, tags:["city"],
+        text:`### **City**
+        
+The only major city in the Vitruvian Highlands that was not founded by **Vitruvius**, and is thus not ruled directly by the **Clergy of Noctyra**. Rather it is ruled by a small noble house.
+
+This small city is found in the far north of the highlands.
+
+`
+        },{
+        name: "Calvess", x:5099, y:663,
+        color:"#151091", size:6, tags:["city"],
+        text:`### **Island City**
+        
+Positioned between the Isle of Hope and the Great Expanse, it is also known as **“The Gateway to the Expanse”**due to most people from the **Isle of Hope** going here to make their way to the mainland.
+
+Has a reputation for smugglers, mercenaries, and people that are a little rough around the edges.
+
+The city is run by a council of guilds (merchants, masons, fishers, etc..) and each has an equal voice in choices for the island. This results in stuff usually never happening politically… unless money is involved.
+
+`
+        },{
+        name: "The Isle of Hope", x:5760, y:271,
+        color:"#151091", size:6, tags:["city"],
+        text:`### **Island City**
+        
+A smaller Island far in the waters southeast of **Calvess**. Life there is not easy, most young and ambitious leave if given the chance.
+
+Not a lot of usable land, and rocky hills cover most of the landscape there as well, yet the people from there speak with great pride of the island.
+
+`
+        },{
+        name: "Helion", x:3670, y:2868,
+        color:"#EDC26B", size:6, tags:["camp"],
+        text:`### **Camp**
+        
+A practical camp, set up by the good of the people to aid those traversing the sunscorched wastes. Some local shops stay stocked with things to deal with the harshness of the area.
+
+The camp is full of travelers going here to there, survivalists, traders. Rarely any permanent residents.
+
+Neutral to everyone, although if you mess with others here, you’ll probably be targeted by locals for disrupting the peace.
+
+`
+        },{
+        name: "Stoneridge", x:2153, y:3327,
+        color:"#8CAFCF", size:6, tags:["city"],
+        text:`### **City**
+        
+The **second largest** city in the Vitruvian Highlands.
+
+This city is found roughly in the center of the region and has a reputation for being fairly provincial. This city is directly ruled by the **Clergy of Noctyra**.
+
+`
+        },{
+        name: "Cryocus", x:927, y:3920,
+        color:"#D5E3E8", size:6, tags:["city"],
+        text:`### **City**
+        
+The great city of the north, carved along the frozen shores of **Lake Vellune**.
+
+Cryocus is a marvel of quiet beauty, its towers and walls made from blue-white stone.
+
+At its heart lies the **Cathedral of Refraction**, an immense domed structure built directly above the ever-frozen lake, where priests and scholars worship both gods through silence and self-reflection.
+
+`
+        },{
+        name: "The Sundial Crater", x:1775, y:809,
+        color:"#ffdf91", size:6, tags:["landmark"],
+        text:`### **Landmark**
+        
+A vast circular basin deep in the Meros, where the ground sinks inward into a mirror-smooth depression in the landscape, made of fused glass, vitrified sand and blackened stone. 
+
+At its center stands a single, half-melted obelisk of brass and sandstone, scholars debate whether it is a natural formation or the relic of some forgotten ritual, but no records of its origin survive.
+
+`
+
+        },{
+        name: "Grand Cathedral of Flame", x:3404, y:3034,
+        color:"#EDC26B", size:6, tags:["other"],
+        text:`### **Grand Cathedral**
+        
+Home to **The Ashen Knight**, a paladin of Balance and Burden.
+
+The Cathedral can be transported above or below ground at the Knight's will. While the Cathedral is underground, the only way to access it is through a **nearby flame illusion**, which leads to the lower part of the cathedral.
+
+There is a large pipe organ that resides in the Cathedral's main room, that can be faintly heard even when below ground.
+
+`
+        },
     ];
 
+    const markers = [];
+
     locations.forEach(loc => {
-      const marker = L.circleMarker([loc.y, loc.x], {
+    const marker = L.circleMarker([loc.y, loc.x], {
         radius: loc.size,
         fillColor: loc.color,
         color: "#000",
         weight: 1,
         opacity: 1,
-        fillOpacity: 0.9,
-      }).addTo(map);
+        fillOpacity: 0.9
+    }).addTo(map);
 
-      marker.on('click', (e) => {
-        L.DomEvent.stopPropagation(e); 
+    marker.tags = loc.tags;
+    marker.locData = loc;
+    marker.originalRadius = loc.size; 
+
+    marker.on('mouseover', e => {
+        marker.setRadius(marker.originalRadius * 1.5);
+        marker.bindTooltip(loc.name, {
+        permanent: false,
+        direction: "top",
+        offset: [0, -marker.options.radius]
+        }).openTooltip();
+    });
+
+    marker.on('mouseout', e => {
+        marker.setRadius(marker.originalRadius);
+        marker.closeTooltip();
+    });
+
+    marker.on('click', e => {
+        L.DomEvent.stopPropagation(e);
         cityName.textContent = loc.name;
         cityText.innerHTML = marked.parse(loc.text);
         sidebar.classList.add('open');
-        mapDiv.classList.add('map-pushed');
-        setTimeout(() => {
-          map.invalidateSize();
-          map.panTo([loc.y, loc.x]);
-        }, 500);
+        setTimeout(()=>map.invalidateSize(),500);
+    });
+
+    markers.push(marker);
+    });
+
+
+    const checkboxes = document.querySelectorAll("#tagMenu input[type=checkbox]");
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const selectedTags = Array.from(checkboxes).filter(c => c.checked).map(c => c.value);
+        markers.forEach(m => {
+          const show = m.tags.some(tag => selectedTags.includes(tag));
+          if (show) m.addTo(map);
+          else m.remove();
+        });
       });
     });
 
