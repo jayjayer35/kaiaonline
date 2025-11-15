@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>kaia's campfire</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #1f0a31 url('../assets/galaxybkagnd.jpg') repeat;
+    background-size: cover;
+    font-family: "Comic Sans MS","Courier New",monospace;
+    color: #fbd4ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .campfire-container {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .campfire-container img {
+    width: 150px;
+    height: auto;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
+  }
+
+  .campfire-container img:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 15px #ffb347);
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-top: 1rem;
+    text-shadow: 2px 2px 5px #000;
+  }
+
+  /* soft blinking stars layer */
+  .stars {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: transparent url('../assets/stars.png') repeat;
+    background-size: contain;
+    animation: moveStars 60s linear infinite;
+    z-index: 1;
+    opacity: 0.3;
+  }
+
+  @keyframes moveStars {
+    from { transform: translate(0,0); }
+    to { transform: translate(-500px, -500px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div class="campfire-container">
+  <a href="index.html">
+    <img src="../assets/campfire.png" alt="campfire">
+  </a>
+  <h1>sit by the fire a while...</h1>
+</div>
+
+<script>
+    document.addEventListener('click', () => {
+    const sound = new Audio('../assets/click.mp3');
+    sound.volume = 0.02;
+    sound.play();
+}, true);
+  </script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script>
+    //ill leave this here, but this little <script> makes  the titlebar scroll if ya wanna use it
+    const siteTitle = "woo woo - how cool - ";
+    let scrollTitle = siteTitle;
+    setInterval(() => {
+        scrollTitle = scrollTitle.substring(1) + scrollTitle.charAt(0);
+        document.title = scrollTitle;
+    }, 300); //speed
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet" />
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        font-family: 'Space Mono', monospace;
+        background-color: #0e1a2b;
+        color: #e0e0e0;
+        overflow: hidden;
+    }
+
+    body::after {
+        content: '';
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;  
+        opacity: 0.03;
+        mix-blend-mode: screen;
+        pointer-events: none;
+        z-index: 100;
+    }
+
+    /* this is keeping it on the left, im like 90% sure */
+    .container {
+        display: grid;
+        grid-template-columns: 200px 1fr 260px;
+        height: 100vh;
+    }
+
+    .panel {
+        
+        backdrop-filter: blur(4px);
+        background: rgba(10, 10, 20, 0.65);
+        padding: 16px;
+        overflow-y: auto;
+        height: 100%;
+        border-right: 1px solid rgba(255,255,255,0.05);
+    }
+
+    h2 {
+        font-size: 1rem;
+        color: #9ed0ff;
+        margin-bottom: 1rem;
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        outline: none;
+        transition: background 0.2s ease;
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 14px;
+        width: 14px;
+        background: #9ed0ff;
+        border: 2px solid #0e1a2b;
+        border-radius: 50%;
+        box-shadow: 0 0 6px #88c0d0;
+        transition: background 0.3s ease;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        height: 14px;
+        width: 14px;
+        background: #9ed0ff;
+        border: 2px solid #0e1a2b;
+        border-radius: 50%;
+        box-shadow: 0 0 6px #88c0d0;
+        cursor: pointer;
+    }
+    input[type="range"]:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    button {
+        font-family: 'Space Mono', monospace;
+        background: rgba(50, 100, 150, 0.15);
+        border: 1px solid #88c0d0;
+        color: #c2f0ff;
+        padding: 6px 12px;
+        border-radius: 3px;
+        box-shadow: 0 0 6px rgba(100, 200, 255, 0.2);
+        transition: 0.2s ease;
+        cursor: pointer;
+    }
+    button:hover {
+        background: rgba(100, 180, 255, 0.3);
+        color: white;
+        border-color: #aeefff;
+    }
+  </style>
+</head>
+<body>
+
+
+<div class="container">
+    <div class="panel">
+        <h2>NOW PLAYING</h2>
+        <div class="music">
+        <p id="song-title"><strong>not started...</strong></p>
+
+        <audio id="musicPlayer" preload="auto"></audio>
+
+        <div style="margin: 8px 0;">
+            <input type="range" id="progressBar" value="0" step="1" min="0" max="100" style="width: 100%;">
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+            <button id="pauseButton">⏸</button>
+            <button id="skipButton">⏭</button>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3" />
+
+        </div>
+    </div>
+  <script>
+
+    //music player script -===========================================================-
+
+    const musicPlayer = document.getElementById('musicPlayer');
+    musicPlayer.volume = 0.03; // start vol
+    const songTitle = document.getElementById('song-title');
+    const skipButton = document.getElementById('skipButton');
+    const pauseButton = document.getElementById('pauseButton');
+    const progressBar = document.getElementById('progressBar');
+    const volumeSlider = document.getElementById('volumeSlider');
+
+  
+    //must be formatted like this, the title is what will display on the music player, the file is the name of the mp3 file that the song is names
+    const songs = [
+        { title: "example name 1", file: "file1.mp3" },
+        { title: "example name 2", file: "file2.mp3" },
+        { title: "example name 3", file: "file3.mp3" },
+        
+    ];
+
+    //this little section lets you determine how many songs it played that you dont want to play again in its "memory". make sure there are more songs than this number
+    const historyLimit = 3; // <--- u can change it here
+    let playHistory = [];
+
+    //gets a random song from the table woahhhh
+    function getRandomSong() {
+        let candidates = songs.filter(song => !playHistory.includes(song.file));
+        if (candidates.length === 0) {
+            playHistory = [];
+            candidates = [...songs];
+        }
+        const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+        playHistory.push(chosen.file);
+        if (playHistory.length > historyLimit) {
+            playHistory.shift();
+        }
+        return chosen;
+    }
+
+    //makes skip button... skip songs (waow)
+    skipButton.addEventListener('click', loadAndPlaySong);
+
+    //loads and plays a song
+    function loadAndPlaySong() {
+        const song = getRandomSong();
+        musicPlayer.src = `../music/${song.file}`;
+        musicPlayer.play();
+        songTitle.innerHTML = `<strong>${song.title}</strong>`;
+    }
+
+    //this stuff tracks the song progress, best not to touch :>
+    musicPlayer.addEventListener('timeupdate', () => {
+        if (musicPlayer.duration) {
+        progressBar.value = (musicPlayer.currentTime / musicPlayer.duration) * 100;
+        }
+    }); //this one lets you adjust posititon of the song by messing with the progress bar lululul
+    progressBar.addEventListener('input', () => {
+        if (musicPlayer.duration) {
+        musicPlayer.currentTime = (progressBar.value / 100) * musicPlayer.duration;
+        }
+    });
+
+    //this is the code so the volume is matched by the position of the vol. slider
+    volumeSlider.addEventListener('input', () => {
+        musicPlayer.volume = volumeSlider.value;
+    });
+
+    //here you can change how the pause button looks if ya wanna :3
+    pauseButton.addEventListener('click', () => {
+    if (musicPlayer.paused) {
+        musicPlayer.play();
+        pauseButton.textContent = '⏸';
+    } else {
+        musicPlayer.pause();
+        pauseButton.textContent = '▶';
+    }
+    });
+
+    // this will get a random song from the table seen earlier
+    // and then runs another function to play said loaded song.
+    // once this process has started it should automatically do it itself when the song ends and stuffs
+    document.addEventListener("DOMContentLoaded", function() {
+        getRandomSong();
+        loadAndPlaySong();
+    });
+  </script>
+</div>
+</body>
+</html>

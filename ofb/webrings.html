@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>webrings!!</title>
+  <link rel="stylesheet" href="galactic-webring.css">
+  <style>
+    body {
+      background: url("../assets/starsss.gif");
+      color: white;
+      font-family: 'Courier New', Courier, monospace;
+      color: #b5a9d6;
+      text-shadow: 0 0 10px #00d9ff;
+      animation: flicker .005s infinite;
+      margin: 0;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      opacity: 0.4;
+      pointer-events: none; 
+      z-index: 0;
+    }
+    @keyframes flicker {
+      0% { text-shadow: 0 0 5px #00eeff6c, 0 0 5px #00eeff6c; }
+      20% { text-shadow: none; }
+      40% { text-shadow: 0 0 5px #00eeff6c, 0 0 5px #00eeff6c; }
+      60% { text-shadow: none; }
+      80% { text-shadow: 0 0 4px #00eeff6c, 0 0 4px #00eeff6c; }
+      100% { text-shadow: 0 0 5px #00eeff6c, 0 0 5px #00eeff6c; }
+    }
+    .card {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      padding: .5rem .5rem;
+      width: fit-content;
+    }
+
+    .card h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+      color: #aaf;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      gap: .5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+
+    a {
+      color: #aaf;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    object {
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="galactic-webring">
+    <script src="https://darkosparko.nekoweb.org/webrings/galactic-webring/galactic-webring-variables.js" target="_parent"></script>
+    <script src="../gw-widget.js" target="_parent"></script>
+  </div>
+  <div class="card">
+    <div id='aperturewebring'>
+      <script type="text/javascript" src="https://jack-dawlia.neocities.org/page/shrines/portal/aperturewebring/onionring-variables.js"></script>
+      <script type="text/javascript" src="https://jack-dawlia.neocities.org/page/shrines/portal/aperturewebring/onionring-widget-1.js"></script>
+      <noscript>
+      This site is part of the <a href="https://jack-dawlia.neocities.org/page/shrines/portal/aperturewebring">Aperture Webring</a>!
+      </noscript>
+    </div>
+  </div>
+  <div class="row">
+    <div class="card">
+      <h2>Melonland<br> Surf Club</h2>
+      <object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#383838" type="image/svg+xml"></object>
+    </div>
+
+    <!-- stack hotline and retro  -->
+    <div class="column">
+      <div class="card">
+        <h2>&MediumSpace;Retronauts Webring&MediumSpace;</h2>
+        <a href='https://webring.dinhe.net/prev/https://kaia.starscene.com' target="_parent">«««</a>
+        <a href="https://webring.dinhe.net/" target="_parent">Home</a>
+        <a href='https://webring.dinhe.net/next/https://kaia.starscene.com' target="_parent">»»»</a><br>
+            <a style="font-size:60%" href="https://webring.dinhe.net/random" target="_top">(random)</a>
+      </div>
+      <div class="card">
+        <h2>&emsp14;&emsp14;&MediumSpace;no ai webring&MediumSpace;&MediumSpace;&emsp14;&emsp14;</h2>
+        <a href="https://baccyflap.com/noai/?prv&s=kio" target="_top">«««</a>
+        <a href="https://baccyflap.com/noai" target="_blank">Home</a>
+        <a href="https://baccyflap.com/noai/?nxt&s=kio" target="_top">»»»</a><br>
+        <a style="font-size:60%" href="https://baccyflap.com/noai/?rnd" target="_top">(random)</a>
+      </div> 
+  
+    </div>
+  </div>
+  <div class="card">
+    <h2>Hotline Webring</h2>
+    <a href='https://hotlinewebring.club/kaiaonline/previous' target="_parent">«««</a>
+    <a href="https://hotlinewebring.club/" target="_parent">Home</a>
+    <a href='https://hotlinewebring.club/kaiaonline/next' target="_parent">»»»</a>
+  </div>
+  <div>
+    <div id='gfdkris'> 
+      <script type="text/javascript" src="https://fabstarotcorner.neocities.org/webring/onionring-variables.js"></script>
+      <script type="text/javascript" src="../gfdkris.js"></script>
+      </div>
+    </div>
+  
+            
+  <script>
+    document.addEventListener('click', () => {
+    const sound = new Audio('../assets/click.mp3');
+    sound.volume = 0.02;
+    sound.play();
+}, true);
+  </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>dream</title>
+<style>
+  html,body{
+    height:100%;
+    margin:0;
+  }
+  body{
+    background:#040014;
+    color:rgb(255, 235, 180);
+    font-family: 'Courier New', Courier, monospace;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px;
+    cursor:default; 
+    overflow:hidden;
+  }
+
+  .wrap{
+    max-width:90ch;
+    width:100%;
+  }
+
+  .message{
+    font-size:2rem;
+    line-height:1.2;
+    white-space:pre-wrap;
+    word-break:break-word;
+    display:inline-block;
+    transition:opacity .5s ease;
+    opacity:0; 
+    user-select:none; 
+  }
+
+
+  .hint{
+    position:fixed;
+    bottom:18px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:.95rem;
+    color:rgba(180,180,180,0.6);
+    pointer-events:none;
+  }
+
+  ::selection{ background: rgba(255,255,255,0.06); }
+</style>
+</head>
+<body>
+  <!--"dont meddle in whats not yours" -->
+  <!--"i see you, and you see me, but can we see ahead?, these gods have been so damn annoying, havent they"-->
+  <div class="wrap">
+    <div id="message" class="message" aria-live="polite"><span id="text"></span><span id="cursor" class="cursor" aria-hidden="true"></span></div>
+  </div>
+  <div class="hint" id="hint"></div>
+
+  <audio id="bgAudio" src="../music/lament_balance.mp3" loop preload="auto"></audio>
+<script>
+const _0x5b2e64=_0x4adb;(function(_0x55f1aa,_0x40d2cf){const _0x596ded=_0x4adb,_0x4b99ee=_0x55f1aa();while(!![]){try{const _0x4a2fdc=-parseInt(_0x596ded(0x214))/0x1+parseInt(_0x596ded(0x202))/0x2+parseInt(_0x596ded(0x200))/0x3*(parseInt(_0x596ded(0x1f6))/0x4)+-parseInt(_0x596ded(0x20a))/0x5*(parseInt(_0x596ded(0x1fa))/0x6)+parseInt(_0x596ded(0x20d))/0x7+-parseInt(_0x596ded(0x1fe))/0x8*(-parseInt(_0x596ded(0x213))/0x9)+-parseInt(_0x596ded(0x1f0))/0xa;if(_0x4a2fdc===_0x40d2cf)break;else _0x4b99ee['push'](_0x4b99ee['shift']());}catch(_0x2ac92c){_0x4b99ee['push'](_0x4b99ee['shift']());}}}(_0x299b,0x2d562));const MESSAGES=[_0x5b2e64(0x210),_0x5b2e64(0x208),_0x5b2e64(0x201),_0x5b2e64(0x1f7),'THE\x20DEATH\x20OF\x20AN\x20EYE\x20RENDERS\x20THE\x20WHOLE\x20WORLD\x20BLIND'],messageEl=document[_0x5b2e64(0x204)](_0x5b2e64(0x215)),textEl=document['getElementById'](_0x5b2e64(0x1f3)),hintEl=document[_0x5b2e64(0x204)](_0x5b2e64(0x1fd)),audioEl=document[_0x5b2e64(0x204)]('bgAudio');let userMessage=localStorage[_0x5b2e64(0x212)](_0x5b2e64(0x1f5));!userMessage&&(Math[_0x5b2e64(0x1fb)]()<0.05?userMessage=_0x5b2e64(0x206):userMessage=MESSAGES[Math['floor'](Math[_0x5b2e64(0x1fb)]()*MESSAGES['length'])],localStorage[_0x5b2e64(0x207)](_0x5b2e64(0x1f5),userMessage));window[_0x5b2e64(0x1f8)]=function(){const _0x3ed482=_0x5b2e64;localStorage[_0x3ed482(0x1fc)]('userMessage'),location[_0x3ed482(0x1f2)]();};function _0x4adb(_0x41dcb4,_0x314100){const _0x299b0e=_0x299b();return _0x4adb=function(_0x4adb12,_0x7da5d6){_0x4adb12=_0x4adb12-0x1f0;let _0x47cfd7=_0x299b0e[_0x4adb12];return _0x47cfd7;},_0x4adb(_0x41dcb4,_0x314100);}function typeWriter(_0x23508e,_0x24f49a){const _0x2cb38b=_0x5b2e64;messageEl['style']['opacity']='1',textEl[_0x2cb38b(0x20f)]='';let _0x3bae4b=0x0;return new Promise(_0x542706=>{function _0x489a46(){const _0x2adc31=_0x4adb;_0x3bae4b<_0x23508e[_0x2adc31(0x1f1)]?(textEl[_0x2adc31(0x20f)]+=_0x23508e[_0x2adc31(0x209)](_0x3bae4b),_0x3bae4b++,setTimeout(_0x489a46,_0x24f49a)):_0x542706();}_0x489a46();});}function requestFullscreen(){const _0x30af65=_0x5b2e64,_0x50ab97=document[_0x30af65(0x205)];if(_0x50ab97['requestFullscreen'])return _0x50ab97[_0x30af65(0x20e)]();if(_0x50ab97['webkitRequestFullscreen'])return _0x50ab97[_0x30af65(0x20b)]();if(_0x50ab97[_0x30af65(0x1ff)])return _0x50ab97[_0x30af65(0x1ff)]();return Promise['resolve']();}let started=![];document[_0x5b2e64(0x20c)]['addEventListener'](_0x5b2e64(0x203),async function(){const _0x3eff91=_0x5b2e64;if(started)return;started=!![];if(hintEl)hintEl['style']['display']=_0x3eff91(0x211);requestFullscreen()['catch'](()=>{});try{audioEl.volume = 0.2;await audioEl[_0x3eff91(0x1f4)]();}catch(_0x36a234){console['warn'](_0x3eff91(0x1f9),_0x36a234);}await typeWriter(userMessage,0x50);},{'once':!![]});function _0x299b(){const _0x3b529a=['20RMBksd','webkitRequestFullscreen','body','2351881GwDvAU','requestFullscreen','textContent','WHAT\x20SOME\x20CALL\x20THE\x20SACRED\x20WOUND,','none','getItem','9VzFsan','123441lWtRek','message','8297670yWjmNc','length','reload','text','play','userMessage','152ouNTrc','WHERE\x20THE\x20TRUTH\x20STILL\x20WAITS\x20TO\x20BE\x20READ.','resetUserMessage','Audio\x20play\x20blocked:','128178OWOvPB','random','removeItem','hint','2707784ezQREC','msRequestFullscreen','16893pUQOhH','FIND\x20THE\x20PLACE\x20THAT\x20HIDES\x20ITS\x20HEAD,','671848iLOsia','click','getElementById','documentElement','and\x20at\x20the\x20world’s\x20still\x20hour,\x20three\x20echoes\x20remain.\x20one\x20burned\x20into\x20glass\x20where\x20heaven\x20burned\x20fierce.\x20one\x20with\x20records\x20that\x20remembers\x20all\x20between\x20eons.\x20and\x20lastly,\x20one\x20buried\x20deeper,\x20where\x20the\x20those\x20of\x20the\x20ruin,\x20still\x20persist.','setItem','ONCE\x20AN\x20INSTRUMENT,\x20WELL\x20TUNED','charAt'];_0x299b=function(){return _0x3b529a;};return _0x299b();}
+</script>
+</body>
+</html>

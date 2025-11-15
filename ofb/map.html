@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thalenrose</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #1b1b1b;
+      overflow: hidden;
+      font-family: "Garamond", serif;
+    }
+
+    #map {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      cursor: grab;
+      transition: transform 0.5s ease;
+    }
+
+    .leaflet-container { background: #1b1b1b; }
+
+    .leaflet-tooltip {
+      background-color: #272522 !important;
+      color: #ffffff !important;
+      border: 1px solid #ffffff !important;
+      font-family: "Garamond", serif;
+      font-size: 1.2em;
+      padding: 0.2em 0.5em;
+      border-radius: 0.3em;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .leaflet-tooltip.leaflet-tooltip-open { opacity: 1; }
+    .leaflet-tooltip-bottom:after { border-top-color: #272522 !important; }
+
+    #sidebar {
+      position: absolute;
+      top: 0; right: 0;
+      width: 18vw; height: 100%;
+      background: #272522;
+      color: #f0e6d2;
+      box-shadow: -0.5vw 0 2vw rgba(0,0,0,0.6);
+      padding: 2vw;
+      overflow-y: auto;
+      overflow-x: hidden;   
+      word-wrap: break-word;
+      transform: translateX(100%);
+      transition: transform 0.5s ease;
+      z-index: 1000;
+    }
+    #sidebar.open { transform: translateX(0); }
+
+    #sidebar h2 {
+      margin-top: 0;
+      font-size: 1.6em;
+      color: #ffdf91;
+    }
+
+    #cityText {
+      line-height: 1.6;
+      font-size: 1em;
+    }
+    #cityText h1, #cityText h2, #cityText h3 { color: #ffdf91; }
+    #cityText em { color: #d1c7b3; }
+    #cityText strong { color: #fff1b8; }
+    #cityText a { color: #ffd884; text-decoration: none; }
+    #cityText a:hover { text-decoration: underline; }
+    #cityText ul, #cityText ol { margin-left: 1.2em; }
+
+    @media (max-width: 768px) {
+      #sidebar {
+        width: 100%;
+        height: 40vh;
+        top: auto; bottom: 0; left: 0; right: 0;
+        box-shadow: 0 -0.5vw 2vw rgba(0,0,0,0.6);
+        transform: translateY(100%);
+      }
+      #sidebar.open { transform: translateY(0); }
+    }
+
+    #coords {
+      position: absolute;
+      bottom: 1vw; left: 1vw;
+      background: rgba(0,0,0,0.6);
+      color: #e0e0e0;
+      font-family: monospace;
+      font-size: 1vw;
+      padding: 0.4vw 0.8vw;
+      border-radius: 0.6vw;
+      z-index: 1000;
+      user-select: none;
+    }
+
+    #leftControls {
+      position: absolute;
+      left: 1vw;
+      bottom: 3.5vw;
+      z-index: 1200;
+
+      display: flex;
+      flex-direction: column;
+      gap: 0.2vw;
+      align-items: flex-start;
+    }
+
+    #tagMenu {
+      background: rgba(0, 0, 0, 0.6);
+      color: #e0e0e0;
+      font-family: monospace;
+
+      padding: 0.6vw 1vw;
+      border-radius: 0.6vw;
+
+      display: flex;
+      flex-direction: column;
+      gap: 0.45vw;
+      font-size: 1.1em;
+    }
+
+    #tagMenu label {
+      display: flex;
+      align-items: center;
+      gap: 0.3em;
+      cursor: pointer;
+    }
+
+    #mapSwitchWrapper {
+      background: rgba(0,0,0,0.6);
+      padding: 0.45vw 0.9vw;
+      border-radius: 0.6vw;
+      display: flex;
+      align-items: center;
+      gap: 0.7vw;
+    }
+
+    .switchLabel {
+      color: #e0e0e0;
+      font-family: monospace;
+      font-size: 1.05em;
+    }
+
+    .switch {
+      width: 2.8vw;
+      height: 1.4vw;
+      background: #444;
+      border-radius: 1vw;
+      position: relative;
+      cursor: pointer;
+
+      transition: background-color 0.25s ease;
+    }
+
+    .switch::before {
+      content: "";
+      position: absolute;
+      width: 1.2vw;
+      height: 1.2vw;
+      background: #ddd;
+      border-radius: 50%;
+      top: 0.1vw;
+      left: 0.1vw;
+
+      transition: transform 0.25s ease, background 0.25s ease;
+    }
+
+    .switch.active {
+      background-color: #c9a86a;
+    }
+
+    .switch.active::before {
+      background: #272522;
+      transform: translateX(1.4vw);
+    }
+
+    @media (max-width: 768px) {
+
+      #leftControls {
+        bottom: 6vh;
+        gap: 1.2vh;
+      }
+
+      #mapSwitchWrapper,
+      #tagMenu {
+        padding: 1vh 2.2vh;
+        font-size: 1em;
+      }
+
+      .switch {
+        width: 7vh;
+        height: 3.5vh;
+      }
+
+      .switch::before {
+        width: 3vh;
+        height: 3vh;
+        top: 0.25vh;
+        left: 0.25vh;
+      }
+
+      .switch.active::before {
+        transform: translateX(3.2vh);
+      }
+    }
+
+    .fade-layer {
+      transition: opacity 0.5s ease-in-out;
+    }
+
+</style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="coords">x: 0, y: 0</div>
+
+  <div id="leftControls">
+    <div id="tagMenu">
+      <label><input type="checkbox" value="city" checked> Cities</label>
+      <label><input type="checkbox" value="camp" checked> Camps</label>
+      <label><input type="checkbox" value="landmark" checked> Landmarks</label>
+      <label><input type="checkbox" value="other" checked> Other</label>
+    </div>
+
+    <div id="mapSwitchWrapper">
+      <span class="switchLabel">Map Labels</span>
+      <div id="mapSwitch" class="switch" role="button" aria-pressed="false"></div>
+    </div>
+  </div>
+
+  <div id="sidebar">
+    <h2 id="cityName">City Name</h2>
+    <div id="cityText">Click a marker.</div>
+  </div>
+
+<script>
+const mapWidth = 7680;
+const mapHeight = 4320;
+
+const baseMapURL = "../assets/thalenrose_nolabel.png";
+const labelMapURL = "../assets/thalenrose_label.png";
+
+/* --- REFERENCE stuff --- */
+const references = {
+  /* REGIONS REGIONS REGIONS REGIONS REGIONS REGIONS REGIONS REGIONS REGIONS */
+  "Vitruvian Highlands": {
+    title: "Vitruvian Highlands",
+    text: `### **Region**
+        
+Named after a cleric of Noctyra who first established many settlements in the area, the Vitruvian Highlands rest in between the Scorched Wastes to the south, and the vast Petalgrave Tundra to the north.
+
+The highlands are a hilly expanse of rocky outcroppings formed at the base of the Sèlean Mountains.
+
+There are many steep rocky cliffs and deep gorges dotting the grassy slopes. The soil quality in the highlands is poor and rocky, leading to agricultural fields being scarce.
+
+The highlands are extremely rich in ores, resulting in certain areas suffering extreme disturbance due to mining practices. While the climate at the southern edge of the highlands is fairly mild, the northern edge of the highlands is bitterly cold. It is not uncommon for the entirety of the green hills to be covered in a thick layer of snow, particularly in the winter months.
+
+The most defining aspect of culture in the Vitruvian Highlands is the prevalence of the Church of Noctyra. Due to the circumstances of the region’s founding, worship of Noctyra is part of daily life in the highlands. That’s not to say worship of Solryn is not uncommon in the highlands, in fact is still often encouraged, but his worship is much less ingrained in the culture.
+
+Most houses in the Vitruvian Highlands keep a small shrine to Noctyra dedicated to personal prayer. 
+
+The Church of Noctyra’s presence in the highlands is such that many of the laws and festivals from the region are derived from Noctyra’s teachings and values, and have had influence further than just this region alone. For example, the Vigils.
+
+The second defining aspect of culture in the highlands is the lack of good soil. The inability to grow crops results in the majority of highlanders living pastoral lifestyles. The remainder of the peasantry generally work in the many mines within the region. The prevalence of ore and wool as resources in the highlands leads to a large class of artisans living and working in the region. Many notable smiths and weavers are from this area. Naturally, the church of Noctyra often commissions works of art dedicated to Noctyra, rarely Solryn, but it provides a bolstering artisan community in the cities of the Highlands.
+`
+  },"Great Expanse": {
+    title: "Great Expanse",
+    text: `### **Region**
+        
+A great big plain. Sparse trees and beautiful low rolling hills. 
+
+Ruins lie scattered across the landscape, remnants of a lost time. 
+
+This region of the land is known as one that is fairly safe.
+
+Both Silent Hollow, and the Meros Desert are on the western side. 
+
+North leads to the Sunscorched Wastes. 
+
+The East is completely blocked off by the Sèlean Mountains.
+
+A small chunk of the land has access to The Shattered Sea`
+
+  },"Duskmire": {
+    title: "Duskmire",
+    text: `### **Region**
+        
+The swamp marsh on the Eastern side of the Sèlean Mountains. 
+
+Broken wetlands and rivers make up most of this marshy landscape, the marsh begins to blend to the ocean the further you go east. 
+
+The Grung, who live in this area have called it Duskmire, due to its unique feel on sundown where the horizon itself begins to get hazy.
+
+The marsh feels very humid, and there is shallow water on the parts that are walkable. 
+
+A dense hazy fog rolls in every now and again, making the air itself hard to breathe.
+
+Two major cities lie in the marsh, not many camps. This is a result of constant flooding the region faces.
+`
+  },"Sèlean Mountains": {
+    title: "Sèlean Mountains",
+    text: `### **Region**
+        
+The Sèlean Mountains seem impossibly tall, too tall to scale. Rumored that they pierce the aether itself. 
+
+A geographical divide between the Great Expanse and Duskmire.
+
+People in the past have disappeared trying to climb these mountains.
+
+The mountains have been said to be here since time itself, although not much is known about them, but they are often thought of as a symbol of perseverance by neighboring cities and passer-bys.`
+  },"Silent Hollow": {
+    title: "Silent Hollow",
+    text: `### **Region**
+Silent Hollow is a vast, dense, misty forest. The air is cool, heavy, and still. Sound itself feels muted, as if swallowed by the trees. 
+
+The forest canopy filters the sun into slivers of light that dot the ground, which of itself glows faintly.
+
+Wether entering from the Meros Desert, Great Expanse, or Vitruvian Highlands, the Hollow seems to disorient all people who seem to enter, and roads seem to twist back on themselves. Compasses refuse to work.
+
+The only people ever that seem comfortable traversing this forest are eladrin.
+`        
+  },"Meros Desert": {
+    title: "Meros Desert",
+    text: `### **Region**
+At the far reaches south of the Great Expanse lies the Meros Desert, a vast stretch of pale dunes, almost entirely surrounded by The Shattered Sea.
+
+Despite its desolation, the Meros holds quiet beauty. The sands shimmer like golden dust, and when night falls, the sky is sprinkled with beautifully bright stars. 
+
+The desert carries a stillness that feels watchful, like the land itself remembers something it cannot forgive.
+
+Though often mistaken for lifeless, the region is home to small, isolated communities who have learned to endure the heat and the quiet. Most who live here worship Solryn in quiet, their faith tempered by some caution.
+
+Ruined pillars circle a central part of the landscape, these pillars half-buried and melted smooth by an ancient heat. The people call them the Spires of the Fallen Dawn, remnants of an older age whose purpose has long been lost to time.
+
+Travelers who cross the Meros speak of strange sights, glimmers of shining towers in place of those ruins, and rivers of gold seen only at the edge of vision.
+
+Travelers report seeing “walking silhouettes”, figures made of light that vanish when approached.`        
+  },"The Shattered Sea": {
+    title: "The Shattered Sea",
+    text: `### **Ocean**
+A vast ocean covering most of the east and southeast of the world. Named due to the fact that when you look in the water, your reflection is never whole. It looks as if you were looking in a broken mirror.
+
+The water throughout The Shattered Sea is unpredictable, some days it lies dead still, some days the waves crash and reach multiple feet high, like the ocean is fighting itself.
+
+People who chart these waters tell passed down tales about how “the sea itself was torn apart by a divine battle.”
+
+The people that live here (either on Calvess or The Isle of Hope), are almost always unique. To grow up here is to know hardship more than anyone else. The people embody resilience and survival, regardless of their situation. They are known to persevere in even the roughest circumstances.
+
+Faith on these islands is complicated. They have respect for the gods, yet do not swear by them. Their indifference brings a unique sense of tranquility to the islands however.
+`        
+  },"Sunscorched Wastes": {
+    title: "Sunscorched Wastes",
+    text: `### **Region**
+Lies north of the Great Expanse.
+
+This place is known to be hot during the day, so it is advised to travel with some protection, or to travel at night when it is much cooler.
+
+This region is commonly thought of as a child region to that of the Great Expanse, but big enough to bear its own name. As such, it mirrors the Great Expanse geographically, but burned. 
+
+Charred and dead trees lie scorched and scattered about. There's harsh sunlight, cracked earth, heatwaves, and embers drifting in the wind on a normal day, dust storms on a bad one.
+
+Great pale flames burn tall around the region, you can see them from far away, but they do not spread. This land is an anomaly, the place should not be burning, let alone this much, but it has been this way for as long as people remember and they've accepted it.
+
+When travelling at night, there are known people lurking in the area in darkness, due to a minimal outside force holding protection over the landscape of the area. It could get nasty real quick out here without the proper preparation.
+
+Small camps do lie in this region, but they are underground, and have staircases that lead to them. The surface is deemed too volatile for active cities.
+`        
+  },"Petalgrave Tundra": {
+    title: "Sunscorched Wastes",
+    text: `### **Region**
+A haunting, and cold region of the land, the Petalgrave Tundra lies north of the Vitruvian Highlands.
+
+The wind howls through the night on these frozen wastes. It is a rolling tundra of ice and permafrost covered in snow, broken occasionally by patches of wildflowers. During the short summers, the land bursts into bloom, painting the landscape in a breathtaking display of color. But in the winter, the tundra is buried underneath dense, endless blizzards.
+
+On the western side of the tundra lies a Lake Vellune, upon which the region’s only city is built upon.
+
+At night, the sky is lit up with auroras.
+`        
+  },
+   /* CITIES CITIES CITIES AND OTHER SHIT */
+  "Aradisia": {
+    title: "Aradisia",
+    text: `### **City**
+
+Second largest city in the Great Expanse.
+
+People of Aradisia honor their faith and religion strongly.
+
+People usually arrive in town from the south, sometimes from the north and west.
+
+Aradisia is on the edge of safety, usually dealing with minor annoyances here and there, but very well guarded.
+
+The city is partially monitored by Cianthus.
+
+The gates of the city close at sundown.
+`        
+  },"Cianthus": {
+    title: "Cianthus",
+    text: `### **City**
+
+Largest city in the Great Expanse.
+
+A very religious city, they respect both gods and hold them in a very high regard, equally. They do not favor Noctyra or Solryn more than the other, and both gods are equal in the eyes of the city.
+
+Compared to Aradisia, Cianthus is a much older city, partially built upon the ruins in the area; though said ruins seem to be more prominent here. The city is much bigger and much more populated than Aradisia, as a result, it is a major center for trade, known as the beating heart of the land, which people from all over can be seen living in.
+
+The city is filled with historians, and locals claim at night you can hear whispers from a city beneath, echoes of whatever came before. Religious folk say the world feels to resonate with them in the city as well, when they are there they can feel everyone's heart beating as one during prayer.
+
+The city is, and has always been, ruled by a powerful family, the Orientalis family.
+`        
+  },"Reed": {
+    title: "Reed",
+    text: `### **City**
+
+A slightly smaller city located on the southern end of Duskmire.
+
+Reed’s population doesn’t only consist of Grung, as there are small groups of other races here as well.
+
+Grung of Reed are more welcoming of outsiders, though they still do not like them. 
+_(they are racist lol)_
+
+While the caste system is not in effect here, they still only allow a strong gold Grung to be the head of the city.
+
+These Grung hold no worship, and they do not like the Grung of Riphwater.
+`        
+  },"Riphwater": {
+    title: "Riphwater",
+    text: `### **City**
+
+This is the largest Grung settlement in the marsh, located in the center of Duskmire.
+
+The city is ruled by the strongest of their kin, a golden Grung named Unc’Unc.
+
+The buildings are built all on stilts. Buildings and roads are all being connected through wooden walkways and bridges.
+
+The Grung who live here all favor Solryn, but they twist his teachings for their own personal gain and manipulation of the lesser castes.
+
+The lower caste of Riphwater are basically treated as slaves.
+
+It is a very oppressive city and they are not allowed to leave unless exiled or permitted.
+
+They do not welcome outsiders, unless you are a Grung of Riphwater itself.
+`        
+  },"Leydon": {
+    title: "Leydon",
+    text: `### **City**
+
+The largest city of the Vitruvian Highlands, placed directly at the base of the Sèlean Mountains. It is only slightly smaller than Cianthus.
+
+Leydon is the largest hub of trade and art North of the Sunscorched Wastes, and it is the home of the Cathedral of the Moon.
+
+This city boasts some of the best artisans on the continent, as innumerable resources flow into the city allowing the artisans to make truly magnificent works. The Cathedral of the Moon is the single largest structure dedicated to the worship of Noctyra, and it is the center of her church. The head of the Clergy of Noctyra can be found here.
+
+This city is directly ruled by the Clergy of Noctyra.
+`        
+  },"Winter's Bluff": {
+    title: "Leydon",
+    text: `### **City**
+
+The only major city in the Vitruvian Highlands that was not founded by Vitruvius, and is thus not ruled directly by the Clergy of Noctyra. Rather it is ruled by a small noble house.
+
+This small city is found in the far north of the Vitruvian Highlands.
+`        
+  },"Calvess": {
+    title: "Calvess",
+    text: `### **Island City**
+
+Positioned between the Isle of Hope and the Great Expanse, it is also known as “The Gateway to the Expanse” due to most people from the Isle of Hope going here to make their way to the mainland.
+
+Has a reputation for smugglers, mercenaries, and people that are a little rough around the edges.
+
+The city is run by a council of guilds (merchants, masons, fishers, etc..) and each has an equal voice in choices for the island. This results in stuff usually never happening politically… unless money is involved.
+
+`        
+  },"Isle of Hope": {
+    title: "Isle of Hope",
+    text: `### **Island City**
+
+A smaller Island far in the waters of the The Shattered Sea, southeast of Calvess. Life there is not easy, most young and ambitious leave if given the chance.
+
+Not a lot of usable land, and rocky hills cover most of the landscape there as well, yet the people from there speak with great pride of the island.
+
+`        
+  },"Helion": {
+    title: "Helion",
+    text: `### **Camp**
+
+A practical camp, set up by the good of the people to aid those traversing the Sunscorched Wastes. Some local shops stay stocked with things to deal with the harshness of the area.
+
+The camp is full of travelers going here to there, survivalists, traders. Rarely any permanent residents.
+
+Neutral to everyone, although if you mess with others here, you’ll probably be targeted by locals for disrupting the peace.
+
+`        
+  },"Stoneridge": {
+    title: "Stoneridge",
+    text: `### **City
+The second largest city in the Vitruvian Highlands.
+
+This city is found roughly in the center of the region and has a reputation for being fairly provincial. This city is directly ruled by the Clergy of Noctyra.
+
+`        
+  },"Cryocus": {
+    title: "Cryocus",
+    text: `### **City**
+
+The great city of the Petalgrave Tundra, carved along the frozen shores of Lake Vellune.
+
+Cryocus is a marvel of quiet beauty, its towers and walls made from blue-white stone.
+
+At its heart lies the Cathedral of Refraction, an immense domed structure built above the ever-frozen lake, where priests and scholars worship both gods through silence and self-reflection.
+
+`        
+  },
+   /* GARBAGE */
+   "Sundial Crater": {
+    title: "Sundial Crater",
+    text: `### **Landmark**
+
+A vast circular basin deep in the Meros Desert, where the ground sinks inward into a mirror-smooth depression in the landscape, made of fused glass, vitrified sand and blackened stone. 
+
+At its center stands a single, half-melted obelisk of brass and sandstone, scholars debate whether it is a natural formation or the relic of some forgotten ritual, but no records of its origin survive.
+
+`        
+  },"Grand Cathedral of Flame": {
+    title: "Grand Cathedral of Flame",
+    text: `### **Grand Cathedral**
+
+Home to The Ashen Knight.
+
+The Cathedral can be transported above or below ground at the Knight's will. While the Cathedral is underground, the only way to access it is through a nearby flame illusion, which leads to the lower part of the cathedral.
+
+There is a large pipe organ that resides in the Cathedral's main room, that can be faintly heard even when below ground.
+`        
+  },"The Ashen Knight": {
+    title: "The Ashen Knight",
+    text: `### **Other**
+
+A body of magma, clad head to toe in blackened steel, he is a paladin of both balance and burden, not bound by any god, but a promise.
+
+Tests those through he deems worthy through a trial by fire to awaken their inner flame.
+
+Can play the pipe organ.
+
+*(I'd like to see you try, Luu.)*
+`        
+  },
+};
+
+function linkifyReferences(markdown) {
+  for (const key in references) {
+    const regex = new RegExp(`\\b${key}\\b`, "g"); // exact word match
+    markdown = markdown.replace(regex, `<a href="#" class="ref-link" data-ref="${key}">${key}</a>`);
+  }
+  return markdown;
+}
+
+const map = L.map("map", {
+  minZoom: -2,
+  maxZoom: 2,
+  zoom: 0,
+  center: [0, 0],
+  crs: L.CRS.Simple,
+  maxBoundsViscosity: 1.0
+});
+
+const bounds = [[0,0],[mapHeight,mapWidth]];
+
+const baseLayer = L.imageOverlay(baseMapURL, bounds, { className: "fade-layer" }).addTo(map);
+const labelLayer = L.imageOverlay(labelMapURL, bounds, { className: "fade-layer" });
+labelLayer.setOpacity(0);
+
+map.setMaxBounds(bounds);
+map.fitBounds(bounds);
+
+const sidebar = document.getElementById("sidebar");
+const cityName = document.getElementById("cityName");
+const cityText = document.getElementById("cityText");
+
+map.on("click", () => sidebar.classList.remove("open"));
+
+/* --- LOCATIONS --- */
+const locations = [
+        {
+        name: "Aradisia", x:3297, y:2378,
+        color:"#15E858", size:6, tags:["city"],
+        text:`### **City**
+
+Second largest city in the Great Expanse.
+
+People of Aradisia honor their faith and religion strongly.
+
+People usually arrive in town from the south, sometimes from the north and west.
+
+Aradisia is on the edge of safety, usually dealing with minor annoyances here and there, but very well guarded.
+
+The city is partially monitored by Cianthus.
+
+The gates of the city close at sundown.
+`
+        },{
+        name: "Cianthus", x:3694, y:1638,
+        color:"#15E858", size:6, tags:["city"],
+        text:`### **City**
+        
+Largest city in the Great Expanse.
+
+A very religious city, they respect both gods and hold them in a very high regard, equally. They do not favor Noctyra or Solryn more than the other, and both gods are equal in the eyes of the city.
+
+Compared to Aradisia, Cianthus is a much older city, partially built upon the ruins in the area; though said ruins seem to be more prominent here. The city is much bigger and much more populated than Aradisia, as a result, it is a major center for trade, known as the beating heart of the land, which people from all over can be seen living in.
+
+The city is filled with historians, and locals claim at night you can hear whispers from a city beneath, echoes of whatever came before. Religious folk say the world feels to resonate with them in the city as well, when they are there they can feel everyone's heart beating as one during prayer.
+
+The city is, and has always been, ruled by a powerful family, the Orientalis family.
+`
+        },{
+        name: "Reed", x:4430, y:2102,
+        color:"#58B010", size:6, tags:["city"],
+        text:`### **City**
+        
+A slightly smaller city located on the southern end of Duskmire.
+
+Reed’s population doesn’t only consist of Grung, as there are small groups of other races here as well.
+
+Grung of Reed are more welcoming of outsiders, though they still do not like them. 
+_(they are racist lol)_
+
+While the caste system is not in effect here, they still only allow a strong gold Grung to be the head of the city.
+
+These Grung hold no worship, and they do not like the Grung of Riphwater.
+
+`
+        },{
+        name: "Riphwater", x:4597, y:3043,
+        color:"#58B010", size:6, tags:["city"],
+        text:`### **City**
+        
+This is the largest Grung settlement in the marsh, located in the center of Duskmire.
+
+The city is ruled by the strongest of their kin, a golden Grung named Unc’Unc.
+
+The buildings are built all on stilts. Buildings and roads are all being connected through wooden walkways and bridges.
+
+The Grung who live here all favor Solryn, but they twist his teachings for their own personal gain and manipulation of the lesser castes.
+
+The lower caste of Riphwater are basically treated as slaves.
+
+It is a very oppressive city and they are not allowed to leave unless exiled or permitted.
+
+They do not welcome outsiders, unless you are a Grung of Riphwater itself.
+
+`
+        },{
+        name: "Leydon", x:3778, y:3464,
+        color:"#8CAFCF", size:6, tags:["city"],
+        text:`### **City**
+        
+The largest city of the Vitruvian Highlands, placed directly at the base of the Sèlean Mountains. It is only slightly smaller than Cianthus.
+
+Leydon is the largest hub of trade and art North of the Sunscorched Wastes, and it is the home of the Cathedral of the Moon.
+
+This city boasts some of the best artisans on the continent, as innumerable resources flow into the city allowing the artisans to make truly magnificent works. The Cathedral of the Moon is the single largest structure dedicated to the worship of Noctyra, and it is the center of her church. The head of the Clergy of Noctyra can be found here.
+
+This city is directly ruled by the Clergy of Noctyra.
+
+`
+        },{
+        name: "Winter's Bluff", x:2863, y:3775,
+        color:"#8CAFCF", size:6, tags:["city"],
+        text:`### **City**
+        
+The only major city in the Vitruvian Highlands that was not founded by Vitruvius, and is thus not ruled directly by the Clergy of Noctyra. Rather it is ruled by a small noble house.
+
+This small city is found in the far north of the Vitruvian Highlands.
+
+`
+        },{
+        name: "Calvess", x:5099, y:663,
+        color:"#151091", size:6, tags:["city"],
+        text:`### **Island City**
+        
+Positioned between the Isle of Hope and the Great Expanse, it is also known as “The Gateway to the Expanse” due to most people from the Isle of Hope going here to make their way to the mainland.
+
+Has a reputation for smugglers, mercenaries, and people that are a little rough around the edges.
+
+The city is run by a council of guilds (merchants, masons, fishers, etc..) and each has an equal voice in choices for the island. This results in stuff usually never happening politically… unless money is involved.
+
+`
+        },{
+        name: "Isle of Hope", x:5760, y:271,
+        color:"#151091", size:6, tags:["city"],
+        text:`### **Island City**
+        
+A smaller Island far in the waters of the The Shattered Sea, southeast of Calvess. Life there is not easy, most young and ambitious leave if given the chance.
+
+Not a lot of usable land, and rocky hills cover most of the landscape there as well, yet the people from there speak with great pride of the island.
+
+`
+        },{
+        name: "Helion", x:3670, y:2868,
+        color:"#EDC26B", size:6, tags:["camp"],
+        text:`### **Camp**
+        
+A practical camp, set up by the good of the people to aid those traversing the Sunscorched Wastes. Some local shops stay stocked with things to deal with the harshness of the area.
+
+The camp is full of travelers going here to there, survivalists, traders. Rarely any permanent residents.
+
+Neutral to everyone, although if you mess with others here, you’ll probably be targeted by locals for disrupting the peace.
+
+`
+        },{
+        name: "Stoneridge", x:2153, y:3327,
+        color:"#8CAFCF", size:6, tags:["city"],
+        text:`### **City**
+        
+The second largest city in the Vitruvian Highlands.
+
+This city is found roughly in the center of the region and has a reputation for being fairly provincial. This city is directly ruled by the Clergy of Noctyra.
+
+`
+        },{
+        name: "Cryocus", x:927, y:3920,
+        color:"#D5E3E8", size:6, tags:["city"],
+        text:`### **City**
+        
+The great city of the Petalgrave Tundra, carved along the frozen shores of Lake Vellune.
+
+Cryocus is a marvel of quiet beauty, its towers and walls made from blue-white stone.
+
+At its heart lies the Cathedral of Refraction, an immense domed structure built above the ever-frozen lake, where priests and scholars worship both gods through silence and self-reflection.
+
+`
+        },{
+        name: "The Sundial Crater", x:1775, y:809,
+        color:"#ffdf91", size:6, tags:["landmark"],
+        text:`### **Landmark**
+        
+A vast circular basin deep in the Meros Desert, where the ground sinks inward into a mirror-smooth depression in the landscape, made of fused glass, vitrified sand and blackened stone. 
+
+At its center stands a single, half-melted obelisk of brass and sandstone, scholars debate whether it is a natural formation or the relic of some forgotten ritual, but no records of its origin survive.
+
+`
+
+        },{
+        name: "Grand Cathedral of Flame", x:3404, y:3034,
+        color:"#EDC26B", size:6, tags:["other"],
+        text:`### **Grand Cathedral**
+        
+Home to The Ashen Knight, a paladin of Balance and Burden.
+
+The Cathedral can be transported above or below ground at the Knight's will. While the Cathedral is underground, the only way to access it is through a nearby flame illusion, which leads to the lower part of the cathedral.
+
+There is a large pipe organ that resides in the Cathedral's main room, that can be faintly heard even when below ground.
+
+`
+        },
+    ];
+
+    const markers = [];
+
+locations.forEach(loc => {
+  const marker = L.circleMarker([loc.y, loc.x], {
+    radius: loc.size,
+    fillColor: loc.color,
+    color: "#000",
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 0.9
+  }).addTo(map);
+
+  marker.tags = loc.tags;
+  marker.locData = loc;
+  marker.originalRadius = loc.size;
+
+  marker.on("mouseover", () => {
+    marker.setRadius(marker.originalRadius * 1.5);
+    marker.bindTooltip(loc.name, {
+      permanent: false,
+      direction: "top",
+      offset: [0, -marker.options.radius]
+    }).openTooltip();
+  });
+
+  marker.on("mouseout", () => {
+    marker.setRadius(marker.originalRadius);
+    marker.closeTooltip();
+  });
+
+  marker.on("click", e => {
+    L.DomEvent.stopPropagation(e);
+    showReference(loc.name, loc.text);
+  });
+
+  markers.push(marker);
+});
+
+function showReference(title, markdown) {
+  cityName.textContent = title;
+  cityText.innerHTML = marked.parse(linkifyReferences(markdown));
+  sidebar.classList.add("open");
+  setTimeout(() => map.invalidateSize(), 500);
+  attachReferenceHandlers();
+}
+
+function attachReferenceHandlers() {
+  const links = cityText.querySelectorAll(".ref-link");
+  links.forEach(link => {
+    link.onclick = e => {
+      e.preventDefault();
+      const key = link.dataset.ref;
+      const ref = references[key];
+      if (ref) showReference(ref.title, ref.text);
+    };
+  });
+}
+
+attachReferenceHandlers();
+
+const checkboxEls = document.querySelectorAll("#tagMenu input[type=checkbox]");
+checkboxEls.forEach(cb =>
+  cb.addEventListener("change", () => {
+    const selected = [...checkboxEls].filter(c => c.checked).map(c => c.value);
+    markers.forEach(m => {
+      if (m.tags.some(t => selected.includes(t))) m.addTo(map);
+      else m.remove();
+    });
+  })
+);
+
+const coordBox = document.getElementById("coords");
+map.on("mousemove", e => {
+  coordBox.textContent = `x: ${Math.round(e.latlng.lng)}, y: ${Math.round(e.latlng.lat)}`;
+});
+
+const mapSwitch = document.getElementById("mapSwitch");
+let labelsOn = false;
+
+mapSwitch.addEventListener("click", () => {
+  labelsOn = !labelsOn;
+  mapSwitch.classList.toggle("active", labelsOn);
+  if (labelsOn) {
+    labelLayer.addTo(map);
+    setTimeout(() => labelLayer.setOpacity(1), 10);
+  } else {
+    labelLayer.setOpacity(0);
+    setTimeout(() => map.removeLayer(labelLayer), 500);
+  }
+});
+</script>
+
+</body>
+</html>
+
+

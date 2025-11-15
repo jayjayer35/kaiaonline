@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Landing Page</title>
+<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="mc.css">
+<style>
+  body {
+    margin:0;
+    padding:1rem;
+    font-family:"Comic Sans MS","Courier New",monospace;
+    font-size:.9rem;
+    color:#cebdf7;
+    background: #7d599b url('../assets/197.GIF') repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  h1 {
+    text-align: center;
+    font-size: 6em;
+    margin: 1em 0 0.5em 0;
+  }
+  p {
+    text-align: center;
+    font-size: 1.4em;
+  }
+  .blinking-star {
+    display:inline-block;
+    animation:blink .5s infinite alternate;
+  }
+  @keyframes blink {
+    to {opacity:0.3;}
+  }
+  /* blinking cursor */
+  #random-message::after {
+    content: ' _';
+    animation: blink 0.2s infinite alternate;
+  }
+  @keyframes blink {
+    to { opacity: 0; }
+  }
+  .cute-glitch {
+  position: relative;
+  font-size: 2.8rem;
+  font-family: "Comic Sans MS", "Courier New", monospace;
+  color: #ffbbf2;
+  letter-spacing: 2px;
+  text-align: center;
+  animation: softGlitch 3s ease-in-out infinite;
+}
+
+.cute-glitch::before,
+.cute-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: -1;
+}
+
+.cute-glitch::before {
+  color: #a5f7ff;
+  animation: glitchShift1 3s ease-in-out infinite;
+}
+
+.cute-glitch::after {
+  color: #ffbbf2;
+  animation: glitchShift2 3s ease-in-out infinite;
+}
+
+@keyframes glitchShift1 {
+  0%, 100% { transform: translate(0, 0); opacity: 0.7; }
+  50% { transform: translate(1px, -1px); opacity: 1; }
+}
+
+@keyframes glitchShift2 {
+  0%, 100% { transform: translate(0, 0); opacity: 0.7; }
+  50% { transform: translate(-1px, 1px); opacity: 1; }
+}
+
+@keyframes softGlitch {
+  0%, 100% { text-shadow: 0 0 1px #ffbbf2; }
+  50% { text-shadow: 1px 1px 3px #ffbbf2, -1px -1px 3px #a5f7ff; }
+}
+
+</style>
+
+
+</head>
+<body>
+  <div><br><br></div>
+  <img src="../assets/welcome too.png">
+  
+  <!-- updated p with id -->
+  <p class="minecraft light_purple" id="random-message"></p>
+
+  
+  <p>
+    
+  <a href="https://piclog.blue/profile.php?id=1554" target="_parent"><img src="https://piclog.blue/latest.php?id=1554"></a><br><br>
+  <!-- <img src="../assets/legend.jpg" alt="you fucked with a legend" style="max-width: 300px"/><br><br> -->
+  <br><br>
+  <div style=" align-items: center; gap: 4px; justify-content: center;">
+    <a target="_blank"><img src="../assets/onlinebadge.gif" alt="kaia online"/></a>
+    <a href="https://www.firefox.com/en-US/" target="_parent"><img src="../assets/getfirefox.gif" alt="get firefox"/></a>
+    <a href="https://endeavouros.com/" target="_parent"><img src="../assets/linux.png" alt="get linux"/></a>
+    <a href="https://www.sugarcult.com/" target="_parent"><img src="../assets/sugarcult1.gif" alt="sugarcult!"/></a>
+  </div>
+  <div style="display: flex; align-items: center; gap: 4px; justify-content: center;">
+   <a href="https://kaia.starscene.com/" target="_blank"><img src="../assets/kaiabutton.png" alt="goes to my site!"/></a> 
+   <a target="_blank"><img src="../assets/internetprivacy.gif" alt="privacy now!"/> </a> 
+   <a target="_blank"><img src="../assets/gregdock3.gif" alt=""/> </a> 
+   <a target="_blank"><img src="../assets/b-campaignagainstcampaignagainstframes.gif" alt=""/> 
+   <a target="_blank"><img src="../assets/makeasite.jpg" alt=""/></a>
+  </div>
+  <div style="display: flex; align-items: center; gap: 4px; justify-content: center;">
+    <a target="_blank"><img src="../assets/css.gif" alt="goes to my site!"/></a> 
+    <a target="_blank"><img src="../assets/pinetreesbutton.png" alt="smell pine trees"/></a>
+    <a target="_blank"><img src="../assets/rainbow.gif" alt="rainbow gif button"/></a>
+    <a target="_blank"><img src="../assets/queer.png" alt="queer coded"/></a>
+  </div>
+  <div style="display: flex; align-items: center; gap: 4px; justify-content: center;">
+    <img src="../assets/useframes.gif" alt="use frames!"/></div>
+  </div>
+  
+  
+  
+  
+ </p>
+<script>//MESSAGES
+  const messages = [
+    "this place that i coded by hand, just for you ",
+    "and explore and get lost like i do in the stars",
+    "my little corner of the internet cosmos",
+    "my planet!",
+    "these pixels are my soul laid bare",
+    "craft OS 1.8",
+    /*"js, html, and css. (and what their powers look combined)", */
+    "hell, can you feel my dysphoria?",
+    "gichur gichur belly itchur",
+    /*"trans rights are human rights!", */
+    "a glass half full",
+    /*"to the moon and back", */
+    /*"kaiasei wuz here", */
+    "something under construction!",
+    "my site! so much to do, so much to explore...",
+    "my flower garden! orchids are one of my favorite flowers",
+    /*"...  i lost my glasses again", */
+    "a freedom dive",
+    /*"ah... i wanna play SDVX", */
+    "AAAAAAAAAAAAAAAAAAAAA",
+    /* "sudo shutdown now", */
+    /* "sudo rm -fr /", */
+    /* "wait- this isnt lua", */
+    "a castle built overnight",
+    /* "there are so many splash texts", */
+    "the world, live your life to the fullest",
+    "the heat death of the universe",
+    /* "est. March 2022", */
+    "greg",
+    "something highly unmotivated",
+    "a time to be alive",
+    "a beautiful sunrise.",
+    /* "hooray!", */
+    "a celebration of life.",
+    "strings on my heart",
+    /* "i dont wanna be jay anymore!", */
+    /* "dain booker", */
+    /* "like legit", */
+    /* "late night???", */
+    "haia kaia",
+    /* "awoooo", */
+    "404 welcome not found",
+    "a singular Waffle House on Babylon",
+    /* "nil", */
+    "a beautiful sunset",
+    "the beautifu stars tonight",
+    "a perfect planet",
+    "a perfect solar system",
+    "a perfect time to be alive",
+    /* "wait, this isn't the guestbook!", */
+    /* ":3", */
+    /* "big hugs to you", */
+    /* "this place..? it'll all be okay" */
+    "a small star in an endless sky",
+    "my little universe",
+    "a constellation drawn just for you",
+    "the inside of my head",
+    "the half-forgotten dream i keep chasing",
+    "a diary i accidentally left unlocked",
+    "a little sanctuary for tired souls",
+    "the unpolished version of me",
+    "a messy room with open windows",
+    "my scrapbook of feelings",
+    "an unfinished thought",
+    "the place i cry and code at 3am",
+    "the infinite void, but make it comfy",
+    "banana storage facility",
+    "a half-broken iframe",
+    "the part of me that still believes in magic",
+    "a rainy evening that never ends",
+    "the last page of an unfinished book",
+    "my shadow on the wall",
+    "my world, even if it’s small",
+    "a candle flickering in the dark",
+  ];
+
+  const elem = document.getElementById("random-message");
+
+  function typeWriter(text, i, cb) {
+  if (i < text.length) {
+    elem.innerHTML += text.charAt(i);
+    setTimeout(() => typeWriter(text, i + 1, cb), 50);
+  } else {
+    setTimeout(cb, 3000); // waits div/1000 sec
+  }
+}
+
+  function eraseText(cb) {
+    const currentText = elem.innerHTML;
+    if (currentText.length > 0) {
+      elem.innerHTML = currentText.substring(0, currentText.length - 1);
+      setTimeout(() => eraseText(cb), 30);
+    } else {
+      cb();
+    }
+  }
+
+  function startCycle() {
+    const msg = messages[Math.floor(Math.random() * messages.length)];
+    typeWriter(msg, 0, () => {
+      eraseText(startCycle);
+    });
+  }
+
+
+
+    document.addEventListener('click', () => {
+    const sound = new Audio('../assets/click.mp3');
+    sound.volume = 0.02;
+    sound.play();
+}, true);
+
+  startCycle();
+
+
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>baked "goods"</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-image: url('../assets/BACKGR12.JPG');
+    background-size: cover;
+    image-rendering: pixelated;
+    font-family: 'Comfortaa', cursive;
+    color: #3a475a;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  header {
+    padding: 2rem 1rem 1rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.712);
+    box-shadow: 0 4px 12px rgba(87, 58, 90, 0.15);
+    top: 0;
+    z-index: 20;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 3rem;
+    text-shadow: 1px 1px 3px rgba(90, 58, 86, 0.3);
+  }
+
+  #recipe-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0 2rem;
+    flex-wrap: wrap;
+    z-index: 20;
+    top: 6.5rem; 
+    background: rgba(255, 255, 255, 0.7);
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 8px rgba(90, 58, 87, 0.1);
+  }
+
+  #recipe-buttons button {
+    background: #998fc5;
+    border: none;
+    border-radius: 20px;
+    padding: 0.5em 1.5em;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(144, 143, 197, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Comfortaa', cursive;
+    user-select: none;
+  }
+
+  #recipe-buttons button:hover {
+    background: #736ebf;
+    transform: scale(1.1) rotate(-1deg);
+  }
+
+  #recipe-buttons button.active {
+    background: #473f8d;
+    box-shadow: 0 5px 15px rgba(75, 63, 141, 0.8);
+  }
+
+  main {
+    max-width: 900px;
+    margin: 0 auto 4rem;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 10;
+  }
+
+  .recipe-card {
+    background: #fbedfacc;
+    border-radius: 18px;
+    box-shadow: 0 4px 10px rgba(90, 58, 90, 0.15);
+    margin-bottom: 2.5rem;
+    padding: 1.8rem 2rem;
+    transition: transform 0.2s ease;
+    display: none;
+  }
+  .recipe-card.show {
+    display: block;
+  }
+  .recipe-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(90, 58, 87, 0.25);
+  }
+
+  .recipe-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #644062;
+  }
+
+  .subtitle {
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.4rem;
+    color: #704a68;
+  }
+
+  ul {
+    margin-top: 0;
+    margin-left: 1.2rem;
+  }
+
+  p.instructions {
+    line-height: 1.5;
+    margin-top: 0.6rem;
+  }
+
+  .sun {
+    position: fixed;
+    width: 120px;
+    height: 120px;
+    background: #ffeda3;
+    border-radius: 50%;
+    box-shadow: 0 0 30px 8px #fff3bc;
+    animation: sunGlow 3s ease-in-out infinite alternate;
+    top: 20px;
+    right: 20px;
+    z-index: 9;
+  }
+
+  @keyframes sunGlow {
+    0% { box-shadow: 0 0 25px 7px #fff1b5; }
+    100% { box-shadow: 0 0 45px 13px #fff9a4; }
+  }
+
+
+  button.card-button {
+    background: #938fc5;
+    border: none;
+    border-radius: 20px;
+    padding: 0.5em 1.5em;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(147, 143, 197, 0.5);
+    transition: background 0.3s ease;
+    font-family: 'Comfortaa', cursive;
+    margin-top: 1rem;
+  }
+
+  button.card-button:hover {
+    background: #b86ebf;
+    transform: scale(1.1) rotate(-3deg);
+  }
+
+  @media (max-width: 600px) {
+    header h1 {
+      font-size: 2.2rem;
+    }
+    #recipe-buttons {
+      top: 5.5rem;
+      padding: 0.5rem 0.5rem;
+      gap: 0.6rem;
+    }
+    main {
+      margin: 1rem auto 3rem;
+      padding: 0 1rem;
+    }
+    .recipe-card {
+      padding: 1.2rem 1.5rem;
+    }
+  }
+  ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        /* background: rgba(100,100,150,0.4); */
+        background: rgba(108, 77, 194, 0.4); /* fall */
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        outline: none;
+        transition: background 0.2s ease;
+        cursor: pointer;
+        /* box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);  */
+        box-shadow: 0 0 5px rgba(255, 136, 0, 0.3); /* fall */
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 14px;
+        width: 14px;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffcd9e; /* fall */
+        border: 2px solid #2b1e0e; /* fall */
+        border-radius: 50%;
+        /* box-shadow: 0 0 6px #88c0d0; */
+        box-shadow: 0 0 6px #d0ab88; /* fall */
+        transition: background 0.3s ease;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        height: 14px;
+        width: 14px;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffca9e; /* fall */
+        border: 2px solid #2b1f0e; /* fall */
+        border-radius: 50%;
+        /* box-shadow: 0 0 6px #88c0d0;  */
+        box-shadow: 0 0 6px #d0ae88;/* fall */
+        cursor: pointer;
+    }
+    input[type="range"]:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+</style>
+</head>
+<body>
+   <header>
+    <h1>kitchen nightmare</h1>
+    <p>i bake yummy things, and i log them here<br>
+      i am by NO means a chef, and these recipes fail like half the time, but theyre so good.<br>
+      please be safe when using an oven and like, dont be an idiot <3 <br><br>
+        i should really attach photos the next time i make them
+    </p>
+  </header>
+   
+  
+
+  <nav id="recipe-buttons" aria-label="Recipe navigation">
+    <button class="active" data-target="rolls">Cinnamon Rolls</button>
+    <button data-target="gsnap">Gingersnap Cookies</button>
+    <button data-target="bwcookie">???</button>
+  </nav>
+
+  <main>
+    <article id="rolls" class="recipe-card show" tabindex="0" aria-label="Cinnamon Rolls!">
+      <h2 class="recipe-title">Cinnamon Rolls (Cream Cheese Frosting)</h2>
+      <p>these cinnamon rolls i make every holiday season, and they are quite tricky. <br>
+        but they are so. good.
+        <br><br>so heres the recipe! its like a two parter-ish, since you're making the icing too, so this recipe is a time sink, will take you 4/5 hours. <br><br>
+
+        * = for cinnamon rolls<br>
+        ~ = for frosting
+    </p>
+      <div class="subtitle">Ingredients:</div>
+      <ul>
+        <li>3 1/4 ounces granulated sugar</li>
+        <li>1/2 tsp salt</li>
+        <li>3 ounces butter (soft) unsalted</li>
+        <li>1 <em>egg</em></li>
+        <li>16 ounces of bread flour (flexible)</li>
+        <li>1 packet <em>INSTANT</em> yeast</li>
+        <li>8 oz buttermilk</li>
+        <li>1/2 cup white sugar*</li>
+        <li>1 1/2 tbsp cinnamon*</li>
+        <li>1/4 cup brown sugar*</li>
+        <li>8 ounces cream cheese (room temp) ~</li>
+        <li>4 ounces butter (room temp) ~</li>
+        <li>heavy cream, to thin out mixture ~</li>
+      </ul>
+      <div class="subtitle">Instructions:</div>
+      <p class="instructions">
+        1. Combine 3 1/4 oz. w/ 1/2 tsp salt & 3 oz. of soft butter for 1 min or until fluffy (move into a bigger bowl, you might need it!)<br><br>
+        2. Tidy up the bowl and then add 1 egg and mix fast for 2 mins.<br><br>
+        3. Add 16 oz bread flour, instant yeast, & 8 oz buttermilk and mix relatively fast for 10 mins<br><br>
+        4. In another bowl, oil it around the edges a little, and let the dough sit in a room temperature area to rise for 2 hours <em>or</em> until doubled in size.<br><br>
+        5. Knead and roll flat (with rolling pin preferably) to roughly 14x18 inches.<br><br>
+        6. Combine the '*' ingredients in a bowl and mix, sifting them togther is optional, but i like the pockets of cinnamon sugar it makes :3<br><br>
+        7. Cut into 12 equal slices, or dont, i dont control you, but then ROLL EM UP and lay them on a baking dish evenly spaced with about a 1/2 inch in between them. usually will look like a 4x3 array of small rolls on their sides. <br><br>
+        8. Proof for 90 mins (it means let them sit in a room temperature area, covered, and let the dough rise (cause you have yeast in it) for 90 mins)<br><br>
+        8.5. You will preheat the oven to 375°F, but since you're letting them proof for an hour and a half, do this when you feel its necessary.<br><br>
+        9. Brush the tops with some melted butter if you want, i really recommend it, but it isnt entirely necessary.<br><br>
+        10. Bake for 20 mins, or until brown<br><br>
+        11. When (or just before) the cinnamon rolls are done, add all the '~' ingredients in a bowl, BUT slowly add heavy cream if YOU feel the frosting is too thick.<br><br>
+        12. ENJOY!!! While hot usually, but theyre delicious...<br><br>
+      </p>
+      </article>
+
+    <article id="gsnap" class="recipe-card" tabindex="0" aria-label="Ginger Snaps!">
+      <h2 class="recipe-title">Gingersnap Cookies</h2>
+      <p>these i used to make a lot more during high school around december. i would go around and give cookies to my friends who i feel deserved them LOL, they are pretty good, and are constantly requested every christmas haha<br><br>
+      
+          * = cookie coating
+      </p>
+      <div class="subtitle">Ingredients:</div>
+      <ul>
+        <li>3/4 cup margarine melted</li>
+        <li>1 cup white sugar</li>
+        <li>1 egg</li>
+        <li>1/4 cup molasses</li>
+        <li>2 cups flour</li>
+        <li>2 tsp baking soda</li>
+        <li>1/2 tsp salt</li>
+        <li>1 tsp ground cinnamon</li>
+        <li>1/2 tsp ground cloves</li>
+        <li>1/2 tsp ground ginger</li>
+        <li>1/2 cup white sugar*</li>
+      </ul>
+      <div class="subtitle">Instructions:</div>
+      <p class="instructions">
+        1. Combine the dry ingredients <em>(flour, white sugar, baking soda, salt, and the spices)</em> into a big bowl. Sift them in if you want, not entirely necessary.<br><br>
+        2. Combine the wet ingredients <em>(melted margarine, egg, molasses)</em>in a seperate bowl, becareful cause that molasses stuff smells TERRIBLE right now, but it makes the cookie so good, just trust me.<br><br>
+        3. COMBINE THEM ALLLLL, then once the dough is nice and uniform, let it chill in the fridge for like and hour.<br><br>
+        4. Preheat the oven to like 375°F. Dont worry, you will have to do something while it's preheating, so youll be busy<br><br>
+        5. Take the dough out of the fridge and roll them into like, walnut sized balls, and roll them in the sugar* and place onto ungreased baking sheets.<br><br>
+        6. Once you've done that (i usually end up with like 36-ish balls of dough), pop them in the oven for 8-10 mins OR until the tops look like theyre cracking.<br><br>
+        7. Let cool on a wire rack or whatever you cool cookies on<br><br>
+        8. Enjoy the cinnamon-y goodness!
+      </p>
+    </article>
+
+    <article id="bwcookie" class="recipe-card" tabindex="0" aria-label="Black and White Cookies">
+      <h2 class="recipe-title">???</h2>
+      <p>
+        ???
+      </p>
+      <div class="subtitle">Ingredients:</div>
+      <ul>
+        <li><em>ingredient goe here....but there was nothing.</em></li>
+      </ul>
+      <div class="subtitle">Instructions:</div>
+      <p class="instructions">
+        <em>???</em>
+      </p>
+    </article>
+  </main>
+
+<script>
+  const buttons = document.querySelectorAll('#recipe-buttons button');
+  const cards = document.querySelectorAll('.recipe-card');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      buttons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      const targetId = button.getAttribute('data-target');
+
+      cards.forEach(card => {
+        if (card.id === targetId) {
+          card.classList.add('show');
+          card.focus(); 
+        } else {
+          card.classList.remove('show');
+        }
+      });
+    });
+  });
+  
+  document.addEventListener('click', () => {
+    const sound = new Audio('../assets/click.mp3');
+    sound.volume = 0.05;
+    sound.play();
+}, true);
+</script>
+<div id="blossom_container"></div>
+</body>
+</html>

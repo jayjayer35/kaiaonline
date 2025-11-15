@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>don't forget</title>
+<style>
+  html, body {
+    margin: 0; 
+    height: 100%;
+    width: 100%;
+    background: url('../assets/forest.gif');
+    background-size: cover;
+    image-rendering: pixelated;
+    position: relative;
+    font-family: monospace;
+  }
+
+  .click-area {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    background: rgba(212, 0, 255, 0); 
+    position: absolute;
+    top: 80%;  
+    left: 49.2%;
+    transform: translate(-50%, 0);
+  }
+
+  #poem-container {
+    position: absolute;
+    top: 7%;
+    left: 20px;
+    color: rgb(228, 164, 225);
+    font-size: 1.8rem;
+    white-space: pre-line;
+    text-shadow: 0 0 10px rgba(218, 149, 224, 0.863);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="click-area" onclick="typePoem(this)"></div>
+<div id="poem-container"></div>
+
+<script>
+  // Define wait time per line in milliseconds
+  const poemData = [
+    { text: "It is a horrifying process to forget someone.", delay: 500 },
+    { text: " ", delay: 1600 },
+    { text: "We swear we won't-", delay: 800 },
+    { text: "and we truly believe it.", delay: 800 },
+    { text: " ", delay: 1600 },
+    { text: "But memory, like all things", delay: 800 },
+    { text: "corrodes.", delay: 800 },
+    { text: " ", delay: 1600 },
+    { text: "One day you'll stumble upon a song that they loved ", delay: 800 },
+    { text: "but their voice, as they sing along- ", delay: 300 },
+    { text: "would have faded into the music.", delay: 800 },
+    { text: " ", delay: 1600 },
+    { text: "You'll swear there's something missing", delay: 800 },
+    { text: "But all you'll have as proof-", delay: 400 },
+    { text: "is a pain you can't place.", delay: 800 },
+    { text: " ", delay: 800 },
+    { text: "A feeling with no roots.", delay: 800 },
+    { text: " ", delay: 1600 },
+    { text: "Didn't their laugh have a certain tone?", delay: 800 },
+    { text: "Didn't their head feel a certain way,", delay: 300 },
+    { text: "leaning on your shoulder?", delay: 800 },
+    { text: " ", delay: 1600 },
+    { text: "You won't recall exactly,", delay: 600 },
+    { text: "but you'll know something is missing.", delay: 1200 },
+    { text: "And it will hurt in ways you didn't even know were possible.", delay: 800 },
+    { text: " ", delay: 1600 },
+    { text: "What if I told you,", delay: 600 },
+    { text: "you could get rid of this pain?", delay: 800 },
+    { text: " ", delay: 1500 },
+    { text: "Would you?", delay: 1500 }
+  ];
+
+async function typePoem(el) {
+  el.remove(); // destroy the click area immediately
+
+  const container = document.getElementById('poem-container');
+  container.textContent = ""; 
+  for (let lineObj of poemData) {
+    await typeLine(lineObj.text, container);
+    await wait(lineObj.delay);
+  }
+}
+
+  function typeLine(line, container) {
+    return new Promise(resolve => {
+      let i = 0;
+      const interval = setInterval(() => {
+        container.textContent += line[i];
+        i++;
+        if (i >= line.length) {
+          clearInterval(interval);
+          container.textContent += "\n";
+          resolve();
+        }
+      }, 60);
+    });
+  }
+
+  function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+</script>
+
+<audio id="background-audio" autoplay loop>
+  <source src="../assets/chimes.mp3" type="audio/mp3" />
+  Your browser does not support the audio element.
+</audio>
+
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>surf city</title>
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Courier New", monospace;
+  color: #d8f3ff;
+  background: linear-gradient(to bottom, #031427, #081e35 60%, #020b15);
+  font-size: 1.4rem;
+  min-height: 100vh;
+  background-attachment: fixed;
+}
+
+header {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: rgba(7, 27, 47, 0.9);
+  border-bottom: 2px solid #63c7ff;
+  box-shadow: 0 0 20px #3dbdff88;
+}
+
+header h1 {
+  font-size: 2.8rem;
+  margin: 0;
+  color: #bfeeff;
+  text-shadow: 0 0 10px #67d3ff;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  display: flex;
+  gap: 2rem;
+  background: rgba(8, 20, 36, 0.6);
+  border-radius: 16px;
+  border: 1px solid #4fc2ff;/* 
+  box-shadow: 0 0 25px #3dbdff55; */
+  flex-wrap: wrap;
+}
+
+.left-panel {
+  flex: 1 1 300px;
+  background: rgba(0, 10, 20, 0.5);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #53d6ff;
+  box-shadow: 0 0 12px #5bcaff66;
+}
+
+.right-panel {
+  flex: 1 1 400px;
+  background: rgba(5, 15, 25, 0.5);
+  border-radius: 12px;
+  border: 1px solid #3ab0ff;
+  box-shadow: 0 0 14px #66d2ff55;
+  padding: 1rem;
+  max-height: 700px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.filler {
+  flex-grow: 1;
+  background: rgba(5, 15, 25, 0.3); /* slightly see-through so it blends */
+  border-radius: 0 0 12px 12px;      /* rounded bottom corners */
+  border-top: 1px solid #3ab0ff44;   /* faint separator line */
+}
+
+.link-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.8rem;
+  justify-items: center;
+}
+
+.link-buttons a img {
+  height: 31px;
+  border-radius: 4px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 8px #4bc3ff50;
+}
+
+/* Update your existing rule to use the variable */
+.link-buttons a:hover img {
+  transform: scale(1.1) rotate(-3deg);
+  box-shadow: 0 0 12px var(--hover-shadow-color, #88f3ff);
+}
+
+.tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: rgba(16, 32, 60, 0.95);
+  color: #bfefff;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  font-family: "Courier New", monospace;
+  border-radius: 6px;
+  box-shadow: 0 0 8px #4ab0ff80;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  white-space: normal;
+  max-width: 240px;
+  line-height: 1.2;
+}
+
+footer {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #9beaff;
+  margin-top: 3rem;
+  padding: 2rem;
+  border-top: 1px solid #66d3ff;
+  background: rgba(3, 14, 26, 0.7);
+  box-shadow: inset 0 1px 20px #3dbdff33;
+}
+
+.star {
+  animation: starGlow 4s infinite alternate;
+}
+
+@keyframes starGlow {
+  0% { color: #6fd8ff; text-shadow: 0 0 6px #4bc3ff; }
+  100% { color: #c8f5ff; text-shadow: 0 0 14px #a4edff; }
+}
+
+/* Responsive stack on mobile */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+  }
+}
+
+::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        /* background: rgba(100,100,150,0.4); */
+        background: rgba(53, 92, 143, 0.4); /* fall */
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        outline: none;
+        transition: background 0.2s ease;
+        cursor: pointer;
+        /* box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);  */
+        box-shadow: 0 0 5px rgba(255, 136, 0, 0.3); /* fall */
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 14px;
+        width: 14px;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffcd9e; /* fall */
+        border: 2px solid #2b1e0e; /* fall */
+        border-radius: 50%;
+        /* box-shadow: 0 0 6px #88c0d0; */
+        box-shadow: 0 0 6px #d0ab88; /* fall */
+        transition: background 0.3s ease;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        height: 14px;
+        width: 14px;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffca9e; /* fall */
+        border: 2px solid #2b1f0e; /* fall */
+        border-radius: 50%;
+        /* box-shadow: 0 0 6px #88c0d0;  */
+        box-shadow: 0 0 6px #d0ae88;/* fall */
+        cursor: pointer;
+    }
+    input[type="range"]:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+
+.right-filler {
+  margin-top: 1rem; /* space below buttons */
+  border: 1px solid #3ab0ff; 
+  border-radius: 10px;
+  background: rgba(5, 15, 25, 0.8); /* same bg as your buttons box */
+  flex-grow: 1; /* this makes it stretch down to bottom of content */
+}
+</style>
+</head>
+
+<body>
+  <div class="content">
+    <div class="left-panel">
+      <h2 class="star" style="text-align: center;">surf city</h2>
+      <p style="text-align: center;"> going so soon??<br><br>
+        to me, the indie web is extremely important, it's an archive of my own life, an archive of others' lives, and it's a beautiful tradition that must go on! <br><br>
+
+        try to make your own site, learn what you can, and put yourself out there! who cares if it's imperfect, its yours!<br><br>
+
+        <textarea readonly="" onclick="this.select()"><a href="https://kaia.starscene.com" target="_parent"><img src="https://kaia.starscene.com/../assets/kaiabutton.png" alt="kaia online"/></a></textarea><img src="../assets/kaiabutton.png" alt="kaia online" style="padding-left: 1rem;"/><br>
+        <textarea readonly="" onclick="this.select()"><a href="https://kaia.starscene.com" target="_parent"><img src="https://kaia.starscene.com/../assets/kaiabutton.gif" alt="kaia online"/></a></textarea><img src="../assets/kaiabutton.gif" alt="kaia online" style="padding-left: 1rem;"/>
+        <br><br>hotlink hotlink hotlink! so that way if i change my button, it will change everywhereee<br><br>
+
+        if you are still reading this text, to the right are some buttons that lead to a variety of sites that are fun, inspiring, cute, interactive, awesome, silly, unique, helpful, and everything in between. check them out! people poured their hearts and 
+        souls into these. <3
+
+        
+      <br> these will open in this tab, so come back soon! <em style="font-size: x-small;">(hopefully)</em>
+      </p>
+    </div>
+  <div class="right-panel">
+    <div class="link-buttons">
+      <a href="https://lu.tiny-universes.net/index.html" target="_parent" data-title="one of my first interactions with the indie web, and a big inspiration for me. some of my web assets are graciously from her, check out her page!" style="--hover-shadow-color: rgb(185, 0, 161);"><img src="../assets/lulu2.gif" alt="lu tiny universes" style="image-rendering:pixelated"/></a>
+      <a href="https://biggulpsupreme.neocities.org/" target="_parent" data-title="" style="--hover-shadow-color: rgb(9, 0, 94);"><img src="https://i.imgur.com/ZU3CcjO.gif" alt="biggulp" style="image-rendering:pixelated"/></a>
+      <a href="https://purplehello98.neocities.org/" target="_parent" data-title="" style="--hover-shadow-color: rgb(92, 0, 145);"><img src="https://purplehello98.neocities.org/graphics/buttons/purplehello98.gif" alt="purple hello 98" style="image-rendering:pixelated"/></a>
+      <a href="https://the-simple-site.neocities.org/" target="_parent" data-title="" style="--hover-shadow-color: rgb(107, 166, 255);"><img src="https://the-simple-site.neocities.org/images/simpdark88.gif" alt="simple site" style="image-rendering:pixelated"/></a>
+      <a href="https://aegi.neocities.org/" target="_parent" data-title="" style="--hover-shadow-color: rgb(86, 138, 161);"><img src="https://aegi.neocities.org/images/aegi_button.gif" alt="aegi" style="image-rendering:pixelated"/></a>
+      <a href="https://2bit.neocities.org/" target="_parent" data-title="" style="--hover-shadow-color: rgb(255, 255, 255);"><img src="https://2bit.neocities.org/2bit_button.png" alt="2bit" style="image-rendering:pixelated"/></a>
+      <a href="https://devils.neocities.org/" target="_parent" data-title="" style="--hover-shadow-color: rgb(0, 4, 255);"><img src="https://66.media.tumblr.com/777717d122b4e7d3ae82524b44d21f67/tumblr_inline_pswuk76Sda1w1xdc5_1280.gif" alt="devils" style="image-rendering:pixelated"/></a>
+      <a href="https://wiby.me/" target="_parent" data-title="wiby - old web search engine!" style="--hover-shadow-color: rgb(210, 151, 228);"><img src="https://wiby.me/about/wiby.gif" alt="wiby" style="image-rendering:pixelated"/></a>
+      <a href="https://yumeoi.skin/" target="_parent" data-title="" style="--hover-shadow-color: rgb(161, 62, 62);"><img src="https://yumeoi.skin/image-files/my-buttons/yumeoiskin.gif" alt="yumeoi" style="image-rendering:pixelated"/></a>
+      <a href="https://layercake.nekoweb.org/" target="_parent" data-title="" style="--hover-shadow-color: rgb(255, 255, 255);"><img src="../assets/layercake3.gif" alt="layercake" style="image-rendering:pixelated"/></a>
+      <a href="https://4377.neocities.org" target="_parent" data-title="cool person i met on statuscafe! their site is cozy, and a WIP, but looks pretty cool :3 check it!" style="--hover-shadow-color: rgb(103, 255, 161);"> <img src="../assets/4377.png" alt="4377 (please click this site is just crazy enough. also i need the VIEWS)" style="image-rendering:pixelated"> </a>
+      <a href="https://cyberdemon.nekoweb.org/" target="_parent" data-title="i like the way this site looks a lot, makes me all comfy :3" style="--hover-shadow-color: rgb(0, 247, 255);"><img src="https://cyberdemon.nekoweb.org/button.png" alt="cyberdemon" style="image-rendering:pixelated"/></a>
+      <a href="https://beaniepines.neocities.org/garden" target="_parent" data-title="" style="--hover-shadow-color: rgb(206, 127, 175);"><img src="../assets/bpdusk.gif" alt="beanie pines" style="image-rendering:pixelated"/></a>
+      <a href="https://starrs.neocities.org/" target="_parent" data-title="" style="--hover-shadow-color: rgb(183, 0, 255);"><img src="../assets/tiny_space.gif" alt="tiny space" style="image-rendering:pixelated"/></a>
+      <a href="https://www.lejlart.com/apple.html" target="_parent" data-title="" style="--hover-shadow-color: rgb(255, 137, 210);"><img src="../assets/ad_skullsprinkles.gif" alt="appledust" style="image-rendering:pixelated"/></a>
+      <a href="https://exo.pet/" target="_parent" data-title="" style="--hover-shadow-color: rgb(255, 238, 0);"><img src="../assets/exopetbutton1.png" alt="exo pet" style="image-rendering:pixelated"/></a>
+      <a href="https://frutigeraeroarchive.org/" target="_parent" data-title="THE fruitger aero archive!!!" style="--hover-shadow-color: rgb(187, 255, 0);"><img src="../assets/frutigeraeroarchive_button.png" alt="frutiger aero archive" style="image-rendering:pixelated"/></a>
+      <a href="https://petrapixel.neocities.org/" target="_parent" data-title="such a unique site, so much to click and do, it inspires me!" style="--hover-shadow-color: rgb(255, 171, 223);"><img src="https://cdn.jsdelivr.net/gh/petracoding/petrapixel.neocities.org@latest/public/assets/img/linkback.gif" alt="petrapixel" style="image-rendering:pixelated"/></a>
+      <a href="https://alynxolotl.neocities.org" target="_parent" data-title="" style="--hover-shadow-color: rgb(255, 153, 0);"><img src="https://files.catbox.moe/di03jx.gif" alt="alynxolotl" style="image-rendering:pixelated"/></a>
+      <a href="https://astrito.nekoweb.org" target="_parent" data-title="a cool personality quiz lies on this page! (i got an empanada), check it out!" style="--hover-shadow-color: rgb(255, 255, 255);"><img src="https://astrito.nekoweb.org/astrito_sitebutton.gif" alt="astrito" style="image-rendering:pixelated"/></a>
+      <a href="https://aoki553.nekoweb.org/" target="_parent" data-title="" style="--hover-shadow-color: rgb(255, 255, 255);"><img src="https://aoki553.neocities.org/nekoweb/deco/aoki553button.gif" alt="aoki553" style="image-rendering:pixelated"/></a>
+      <a href="https://status.cafe" target="_parent" data-title="this is how im able to upload my own statuses without needing to manually update my site each time!!" style="--hover-shadow-color: rgb(224, 224, 224);"><img src="https://status.cafe/../assets/button.png" alt="Status Cafe" style="image-rendering:pixelated"/></a>
+      <a href="https://neocities.org/" target="_parent" data-title="a great place to start when working with the indie web." style="--hover-shadow-color: rgb(128, 160, 202);"><img src="../assets/neocities.gif" alt="neocities!" style="image-rendering:pixelated"/></a>
+      <a href="https://www.w3schools.com/" target="_parent" data-title="helped me a lot with making my site, i was rusty on my CSS and JS" style="--hover-shadow-color: rgb(255, 255, 255);"><img src="../assets/w3schools_site-btn.gif" alt="w3 schools" style="image-rendering:pixelated"/></a>
+      <a href="https://ultrakill.nekoweb.org" target="_parent" data-title="really neat thematic(?) site, gimmie a darkmode though!! lulz"><img src="https://file.garden/ZkRD3wbiZDsBIZnn/solbutton.png" alt="a button of the word ULTRAKILL in all caps and bright blue above two shooting stars and an open black eye with a blue background." style="filter:brightness(3); image-rendering: pixelated;"></a>
+      <a href="https://zziz.nekoweb.org/" target="_parent" data-title="CRAZY ALIEN SITE - i luv it so much! so pink uwaa" style="--hover-shadow-color: rgb(106, 0, 148);"><img src="https://zziz.nekoweb.org/zzizbutton.gif" style="image-rendering:pixelated"></a>
+      <a href="https://r3ckoning.nekoweb.org" target="_parent" data-title="i love the landing page for this site, kinda similar to one of my layouts before and i love it!" style="--hover-shadow-color: rgb(40, 114, 77);"><img src="https://r3ckoning.nekoweb.org/fishy-animated.gif" alt="r3ckoner" style="image-rendering:pixelated"></a>
+      <a href="https://sillyfes.neocities.org/" target="_parent" data-title="a really silly and whimsical site. check it check it!!" style="--hover-shadow-color: rgb(78, 29, 255);"><img src="https://sillyfes.neocities.org/images/sillybutton.png" alt="sillfes" style="image-rendering:pixelated"></a>
+      <a href="https://lazer-bunny.neocities.org/" target="_parent" data-title="cute very pink site, with an amazing collection of so many webgraphics, i also really really love the vibe it gives!!!" style="--hover-shadow-color: rgb(255, 151, 215);"><img src="../assets/PTTYSwz.gif" alt="lazer-bunny" style="image-rendering:pixelated"></a>
+      <a href="https://adnyx.nekoweb.org" target="_parent" data-title="internet friend!!!!! and a lovely site" style="--hover-shadow-color: rgb(255, 81, 0);"><img src="https://adnyx.nekoweb.org/images/adnyx_button.gif" alt="adnyx's page"></a>
+      <a href="https://e10.neocities.org/" target="_parent" data-title="really fun page to look at :D (also a sackboy LOVER)" style="--hover-shadow-color: rgb(255, 0, 157);"><img src="https://e10.neocities.org/imgs/other/e10.neocities-button.gif"/></a> 
+      <a href="https://bugkisser.neocities.org/" target="_parent" data-title="" style="--hover-shadow-color: rgb(255, 156, 255);"><img src="https://bugkisser.neocities.org/buttons/bugkisser!.png"></a>            
+      <a href="https://nomnomnami.com/" target="_parent" data-title="where i got my blog template from! plus a comfy site" style="--hover-shadow-color: rgb(148, 148, 148);"><img src="https://nomnomnami.com/images/site_button.gif" alt="nomnomnami"></a>
+    </div> 
+    
+  </div> 
+  <div class="right-panel">useless box for now</div>
+</div>
+
+
+<script>
+  const tooltip = document.createElement('div');
+  tooltip.className = 'tooltip';
+  document.body.appendChild(tooltip);
+
+  // wait for all DOM content to be loaded before attaching event listeners
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.link-buttons a').forEach(el => {
+      const titleText = el.getAttribute('title') || el.dataset.title;
+      if (!titleText) return;
+
+      el.removeAttribute('title'); // disable native tooltip
+      el.dataset.title = titleText;
+
+      el.addEventListener('mouseenter', () => {
+        tooltip.textContent = el.dataset.title;
+        tooltip.style.opacity = '1';
+      });
+
+      el.addEventListener('mousemove', e => {
+        tooltip.style.left = `${e.clientX + 12}px`;
+        tooltip.style.top = `${e.clientY + 12}px`;
+      });
+
+      el.addEventListener('mouseleave', () => {
+        tooltip.style.opacity = '0';
+      });
+    });
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.link-buttons a').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        const hoverSound = new Audio('altsite/fx/shiplog_highlight2.wav');
+        hoverSound.volume = 0.4; // optional: adjust volume
+        hoverSound.play();
+      });
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('click', () => {
+    const sound = new Audio('../assets/click.mp3');
+    sound.volume = 0.02;
+    sound.play();
+  }, true);
+</script>
+</body>
+</html>

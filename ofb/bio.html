@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>me me me me me me me me me me me me me me me me me me me me me me me </title>
+  <style>
+   @font-face {
+      font-family: 'Big Shot';
+      src: url('../assets/big-shot.ttf') format('truetype');
+    }
+
+    body {
+      font-family: 'Big Shot', cursive, sans-serif;
+      background-color: #000;
+      color: #eee;
+      padding: 2rem;
+    }
+    .big-box {
+      border: 4px solid #eee;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      box-shadow: 0 0 10px #555 inset;
+      background: #111;
+    }
+    .container {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .left-column, .right-column {
+      flex: 1;
+      min-width: 280px;
+    }
+    .left-column img {
+      max-width: 100%;
+      border: 3px solid #eee;
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .right-column img {
+      max-width: 100%;
+      border: 3px solid #eee;
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .right-column p {
+      line-height: 1.2;
+      font-size: 100%;
+      margin-bottom: 1rem;
+    }
+    h1, h2 {
+      margin-bottom: 1rem;
+      color: #fff;
+      font-size: 1rem;
+      font-size: 200%;
+    }
+    a {
+      color: #66f;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .below-box {
+      max-width: 900px;
+      margin: 2rem auto 0;
+      padding: 1rem 2rem;
+      border: 3px solid #eee;
+      background: #111;
+      font-size: 0.7rem;
+      line-height: 1.3;
+    }
+    @media (max-width: 700px) {
+      .container {
+        flex-direction: column;
+      }
+    }
+    .aboutentry {
+      color: rgb(255, 202, 252);
+    }
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        /* background: rgba(100,100,150,0.4); */
+        background: rgba(175, 175, 175, 0.4); /* fall */
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        outline: none;
+        transition: background 0.2s ease;
+        cursor: pointer;
+        /* box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);  */
+        box-shadow: 0 0 5px rgba(255, 136, 0, 0.3); /* fall */
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 14px;
+        width: 14px;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffcd9e; /* fall */
+        border: 2px solid #2b1e0e; /* fall */
+        border-radius: 50%;
+        /* box-shadow: 0 0 6px #88c0d0; */
+        box-shadow: 0 0 6px #d0ab88; /* fall */
+        transition: background 0.3s ease;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        height: 14px;
+        width: 14px;
+        /* background: #9ed0ff;
+        border: 2px solid #0e1a2b; */
+        background: #ffca9e; /* fall */
+        border: 2px solid #2b1f0e; /* fall */
+        border-radius: 50%;
+        /* box-shadow: 0 0 6px #88c0d0;  */
+        box-shadow: 0 0 6px #d0ae88;/* fall */
+        cursor: pointer;
+    }
+    input[type="range"]:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="big-box">
+    <h1>Who is this? Where am I? What's going on? </h1>
+    <p>If you've somehow stumbled across my site, welcome to the mish-mash of random stuff i feel like sharing with the internet. And (at least on this page) its gonna be about me and this site!</p>
+    <div class="container">
+      <div class="left-column">
+        <img src="../assets/meposter.jpg" alt="Your Photo" />
+        <p>I figured out some github pages stuff with a friend that was more familiar with it, hosted back up my old site files, and then hid the github pages domain with a neat little subdomain so it looks pretty. After that, the rest is history. I'm still working on the site, and I've been recently figuring out how to really do more with it, and some backend stuff for fun (<span style="color: gold;">I get notified when people visit me!</span>).<br><br> So welcome to my little internet home; ever-changing, and always inspiring me to do better.<br><br>
+        
+        <div class="big-box" style="line-height: 110%; box-shadow: 0 0 0px; border-width: 3px;">
+          <span class="aboutentry">Name</span>: Kaia<br>
+          <span class="aboutentry">Age</span>: Older than the Nintendo DS, but not by a year! OK!?<br>
+          <span class="aboutentry">From</span>: Swampland, USA.<br>
+          <span class="aboutentry">Pets</span>: <a href="bigguy.html">this little shit</a>, but I used to have two turtles<br>
+          <span class="aboutentry">Fav Song Evar</span>: Owl City's '<a href="https://www.youtube.com/watch?v=psuRGfAaju4" target="_parent">Fireflies</a>', so many fond memories of my childhood. <br>
+          <span class="aboutentry">Likes</span>: Baking, coding, linux, rollerblading, video games, my friends, but also being alone, birds, birdwatching, cheese, playing music, listening to music, creating music, making lists, the little things, milk, rhythm games, and myself<br>
+          
+        </div>
+        </p>
+      </div>
+      <div class="right-column">
+        <p>The internet is an important part of me; I've learned a lot about myself, the world, people, and much much more. I will never be able to give enough thanks to the internet. Below this text and to the left of it, <span style="color: gold;">you can see photos of me!</span> How cool. It's not often I'm gonna show my face here lol.</p>
+        <p>Originally, I hosted the site with some sketchy free hosting site, but it taught me the basics. After that, I tried to move onto <a href="https://neocities.org/" target="_blank">neocities</a> cause I thought it would be fairly easy, but at the time I was developing my page during school to avoid classwork, so neocities just never worked. So after I figured that out, I bought a domain name and hosted all from 'Dreamhost', my domain was <em>jacobonline.net</em>. It taught me even more how all this crazy stuff worked and I did have a lot of fun with it, but after a while I had moved on from my site, stopped paying for my custom domain, and preoccupied with other things in my life, yknow, uni and stuff. Studying aerospace engineering sucked balls, but I met some <span style="color: gold;">real cool people</span> at uni. After moving back home, I kept in touch with my super cool uni friends, and one of them I showed my old site files. He loved it and encouraged me to continue working on it! So after some -not so- careful consideration, I dived right back in!</p>
+        <img src="../assets/me2.jpg" alt="Another Photo" />
+        <p>* The site was originally created on March 17th, 2022.</p>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="big-box">
+    <h1>100 QUESTIONS!!</h1>
+    <p>Here is <span style="color: gold;">one hundred</span> questions that i answered about me, so if u wanna know more, feed your mind here!<br><br></p>
+    <div class="container">
+      <div class="left-column">
+          * What’s your favorite color?<br>
+          &nbsp;&nbsp;Its hard to pick between <span style="color: #faacfa;">pink</span> and <span style="color: #acfab6;">green</span><br><br>
+          * Do you like pineapple on pizza?<br>
+          &nbsp;&nbsp;FUCKKKKKKK NO<br><br>
+          * Have you ever stayed up all night?<br>
+          &nbsp;&nbsp;All the time, I prob have holes in my brain<br><br>
+          * Do you like scary movies?<br>
+          &nbsp;&nbsp;Nope, not a huge movie watcher<br><br>
+          * What’s your favorite drink?<br>
+          &nbsp;&nbsp;Melted ice cream<br><br>
+          * Do you play any instruments?<br>
+          &nbsp;&nbsp;5 of them! (Clarinet, Piano, Guitar, Sax, Drums)<br><br>
+          * Have you ever been on a boat?<br>
+          &nbsp;&nbsp;Sailing classes during the summer once :)<br><br>
+          * Do you like the rain?<br>
+          &nbsp;&nbsp;I LOVE the rain, it's so cozy <3.<br><br>
+          * What’s your favorite holiday?<br>
+          &nbsp;&nbsp;Definitely christmas, leaning to halloween tho<br><br>
+          * Do you like swimming?<br>
+          &nbsp;&nbsp;It's meh, not crazy about it<br><br>
+          * Have you ever been camping?<br>
+          &nbsp;&nbsp;I would love to with my friends! but not yet :<<br><br>
+          * Do you wear glasses?<br>
+          &nbsp;&nbsp;Yes, and I actually really like them<br><br>
+          * What’s your favorite candy?<br>
+          &nbsp;&nbsp;Resse's peanut butter cups, frozen<br><br>
+          * Have you ever baked bread?<br>
+          &nbsp;&nbsp;A couple times, not a lot<br><br>
+          * Do you like cats?<br>
+          &nbsp;&nbsp;YES YES YES YES YES YES YES YES YES YES Y-<br><br>
+          * What’s your favorite season?<br>
+          &nbsp;&nbsp;<span style="color: #ff7247;">Autumn</span><br><br>
+          * Have you ever broken a bone?<br>
+          &nbsp;&nbsp;I broke my femur when I was little if that counts<br><br>
+          * Do you enjoy drawing?<br>
+          &nbsp;&nbsp;Yes, but I need to work on it more<br><br>
+          * Have you ever been to a concert?<br>
+          &nbsp;&nbsp; I love them, but I have to go to more<br><br>
+          * Do you like hot chocolate?<br>
+          &nbsp;&nbsp;Especially in the summer, weirdly enough<br><br>
+          * What’s your favorite fruit?<br>
+          &nbsp;&nbsp;Dragonfruit, and pomegrante<br><br>
+          * Do you like roller coasters?<br>
+          &nbsp;&nbsp;Nope nope nope<br><br>
+          * Have you ever met someone famous?<br>
+          &nbsp;&nbsp;I have a photo with Adam Savage :)<br><br>
+          * Do you like spicy food?<br>
+          &nbsp;&nbsp;Nope, I hate it.<br><br>
+          * What’s your favorite breakfast food?<br>
+          &nbsp;&nbsp;BACON EGG AND CHEESE ON A BAGEL<br><br>
+          * Do you enjoy reading?<br>
+          &nbsp;&nbsp;I've been trying to appreciate it more<br><br>
+          * Have you ever gone fishing?<br>
+          &nbsp;&nbsp;Once, and it was pretty fun!<br><br>
+          * Do you like to dance?<br>
+          &nbsp;&nbsp;If flailing my arms when I'm alone counts...<br><br>
+          * Do you like playing cards?<br>
+          &nbsp;&nbsp;I suck at all games involving them<br><br>
+          * What’s your favorite flower(s)?<br>
+          &nbsp;&nbsp;Stargazer Lillies, Chrysanthemums, Alliums<br><br>
+          * Have you ever traveled by train?<br>
+          &nbsp;&nbsp;Just up my state, never cross country.<br><br>
+          * Do you like snow?<br>
+          &nbsp;&nbsp;I have never seen it in person, Miami life<br><br>
+          * Do you enjoy gardening?<br>
+          &nbsp;&nbsp;I would love to get into it!<br><br>
+          * What’s your favorite smell?<br>
+          &nbsp;&nbsp;Lavender<br><br>
+          * Have you ever gone ice skating?<br>
+          &nbsp;&nbsp;Once, much better at rollerblading<br><br>
+          * Do you like going to the beach?<br>
+          &nbsp;&nbsp;Not that much<br><br>
+          * Do you drink coffee?<br>
+          &nbsp;&nbsp;Used too, now I dont<br><br>
+          * Have you ever built a snowman?<br>
+          &nbsp;&nbsp;IVE NEVER SEEN SNOW DAMMIT<br><br>
+          * Do you like museums?<br>
+          &nbsp;&nbsp;Yes, they feed my soul in some way<br><br>
+          * Have you ever tried sushi?<br>
+          &nbsp;&nbsp;Yes! but I'm not a fan of fish<br><br>
+          * What’s your favorite dessert?<br>
+          &nbsp;&nbsp;S'mores!<br><br>
+          * Do you like camping?<br>
+          &nbsp;&nbsp;I WANNA GO<br><br>
+          * Have you ever been on a roller coaster?<br>
+          &nbsp;&nbsp;Yes, and I dont like em lol<br><br>
+          * Do you like dogs?<br>
+          &nbsp;&nbsp;I like them... but I dont like getting slobbered on<br><br>
+          * What’s your favorite sandwich filling?<br>
+          &nbsp;&nbsp;THE <span style="color: rgb(255, 236, 129);">CHEESE</span><br><br>
+          * Have you ever flown in a plane?<br>
+          &nbsp;&nbsp;A handful of time when I was little, makes me nauseous<br><br>
+          * Do you enjoy photography?<br>
+          &nbsp;&nbsp;A fun pastime :)<br><br>
+          * Have you ever played chess?<br>
+          &nbsp;&nbsp;Yeah, and im embarassingly bad<br><br>
+          * Do you like singing?<br>
+          &nbsp;&nbsp;nope<br><br>
+          *  What’s your favorite snack?<br>
+          &nbsp;&nbsp;Donut holes.<br><br>
+          * Have you ever ridden a bicycle?<br>
+          &nbsp;&nbsp;It gives me fond fall memories and nostalgia <3<br><br>
+      </div>
+      <div class="right-column">
+          * Have you ever been to the mountains?<br>
+          &nbsp;&nbsp;Not crazy tall mountains, but some yes!<br><br>
+          * Do you like thunderstorms?<br>
+          &nbsp;&nbsp;Even more so than rain!<br><br>
+          * What’s your favorite movie?<br>
+          &nbsp;&nbsp;Interstellar<br><br>
+          * What’s your favorite video game?<br>
+          &nbsp;&nbsp;Tough choice between <span style="color: #ff943c;">Outer Wilds</span> and <span style="color: #105a02;">Minecraft</span><br><br>
+          * Do you like hiking?<br>
+          &nbsp;&nbsp;Sounds like it would get me winded, so no<br><br>
+          * Have you ever gone bowling?<br>
+          &nbsp;&nbsp;Yes! My brother is much better than I am. Much better.<br><br>
+          * Do you enjoy painting?<br>
+          &nbsp;&nbsp;Never done it, it looks pretty intimidating<br><br>
+          * Have you ever been in a play?<br>
+          &nbsp;&nbsp;Nope, dont have plans to eitherrr<br><br>
+          * Do you like puzzles?<br>
+          &nbsp;&nbsp;Love them!<br><br>
+          * Have you ever been on TV?<br>
+          &nbsp;&nbsp;I was on the news once, lol<br><br>
+          * Do you like to cook?<br>
+          &nbsp;&nbsp;I CANT COOK ETCFGIEFGDSFCFJSDKFJSDJF<br><br>
+          * Have you ever been to a zoo?<br>
+          &nbsp;&nbsp;I love the zoo! The one near me only houses rescues.<br><br>
+          * Do you like milkshakes?<br>
+          &nbsp;&nbsp;Im lactose intolerant, but they're so good.<br><br>
+          * What’s your favorite vegetable?<br>
+          &nbsp;&nbsp;Carrots<br><br>
+          * Are you consistent with your laundry?<br>
+          &nbsp;&nbsp;....never lol<br><br>
+          * Do you like campfires?<br>
+          &nbsp;&nbsp;cozy feelings -.-<br><br>
+          * Have you ever tried surfing?<br>
+          &nbsp;&nbsp;Nope!<br><br>
+          * Do you like reading magazines?<br>
+          &nbsp;&nbsp;Fun to think about doing, but in reality not.<br><br>
+          * Have you ever played in the snow?<br>
+          &nbsp;&nbsp;no :(<br><br>
+          * Do you like going to the park?<br>
+          &nbsp;&nbsp;I love it!<br><br>
+          * Have you ever made a sandcastle?<br>
+          &nbsp;&nbsp;Yes, I've made cool ones, but now I hate playing in sand<br><br>
+          * Do you enjoy going for walks?<br>
+          &nbsp;&nbsp;Of course, I love nature<br><br>
+          * Do you like fireworks?<br>
+          &nbsp;&nbsp;50/50<br><br>
+          * Whats your opinion on AI?<br>
+          &nbsp;&nbsp;I don't really like it much.<br><br>
+          * Do you enjoy baking?<br>
+          &nbsp;&nbsp;DUH<br><br>
+          * Have you ever worn a costume?<br>
+          &nbsp;&nbsp;Yes, its called going outside :p (Halloween, yes!)<br><br>
+          * Do you like milk?<br>
+          &nbsp;&nbsp;>:)<br><br>
+          * Have you ever gone skiing?<br>
+          &nbsp;&nbsp;Anything involved with snow is a no<br><br>
+          * Do you like to write?<br>
+          &nbsp;&nbsp;I like to a lot, but I'm not good at it<br><br>
+          * Have you ever ridden a horse?<br>
+          &nbsp;&nbsp;Nope, big animal scary<br><br>
+          * Do you like watching the sunrise?<br>
+          &nbsp;&nbsp;everytime.<br><br>
+          * Have you ever eaten cotton candy?<br>
+          &nbsp;&nbsp;Yes, and its a mess and a sensory nightmare<br><br>
+          * Do you like video games?<br>
+          &nbsp;&nbsp;love em<br><br>
+          * Have you ever climbed a tree?<br>
+          &nbsp;&nbsp;I actually do this all the time! Super fun.<br><br>
+          * Do you like toast?<br>
+          &nbsp;&nbsp;At night, yes<br><br>
+          * Have you ever been in a parade?<br>
+          &nbsp;&nbsp;I was in marching band, so technically, yeah!<br><br>
+          * Do you like lemonade?<br>
+          &nbsp;&nbsp;In this Miami heat, it isn't a choice!<br><br>
+          * Have you ever been scuba diving?<br>
+          &nbsp;&nbsp;No, my brother has though, I'm just scared of the ocean<br><br>
+          * Do you like board games?<br>
+          &nbsp;&nbsp;Yes!! Scrabble is one of my more recent favs<br><br>
+          * Have you ever seen a shooting star?<br>
+          &nbsp;&nbsp;A couple times, it's <span style="color: darkmagenta;">magical</span><br><br>
+          * Do you like popcorn?<br>
+          &nbsp;&nbsp;Kernels get stuck in your teeth, another sensory nightmare<br><br>
+          * Have you ever visited a farm?<br>
+          &nbsp;&nbsp;When I was in preschool I actually did, it was kinda cool<br><br>
+          * Do you like picnics?<br>
+          &nbsp;&nbsp;Did one once, I think you'd have to be with the right people<br><br>
+          * Have you ever had a pen pal?<br>
+          &nbsp;&nbsp;I wish D:<br><br>
+          * Do you like chocolate?<br>
+          &nbsp;&nbsp;Hurts mah stumach<br><br>
+          * Have you ever been in a band?<br>
+          &nbsp;&nbsp;School band, and a personal band!<br><br>
+          * Do you like ice cream?<br>
+          &nbsp;&nbsp;Dairy my beloved..<br><br>
+          * Have you ever made your own pizza?<br>
+          &nbsp;&nbsp;Yes, but the better part is making your own pizza dough<br><br>
+          * Do you like sunflowers?<br>
+          &nbsp;&nbsp;I love they way they look!<br><br>
+      </div>
+    </div>
+  </div>
+  <div class="below-box">
+    <p>i made this box cause i originally had plans to put something here but now i forgot what it was gonna be, so it lies here, waiting for its next chance to shine <br><br>page last edited on 8/29/25</p>
+  </div>
+  <script>
+    document.addEventListener('click', () => {
+    const sound = new Audio('../assets/click.mp3');
+    sound.volume = 0.02;
+    sound.play();
+}, true);
+  </script>
+</body>
+</html>

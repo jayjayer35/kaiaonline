@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Indie Web</title>
+<style>
+:root {
+  --bg-tile: #fff;
+  --bg-header: #9eb4d1;
+  --border-tile: #b6c6df;
+  --border-header: #7e8ba3;
+  --header-shadow: #9ca7c3;
+  --text-color: #444;
+  --font-base: 1rem; /* 16px default */
+  --line-height: 1.5;
+}
+
+html {
+  font-size: var(--font-base);
+}
+
+body {
+  margin: 0;
+  font-family: "Verdana", sans-serif;
+  background: #e8eff7 url('https://files.catbox.moe/0zwj64.png');
+  image-rendering: pixelated;
+  color: var(--text-color);
+  line-height: var(--line-height);
+  padding: 0;
+}
+
+/* HEADER BAR */
+header {
+  width: 100%;
+  background: var(--bg-header);
+  border-bottom: 0.2rem solid var(--border-header);
+  padding: 0.625rem 0;
+  text-align: center;
+  box-shadow: 0 0.125rem 0.25rem var(--header-shadow);
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+header a {
+  margin: 0 0.5rem;
+  color: white;
+  text-decoration: none;
+}
+header a:hover {
+  text-decoration: underline;
+}
+
+/* MAIN GRID */
+.wrapper {
+  max-width: 75rem; /* ~1200px */
+  margin: auto;
+  display: grid;
+  grid-template-columns: 15rem 1fr 15rem;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+/* BASIC TILE STYLING */
+.tile {
+  background: var(--bg-tile);
+  border: 0.15rem solid var(--border-tile);
+  border-radius: 0.375rem;
+  padding: 0.625rem;
+  box-shadow: 0 0 0.25rem var(--header-shadow);
+}
+
+/* TILE HEADERS */
+.tile h2 {
+  background: var(--border-tile);
+  color: white;
+  margin: -0.625rem -0.625rem 0.625rem -0.625rem;
+  padding: 0.375rem;
+  font-size: 0.95rem;
+  text-align: center;
+  border-bottom: 0.15rem solid #8a99b8;
+}
+
+/* RESPONSIVE */
+@media (max-width: 56.25rem) { /* 900px */
+  .wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* BANNER SECTION */
+.banner {
+  width: 100%;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.banner img {
+  max-width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+/* EXTRA MOBILE TWEAKS */
+@media (max-width: 37.5rem) { /* 600px */
+  header {
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+  }
+  .wrapper {
+    padding: 0.625rem;
+    gap: 0.625rem;
+  }
+  .tile {
+    font-size: 0.9rem;
+  }
+}
+/* DECORATION CORNERS */
+.tile {
+  position: relative; /* important for targeting corners */
+}
+
+.tile .decor {
+  position: absolute;
+  width: 2.5rem; /* size of the decor */
+  image-rendering: pixelated;
+  pointer-events: none; /* stops it from blocking any clicks */
+}
+
+/* Position based on class */
+.corner-top-left {
+  top: -0.4rem;
+  left: -0.4rem;
+}
+
+.corner-top-right {
+  top: -0.4rem;
+  right: -0.4rem;
+}
+
+.corner-bottom-left {
+  bottom: -0.4rem;
+  left: -0.4rem;
+}
+
+.corner-bottom-right {
+  bottom: -0.4rem;
+  right: -0.4rem;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="#">home</a> ·
+  <a href="#">about</a> ·
+  <a href="#">shrines</a> ·
+  <a href="#">blog</a> ·
+  <a href="#">links</a>
+</header>
+
+<div class="banner">
+  <img src="https://your-image-url-here.png" alt="Banner Image">
+</div>
+
+<div class="wrapper">
+
+  <!-- LEFT COLUMN -->
+  <div class="tile">
+    <h2>WELCOME ★</h2>
+    <p>hi!! i'm a cool indie-web person.</p>
+    <p>this site is forever a WIP.</p>
+  </div>
+
+  <!-- CENTER COLUMN (AUTO WIDE) -->
+  <div class="tile">
+    <h2>UPDATES</h2>
+    <ul>
+      <li>11/15 – redid layout again lol</li>
+      <li>11/10 – added shrine</li>
+      <li>11/03 – got new cat!!</li>
+    </ul>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="tile">
+    <h2>STATUS</h2>
+    <b>mood:</b> sleepy<br>
+    <b>now playing:</b> ♫ video game ost<br>
+    <b>weather:</b> rainy
+  </div>
+
+  <!-- MORE TILES -->
+  <div class="tile">
+    <h2>ABOUT ME</h2>
+    <p>i code, draw, make worlds, and sleep too much.</p>
+  </div>
+
+  <div class="tile">
+    <h2>BUTTONS</h2>
+    <img src="https://i.imgur.com/UKQ7F5t.gif" alt="Button 1">
+    <img src="https://i.imgur.com/xovkJYh.gif" alt="Button 2">
+    <img src="https://i.imgur.com/gAG5nqH.gif" alt="Button 3">
+  </div>
+
+  <div class="tile">
+    <h2>MY LITTLE GIF</h2>
+    <img src="https://i.imgur.com/7yzuECx.gif" alt="GIF">
+  </div>
+
+</div>
+
+</body>
+</html>

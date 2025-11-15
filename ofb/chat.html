@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>chatroom</title>
+    <script src="https://iframe.chat/scripts/main.min.js"></script>
+</head>
+<body style="margin:0; height:100%;">
+    <iframe src='https://iframe.chat/embed?chat=10669156'
+        id='chattable'
+        frameborder='0'
+        width='100%'
+        height='100%'>
+    </iframe>
+</body>
+
+<script>
+    document.addEventListener('click', () => {
+    const sound = new Audio('../assets/click.mp3');
+    sound.volume = 0.02;
+    sound.play();
+}, true);
+  </script>
+</html>
