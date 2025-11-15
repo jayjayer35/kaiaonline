@@ -6,7 +6,7 @@ html, body {
   top: 0; left: 0; 
   width: 100vw;
   height: 100vh;
-  background: url('assets/static.gif');
+  background: url('../assets/static.gif');
   opacity: .98;
   background-repeat: repeat;
   background-position: center center;
@@ -158,7 +158,7 @@ body::-webkit-scrollbar {
   top: 0; left: 0; 
   width: 100vw;
   height: 100vh;
-  background: url('assets/galaxybkgndblue.jpg');
+  background: url('../assets/galaxybkgndblue.jpg');
   filter: blur(2px);
   background-color: #010d1f;
   opacity: .8;

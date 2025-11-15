@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Minecraftia';
-  src: url('assets/minecraft.otf') format('truetype');
+  src: url('../assets/minecraft.otf') format('truetype');
   font-size: 2rem;
 }
 .minecraft {

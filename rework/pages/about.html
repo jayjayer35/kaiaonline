@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Me</title>
+
+<style>
+:root {
+  --bg-tile: #fff;
+  --bg-header: #9eb4d1;
+  --border-tile: #b6c6df;
+  --border-header: #7e8ba3;
+  --header-shadow: #9ca7c3;
+  --text-color: #444;
+  --font-base: 1rem; /* 16px default */
+  --line-height: 1.5;
+}
+
+html {
+  font-size: var(--font-base);
+}
+
+body {
+  margin: 0;
+  font-family: "Verdana", sans-serif;
+  background: #e8eff7 url('https://files.catbox.moe/0zwj64.png');
+  image-rendering: pixelated;
+  color: var(--text-color);
+  line-height: var(--line-height);
+}
+
+/* HEADER BAR (CLODER MATCH INDEX) */
+header {
+  width: 100%;
+  background: var(--bg-header);
+  border-bottom: 0.2rem solid var(--border-header);
+  padding: 0.625rem 0;
+  text-align: center;
+  box-shadow: 0 0.125rem 0.25rem var(--header-shadow);
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+header a {
+  margin: 0 0.5rem;
+  color: white;
+  text-decoration: none;
+}
+header a:hover {
+  text-decoration: underline;
+}
+
+/* CONTENT BLOCK */
+.page-content {
+  max-width: 60rem;
+  background: var(--bg-tile);
+  border: 0.15rem solid var(--border-tile);
+  border-radius: 0.375rem;
+  padding: 1.5rem;
+  box-shadow: 0 0 0.25rem var(--header-shadow);
+  margin: 2rem auto;
+  position: relative;
+}
+
+/* TITLE STYLE */
+.page-content h1 {
+  margin-top: 0;
+  background: var(--border-tile);
+  color: white;
+  padding: 0.5rem;
+  text-align: center;
+  border-bottom: 0.15rem solid #8a99b8;
+  border-radius: 0.25rem;
+  font-size: 1.25rem;
+}
+
+/* DECORATIONS */
+.decor {
+  position: absolute;
+  width: 3rem;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.corner-top-right { top: -0.6rem; right: -0.6rem; }
+.corner-bottom-left { bottom: -0.6rem; left: -0.6rem; }
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .page-content {
+    margin: 1rem;
+    padding: 1rem;
+  }
+  header {
+    font-size: 0.9rem;
+  }
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <a href="../../indexnew.html">home</a> ·
+  <a href="about.html">about</a> ·
+  <a href="#">shrines</a> ·
+  <a href="#">blog</a> ·
+  <a href="#">links</a>
+</header>
+
+<div class="page-content">
+  <h1>About Me</h1>
+  <p>Hello! I'm a mysterious indie-web wanderer and this is my about page...</p>
+
+  <p>You can write your bio here, add images, or info about your worldbuilding, coding, or gaming projects.</p>
+
+  <!-- Add some decorations to corners if you want -->
+  <img src="https://i.imgur.com/UKQ7F5t.gif" class="decor corner-top-right">
+  <img src="https://i.imgur.com/gAG5nqH.gif" class="decor corner-bottom-left">
+</div>
+
+</body>
+</html>
