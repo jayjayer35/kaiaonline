@@ -30,7 +30,6 @@
 
     .leaflet-container { background: #1b1b1b; }
 
-    /* TOOLTIP STYLING */
     .leaflet-tooltip {
       background-color: #272522 !important;
       color: #ffffff !important;
@@ -45,7 +44,6 @@
     .leaflet-tooltip.leaflet-tooltip-open { opacity: 1; }
     .leaflet-tooltip-bottom:after { border-top-color: #272522 !important; }
 
-    /* SIDEBAR */
     #sidebar {
       position: absolute;
       top: 0; right: 0;
@@ -91,7 +89,6 @@
       #sidebar.open { transform: translateY(0); }
     }
 
-    /* COORD BOX */
     #coords {
       position: absolute;
       bottom: 1vw; left: 1vw;
@@ -105,7 +102,6 @@
       user-select: none;
     }
 
-    /* --- LEFT CONTROLS: grouped & stacked cleanly --- */
     #leftControls {
       position: absolute;
       left: 1vw;
@@ -118,7 +114,6 @@
       align-items: flex-start;
     }
 
-    /* --- Tag Menu --- */
     #tagMenu {
       background: rgba(0, 0, 0, 0.6);
       color: #e0e0e0;
@@ -140,7 +135,6 @@
       cursor: pointer;
     }
 
-    /* --- Switch wrapper card --- */
     #mapSwitchWrapper {
       background: rgba(0,0,0,0.6);
       padding: 0.45vw 0.9vw;
@@ -156,7 +150,6 @@
       font-size: 1.05em;
     }
 
-    /* --- SWITCH COMPONENT (with animation) --- */
     .switch {
       width: 2.8vw;
       height: 1.4vw;
@@ -165,7 +158,6 @@
       position: relative;
       cursor: pointer;
 
-      /* smooth fade on track */
       transition: background-color 0.25s ease;
     }
 
@@ -179,11 +171,9 @@
       top: 0.1vw;
       left: 0.1vw;
 
-      /* sliding knob animation */
       transition: transform 0.25s ease, background 0.25s ease;
     }
 
-    /* ACTIVE (checked) STATE */
     .switch.active {
       background-color: #c9a86a;
     }
@@ -193,7 +183,6 @@
       transform: translateX(1.4vw);
     }
 
-    /* --- MOBILE ADJUSTMENTS --- */
     @media (max-width: 768px) {
 
       #leftControls {
@@ -260,7 +249,7 @@ const mapHeight = 4320;
 const baseMapURL = "assets/thalenrose_nolabel.png";
 const labelMapURL = "assets/thalenrose_label.png";
 
-/* --- REFERENCE DATA --- */
+/* --- REFERENCE stuff --- */
 const references = {
   /* REGIONS REGIONS REGIONS REGIONS REGIONS REGIONS REGIONS REGIONS REGIONS */
   "Vitruvian Highlands": {
@@ -567,9 +556,7 @@ Can play the pipe organ.
   },
 };
 
-/* --- LINKIFY REFERENCES (recursive) --- */
 function linkifyReferences(markdown) {
-  // Loop through all reference keys
   for (const key in references) {
     const regex = new RegExp(`\\b${key}\\b`, "g"); // exact word match
     markdown = markdown.replace(regex, `<a href="#" class="ref-link" data-ref="${key}">${key}</a>`);
@@ -577,7 +564,6 @@ function linkifyReferences(markdown) {
   return markdown;
 }
 
-/* --- LEAFLET MAP --- */
 const map = L.map("map", {
   minZoom: -2,
   maxZoom: 2,
@@ -781,7 +767,6 @@ There is a large pipe organ that resides in the Cathedral's main room, that can 
 
     const markers = [];
 
-/* --- MARKER SETUP --- */
 locations.forEach(loc => {
   const marker = L.circleMarker([loc.y, loc.x], {
     radius: loc.size,
@@ -818,7 +803,6 @@ locations.forEach(loc => {
   markers.push(marker);
 });
 
-/* --- SHOW REFERENCE FUNCTION --- */
 function showReference(title, markdown) {
   cityName.textContent = title;
   cityText.innerHTML = marked.parse(linkifyReferences(markdown));
@@ -827,7 +811,6 @@ function showReference(title, markdown) {
   attachReferenceHandlers();
 }
 
-/* --- ATTACH HANDLERS TO LINKS --- */
 function attachReferenceHandlers() {
   const links = cityText.querySelectorAll(".ref-link");
   links.forEach(link => {
@@ -840,10 +823,8 @@ function attachReferenceHandlers() {
   });
 }
 
-/* --- INITIAL ATTACH --- */
 attachReferenceHandlers();
 
-/* --- TAG FILTERING --- */
 const checkboxEls = document.querySelectorAll("#tagMenu input[type=checkbox]");
 checkboxEls.forEach(cb =>
   cb.addEventListener("change", () => {
@@ -855,13 +836,11 @@ checkboxEls.forEach(cb =>
   })
 );
 
-/* --- COORD DISPLAY --- */
 const coordBox = document.getElementById("coords");
 map.on("mousemove", e => {
   coordBox.textContent = `x: ${Math.round(e.latlng.lng)}, y: ${Math.round(e.latlng.lat)}`;
 });
 
-/* --- MAP LABEL SWITCH --- */
 const mapSwitch = document.getElementById("mapSwitch");
 let labelsOn = false;
 
