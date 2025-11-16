@@ -115,6 +115,7 @@
       padding: 0.625rem;
       box-shadow: 0 0 0.25rem var(--header-shadow);
       position: relative;
+      
     }
 
     /* tile headers */
@@ -152,10 +153,9 @@
     .hover-float.slow { animation-duration: 4s; }
     .hover-float.fast { animation-duration: 1s; }
 
-    /* TILE ROW WITH SIDE IMAGE */
     .tile-row {
       display: flex;
-      width: 100%;              /* row spans full column width */
+      width: 100%;        
       align-items: flex-start;
       gap: 1rem;
       margin-top: 1rem;
@@ -166,14 +166,14 @@
     }
 
     .side-image {
-      width: 6rem;              /* fixed width */
+      width: 6rem;       
       height: auto;
       image-rendering: pixelated;
       flex-shrink: 0;
     }
 
     .narrow-tile {
-      flex: 1;                  /* fills remaining space */
+      flex: 1;                 
     }
 
     /* mobile adjustments */
@@ -196,20 +196,20 @@
     }
 
     .piclog-img {
-      width: auto;      /* don't stretch */
-      max-width: 100%;  /* ensure it never overflows tile */
+      width: auto;      
+      max-width: 100%;  
       height: auto;     
       display: block;
-      margin: 0 auto;   /* center it in the tile */
-      image-rendering: pixelated; /* keeps pixelated style if needed */
+      margin: 0 auto; 
+      image-rendering: pixelated;
     }
 
     #status-tile #statuscafe {
       padding: 0.5rem;
-      background: transparent;           /* tile background handles this */
-      border: none;                      /* remove default border */
-      color: var(--text-color);          /* match your text */
-      font-family: 'NDS', sans-serif;    /* match your site font */
+      background: transparent;          
+      border: none;                     
+      color: var(--text-color);          
+      font-family: 'NDS', sans-serif;   
     }
 
     #status-tile #statuscafe-username {
@@ -225,13 +225,11 @@
       line-height: .75;
     }
 
-    /* Dropdown Wrapper */
     .dropdown {
       position: relative;
       display: inline-block;
     }
 
-    /* Dropdown Content */
     .dropdown-content {
       display: none;
       position: absolute;
@@ -241,7 +239,7 @@
       box-shadow: 2px 2px 0 var(--border-header);
       z-index: 10;
       
-      top: 100%; /* Directly under the header link */
+      top: 100%; 
       left: 50%;
       transform: translateX(-50%);
       
@@ -250,7 +248,6 @@
       padding: 0.2rem 0;
     }
 
-    /* Links inside dropdown */
     .dropdown-content a {
       display: block;
       padding: 0.4rem 0.8rem;
@@ -259,12 +256,10 @@
       white-space: nowrap;
     }
 
-    /* Hover behavior */
     .dropdown-content a:hover {
       background-color: #d6e0f0;
     }
 
-    /* Show dropdown on hover */
     .dropdown:hover .dropdown-content {
       display: block;
     }
@@ -274,31 +269,27 @@
 <body>
   <header style="color: #fff;">
     <div class="dropdown">
-      <a href="#">home</a> - 
+      <a href="indexnew.html">home</a> - 
       <div class="dropdown-content">
-        <a href="indexnew.html">main page</a>
-        <a href="rework/pages/about.html">about me</a>
+        <a href="about.html">about me</a>
       </div>
     </div>
     <div class="dropdown">
       <a href="#">projects</a> - 
       <div class="dropdown-content">
-        <a href="rework/pages/garden.html">garden</a>
-        <a href="rework/pages/piclog.html">piclog</a>
+        <a href="placeholder.html">placeholder</a>
       </div>
     </div>
     <div class="dropdown">
       <a href="#">blog</a> - 
       <div class="dropdown-content">
-        <a href="rework/pages/blog.html">main blog</a>
-        <a href="rework/pages/archive.html">archive(?)</a>
+        <a href="blog.html">main blog</a>
       </div>
     </div>
     <div class="dropdown">
       <a href="#">other</a>
       <div class="dropdown-content">
-        <a href="rework/pages/widgets.html">widgets</a>
-        <a href="rework/pages/secret.html">secret</a>
+        <a href="placeholder.html">placeholder</a>
       </div>
     </div>
   </header>
@@ -313,9 +304,12 @@
     <div class="column left">
       <div class="tile">
         <img src="assets/funnyalien.gif" style="image-rendering: pixelated;" class="decor corner-top-left hover fast">
-        <h2>about you!</h2>
+        <h2>testing</h2>
         <p>unique visitor #<span id="visitor-count">...</span></p>
-        <p>lorem ipsum <br> dasdasdas</p>
+        <p id="health">- Health: --%</p>
+        <p id="battery">- Social Battery: --%</p>
+        <p id="availability">- Steam Status: Loading...</p>
+        <p id="game">- Playing: Loading...</p>
       </div>
 
       <div class="tile" id="status-tile">
@@ -513,6 +507,48 @@
         }
       })
       .catch(err => console.error("Visitor count error:", err));
+
+    const endpoint = "/.netlify/functions/getSteamStatus";
+
+    let health = Math.floor(Math.random() * 31) + 70;      // 70-100%
+    let battery = Math.floor(Math.random() * 101);         // 0-100%
+
+    function updateKaiaStatus() {
+    const changeHealth = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1);
+    const changeBattery = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1);
+
+    health = Math.min(100, Math.max(0, health + changeHealth));
+    battery = Math.min(100, Math.max(0, battery + changeBattery));
+
+    document.getElementById("health").textContent = `- Health: ${health}%`;
+    document.getElementById("battery").textContent = `- Social Battery: ${battery}%`;
+
+    fetch(endpoint)
+        .then(res => res.json())
+        .then(data => {
+            console.log("Fetched Steam data:", data);
+            document.getElementById("game").textContent = `- Playing: ${data.game}`;
+
+            const stateMap = {
+                "0": "Radio-silent",
+                "1": "Active!",
+                "2": "Preoccupied",
+                "3": "Exploring the Stars",
+                "4": "Half-asleep",
+                "5": "Looking to Trade",
+                "6": "Looking to Play",
+            };
+
+            const status = stateMap[data.status?.toString()] || "Unknown";
+            document.getElementById("availability").textContent = `- Steam Status: ${status}`;
+        })
+        .catch((err) => {
+            console.error("Fetch error:", err);
+            document.getElementById("game").textContent = "- Playing: ???";
+        });
+    }
+
+    updateKaiaStatus();
   </script>
 </body>
 </html>
