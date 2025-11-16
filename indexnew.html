@@ -24,9 +24,9 @@
       --tile-header-bg: #b6c6df;
       --tile-header-border: #8a99b8;
       --text-color: #444;
-      --font-base: 1.2rem;
+      --font-base: 1rem;
       --line-height: 1;
-      --custom-font-scale: 1.2;
+      --custom-font-scale: 1.5;
     }
 
     html { font-size: var(--font-base); }
@@ -50,7 +50,9 @@
       text-align: center;
       box-shadow: 0 0.125rem 0.25rem var(--header-shadow);
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: 1.75rem;
+      position: relative;
+      z-index: 20;
     }
 
     header a {
@@ -130,7 +132,6 @@
     .tile .decor {
       position: absolute;
       width: 2.5rem;
-      image-rendering: pixelated;
       pointer-events: none;
       user-select: none;
     }
@@ -140,11 +141,52 @@
     .corner-bottom-left { bottom: -0.4rem; left: -0.4rem; }
     .corner-bottom-right { bottom: -0.4rem; right: -0.4rem; }
 
-    /* mobile responsiveness */
+    /* float animation */
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-0.25rem); }
+      100% { transform: translateY(0); }
+    }
+
+    .hover { animation: float 2.5s ease-in-out infinite; }
+    .hover-float.slow { animation-duration: 4s; }
+    .hover-float.fast { animation-duration: 1s; }
+
+    /* TILE ROW WITH SIDE IMAGE */
+    .tile-row {
+      display: flex;
+      width: 100%;              /* row spans full column width */
+      align-items: flex-start;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .tile-row.reverse {
+      flex-direction: row-reverse;
+    }
+
+    .side-image {
+      width: 6rem;              /* fixed width */
+      height: auto;
+      image-rendering: pixelated;
+      flex-shrink: 0;
+    }
+
+    .narrow-tile {
+      flex: 1;                  /* fills remaining space */
+    }
+
+    /* mobile adjustments */
     @media (max-width: 56.25rem) {
-      .wrapper { 
+      .wrapper { flex-direction: column; }
+      .tile-row {
         flex-direction: column;
+        gap: 0.5rem;
       }
+      .side-image {
+        margin: 0 auto;
+      }
+      .narrow-tile { max-width: 100%; }
     }
 
     @media (max-width: 37.5rem) {
@@ -153,22 +195,112 @@
       .tile { font-size: 0.9rem; }
     }
 
-    .wrap {
-      float: left;
-      width: 20%;      /* scales with container */
-      margin-right: 1em;
-      margin-bottom: 0.5em;
+    .piclog-img {
+      width: auto;      /* don't stretch */
+      max-width: 100%;  /* ensure it never overflows tile */
+      height: auto;     
+      display: block;
+      margin: 0 auto;   /* center it in the tile */
+      image-rendering: pixelated; /* keeps pixelated style if needed */
     }
-  </style>
+
+    #status-tile #statuscafe {
+      padding: 0.5rem;
+      background: transparent;           /* tile background handles this */
+      border: none;                      /* remove default border */
+      color: var(--text-color);          /* match your text */
+      font-family: 'NDS', sans-serif;    /* match your site font */
+    }
+
+    #status-tile #statuscafe-username {
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    #status-tile #statuscafe-content {
+      margin: 0;
+      padding: 0;
+      font-size: 1.5rem;
+      line-height: .75;
+    }
+
+    /* Dropdown Wrapper */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Dropdown Content */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #eef3ff;
+      border: 1px solid var(--border-header);
+      border-radius: 6px;
+      box-shadow: 2px 2px 0 var(--border-header);
+      z-index: 10;
+      
+      top: 100%; /* Directly under the header link */
+      left: 50%;
+      transform: translateX(-50%);
+      
+      min-width: 8rem;
+      font-size: 1.1rem;
+      padding: 0.2rem 0;
+    }
+
+    /* Links inside dropdown */
+    .dropdown-content a {
+      display: block;
+      padding: 0.4rem 0.8rem;
+      text-decoration: none;
+      color: var(--text-color);
+      white-space: nowrap;
+    }
+
+    /* Hover behavior */
+    .dropdown-content a:hover {
+      background-color: #d6e0f0;
+    }
+
+    /* Show dropdown on hover */
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+      </style>
 </head>
 
 <body>
-  <header>
-    <a href="indexnew.html">home</a> ·
-    <a href="rework/pages/about.html">profile</a> ·
-    <a href="#">fun thingies</a> ·
-    <a href="#">blog</a> ·
-    <a href="#">other</a>
+  <header style="color: #fff;">
+    <div class="dropdown">
+      <a href="#">home</a> - 
+      <div class="dropdown-content">
+        <a href="indexnew.html">main page</a>
+        <a href="rework/pages/about.html">about me</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">projects</a> - 
+      <div class="dropdown-content">
+        <a href="rework/pages/garden.html">garden</a>
+        <a href="rework/pages/piclog.html">piclog</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">blog</a> - 
+      <div class="dropdown-content">
+        <a href="rework/pages/blog.html">main blog</a>
+        <a href="rework/pages/archive.html">archive(?)</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">other</a>
+      <div class="dropdown-content">
+        <a href="rework/pages/widgets.html">widgets</a>
+        <a href="rework/pages/secret.html">secret</a>
+      </div>
+    </div>
   </header>
 
   <div class="banner">
@@ -177,103 +309,210 @@
 
   <div class="wrapper">
 
-  <!-- LEFT -->
-  <div class="column left">
-    <div class="tile">
-      <img src="assets/funnyalien.gif" style="image-rendering: pixelated;" class="decor corner-top-left">
-      <h2>about you!</h2>
-      <p>unique visitor #<span id="visitor-count">...</span></p>
-      <p>lorem ipsum <br>
-      dasdasdas</p>
+    <!-- LEFT -->
+    <div class="column left">
+      <div class="tile">
+        <img src="assets/funnyalien.gif" style="image-rendering: pixelated;" class="decor corner-top-left hover fast">
+        <h2>about you!</h2>
+        <p>unique visitor #<span id="visitor-count">...</span></p>
+        <p>lorem ipsum <br> dasdasdas</p>
+      </div>
+
+      <div class="tile" id="status-tile">
+        <img src="rework/assets/decor/rosie1.png" class="decor corner-bottom-left" style="transform: scale(1.5); transform-origin: bottom left; bottom: -2.8rem; left: -2.8rem;z-index: 999;">
+        <h2>Status</h2>
+        <div id="statuscafe">
+          <div id="statuscafe-username"></div>
+          <div id="statuscafe-content"></div>
+        </div>
+        <script src="https://status.cafe/current-status.js?name=kaiasei" defer></script>
+      </div>
+
+      <div class="tile">
+        <h2>piclog</h2>
+        <a href="https://piclog.blue/profile.php?id=1554">
+          <img src="https://piclog.blue/latest.php?id=1554" alt="Piclog Widget" class="piclog-img">
+        </a>
+      </div>
+
+      <div class="tile">
+        <h2>Buttons !</h2>
+        <!-- row 1 -->
+        <marquee width="100%" direction="left" height="30px" scrollamount="3">
+          <a href="https://lu.tiny-universes.net/index.html" target="_parent"><img src="assets/lulu2.gif" alt="lu tiny universes" style="image-rendering:pixelated"/></a>
+          <a href="https://biggulpsupreme.neocities.org/" target="_parent"><img src="https://i.imgur.com/ZU3CcjO.gif" alt="biggulp" style="image-rendering:pixelated"/></a>
+          <a href="https://purplehello98.neocities.org/" target="_parent"><img src="https://purplehello98.neocities.org/graphics/buttons/purplehello98.gif" alt="purple hello 98" style="image-rendering:pixelated"/></a>
+          <a href="https://the-simple-site.neocities.org/" target="_parent"><img src="https://the-simple-site.neocities.org/images/simpdark88.gif" alt="simple site" style="image-rendering:pixelated"/></a>
+          <a href="https://aegi.neocities.org/" target="_parent" ><img src="https://aegi.neocities.org/images/aegi_button.gif" alt="aegi" style="image-rendering:pixelated"/></a>
+          <a href="https://2bit.neocities.org/" target="_parent"><img src="https://2bit.neocities.org/2bit_button.png" alt="2bit" style="image-rendering:pixelated"/></a>
+          <a href="https://devils.neocities.org/" target="_parent"><img src="https://66.media.tumblr.com/777717d122b4e7d3ae82524b44d21f67/tumblr_inline_pswuk76Sda1w1xdc5_1280.gif" alt="devils" style="image-rendering:pixelated"/></a>
+          <a href="https://wiby.me/" target="_parent"><img src="https://wiby.me/about/wiby.gif" alt="wiby" style="image-rendering:pixelated"/></a>
+          <a href="https://yumeoi.skin/" target="_parent"><img src="https://yumeoi.skin/image-files/my-buttons/yumeoiskin.gif" alt="yumeoi" style="image-rendering:pixelated"/></a>
+          <a href="https://layercake.nekoweb.org/" target="_parent"><img src="assets/layercake3.gif" alt="layercake" style="image-rendering:pixelated"/></a>
+          <a href="https://4377.neocities.org" target="_parent"><img src="assets/4377.png" alt="4377 (please click this site is just crazy enough. also i need the VIEWS)" style="image-rendering:pixelated"> </a>
+          <a href="https://cyberdemon.nekoweb.org/" target="_parent"><img src="https://cyberdemon.nekoweb.org/button.png" alt="cyberdemon" style="image-rendering:pixelated"/></a>
+          <a href="https://beaniepines.neocities.org/garden" target="_parent"><img src="assets/bpdusk.gif" alt="beanie pines" style="image-rendering:pixelated"/></a>
+          <a href="https://starrs.neocities.org/" target="_parent"><img src="assets/tiny_space.gif" alt="tiny space" style="image-rendering:pixelated"/></a>
+          <a href="https://www.lejlart.com/apple.html" target="_parent"><img src="assets/ad_skullsprinkles.gif" alt="appledust" style="image-rendering:pixelated"/></a>
+          <a href="https://e10.neocities.org/" target="_parent"><img src="https://e10.neocities.org/imgs/other/e10.neocities-button.gif"/></a>
+        </marquee>
+        <!-- row 2 -->
+        <marquee width="100%" direction="right" height="30px" scrollamount="3">
+          <a href="https://exo.pet/" target="_parent"><img src="assets/exopetbutton1.png" alt="exo pet" style="image-rendering:pixelated"/></a>
+          <a href="https://frutigeraeroarchive.org/" target="_parent"><img src="assets/frutigeraeroarchive_button.png" alt="frutiger aero archive" style="image-rendering:pixelated"/></a>
+          <a href="https://petrapixel.neocities.org/" target="_parent"><img src="https://cdn.jsdelivr.net/gh/petracoding/petrapixel.neocities.org@latest/public/assets/img/linkback.gif" alt="petrapixel" style="image-rendering:pixelated"/></a>
+          <a href="https://alynxolotl.neocities.org" target="_parent"><img src="https://files.catbox.moe/di03jx.gif" alt="alynxolotl" style="image-rendering:pixelated"/></a>
+          <a href="https://astrito.nekoweb.org" target="_parent"><img src="https://astrito.nekoweb.org/astrito_sitebutton.gif" alt="astrito" style="image-rendering:pixelated"/></a>
+          <a href="https://aoki553.nekoweb.org/" target="_parent"><img src="https://aoki553.neocities.org/nekoweb/deco/aoki553button.gif" alt="aoki553" style="image-rendering:pixelated"/></a>
+          <a href="https://status.cafe" target="_parent"><img src="https://status.cafe/assets/button.png" alt="Status Cafe" style="image-rendering:pixelated"/></a>
+          <a href="https://neocities.org/" target="_parent"><img src="assets/neocities.gif" alt="neocities!" style="image-rendering:pixelated"/></a>
+          <a href="https://www.w3schools.com/" target="_parent"><img src="assets/w3schools_site-btn.gif" alt="w3 schools" style="image-rendering:pixelated"/></a>
+          <a href="https://ultrakill.nekoweb.org" target="_parent"><img src="https://file.garden/ZkRD3wbiZDsBIZnn/solbutton.png" alt="a button of the word ULTRAKILL in all caps and bright blue above two shooting stars and an open black eye with a blue background." style="filter:brightness(3); image-rendering: pixelated;"></a>
+          <a href="https://zziz.nekoweb.org/" target="_parent"><img src="https://zziz.nekoweb.org/zzizbutton.gif" style="image-rendering:pixelated"></a>
+          <a href="https://r3ckoning.nekoweb.org" target="_parent"><img src="https://r3ckoning.nekoweb.org/fishy-animated.gif" alt="r3ckoner" style="image-rendering:pixelated"></a>
+          <a href="https://sillyfes.neocities.org/" target="_parent"><img src="https://sillyfes.neocities.org/images/sillybutton.png" alt="sillfes" style="image-rendering:pixelated"></a>
+          <a href="https://lazer-bunny.neocities.org/" target="_parent"><img src="assets/PTTYSwz.gif" alt="lazer-bunny" style="image-rendering:pixelated"></a>
+          <a href="https://adnyx.nekoweb.org" target="_parent"><img src="https://adnyx.nekoweb.org/images/adnyx_button.gif" alt="adnyx's page"></a> 
+          <a href="https://bugkisser.neocities.org/" target="_parent"><img src="https://bugkisser.neocities.org/buttons/bugkisser!.png"></a>            
+          <a href="https://nomnomnami.com/" target="_parent"><img src="https://nomnomnami.com/images/site_button.gif" alt="nomnomnami"></a>
+        </marquee>
+      </div>
+
     </div>
 
-    <div class="tile">
-      <img src="https://files.catbox.moe/zxflf7.png" class="decor corner-bottom-left">
-      <h2>ABOUT ME</h2>
-      <p>lorem ipsum</p>
+    <!-- MIDDLE -->
+    <div class="column center">
+      <div class="tile">
+        <img src="https://files.catbox.moe/zxflf7.png" class="decor corner-top-right">
+        <h2>Welcome!</h2>
+        <p style="text-align: center;">hello and welcome to my site! this is mostly a personal project, and a way for me to keep myself busy without rotting my brain on the internet.</p>
+      </div>
+
+      
+
+      <!-- image on left -->
+      <div class="tile-row">
+        <img src="https://files.catbox.moe/zxflf7.png" class="side-image" alt="Side Image Left">
+        <div class="tile narrow-tile">
+          <h2>lorem ipsum</h2>
+          <p>this tile should stretch to fill the remaining space of the middle column, while the image sits neatly on its left</p>
+        </div>
+      </div>
+
+      <div class="tile">
+        <img src="https://files.catbox.moe/zxflf7.png" class="decor corner-top-right">
+        <h2>lorem ipsum</h2>
+        <ul>
+          <li>11/15 – lorem ipsum</li>
+        </ul>
+      </div>
+
+      <!-- image on right -->
+      <div class="tile-row reverse">
+        <img src="https://files.catbox.moe/zxflf7.png" class="side-image" alt="Side Image Right">
+        <div class="tile narrow-tile">
+          <h2>lorem ipsum</h2>
+          <p>this tile should stretch to fill the remaining space of the middle column, while the image sits neatly on its right</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="column right">
+      <div class="tile">
+        <h2>Currently</h2>
+        <b>mood:</b> lorem ipsum<br>
+        <b>now playing:</b> lorem ipsum<br>
+      </div>
+
+      <div class="tile" 
+        style="border-image: url('rework/assets/general/divborder1.png') 7 fill round; 
+               border-style: solid; border-width: .75rem; 
+               image-rendering: pixelated; box-shadow: none; border-radius: 2rem;">
+        <h2 style="background: white; color: var(--bg-header); border-bottom-color: var(--bg-header);">
+          Rosie <3
+        </h2>
+        <div id="rosie-gif"></div>
+      </div>
+      
+      <div class="tile" id="hotlink-tile">
+        <h2>Hotlink Buttons</h2>
+        <div class="hotlink-row">
+          <div class="hotlink-item">
+            <div class="button-preview">
+              <img src="assets/kaiabutton.gif" alt="kaia's button, animated" style="image-rendering: pixelated;">
+            </div>
+            <textarea readonly style="
+              width: 200px;       /* smaller width */
+              height: 4rem;       /* smaller height */
+              padding: 0.25rem;
+              resize: none;
+              overflow-x: auto;
+              overflow-y: hidden;
+" class="hotlink-code"><a href="https://kaia.starscene.com"><img src="assets/kaiabutton.gif" alt="Kaia Button 1"></a></textarea>
+          </div>
+
+          <div class="hotlink-item">
+            <div class="button-preview">
+              <img src="assets/kaiabutton.png" alt="kaia's button, not animated" style="image-rendering: pixelated;">
+            </div>
+            <textarea readonly style="
+              width: 200px;       /* smaller width */
+              height: 4rem;       /* smaller height */
+              padding: 0.25rem;
+              resize: none;
+              overflow-x: auto;
+              overflow-y: hidden;
+" class="hotlink-code"><a href="https://kaia.starscene.com"><img src="assets/kaiabutton.png" alt="Kaia Button 2"></a></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="tile">
+        <h2>Moon phase</h2>
+        <b><!-- © wdisseny --><div id="contain_moon" style="text-align:center;padding-bottom:5px;"><div style="font-weight:bold"></div><div style="margin-bottom:-15px;padding:30px;filter:drop-shadow(0 0 30px hsl(229,100%,0%))"></div><div>.</div><div style="font-size:small"></div></div><script>(function(){var d=new Date().getDate();var m=document.querySelectorAll("#contain_moon div");var a=new XMLHttpRequest();var url="https://www.icalendar37.net/lunar/api/?lang=en&month="+(new Date().getMonth()+1)+"&year="+(new Date().getFullYear())+"&size=100&lightColor=rgb(245,245,245)&shadeColor=rgb(37,40,59)&t&LDZ="+new Date(new Date().getFullYear(),new Date().getMonth(),1)/1000+"";m[1].style.height="100px";a.onreadystatechange=function(){if(a.readyState==4&&a.status==200){var b=JSON.parse(a.responseText);m[1].innerHTML=b.phase[d].svg;if(typeof moon_widget_loaded=="function")moon_widget_loaded(b);m[2].innerHTML=b.phase[d].npWidget}};a.open("GET",url,true);a.send()})()</script></b>
+      </div>
+
     </div>
   </div>
 
-  <!-- MIDDLE -->
-  <div class="column center">
-    <div class="tile">
-      <img src="https://files.catbox.moe/zxflf7.png" class="decor corner-top-right">
-      <h2>Welcome!</h2>
-      <p style="text-align: center;">hello and welcome to my site! this is mostly a personal project, and a way for me to keep myself busy without rotting my brain on the internet.</p>
-    </div>
+  <footer>
+    <img src="assets/kaiabutton.gif"><br>
+    <em style="font-size: 80%;">coded by my own two hands | since 2022 - til the end of time! <br>
+    ~ kaia</em>
+  </footer>
 
-    <div class="tile">
-      <img src="https://files.catbox.moe/zxflf7.png" class="decor corner-top-right">
-      <h2>LOREM IPSUM</h2>
-      <ul>
-        <li>11/15 – lorem ipsum</li>
-      </ul>
-    </div>
-  </div>
+  <script>
+    const gifFolder = 'rework/assets/general/rosie/';
+    const totalGifs = 13;
 
-  <!-- RIGHT -->
-  <div class="column right">
-    <div class="tile">
-      <img src="rework/assets/decor/rosie1.png" class="decor corner-bottom-left" style="transform: scale(1.5); transform-origin: bottom left; bottom: -2.8rem; left: -2.5rem;">
-      <h2>STATUS</h2>
-      <b>mood:</b> lorem ipsum<br>
-      <b>now playing:</b> lorem ipsum<br>
-      <b>weather:</b> lorem ipsum
-    </div>
+    function getRandomGif() {
+      const num = Math.floor(Math.random() * totalGifs) + 1;
+      return `rosie${num}.gif`;
+    }
 
-    <div class="tile" 
-     style="border-image: url('rework/assets/general/divborder1.png') 9 fill round; 
-            border-style: solid; border-width: .75rem; 
-            image-rendering: pixelated; box-shadow: none; border-radius: 2rem;">
-  <h2 style="background: white; color: var(--bg-header); border-bottom-color: var(--bg-header);">
-    Rosie <3
-  </h2>
-  <div id="rosie-gif"></div>
-</div>
-  </div>
-</div>
+    function displayGif() {
+      const gifPath = gifFolder + getRandomGif();
+      const imgElement = `<img src="${gifPath}" alt="Rosie GIF" 
+                               style="max-width: 100%; border-radius: 1rem; image-rendering: pixelated;">`;
+      document.getElementById('rosie-gif').innerHTML = imgElement;
+    }
 
+    displayGif();
 
-<footer>
-  <img src="assets/kaiabutton.gif"><br>
-  <em style="font-size: 80%;">coded by my own two hands | since 2022 - til the end of time! <br>
-  ~ kaia</em>
-</footer>
+    const visitorID = localStorage.getItem('visitorID') || crypto.randomUUID();
+    localStorage.setItem('visitorID', visitorID);
 
-
-<script>
-  const gifFolder = 'rework/assets/general/rosie/';
-  const totalGifs = 13; // number of rosie gifs
-
-  function getRandomGif() {
-    const num = Math.floor(Math.random() * totalGifs) + 1; // 1 to 13
-    return `rosie${num}.gif`;
-  }
-
-  function displayGif() {
-    const gifPath = gifFolder + getRandomGif();
-    const imgElement = `<img src="${gifPath}" alt="Rosie GIF" 
-                             style="max-width: 100%; border-radius: 1rem; image-rendering: pixelated;">`;
-    document.getElementById('rosie-gif').innerHTML = imgElement;
-  }
-
-  displayGif();                      // Display immediately
-  //setInterval(displayGif, 25000);    // Update every 25 seconds
-
-
-  const visitorID = localStorage.getItem('visitorID') || crypto.randomUUID();
-  localStorage.setItem('visitorID', visitorID);
-
-  fetch(`/.netlify/functions/countVisits?visitorID=${visitorID}`)
-    .then(res => res.json())
-    .then(data => {
-      const el = document.getElementById('visitor-count');
-      if (el && data.totalCount !== undefined) {
-        el.textContent = data.totalCount;
-      }
-    })
-    .catch(err => console.error("Visitor count error:", err));
-</script>
+    fetch(`/.netlify/functions/countVisits?visitorID=${visitorID}`)
+      .then(res => res.json())
+      .then(data => {
+        const el = document.getElementById('visitor-count');
+        if (el && data.totalCount !== undefined) {
+          el.textContent = data.totalCount;
+        }
+      })
+      .catch(err => console.error("Visitor count error:", err));
+  </script>
 </body>
-
 </html>
