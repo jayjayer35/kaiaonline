@@ -1,0 +1,51 @@
+﻿[Arrow]
+Path=bluemagicwand.ani
+
+[UpArrow]
+Path=bluemagicwand alt sel.ani
+
+[Wait]
+Path=bluemagicwand busy.ani
+
+[Hand]
+Path=bluemagicwand link sel.ani
+
+[SizeNS]
+Path=bluemagicwand verticl resize.ani
+
+[SizeWE]
+Path=bluemagicwand horizontal resize.ani
+
+[SizeNWSE]
+Path=bluemagicwand Diago 1.ani
+
+[SizeNESW]
+Path=bluemagicwand Diago 2.ani
+
+[No]
+Path=bluemagicwand Unavailable.ani
+
+[Help]
+Path=bluemagicwand help.ani
+
+[AppStarting]
+Path=bluemagicwand_working.ani
+
+[Crosshair]
+Path=bluemagicwand_ precision select.ani
+
+[IBeam]
+Path=bluemagicwand text select.ani
+
+[SizeAll]
+Path=bluemagicwand Move.ani
+
+[NWPen]
+Path=bluemagicwand handwriting.ani
+
+[Pin]
+Path=bluemagicwand location sel.ani
+
+[Person]
+Path=bluemagicwand person select.ani
+

@@ -1,32 +1,32 @@
 /* these are the site colors, replace them with anything you want!
  * this version is highly customizable... use simple-style.css for quicker editing if you don't care too much about the specifics!*/
 :root {
-  --site-bg: url("../assets/blogbck.jpg");
+  --site-bg: url("../rework/assets/general/bkg1.png");
   /*or like this for just a solid color:*/
   /*--site-bg: #FFE1C6; */
   
-  --post-bg: rgb(246, 208, 255);
-  --post-text: #4E223D;
-  --post-header-text: #96425b;
-  --border-color: #444079;
+  --post-bg: rgb(164, 186, 226);
+  --post-text: #1a1a1a;
+  --post-header-text: #133853;
+  --border-color: #143663;
   --border-shadow: #27105e80;
   
-  --sidebar-text: #4E223D;
-  --sidebar-bg: #c89bd6da;
+  --sidebar-text: #223a4d;
+  --sidebar-bg: #bbcae6da;
   --sidebar-button-bg: #2bff00;
-  --sidebar-button-bg-hover: #FFE1C6;
+  --sidebar-button-bg-hover: #807368;
   --sidebar-button-text: #4E223D;
   --sidebar-button-text-hover: #DA587E;
   --sidebar-border-color: #444079;
   
  /*this is for the collapsible sections at the top (status and tag filters)*/
   --pinned-text: #4E223D;
-  --pinned-bg: #a788fd;
+  --pinned-bg: rgb(164, 186, 226);
   /*tag filter button colors*/
-  --button-bg: #FFD2E0;
-  --button-bg-hover: rgb(202, 189, 248);
+  --button-bg: #b4d0fc;
+  --button-bg-hover: rgba(148, 159, 255, 0.596);
   --button-bg-selected: #04a3ff;
-  --button-text: #4E223D;
+  --button-text: #22254e;
   --button-border-color: #5244c8;
   
   /*these next two colors are for when you highlight text on the page*/
@@ -40,19 +40,20 @@
  * 
  * if you don't include these files in a "fonts" folder on your website, your browser will try to substitute the next closest thing...
 */
+
 @font-face {
   font-family: Nunito;
-  src: url('/fonts/Nunito-Black.ttf');
+  src: url('../rework/assets/fonts/nds.ttf');
   font-weight: bold;
 }
 @font-face {
     font-family: Atkinson Hyperlegible;
-    src: url('/fonts/AtkinsonHyperlegible-Regular.ttf');
+    src: url('../rework/assets/fonts/nds.ttf');
+    
 }
-
 @font-face {
     font-family: Atkinson Hyperlegible;
-    src: url('/fonts/AtkinsonHyperlegible-Bold.ttf');
+    src: url('../rework/assets/fonts/nds.ttf');
     font-weight: bold;
 }
 
@@ -71,11 +72,11 @@ html {scroll-behavior: smooth;}
 body {
   /*change the main font here*/
   font-family: 'Atkinson Hyperlegible', Verdana, Tahoma, sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   margin: 0;
   background: var(--site-bg);
   color: var(--post-text);
-  line-height: 1.6em;
+  line-height: 1em;
   /*if you use a bg image, this will keep it from scrolling*/
   background-attachment: fixed;
 }
@@ -86,6 +87,7 @@ nav,
 .pinned summary {
   font-family: 'Nunito', Verdana, Tahoma, sans-serif;
   font-weight: bold;
+  letter-spacing: .1rem;
 }
 /*use a pointer for the fake buttons*/
 details > summary,
@@ -152,7 +154,7 @@ main {
 }
 /*font size for your name in the sidebar*/
 #sidebar h1 a {
-  font-size: 1.2em;
+  font-size: 1.9em;
 }
 /*no underline for your name, or hovered links in sidebar*/
 #sidebar h1 a,
@@ -268,7 +270,7 @@ main {
 /*list title, ie "reading:"*/
 #status li:nth-child(odd) {
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 2em;
   color: var(--post-header-text);
 }
 /*list answer, ie "books about magic"*/
@@ -303,6 +305,7 @@ main {
   font-weight: bold;
   padding: .5rem 0;
   border-bottom: 2px dashed var(--border-color);
+  letter-spacing: .05rem;
 }
 /*and the post's timestamp*/
 .post time {

@@ -29,10 +29,12 @@
       --text-color: #444;
       --font-base: 1rem;
       --line-height: 1;
-      --custom-font-scale: 1.5;
+      --custom-font-scale: 1.25;
     }
 
-    html { font-size: var(--font-base); }
+    html { font-size: var(--font-base); 
+      cursor: url("assets/cursors/cursor-default.cur"), auto;
+    }
 
     body {
       margin: 0;
@@ -42,6 +44,7 @@
       image-rendering: pixelated;
       color: var(--text-color);
       line-height: var(--line-height);
+      cursor: url("assets/cursors/cursor-default.cur"), auto;
     }
 
     /* header bar */
@@ -62,9 +65,8 @@
       margin: 0 0.5rem;
       color: white;
       text-decoration: none;
+      letter-spacing: .1rem;
     }
-
-    header a:hover { text-decoration: underline; }
 
     footer {
       text-align: center;
@@ -72,9 +74,10 @@
 
     /* banner image */
     .banner {
-      display: flex;
-      justify-content: center;
-      margin: 1rem 0;
+      max-height: 2rem;
+      width: auto;
+      height: auto;
+      object-fit: contain;
     }
 
     .banner img {
@@ -250,70 +253,87 @@
     .dropdown-content {
       display: none;
       position: absolute;
-      background-color: #eef3ff;
+      background-color: #cfddffc5;
       border: 1px solid var(--border-header);
-      border-radius: 6px;
-      box-shadow: 2px 2px 0 var(--border-header);
+      border-radius: 3px;
+      /* box-shadow: 2px 2px 0 var(--border-header); */
       z-index: 10;
       
       top: 100%; 
-      left: 50%;
+      left: 40%;
       transform: translateX(-50%);
       
-      min-width: 8rem;
+      min-width: 5rem;
       font-size: 1.1rem;
-      padding: 0.2rem 0;
+      padding: 0.1rem 0;
     }
 
     .dropdown-content a {
       display: block;
-      padding: 0.4rem 0.8rem;
+      padding: 0.2rem 0.4rem;
       text-decoration: none;
       color: var(--text-color);
       white-space: nowrap;
+      transition: transform .2s ease-in-out;
     }
 
     .dropdown-content a:hover {
-      background-color: #d6e0f0;
+      /* background-color: #d6e0f0; */
+      transform: scale(1.1);
+      cursor: pointer;
     }
 
     .dropdown:hover .dropdown-content {
       display: block;
     }
-    </style>
+    #leafCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9998;         
+      pointer-events: none;  
+    }
+   </style>
 </head>
 
 <body>
   <header style="color: #fff;">
     <div class="dropdown">
       <a href="indexnew.html">home</a> - 
+    </div>
+    <div class="dropdown">
+      <a href="#">kaia</a> - 
       <div class="dropdown-content">
-        <a href="about.html">about me</a>
+        <a href="about.html">bio</a>
+        <a href="/blog/index.html">blog</a>
       </div>
     </div>
     <div class="dropdown">
-      <a href="#">projects</a> - 
+      <a href="#">site</a> - 
       <div class="dropdown-content">
-        <a href="map.html">thalenrose map</a>
-        <a href="grid.html">ttrpg grid</a>
+        <a href="blog.html">blog</a>
       </div>
     </div>
     <div class="dropdown">
-      <a href="#">blog</a> - 
+      <a href="#">for u</a> - 
       <div class="dropdown-content">
-        <a href="blog.html">main blog</a>
+        <a href="bookmarks.html">bookmarks</a>
+        <a href="">projects</a>
+        <a href="">media</a>
       </div>
     </div>
     <div class="dropdown">
       <a href="#">other</a>
       <div class="dropdown-content">
-        <a href="bookmarks.html">bookmarks</a>
+        <a href="">placeholder</a>
       </div>
     </div>
   </header>
 
   <div class="banner">
-    <img src="" alt="banner Image">
+    <img src="assets/christmas_lights.png" alt="banner Image" style="z-index: 10000;">
   </div>
 
   <div class="wrapper">
@@ -324,8 +344,7 @@
         <img src="assets/funnyalien.gif" style="image-rendering: pixelated; text-align: center;" class="decor corner-top-right hover fast">
         <img src="rework/assets/decor/rosie1.png" class="decor corner-bottom-left" style="transform: scale(1.5); transform-origin: bottom left; bottom: -2.8rem; left: -2.8rem;z-index: 999;">
         <h2>status</h2>
-        <p>unique visitor #<span id="visitor-count">...</span><br>
-        kaia's health: <span id="health">--%</span><br>
+        <p>kaia's health: <span id="health">--%</span><br>
         social battery: <span id="battery">--%</span><br>
         steam status: <span id="availability">loading...</span><br>
         playing: <span id="game">loading...</span><br>
@@ -422,7 +441,7 @@
     <div class="column center">
       <div class="tile">
         <h2>welcome !</h2>
-        <p style="text-align: center;">hello and welcome to kaiaonline! here you can find a bunch of random crap that i make and/or find interesting. oh and also 
+        <p style="text-align: center;">hello and welcome to kaia online! here you can find a bunch of random crap that i make and/or find interesting. oh and also 
           probably a bunch of useless stuff too. make sure to sign my guestbook if you visit! i love reading them :3
         </p>
       </div>
@@ -511,6 +530,13 @@
         <b><!-- © wdisseny --><div id="contain_moon" style="text-align:center;padding-bottom:5px;"><div style="font-weight:bold"></div><div style="margin-bottom:-15px;padding:30px;filter:drop-shadow(0 0 30px hsl(229,100%,0%))"></div><div>.</div><div style="font-size:small"></div></div><script>(function(){var d=new Date().getDate();var m=document.querySelectorAll("#contain_moon div");var a=new XMLHttpRequest();var url="https://www.icalendar37.net/lunar/api/?lang=en&month="+(new Date().getMonth()+1)+"&year="+(new Date().getFullYear())+"&size=100&lightColor=rgb(245,245,245)&shadeColor=rgb(37,40,59)&t&LDZ="+new Date(new Date().getFullYear(),new Date().getMonth(),1)/1000+"";m[1].style.height="100px";a.onreadystatechange=function(){if(a.readyState==4&&a.status==200){var b=JSON.parse(a.responseText);m[1].innerHTML=b.phase[d].svg;if(typeof moon_widget_loaded=="function")moon_widget_loaded(b);m[2].innerHTML=b.phase[d].npWidget}};a.open("GET",url,true);a.send()})()</script></b>
       </div>
 
+      <div class="tile" style="text-align: center;">
+        <h2>stats</h2>
+        <p>
+          you are (unique) visitor <br>
+          #<span id="visitor-count">...</span>!<br>
+        </p>  
+      </div>
     </div>
   </div>
 
@@ -744,7 +770,7 @@ window.addEventListener('load', () => {
       ctx.save();
       ctx.translate(b.position.x, b.position.y);
       ctx.rotate(b.angle);
-      ctx.globalAlpha = 0.1; // semi-transparent
+      ctx.globalAlpha = 0.7; // semi-transparent
       if (leafImg.complete && leafImg.naturalWidth !== 0) {
         ctx.drawImage(leafImg, -size/2, -size/2, size, size);
       } else {
@@ -778,5 +804,6 @@ window.addEventListener('load', () => {
 });
 // ---------- end AUTUMN LEAF LOGIC ----------
   </script>
+  <canvas id="leafCanvas"></canvas>
 </body>
 </html>
