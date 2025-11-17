@@ -32,8 +32,11 @@
       --custom-font-scale: 1.25;
     }
 
+    * {
+      cursor: url("rework/assets/cur/kaiacursor.png"), auto;
+    }
+
     html { font-size: var(--font-base); 
-      cursor: url("assets/cursors/cursor-default.cur"), auto;
     }
 
     body {
@@ -44,7 +47,6 @@
       image-rendering: pixelated;
       color: var(--text-color);
       line-height: var(--line-height);
-      cursor: url("assets/cursors/cursor-default.cur"), auto;
     }
 
     /* header bar */
@@ -70,6 +72,7 @@
 
     footer {
       text-align: center;
+      font-size: 80%;
     }
 
     /* banner image */
@@ -251,7 +254,7 @@
     }
 
     .dropdown-content {
-      display: none;
+      /* display: none; */
       position: absolute;
       background-color: #cfddffc5;
       border: 1px solid var(--border-header);
@@ -266,6 +269,10 @@
       min-width: 5rem;
       font-size: 1.1rem;
       padding: 0.1rem 0;
+      /* fade in out */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
     }
 
     .dropdown-content a {
@@ -285,6 +292,9 @@
 
     .dropdown:hover .dropdown-content {
       display: block;
+      /* fade in out */
+      opacity: 1;
+      visibility: visible;
     }
     #leafCanvas {
       position: fixed;
@@ -301,7 +311,8 @@
 <body>
   <header style="color: #fff;">
     <div class="dropdown">
-      <a href="indexnew.html">home</a> - 
+      <a href="indexnew.html" 
+      style="text-decoration: none; cursor: pointer;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">home</a> - 
     </div>
     <div class="dropdown">
       <a href="#">kaia</a> - 
@@ -313,7 +324,7 @@
     <div class="dropdown">
       <a href="#">site</a> - 
       <div class="dropdown-content">
-        <a href="blog.html">blog</a>
+        <a href="/blog/index.html">blog</a>
       </div>
     </div>
     <div class="dropdown">
@@ -327,7 +338,8 @@
     <div class="dropdown">
       <a href="#">other</a>
       <div class="dropdown-content">
-        <a href="">placeholder</a>
+        <a href="dontforget.html">dont forget</a>
+        <a href="template.html">template</a>
       </div>
     </div>
   </header>
@@ -365,7 +377,7 @@
       </div>
 
       <div class="tile">
-        <h2>buttons</h2>
+        <h2>cool sites & buttons!</h2>
         <!-- row 1 link-->
         <marquee width="100%" direction="left" height="30px" scrollamount="3">
           <a href="https://lu.tiny-universes.net/index.html" target="_parent"><img src="assets/lulu2.gif" alt="lu tiny universes" style="image-rendering:pixelated"/></a>
@@ -501,7 +513,7 @@
                border-style: solid; border-width: .75rem; 
                image-rendering: pixelated; box-shadow: none; border-radius: 2rem;">
         <h2 style="background: white; color: var(--bg-header); border-bottom-color: var(--bg-header);">
-          rosie <3
+          rosie cam !!!
         </h2>
         <div id="rosie-gif"></div>
       </div>
@@ -541,7 +553,7 @@
   </div>
 
   <footer>
-    <em style="font-size: 80%;">coded by my own two grubby hands | since 2022 - til the end of time! <br>
+    <em>coded by my own two grubby hands | since 2022 - til the end of time! <br>
     ~ kaia</em>
   </footer>
 

@@ -34,6 +34,11 @@
   --selected-text: #5244c8;
 }
 
+* {
+  
+  cursor: url("../rework/assets/cur/kaiacursor.png"), text;
+}
+
 /*the fonts used for this template are available here: 
  * https://fonts.google.com/specimen/Atkinson+Hyperlegible
  * https://fonts.google.com/specimen/Nunito
