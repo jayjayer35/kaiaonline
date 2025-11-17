@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>kaia online</title>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
+  <script src="hide-scrollbars.js"></script>
   <style>
     @font-face {
       font-family: "NDS";
@@ -35,7 +36,7 @@
       margin: 0;
       font-family: 'NDS', sans-serif;
       font-size: calc(1rem * var(--custom-font-scale));
-      background: #e8eff7 url('rework/assets/general/bkg1.png');
+      background: #e8eff7 url('rework/assets/general/bkg3.gif');
       image-rendering: pixelated;
       color: var(--text-color);
       line-height: var(--line-height);
@@ -118,15 +119,29 @@
       
     }
 
+    .update-log {
+      height: 7.5rem;
+      overflow-y: auto;
+      /* font-size: 0.8rem; */
+      padding-right: 0.5rem;
+      text-align: center;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .update-log::-webkit-scrollbar {
+      display: none;
+    }
     /* tile headers */
     .tile h2 {
       background: var(--tile-header-bg);
       color: white;
       margin: -0.625rem -0.625rem 0.625rem -0.625rem;
       padding: 0.375rem;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       text-align: center;
       border-bottom: 0.15rem solid var(--tile-header-border);
+      letter-spacing: .2rem;
     }
 
     /* fun deco imgs */
@@ -263,7 +278,7 @@
     .dropdown:hover .dropdown-content {
       display: block;
     }
-      </style>
+    </style>
 </head>
 
 <body>
@@ -277,7 +292,8 @@
     <div class="dropdown">
       <a href="#">projects</a> - 
       <div class="dropdown-content">
-        <a href="placeholder.html">placeholder</a>
+        <a href="map.html">thalenrose map</a>
+        <a href="grid.html">ttrpg grid</a>
       </div>
     </div>
     <div class="dropdown">
@@ -289,38 +305,36 @@
     <div class="dropdown">
       <a href="#">other</a>
       <div class="dropdown-content">
-        <a href="placeholder.html">placeholder</a>
+        <a href="bookmarks.html">bookmarks</a>
       </div>
     </div>
   </header>
 
   <div class="banner">
-    <img src="https://your-image-url-here.png" alt="Banner Image">
+    <img src="" alt="banner Image">
   </div>
 
   <div class="wrapper">
 
     <!-- LEFT -->
     <div class="column left">
-      <div class="tile">
-        <img src="assets/funnyalien.gif" style="image-rendering: pixelated;" class="decor corner-top-left hover fast">
-        <h2>testing</h2>
-        <p>unique visitor #<span id="visitor-count">...</span></p>
-        <p id="health">- Health: --%</p>
-        <p id="battery">- Social Battery: --%</p>
-        <p id="availability">- Steam Status: Loading...</p>
-        <p id="game">- Playing: Loading...</p>
+      <div class="tile" style="text-align: center;">
+        <img src="assets/funnyalien.gif" style="image-rendering: pixelated; text-align: center;" class="decor corner-top-right hover fast">
+        <img src="rework/assets/decor/rosie1.png" class="decor corner-bottom-left" style="transform: scale(1.5); transform-origin: bottom left; bottom: -2.8rem; left: -2.8rem;z-index: 999;">
+        <h2>status</h2>
+        <p>unique visitor #<span id="visitor-count">...</span><br>
+        kaia's health: <span id="health">--%</span><br>
+        social battery: <span id="battery">--%</span><br>
+        steam status: <span id="availability">loading...</span><br>
+        playing: <span id="game">loading...</span><br>
+        <img src="rework/assets/general/divider2.png" alt="divider image lol" style="width: 100%; height: 100%; object-fit: cover; transform: scaleY(0.375rem);">
+        <div id="statuscafe" style="transform: translateY(-1rem);">
+          <span id="statuscafe-content" style="text-align: center;"></span><br>
+          <span id="statuscafe-date" style="font-size: 75%;"></span><span style="font-size: 75%;"> - </span><span id="statuscafe-name" style="font-size: 75%;"></span>
+        </div>
+        <script src="rework/scripts/statuscafe.js" defer></script></p>
       </div>
 
-      <div class="tile" id="status-tile">
-        <img src="rework/assets/decor/rosie1.png" class="decor corner-bottom-left" style="transform: scale(1.5); transform-origin: bottom left; bottom: -2.8rem; left: -2.8rem;z-index: 999;">
-        <h2>Status</h2>
-        <div id="statuscafe">
-          <div id="statuscafe-username"></div>
-          <div id="statuscafe-content"></div>
-        </div>
-        <script src="https://status.cafe/current-status.js?name=kaiasei" defer></script>
-      </div>
 
       <div class="tile">
         <h2>piclog</h2>
@@ -330,17 +344,17 @@
       </div>
 
       <div class="tile">
-        <h2>Buttons !</h2>
-        <!-- row 1 -->
+        <h2>buttons</h2>
+        <!-- row 1 link-->
         <marquee width="100%" direction="left" height="30px" scrollamount="3">
           <a href="https://lu.tiny-universes.net/index.html" target="_parent"><img src="assets/lulu2.gif" alt="lu tiny universes" style="image-rendering:pixelated"/></a>
           <a href="https://biggulpsupreme.neocities.org/" target="_parent"><img src="https://i.imgur.com/ZU3CcjO.gif" alt="biggulp" style="image-rendering:pixelated"/></a>
           <a href="https://purplehello98.neocities.org/" target="_parent"><img src="https://purplehello98.neocities.org/graphics/buttons/purplehello98.gif" alt="purple hello 98" style="image-rendering:pixelated"/></a>
-          <a href="https://the-simple-site.neocities.org/" target="_parent"><img src="https://the-simple-site.neocities.org/images/simpdark88.gif" alt="simple site" style="image-rendering:pixelated"/></a>
-          <a href="https://aegi.neocities.org/" target="_parent" ><img src="https://aegi.neocities.org/images/aegi_button.gif" alt="aegi" style="image-rendering:pixelated"/></a>
-          <a href="https://2bit.neocities.org/" target="_parent"><img src="https://2bit.neocities.org/2bit_button.png" alt="2bit" style="image-rendering:pixelated"/></a>
+          <a href="https://the-simple-site.neocities.org/" target="_parent"><img src="https://the-simple-site.neocities.org/images/simpdark88.gif" alt="the simple site" style="image-rendering:pixelated"/></a>
+          <a href="https://aegi.neocities.org/" target="_parent" ><img src="https://aegi.neocities.org/images/aegi_button.gif" alt="aegi's site" style="image-rendering:pixelated"/></a>
+          <a href="https://2bit.neocities.org/" target="_parent"><img src="https://2bit.neocities.org/2bit_button.png" alt="2bit's site" style="image-rendering:pixelated"/></a>
           <a href="https://devils.neocities.org/" target="_parent"><img src="https://66.media.tumblr.com/777717d122b4e7d3ae82524b44d21f67/tumblr_inline_pswuk76Sda1w1xdc5_1280.gif" alt="devils" style="image-rendering:pixelated"/></a>
-          <a href="https://wiby.me/" target="_parent"><img src="https://wiby.me/about/wiby.gif" alt="wiby" style="image-rendering:pixelated"/></a>
+          <a href="https://wiby.me/" target="_parent"><img src="https://wiby.me/about/wiby.gif" alt="wiby search engine" style="image-rendering:pixelated"/></a>
           <a href="https://yumeoi.skin/" target="_parent"><img src="https://yumeoi.skin/image-files/my-buttons/yumeoiskin.gif" alt="yumeoi" style="image-rendering:pixelated"/></a>
           <a href="https://layercake.nekoweb.org/" target="_parent"><img src="assets/layercake3.gif" alt="layercake" style="image-rendering:pixelated"/></a>
           <a href="https://4377.neocities.org" target="_parent"><img src="assets/4377.png" alt="4377 (please click this site is just crazy enough. also i need the VIEWS)" style="image-rendering:pixelated"> </a>
@@ -350,7 +364,7 @@
           <a href="https://www.lejlart.com/apple.html" target="_parent"><img src="assets/ad_skullsprinkles.gif" alt="appledust" style="image-rendering:pixelated"/></a>
           <a href="https://e10.neocities.org/" target="_parent"><img src="https://e10.neocities.org/imgs/other/e10.neocities-button.gif"/></a>
         </marquee>
-        <!-- row 2 -->
+        <!-- row 2  more links-->
         <marquee width="100%" direction="right" height="30px" scrollamount="3">
           <a href="https://exo.pet/" target="_parent"><img src="assets/exopetbutton1.png" alt="exo pet" style="image-rendering:pixelated"/></a>
           <a href="https://frutigeraeroarchive.org/" target="_parent"><img src="assets/frutigeraeroarchive_button.png" alt="frutiger aero archive" style="image-rendering:pixelated"/></a>
@@ -370,6 +384,34 @@
           <a href="https://bugkisser.neocities.org/" target="_parent"><img src="https://bugkisser.neocities.org/buttons/bugkisser!.png"></a>            
           <a href="https://nomnomnami.com/" target="_parent"><img src="https://nomnomnami.com/images/site_button.gif" alt="nomnomnami"></a>
         </marquee>
+        <!-- row 3  NOT links-->
+        <marquee width="100%" direction="left" height="30px" scrollamount="6">
+          <a><img src="assets/america-ya-button.gif" alt="america ya!" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/b-campaignagainstcampaignagainstframes.gif" alt="we love frames!" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/chrome.gif" alt="chrome is ass" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/css.gif" alt="i love css!" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/queer.png" alt="a queer coded this" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/i-love-physical-media-button-cd.gif" alt="i love physical media!" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/gcworldwide.gif" alt="geocities" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/hatewindowsbutton.jpg" alt="i hate windows" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/makeasite.jpg" alt="make a webpage" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/filetransit.gif" alt="the file transit" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/internetprivacy.gif" alt="internet privacy!" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/netscape3a.gif" alt="netscape navigator" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/noweb32.gif" alt="web3 sux" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/pinetreesbutton.png" alt="stop and smell the pine trees" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/rainbow.gif" alt="beautiful rainbow" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/want-to-believe.gif" alt="i wanna believeeee" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/wwwbutton.gif" alt="world wide web" style="image-rendering:pixelated"/></a>
+          <a><img src="assets/fuckyeah-cyberot.png" alt="fuck yeah, it hurts" style="image-rendering:pixelated"/></a>
+
+        </marquee>
+          <span style="text-align: center;"><iframe width="88" height="31" style="border:none; display:block; margin: 0 auto;" src="https://melonsoda.nekoweb.org/button.html" name="buttonlink"></iframe></span>
+      </div>
+
+      <div class="tile">
+          <h2>navlink</h2>
+          <iframe width="235" height="235" style="border:none" src="https://dimden.neocities.org/navlink/" name="neolink"></iframe>
       </div>
 
     </div>
@@ -377,24 +419,25 @@
     <!-- MIDDLE -->
     <div class="column center">
       <div class="tile">
-        <img src="https://files.catbox.moe/zxflf7.png" class="decor corner-top-right">
-        <h2>Welcome!</h2>
-        <p style="text-align: center;">hello and welcome to my site! this is mostly a personal project, and a way for me to keep myself busy without rotting my brain on the internet.</p>
+        <h2>welcome !</h2>
+        <p style="text-align: center;">hello and welcome to kaiaonline! here you can find a bunch of random crap that i make and/or find interesting. oh and also 
+          probably a bunch of useless stuff too. make sure to sign my guestbook if you visit! i love reading them :3
+        </p>
       </div>
 
       
 
       <!-- image on left -->
       <div class="tile-row">
-        <img src="https://files.catbox.moe/zxflf7.png" class="side-image" alt="Side Image Left">
+        <img src="assets/orchid.gif" class="side-image" alt="Side Image Left" style="transform: scale(1.2) translateY(.6rem)">
         <div class="tile narrow-tile">
           <h2>lorem ipsum</h2>
-          <p>this tile should stretch to fill the remaining space of the middle column, while the image sits neatly on its left</p>
+          <p>this tile should stretch to fill the remaining space of the middle column while the image sits neatly on its lefttt</p>
         </div>
       </div>
 
       <div class="tile">
-        <img src="https://files.catbox.moe/zxflf7.png" class="decor corner-top-right">
+        <img src="" class="decor corner-top-right">
         <h2>lorem ipsum</h2>
         <ul>
           <li>11/15 – lorem ipsum</li>
@@ -403,21 +446,33 @@
 
       <!-- image on right -->
       <div class="tile-row reverse">
-        <img src="https://files.catbox.moe/zxflf7.png" class="side-image" alt="Side Image Right">
+        <img src="assets/rose.gif" class="side-image" alt="Side Image Right" style="transform: scale(1.6) translateY(1rem);">
         <div class="tile narrow-tile">
           <h2>lorem ipsum</h2>
-          <p>this tile should stretch to fill the remaining space of the middle column, while the image sits neatly on its right</p>
+          <p>this tile should stretch to fill the remaining space of the middle column while the image sits neatly on its right</p>
         </div>
       </div>
 
+      <div class="tile">
+        <img src="" class="decor corner-top-right">
+        <h2>updates</h2>
+        <div class="update-log">
+          <div style="padding-bottom: .5rem;">
+            <em style="font-size: 80%;">8:24 PM - 11/16/25</em><br>
+            - small update box added, new updates log now in effect!<br>
+            -
+          <br><br></div>
+        </div>
+      </div>
     </div>
 
     <!-- RIGHT -->
     <div class="column right">
-      <div class="tile">
-        <h2>Currently</h2>
-        <b>mood:</b> lorem ipsum<br>
-        <b>now playing:</b> lorem ipsum<br>
+      <div class="tile" style="text-align: center;">
+        <h2>notices</h2>
+        <em>!!</em><br>
+        this layout is entirely new, as im ditching the old way how i had my page organized, so give it some time<br>
+        <em>!!</em>
       </div>
 
       <div class="tile" 
@@ -431,40 +486,26 @@
       </div>
       
       <div class="tile" id="hotlink-tile">
-        <h2>Hotlink Buttons</h2>
+        <h2>hotlink me!</h2>
         <div class="hotlink-row">
-          <div class="hotlink-item">
+          <div class="hotlink-item" style="text-align: center;">
             <div class="button-preview">
               <img src="assets/kaiabutton.gif" alt="kaia's button, animated" style="image-rendering: pixelated;">
             </div>
-            <textarea readonly style="
-              width: 200px;       /* smaller width */
-              height: 4rem;       /* smaller height */
-              padding: 0.25rem;
-              resize: none;
-              overflow-x: auto;
-              overflow-y: hidden;
-" class="hotlink-code"><a href="https://kaia.starscene.com"><img src="assets/kaiabutton.gif" alt="Kaia Button 1"></a></textarea>
+            <textarea readonly style="font-size: 40%; width: 90%; height: 3.5rem; padding: 0.25rem; resize: none; overflow-x: auto; overflow-y: hidden;" class="hotlink-code"><a href="https://kaia.starscene.com"><img src="assets/kaiabutton.gif" alt="Kaia Button 1"></a></textarea>
           </div>
 
-          <div class="hotlink-item">
+          <div class="hotlink-item" style="text-align: center;">
             <div class="button-preview">
               <img src="assets/kaiabutton.png" alt="kaia's button, not animated" style="image-rendering: pixelated;">
             </div>
-            <textarea readonly style="
-              width: 200px;       /* smaller width */
-              height: 4rem;       /* smaller height */
-              padding: 0.25rem;
-              resize: none;
-              overflow-x: auto;
-              overflow-y: hidden;
-" class="hotlink-code"><a href="https://kaia.starscene.com"><img src="assets/kaiabutton.png" alt="Kaia Button 2"></a></textarea>
+            <textarea readonly style="font-size: 40%; width: 90%; height: 3.5rem; padding: 0.25rem; resize: none; overflow-x: auto; overflow-y: hidden;" class="hotlink-code"><a href="https://kaia.starscene.com"><img src="assets/kaiabutton.png" alt="Kaia Button 2"></a></textarea>
           </div>
         </div>
       </div>
 
       <div class="tile">
-        <h2>Moon phase</h2>
+        <h2>moooon</h2>
         <b><!-- © wdisseny --><div id="contain_moon" style="text-align:center;padding-bottom:5px;"><div style="font-weight:bold"></div><div style="margin-bottom:-15px;padding:30px;filter:drop-shadow(0 0 30px hsl(229,100%,0%))"></div><div>.</div><div style="font-size:small"></div></div><script>(function(){var d=new Date().getDate();var m=document.querySelectorAll("#contain_moon div");var a=new XMLHttpRequest();var url="https://www.icalendar37.net/lunar/api/?lang=en&month="+(new Date().getMonth()+1)+"&year="+(new Date().getFullYear())+"&size=100&lightColor=rgb(245,245,245)&shadeColor=rgb(37,40,59)&t&LDZ="+new Date(new Date().getFullYear(),new Date().getMonth(),1)/1000+"";m[1].style.height="100px";a.onreadystatechange=function(){if(a.readyState==4&&a.status==200){var b=JSON.parse(a.responseText);m[1].innerHTML=b.phase[d].svg;if(typeof moon_widget_loaded=="function")moon_widget_loaded(b);m[2].innerHTML=b.phase[d].npWidget}};a.open("GET",url,true);a.send()})()</script></b>
       </div>
 
@@ -472,12 +513,14 @@
   </div>
 
   <footer>
-    <img src="assets/kaiabutton.gif"><br>
-    <em style="font-size: 80%;">coded by my own two hands | since 2022 - til the end of time! <br>
+    <em style="font-size: 80%;">coded by my own two grubby hands | since 2022 - til the end of time! <br>
     ~ kaia</em>
   </footer>
 
   <script>
+
+    /* random rosie gif :3 */
+
     const gifFolder = 'rework/assets/general/rosie/';
     const totalGifs = 13;
 
@@ -495,6 +538,8 @@
 
     displayGif();
 
+    /* UPDATE TILE AND STATUS BLOCK */
+    
     const visitorID = localStorage.getItem('visitorID') || crypto.randomUUID();
     localStorage.setItem('visitorID', visitorID);
 
@@ -520,35 +565,37 @@
     health = Math.min(100, Math.max(0, health + changeHealth));
     battery = Math.min(100, Math.max(0, battery + changeBattery));
 
-    document.getElementById("health").textContent = `- Health: ${health}%`;
-    document.getElementById("battery").textContent = `- Social Battery: ${battery}%`;
+    document.getElementById("health").textContent = `${health}%`;
+    document.getElementById("battery").textContent = `${battery}%`;
 
     fetch(endpoint)
         .then(res => res.json())
         .then(data => {
             console.log("Fetched Steam data:", data);
-            document.getElementById("game").textContent = `- Playing: ${data.game}`;
+            document.getElementById("game").textContent = `${data.game}`;
 
             const stateMap = {
-                "0": "Radio-silent",
-                "1": "Active!",
-                "2": "Preoccupied",
-                "3": "Exploring the Stars",
-                "4": "Half-asleep",
-                "5": "Looking to Trade",
-                "6": "Looking to Play",
+                "0": "radio-silent",
+                "1": "active!",
+                "2": "preoccupied",
+                "3": "exploring the stars",
+                "4": "half-asleep",
+                "5": "looking to trade",
+                "6": "looking to play",
             };
 
-            const status = stateMap[data.status?.toString()] || "Unknown";
-            document.getElementById("availability").textContent = `- Steam Status: ${status}`;
+            const status = stateMap[data.status?.toString()] || "api error";
+            document.getElementById("availability").textContent = `${status}`;
         })
         .catch((err) => {
             console.error("Fetch error:", err);
-            document.getElementById("game").textContent = "- Playing: ???";
+            document.getElementById("game").textContent = "game not found";
         });
     }
 
     updateKaiaStatus();
+
+
   </script>
 </body>
 </html>
