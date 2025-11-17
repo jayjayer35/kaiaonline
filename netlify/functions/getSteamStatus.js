@@ -5,7 +5,7 @@ exports.handler = async function (event, context) {
   if (!STEAM_API_KEY || !STEAM_ID) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: "Missing STEAM_API_KEY or STEAM_ID in environment variables" }),
+      body: JSON.stringify({ error: "missing STEAM_API_KEY or STEAM_ID in environment variables" }),
     };
   }
 
@@ -27,7 +27,7 @@ exports.handler = async function (event, context) {
     if (!player) {
       return {
         statusCode: 404,
-        body: JSON.stringify({ error: "Player not found" }),
+        body: JSON.stringify({ error: "user not found, kaia did an oopsie!" }),
       };
     }
 
@@ -35,7 +35,7 @@ exports.handler = async function (event, context) {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        game: player.gameextrainfo || "Nothing",
+        game: player.gameextrainfo || "nothing!",
         status: player.personastate?.toString() || "unknown",
       }),
     };
@@ -43,7 +43,7 @@ exports.handler = async function (event, context) {
     return {
       statusCode: 500,
       body: JSON.stringify({
-        error: "Failed to fetch Steam data",
+        error: "failed to fetch steam data, kaia did an oopsie!",
         detail: err.message,
       }),
     };
