@@ -318,34 +318,29 @@
     <div class="dropdown">
       <a href="#">kaia</a> - 
       <div class="dropdown-content">
-        <a href="rework/pages/about.html">about me</a>
+        <a href="about.html">bio</a>
         <a href="https://kaia.starscene.com/blog/index.html">blog</a>
         <a href="100.html">100 questions</a>
-        <a href="contact.html">contact/socials</a>
       </div>
     </div>
     <div class="dropdown">
       <a href="#">site</a> - 
       <div class="dropdown-content">
-        <a href="">guestbook</a>
-        <a href="">webrings</a>
-        <a href="">manifesto</a>
+        <a href="/blog/index.html">blog</a>
       </div>
     </div>
     <div class="dropdown">
       <a href="#">for u</a> - 
       <div class="dropdown-content">
         <a href="bookmarks.html">bookmarks</a>
-        <a href="rework/pages/mystuff.html">my creations</a>
-        <a href="">misc projects</a>
+        <a href="">projects</a>
+        <a href="">media</a>
       </div>
     </div>
     <div class="dropdown">
       <a href="#">other</a>
       <div class="dropdown-content">
-        <a href="wilds.html">outer wilds</a>
         <a href="dontforget.html">dont forget</a>
-        <a href="deepestfear.html">deepest fear</a>
         <a href="template.html">template</a>
       </div>
     </div>
@@ -499,11 +494,8 @@
         <div class="update-log">
           <div style="padding-bottom: .5rem;">
             <em style="font-size: 80%;">8:24 PM - 11/16/25</em><br>
-            - small update box added, new updates log now in effect!<br><br>
-            <em style="font-size: 80%;">12:11 PM - 11/18/25</em><br>
-            - finalized new main page <br>
-            - this new header/nav bar is giving me a headache<br><br>
-            
+            - small update box added, new updates log now in effect!<br>
+            -
           <br><br></div>
         </div>
       </div>
@@ -563,7 +555,7 @@
   </div>
 
   <footer>
-    <em>made for humans, by a human | since 2022 - til the end of time! <br>
+    <em>coded by my own two grubby hands | since 2022 - til the end of time! <br>
     ~ kaia</em>
   </footer>
 
@@ -644,187 +636,6 @@
     }
 
     updateKaiaStatus();
-
-    /* FALLING STUFF SCRIPT */
-
-    // ---------- AUTUMN LEAF LOGIC (transparent, fall-through) ----------
-window.addEventListener('load', () => {
-  if (!window.Matter) { console.error('Matter.js missing — add the CDN script first.'); return; }
-  const { Engine, Runner, World, Bodies, Body, Constraint, Events, Query } = Matter;
-
-  const canvas = document.getElementById('leafCanvas');
-  if (!canvas) { console.error('Add <canvas id="leafCanvas"></canvas> to your page.'); return; }
-  const ctx = canvas.getContext('2d');
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  const engine = Engine.create();
-  const world = engine.world;
-  engine.gravity.y = 0.06; // gentle gravity
-
-  // only side walls so leaves don’t drift off screen
-  const leftWall = Bodies.rectangle(-60, window.innerHeight/2, 120, window.innerHeight*3, { isStatic: true });
-  const rightWall = Bodies.rectangle(window.innerWidth+60, window.innerHeight/2, 120, window.innerHeight*3, { isStatic: true });
-  World.add(world, [leftWall, rightWall]);
-
-  const leaves = [];
-  const MAX_LEAVES = 50;
-
-  const leafImg = new Image();
-  leafImg.src = 'assets/flake.png';
-
-  function spawnLeaf() {
-  const size = 22 + Math.random() * 36;
-  const x = 20 + Math.random() * (canvas.width - 40);
-  const y = -40 - Math.random() * 200;
-
-  // random initial velocity
-  const vx = (Math.random() - 0.5) * 1; // horizontal drift
-  const vy = Math.random() * 1;          // slight vertical speed
-
-  const leaf = Bodies.rectangle(x, y, size * 0.9, size * 0.6, {
-    restitution: 0.18,
-    frictionAir: 0.03,
-    friction: 0.8,
-    density: 0.0008,
-    angle: Math.random() * Math.PI * 2,
-    velocity: { x: vx, y: vy }
-  });
-  leaf.renderSize = size;
-  World.add(world, leaf);
-  leaves.push(leaf);
-}
-
-  // ambient float & wind
-  Events.on(engine, 'beforeUpdate', (ev) => {
-    const t = ev.timestamp;
-    for (let b of leaves) {
-      const windX = Math.sin((b.position.y + t*0.5) / 900) * 0.00002;
-      const floatY = -0.000018 * (0.6 + 0.4 * Math.sin((b.position.x + t) / 1200));
-      Body.applyForce(b, b.position, { x: windX, y: floatY });
-      Body.setAngularVelocity(b, b.angularVelocity * 0.995);
-    }
-
-    // remove leaves below viewport
-    for (let i = leaves.length - 1; i >= 0; i--) {
-      if (leaves[i].position.y > window.innerHeight + 100) {
-        World.remove(world, leaves[i]);
-        leaves.splice(i, 1);
-      }
-    }
-    // gentle oscillating rotation
-    const ROTATION_SPEED = 0.00004; // lower to reduce rotation amount
-    const ROTATION_FREQ = 1200;     // higher to slow down the oscillation
-
-    for (let b of leaves) {
-    const swing = Math.sin((b.position.y + t * 0.3) / ROTATION_FREQ) * ROTATION_SPEED;
-    Body.setAngularVelocity(b, b.angularVelocity + swing);
-    }
-  });
-
-  // push & drag handling (unchanged from your code)
-  let dragConstraint = null;
-  function getLeafAtPoint(pt) {
-    try {
-      const found = Query.point(leaves, pt);
-      return found.length ? found[0] : null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  document.addEventListener('pointerdown', (ev) => {
-    const pt = { x: ev.clientX, y: ev.clientY };
-    const hit = getLeafAtPoint(pt);
-    if (hit) {
-      dragConstraint = Constraint.create({
-        pointA: { x: pt.x, y: pt.y },
-        bodyB: hit,
-        pointB: { x: 0, y: 0 },
-        stiffness: 0.12,
-        damping: 0.2,
-        length: 0
-      });
-      World.add(world, dragConstraint);
-      ev.preventDefault();
-    }
-  });
-
-  document.addEventListener('pointermove', (ev) => {
-    const pt = { x: ev.clientX, y: ev.clientY };
-    if (dragConstraint) {
-      dragConstraint.pointA.x = pt.x;
-      dragConstraint.pointA.y = pt.y;
-    }
-
-    // pushing
-    const PUSH_RADIUS = 96;
-    const PUSH_STRENGTH = 0.0009;
-    for (let b of leaves) {
-      const dx = b.position.x - pt.x;
-      const dy = b.position.y - pt.y;
-      const d2 = dx*dx + dy*dy;
-      if (d2 < PUSH_RADIUS * PUSH_RADIUS) {
-        const d = Math.sqrt(d2) || 1;
-        const mag = (1 - d / PUSH_RADIUS) * PUSH_STRENGTH;
-        Body.applyForce(b, b.position, { x: (dx/d)*mag, y: (dy/d)*mag });
-      }
-    }
-  });
-
-  document.addEventListener('pointerup', () => {
-    if (dragConstraint) {
-      World.remove(world, dragConstraint);
-      dragConstraint = null;
-    }
-  });
-
-  // renderer
-  function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let b of leaves) {
-      const size = b.renderSize || 28;
-      ctx.save();
-      ctx.translate(b.position.x, b.position.y);
-      ctx.rotate(b.angle);
-      ctx.globalAlpha = 0.7; // semi-transparent
-      if (leafImg.complete && leafImg.naturalWidth !== 0) {
-        ctx.drawImage(leafImg, -size/2, -size/2, size, size);
-      } else {
-        ctx.fillStyle = 'rgba(200,120,45,0.7)';
-        ctx.beginPath();
-        ctx.ellipse(0, 0, size*0.45, size*0.28, 0, 0, Math.PI*2);
-        ctx.fill();
-      }
-      ctx.restore();
-    }
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(render);
-  }
-
-  const runner = Runner.create();
-  Runner.run(runner, engine);
-  render();
-
-  setInterval(() => {
-    if (leaves.length < MAX_LEAVES) spawnLeaf();
-  }, 2000);
-
-  for (let i=0;i<8;i++) spawnLeaf();
-
-  window.addEventListener('resize', () => {
-    Body.setPosition(leftWall, { x: -60, y: window.innerHeight/2 });
-    Body.setPosition(rightWall, { x: window.innerWidth+60, y: window.innerHeight/2 });
-  });
-
-  console.log('Floating leaves active — semi-transparent, fall-through, auto-removed.');
-});
-// ---------- end AUTUMN LEAF LOGIC ----------
   </script>
   <canvas id="leafCanvas"></canvas>
 </body>

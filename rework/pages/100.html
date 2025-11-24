@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaia online | 100 questions</title>
+  <script src="hide-scrollbars.js"></script>
+  <style>
+    @font-face {
+      font-family: "NDS";
+      src: url("rework/assets/fonts/nds.ttf") format("truetype");
+      font-display: swap;
+      image-rendering: pixelated;
+      font-smooth: never;
+      -webkit-font-smoothing: none;
+    }
+
+    :root {
+      --bg-tile: #fff;
+      --bg-header: #9eb4d1;
+      --border-tile: #b6c6df;
+      --border-header: #7e8ba3;
+      --header-shadow: #9ca7c3;
+      --tile-header-bg: #b6c6df;
+      --tile-header-border: #8a99b8;
+      --text-color: #444;
+      --font-base: 1rem;
+      --line-height: 1;
+      --custom-font-scale: 1.5;
+    }
+
+    html { font-size: var(--font-base); }
+
+    body {
+      margin: 0;
+      font-family: 'NDS', sans-serif;
+      font-size: calc(1rem * var(--custom-font-scale));
+      background: #e8eff7 url('rework/assets/general/bkg1.png');
+      image-rendering: pixelated;
+      color: var(--text-color);
+      line-height: var(--line-height);
+    }
+
+    header {
+      width: 100%;
+      background: var(--bg-header);
+      border-bottom: 0.2rem solid var(--border-header);
+      padding: 0.625rem 0;
+      text-align: center;
+      box-shadow: 0 0.125rem 0.25rem var(--header-shadow);
+      font-weight: bold;
+      font-size: 1.75rem;
+      position: relative;
+      z-index: 20;
+    }
+
+    header a {
+      margin: 0 0.5rem;
+      color: white;
+      text-decoration: none;
+      letter-spacing: .1rem;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 80%;
+    }
+
+    .banner {
+      max-height: 2rem;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .banner img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .wrapper {
+      display: flex;
+      max-width: 75rem;
+      margin: auto;
+      gap: 1rem;
+      padding: 1.25rem;
+      justify-content: center; 
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .centered-column {
+      align-items: center;
+    }
+
+    .questionnaire dt {
+      margin-top: 0.75rem;
+      font-size: 125%;
+      font-weight: 400;
+      letter-spacing: .03rem;
+    }
+
+    .questionnaire dd {
+      margin-left: 1rem;
+      margin-top: .25rem;
+      padding-left: 1rem; 
+      border-left: 1px dashed rgba(0, 0, 0, 0.3);
+      font-size: 105%; 
+    }
+
+    .tile {
+      background: var(--bg-tile);
+      border: 0.15rem solid var(--border-tile);
+      border-radius: 0.375rem;
+      padding: 0.625rem;
+      box-shadow: 0 0 0.25rem var(--header-shadow);
+      position: relative;
+      max-width: 75rem;
+    }
+
+    .tile h2 {
+      background: var(--tile-header-bg);
+      color: white;
+      margin: -0.625rem -0.625rem 0.625rem -0.625rem;
+      padding: 0.375rem;
+      font-size: 1.5rem;
+      text-align: center;
+      border-bottom: 0.15rem solid var(--tile-header-border);
+      letter-spacing: .2rem;
+    }
+
+    .tile .decor {
+      position: absolute;
+      width: 2.5rem;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .corner-top-left { top: -0.4rem; left: -0.4rem; }
+    .corner-top-right { top: -0.4rem; right: -0.4rem; }
+    .corner-bottom-left { bottom: -0.4rem; left: -0.4rem; }
+    .corner-bottom-right { bottom: -0.4rem; right: -0.4rem; }
+
+    /* float animation */
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-0.25rem); }
+      100% { transform: translateY(0); }
+    }
+
+    .hover { animation: float 2.5s ease-in-out infinite; }
+    .hover-float.slow { animation-duration: 4s; }
+    .hover-float.fast { animation-duration: 1s; }
+
+    .tile-row {
+      display: flex;
+      width: 100%;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .tile-row.reverse {
+      flex-direction: row-reverse;
+    }
+
+    .side-image {
+      width: 6rem; 
+      height: auto;
+      image-rendering: pixelated;
+      flex-shrink: 0;
+    }
+
+    .narrow-tile {
+      flex: 1;                  
+    }
+
+   
+    @media (max-width: 56.25rem) {
+      .wrapper { flex-direction: column; }
+      .tile-row {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .side-image {
+        margin: 0 auto;
+      }
+      .narrow-tile { max-width: 100%; }
+    }
+
+    @media (max-width: 37.5rem) {
+      header { font-size: 0.9rem; padding: 0.5rem 0; }
+      .wrapper { padding: 0.625rem; gap: 0.625rem; }
+      .tile { font-size: 0.9rem; }
+    }
+
+    .piclog-img {
+      width: auto;     
+      max-width: 100%; 
+      height: auto;     
+      display: block;
+      margin: 0 auto;  
+      image-rendering: pixelated; 
+    }
+
+    #status-tile #statuscafe {
+      padding: 0.5rem;
+      background: transparent;          
+      border: none;                    
+      color: var(--text-color);        
+      font-family: 'NDS', sans-serif;   
+    }
+
+    #status-tile #statuscafe-username {
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    #status-tile #statuscafe-content {
+      margin: 0;
+      padding: 0;
+      font-size: 1.5rem;
+      line-height: .75;
+    }
+
+    /* d down wrapper */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      /* display: none; */
+      position: absolute;
+      background-color: #cfddffc5;
+      border: 1px solid var(--border-header);
+      border-radius: 3px;
+      /* box-shadow: 2px 2px 0 var(--border-header); */
+      z-index: 10;
+      
+      top: 100%; 
+      left: 40%;
+      transform: translateX(-50%);
+      
+      min-width: 5rem;
+      font-size: 1.1rem;
+      padding: 0.1rem 0;
+      /* fade in out */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 0.2rem 0.4rem;
+      text-decoration: none;
+      color: var(--text-color);
+      white-space: nowrap;
+      transition: transform .2s ease-in-out;
+    }
+
+    .dropdown-content a:hover {
+      /* background-color: #d6e0f0; */
+      transform: scale(1.1);
+      cursor: pointer;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+      /* fade in out */
+      opacity: 1;
+      visibility: visible;
+    }
+  </style>
+</head>
+<body>
+
+  <header style="color: #fff;">
+    <div class="dropdown">
+      <a href="indexnew.html" 
+      style="text-decoration: none; cursor: pointer;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">home</a> - 
+    </div>
+    <div class="dropdown">
+      <a href="#">kaia</a> - 
+      <div class="dropdown-content">
+        <a href="about.html">bio</a>
+        <a href="/blog/index.html">blog</a>
+        <a href="100.html">100 questions</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">site</a> - 
+      <div class="dropdown-content">
+        <a href="/blog/index.html">blog</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">for u</a> - 
+      <div class="dropdown-content">
+        <a href="bookmarks.html">bookmarks</a>
+        <a href="">projects</a>
+        <a href="">media</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">other</a>
+      <div class="dropdown-content">
+        <a href="dontforget.html">dont forget</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="banner">
+    <img src="assets/christmas_lights.png" alt="Banner Image">
+  </div>
+
+<main>
+ <div class="wrapper">
+  <div class="column centered-column">
+    <div class="tile">
+      <h2>100 Questions</h2>
+      <dl class="questionnaire">
+        <dl>
+          <dt>1. Please introduce yourself.</dt>
+          <dd>Haia im Kaia, at for all intents and purposes, on this website and most places on the internet, that is what I prefer to go by!</dd>
+
+          <dt>2. How long have you been making websites?</dt>
+          <dd>I started back in 2022 during my comp-sci class in high-school because my teacher was really boring, and I wanted to do something actual worthwhile.</dd>
+
+          <dt>3. And what got you into the hobby?</dt>
+          <dd>When I was looking to do something that would keep me busy in comp-sci, I stumbled across <a href="https://lu.tiny-universes.net/">this</a> website, 
+            and it really widened it inspired me to make <em>something</em>.</dd>
+
+          <dt>4. What kind of website are you most interested in?</dt>
+          <dd>The types of websites that I am interested in definetley have to be ones with a bunch of stuff to read, art and photos to look at, and an interesting 
+            person behind the page!
+          </dd>
+
+          <dt>5. What's your workflow? Do you plan your websites out thoroughly or do you come up with the design as you go along?</dt>
+          <dd>I am very lost when I make my designs, in the sense that I go through and make my decisions out on a whim. This is probably why I've had many different revisions over the course of
+            this year (2025), but it is really fun that way!
+          </dd>
+
+          <dt>6. Please link to your biggest inspirations.</dt>
+          <dd>As mentioned previously, <a href="https://lu.tiny-universes.net/">this</a> site by Lu is really what pushed me to see what I could do. I have other inspirations but 
+          there would be too many to mention, everything I see inspires me just a little. Each in it's own way.</dd>
+
+          <dt>7. What's your favourite part about making websites?</dt>
+          <dd>Definetley sharing stuff about things I love! Getting to express myself, carefree and full of whimsy. :)</dd>
+
+          <dt>8. And the thing you struggle with the most?</dt>
+          <dd>I struggle with trying to use new elements and always improve on my last iteration. The learning curve can be rough, but it is very rewarding!</dd>
+
+          <dt>9. Do you keep the same layout on all of your pages? Or do you use different ones?</dt>
+          <dd>On all my old pages, aside from the first ever, I would use iframes to frame other pages so the layouts could always be updated with less hassle, but I'm trying to move 
+            on from that, just got bored of it! So from this point on, no, I prob wont use the same layout on all my pages, but I (kinda) use to.
+          </dd>
+
+          <dt>10. How confident are you with CSS?</dt>
+          <dd>Very-ish! I have gotten much more confident as of recent, but in the beginning i couldnt even figure out how to change the background color of a div T-T</dd>
+
+          <dt>11. Do you know how to correctly use &lt;dl&gt;?</dt>
+          <dd>I think this questionnaire is showing me how :sob:</dd>
+
+          <dt>12. What is your favourite HTML element?</dt>
+          <dd>I LOVE IFRAMES!!!! So much potential, and super cool. But other than that I really like buttons and lists.</dd>
+
+          <dt>13. If you're making a new web page from scratch, what is the first thing you do?</dt>
+          <dd>Figure out the colors I want things, and how I want to lay out any given information. Am I doing the frame referencing thing? What type of things do I share on this page 
+            and what things should get their own page? Stuff like that.
+          </dd>
+
+          <dt>14. Do you know JavaScript?</dt>
+          <dd>One of the only useful things I actually learned in my comp-sci class that I decided to keep working on. Especially helpful considering that's when I 
+            started my indie web-dev journey!</dd>
+
+          <dt>15. How about PHP?</dt>
+          <dd>I'm not even gonna lie, I have no idea what PHP is. I think it's an alternative to HTML?</dd>
+
+          <dt>16. Does your website have a theme that you stick to?</dt>
+          <dd>Nope! Something different each time. As I'm writing this it's Rosie from animal crossing :3</dd>
+
+          <dt>17. Are you more focused on content or design?</dt>
+          <dd>I would say both, equally. I consider the other when working on one.</dd>
+
+          <dt>18. Do you own a domain name? If not, would you ever want to?</dt>
+          <dd>I used to own a domain name, hosted at jacobonline.net, but then I stopped paying for it because of a hiatus. Then I came back and hosted on github 
+            pages with a subdomain doing a masking thing I think.
+          </dd>
+
+          <dt>19. What do you think of nostalgia-focused or "retro" websites?</dt>
+          <dd>I think they're neat! They're incredibly refreshing compared to the flat, bland modern websites that companies make nowadays. Literally anything over that.</dd>
+
+          <dt>20. Is your HTML valid? Do you even check?</dt>
+          <dd>Prob is! VS Code doesn't say there are any errors lul.</dd>
+
+          <dt>21. What are your opinion on buttons and banners?</dt>
+          <dd>I love banners and buttons, but I typically DIY them. Like on my landing page, the "button" is actually a div for some reason, idk, just the way that I code.</dd>
+
+          <dt>22. What do you think of button walls in particular?</dt>
+          <dd>I am a little confused on this question, if talking about 88x31 buttons, I love them! It's like if everyone's site has a little phonebook of interesting people to call. ^^</dd>
+
+          <dt>23. If you started over again, would you make something similar or completely different?</dt>
+          <dd>I'm starting over right now! At least while I'm answering this list of questions. I'm postponing finishing the rest of the site overhaul.</dd>
+
+          <dt>24. Are you envious of other people's websites?</dt>
+          <dd>No! Everyone is different, and their pages are too. My page will always reflect me, someone else's page will always be unique to that person. It can only ever appreciate 
+            a window into someone elses life.
+          </dd>
+
+          <dt>25. What text editor do you use?</dt>
+          <dd>Visual studio code! (VS Code). I used to use notepad++ for each page individually. It was not good.</dd>
+
+          <dt>26. Why do you use that one?</dt>
+          <dd>Because the extensions can be helpful, and I can customize it! Also, since I host my page on github pages, I can <em>very</em> easily push a commit to update the 
+          page.</dd>
+
+          <dt>27. Do you host your image files on your web server, or on another host?</dt>
+          <dd>On here! I see no reason not to.</dd>
+
+          <dt>28. This might not be relevant to you, but what's your opinion on the Neocities vs. Nekoweb debate?</dt>
+          <dd>Not so relevant to me, I don't really even know what the debate is? But I think both are very useful tools for people who want to build an indie page!</dd>
+
+          <dt>29. How much server space would you estimate your main website takes up?</dt>
+          <dd>Considering I store music files on my page as well, probably a lot LOL.</dd>
+
+          <dt>30. Do you keep local backups of your files?</dt>
+          <dd>Yes! I do backups every month-ish so that in case something weird with my computer happens (linux moment)</dd>
+
+          <dt>31. Do you prefer simple or highly visual websites?</dt>
+          <dd>Both!</dd>
+
+          <dt>32. Do you stick to certain colours? Do you do that on purpose, or is it your subconscious?</dt>
+          <dd>I like soft colors and pastels. That and very dark ones, but I am not too fond of oversaturated colors.</dd>
+
+          <dt>33. Have you ever thought about quitting? Why?</dt>
+          <dd>I did take a break, in 2023. But my late friend Jacob, shortly-ish before his passing, encouraged me to continue my page, he saw it as such a cool thing that I did.
+             So I made it my business to keep my site updated a little at least once a month.
+          </dd>
+
+          <dt>34. Do you have many webmaster friends, or is it a solitary hobby?</dt>
+          <dd>Mostly solitary hobby. I've met some cool people online and stuff, but no one too close, at least like right now.</dd>
+
+          <dt>35. Do people in your real life know about your website?</dt>
+          <dd>My parents (good lord) know about my first initial page, but beyond that, I have no idea. I don't want to know if they do or don't.</dd>
+
+          <dt>36. Do you update your website very often? How often is "very often"?</dt>
+          <dd>At least once a month! Mentioned before a couple questions up. :)</dd>
+
+          <dt>37. And the overall design, do you change that much? Why or why not?</dt>
+          <dd>When I feel like I want to redo my design, I redo it. I don't think about it too much. Since I have my backups I can afford to wipe the page and if I don't like it, 
+            we bring it back.
+          </dd>
+
+          <dt>38. Is your website more you-focused, hobby-focused, or outside world-focused?</dt>
+          <dd>Me and hobby focused! Less on the outside world. I like to look at everything I've done and made in one neat little internet package.</dd>
+
+          <dt>39. Do you do web design professionally?</dt>
+          <dd>No.</dd>
+
+          <dt>40. If not, would you like to? And if you're comfortable answering, what do you do for work?</dt>
+          <dd>I don't think I would be qualified to do so. I don't really do anything in particular for work, I'm a college student!</dd>
+
+          <dt>41. Do you communicate with people by email very much?</dt>
+          <dd>I love to! Although I don't do it often.</dd>
+
+          <dt>42. Some people reject social media and use websites as a replacement. Do you keep social media outside of your website?</dt>
+          <dd>I don't like social media, personally I think it controls me too much, it is a very predatory relationship with being online with regards to social media.</dd>
+
+          <dt>43. How about instant messengers? Do you use a mainstream one like Discord or Telegram? Or something like Matrix? Do you avoid them?</dt>
+          <dd>I do use Discord to keep in contact with my friends, the others, no.</dd>
+
+          <dt>44. Do you listen to music while you work on websites? If so, what kinds of artists?</dt>
+          <dd>Yes! City Girl is pretty good, her and Deadmau5 have driven me to code a lot of this crap. Oh, and Animal Crossing: New Leaf's music.</dd>
+
+          <dt>45. Do you keep everything you make on one website, or do you have more than one?</dt>
+          <dd>On one site! Everything I've ever made is linked somewhere on this site, easily accessible or not.</dd>
+
+          <dt>46. On a similar note, do you keep to one topic on your site, or many?</dt>
+          <dd>Many different topics! I don't like to restrict myself.</dd>
+
+          <dt>47. Do you present your real self, or at least try? Or do you construct a persona on purpose?</dt>
+          <dd>I try to be the person here that I wish to be in real life at some point.</dd>
+
+          <dt>48. Have you ever made a good friend thanks to your website?</dt>
+          <dd>One! They seemed pretty cool, and their page is <a href="https://adnyx.nekoweb.org/">here</a>.</dd>
+
+          <dt>49. Are you happy with the way HTML and CSS currently work?</dt>  
+          <dd>Yup yup. I see no issues with it!</dd>
+
+          <dt>50. What are practices that you think people should avoid?</dt>
+          <dd>None! If it works, it works. Aside from having <em>extremely</em> heavy javascript that it lags the broswer, LOL.</dd>
+
+          <dt>51. What about under-utilised practices, or things you think people should do more?</dt>
+          <dd></dd>
+
+          <dt>52. Do you use a lot of semantic HTML? Or are you guilty of generic structure?</dt>
+          <dd>I do some semantic HTML in order to keep myself organized, but none more than I deem necessary.</dd>
+
+          <dt>53. Do you consider different browsers?</dt>
+          <dd>Nope! I stay on the one that I use.</dd>
+
+          <dt>54. Speaking of, what's your preferred browser? Convince your readers why they should use it.</dt>
+          <dd>Firefox! Use it, it has a lot of support and compatibility with things, and is much better than chrome.</dd>
+
+          <dt>55. And what OS are you on?</dt>
+          <dd>EndeavourOS, an arch-based linux distrubution!</dd>
+
+          <dt>56. Do you have a strong opinion on that, or do you just happen to use it?</dt>
+          <dd>I personally was not a fan of the direction that Windows started to go in 2023/2024. As such, I decided to take it upon myself to make I change with something 
+            that I would be comfortable with, and I think I have found something I enjoy!
+          </dd>
+
+          <dt>57. Are your websites mobile-friendly?</dt>
+          <dd>My old layouts, no. From this point on though, I have been making an effort to do so.</dd>
+
+          <dt>58. What are your thoughts on autoplay?</dt>
+          <dd>I love autoplay! I always keep it on. I haven't had any bad experience with it yet, no 
+            one seems to use it maliciously. I usually enable it whenever I go web sufin' for a little :3</dd>
+
+          <dt>59. What are your thoughts on webrings? Are you in any?</dt>
+          <dd>I think webrings are so neat! I am in a couple. The first one I was in was the yesterweb ring. I miss it to this day!</dd>
+
+          <dt>60. Do you have any web shrines? What do you like to see in that sort of page?</dt>
+          <dd>Shrines for me need to be important, not just an obession. I tend to write a lot about a given topic, character, or game if I have to make a shrine. 
+            Because of this kinda "restriction", I only have one, and it is about Outer Wilds, a wonderful game I think many people should play!</dd>
+
+          <dt>61. Are your websites "cliche", in your opinion?</dt>
+          <dd>They could be considered so, but I wouldn't mind :)</dd>
+
+          <dt>62. What is your ideal website? Are you striving for that, or for something else?</dt>
+          <dd>I don't have an ideal website, my wants are always changing.</dd>
+
+          <dt>63. Are you an artist? Do you draw or design your own assets?</dt>
+          <dd>I am a <em>very</em> amateur artist, so I design a few of my assets when possible! :3</dd>
+
+          <dt>64. What are your favourite resource sites?</dt>
+          <dd>Hands down, <a href="https://developer.mozilla.org/en-US/">mozilla's css, html, and JS documentation</a>. It has helped me more times than I could count at this point!</dd>
+
+          <dt>65. Is there a habit you just can't get away from no matter how hard you try?</dt>
+          <dd>Don't tell anyone, but I bite my nails a lot! I know, it's bad.</dd>
+
+          <dt>66. What's your biggest advice for a new webmaster?</dt>
+          <dd>Just start throwing shit at the wall and seeing what sticks, the best way to learn is to your hands dirty!</dd>
+
+          <dt>67. Do you keep all your styling in CSS? Or do you hard-code some?</dt>
+          <dd>I hard-code some one like special area, usually its an exception for like a one time change on a word that I don't plan on doing anywhere else.</dd>
+
+          <dt>68. What do you think of frameset layouts?</dt>
+          <dd>Love 'em!</dd>
+
+          <dt>69. How about table-based layouts?</dt>
+          <dd>I have not messed with them, but seems alright!</dd>
+
+          <dt>70. Do you subscribe to the ideas of "one-column", "two-column" and "three-column" layouts? Do you use any of these?</dt>
+          <dd>My main page is the three-column thing :) It was super fun to make!</dd>
+
+          <dt>71. Do you spend longer on the HTML or the CSS?</dt>
+          <dd>CSS, stuff breaks ALLL the time.</dd>
+
+          <dt>72. Have you ever made a page with no CSS? It's useful for your thoughts.</dt>
+          <dd>In the past, yes. But as of now? Not so much.</dd>
+
+          <dt>73. Do you ever find yourself making layouts with nothing to put on them? Or do you only make layouts when the need arises?</dt>
+          <dd>I make them when the need arises.</dd>
+
+          <dt>74. Would you consider yourself a beginner? Or advanced? Somewhere in the middle?</dt>
+          <dd>Somewhere in the middle for sure. Though I think I am approaching advanced soon-ish</dd>
+
+          <dt>75. Do you have a habit of looking at the source code of websites you visit?</dt>
+          <dd>Very rarely, if their page has a particular design that I like, I'll take a glance to see whats going on under the hood. Other than that, I don't put nose where 
+            it doesnt belong, haha.
+          </dd>
+
+          <dt>76. How did YOU learn how to make websites?</dt>
+          <dd>Throwing myself in with no plan whatsovere, determined to put myself out there!</dd>
+
+          <dt>77. Do you ever force elements to do things they're not supposed to?</dt>
+          <dd>MFW I make a div turn into a button.</dd>
+
+          <dt>78. Thoughts on floating elements?</dt>
+          <dd>Yum!</dd>
+
+          <dt>79. When you're sizing stuff, what do you use first? Do you use px, em, %, or something else?</dt>
+          <dd>I used to use px, but it's pretty bad in practice, especially for making a site mobile friendly. So now I use em, and % interchangeably. </dd>
+
+          <dt>80. Do you have a favourite font?</dt>
+          <dd>I have three! Comfortaa, Space Mono, and the one all over this page, NDS Bios.</dd>
+
+          <dt>81. Would you run a website with another person? How would that work?</dt>
+          <dd>That would be so much fun! For me at least it would be pretty easy, we'd just have to both share the repo on github with the ability to push updates. Beyond that, 
+            I would allow to add whatever we want as long as it kinda stays within the bounds of what we would both be comfortable with.
+          </dd>
+
+          <dt>82. Do you surf the Web to find new personal websites very often?</dt>
+          <dd>At least once a week!</dd>
+
+          <dt>83. Do you bookmark other people's websites? How would you feel knowing someone else bookmarked yours?</dt>
+          <dd>I do sometimes whenever I find something I <em>really</em> like. I would feel honored if people bookmarked my site! That would be so neat.</dd>
+
+          <dt>84. What do you want people to be most impressed with when they see your website?</dt>
+          <dd>Previously I wanted people to really like the reactivity and functions of the site, one of my layouts really shined with that, but it performed horribly, so I scrapped it. Nowadays, I 
+            just want people to find the content of the site interesting, and the layout cute :)
+          </dd>
+
+          <dt>85. Are you interested in technology outside of websites? Do you collect?</dt>
+          <dd>I love old tech, as well as some stuff from the 2000's. I also really like old musical equipment. I don't collect to much right now, but I plan to do so sometime in 
+            the future.
+          </dd>
+
+          <dt>86. How often and for how long are you online?</dt>
+          <dd>Every day. 24/7. I live in my 'puter</dd>
+
+          <dt>87. When it comes to your website, who is your target audience?</dt>
+          <dd>Cool people B)</dd>
+
+          <dt>88. Have you ever been interested in XHTML?</dt>
+          <dd>What the fuck is XHTML</dd>
+
+          <dt>89. Do you program in general? Have you ever written a program for use with or on your website, not counting simple JavaScript?</dt>
+          <dd>I used to program very basic python and some lua, but I don't use it that much anymore.</dd>
+
+          <dt>90. Speaking of programs that help you make websites, what do you think of static site generators (SSGs)? Have you ever used one?</dt>
+          <dd>I have not used them, but I think whatever makes the hobby more accessible to people is good. Accessibility is always a positive.</dd>
+
+          <dt>91. Do you keep a hitcounter? Why or why not?</dt>
+          <dd>I made my own for uniquie visitors! My backend is Netlify, because they allow like 125k function triggers a month or something along those lines (I forget what 
+            it actually is, but it's enough for my purposes), and it triggeres every time someone hops onto my site, stores the UUID I generate in a JSON file, and all that stuff. For me 
+            a hit counter is awesome, cause like, holy crap people actually visit my site and look at stuff! It makes me feel seen :>
+          </dd>
+
+          <dt>92. Do you frequent forums? Which ones?</dt>
+          <dd>Only one, its called the agora road macintosh cafe!</dd>
+
+          <dt>93. Do you write your page content directly into the editor, or do you prepare it elsewhere, like a text document or a Word document?</dt>
+          <dd>STRAIGHT into the editor. lol.</dd>
+
+          <dt>94. Do you think you appear cool to others? A more accurate answer now: do other people ever say you're cool?</dt>
+          <dd>I'd hope so! People have said I'm pretty cool and what I do is pretty cool. I think people generally find most artistic endeavours cool to some extent, even if it 
+            isnt their cup of tea. It's cool to see people make things.
+          </dd>
+
+          <dt>95. Are you embarrassed of your old work? Have you ever deleted everything out of shame?</dt>
+          <dd>A little, but we all start somewhere! I never delete my old stuff, I think it is important to remember where I started to really see the progress I made.</dd>
+
+          <dt>96. Would you close down your website if you couldn't update it, or would you leave an archive?</dt>
+          <dd>Archive. 100%</dd>
+
+          <dt>97. Do you reveal a lot about yourself on your website? Or are you more secretive?</dt>
+          <dd>I reveal what I consider to be a lot. People can really find out about me on here, oopsies lol.</dd>
+
+          <dt>98. Are you willing to reveal who your best online friend is, and/or if they have a website?</dt>
+          <dd>Idk if I have a "best online friend", but there have been a lot of people that I met through irl friends on discord. Would be too many to name, but I love em' all!</dd>
+
+          <dt>99. And do you optimise the images on your website?</dt>
+          <dd>Uhhhhhhh, most my images are tiny, though I guess I could give it a shot!</dd>
+
+          <dt>100. We're out of time! How do you feel after answering 100 questions? ....other than exhausted.</dt>
+          <dd>THIS TOOK ME TWO DAYS! I had done half of it, then went back to working on the site. The next day I booted vscode back up and finished the questions. I really liked 
+            answering them all! I hope if people read the answers to all of them, they can get some insight on how to start their own website, or maybe even just a different way of doing things!
+          </dd>
+        </dl>
+      </dl>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer><em>coded by my own two hands | since 2022 - til the end of time!<br>
+    ~ kaia</em>
+</footer>
+
+</body>
+</html>

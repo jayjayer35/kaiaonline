@@ -228,6 +228,7 @@
       <label><input type="checkbox" value="city" checked> Cities</label>
       <label><input type="checkbox" value="camp" checked> Camps</label>
       <label><input type="checkbox" value="landmark" checked> Landmarks</label>
+      <label><input type="checkbox" value="ruins" checked> Ruins</label>
       <label><input type="checkbox" value="other" checked> Other</label>
     </div>
 
@@ -246,8 +247,8 @@
 const mapWidth = 7680;
 const mapHeight = 4320;
 
-const baseMapURL = "../assets/thalenrose_nolabel.png";
-const labelMapURL = "../assets/thalenrose_label.png";
+const baseMapURL = "assets/thalenrose_nolabel.png";
+const labelMapURL = "assets/thalenrose_label.png";
 
 /* --- REFERENCE stuff --- */
 const references = {
@@ -606,6 +607,15 @@ map.on("click", () => sidebar.classList.remove("open"));
 /* --- LOCATIONS --- */
 const locations = [
         {
+        name: "The Party", x:2109, y:934,
+        color:"#D0396B", size:6, tags:["party"],
+        text:`### **Last session end point**
+
+*You are here!*
+
+In the heart of the Meros Desert.
+`
+        },{
         name: "Aradisia", x:3297, y:2378,
         color:"#15E858", size:6, tags:["city"],
         text:`### **City**
@@ -722,7 +732,7 @@ Not a lot of usable land, and rocky hills cover most of the landscape there as w
 `
         },{
         name: "Helion", x:3670, y:2868,
-        color:"#EDC26B", size:6, tags:["camp"],
+        color:"#EDC26B", size:4, tags:["camp"],
         text:`### **Camp**
         
 A practical camp, set up by the good of the people to aid those traversing the Sunscorched Wastes. Some local shops stay stocked with things to deal with the harshness of the area.
@@ -756,18 +766,22 @@ At its heart lies the Cathedral of Refraction, an immense domed structure built 
 `
         },{
         name: "The Sundial Crater", x:1775, y:809,
-        color:"#ffdf91", size:6, tags:["landmark"],
+        color:"#ffdf91", size:5, tags:["landmark"],
         text:`### **Landmark**
         
 A vast circular basin deep in the Meros Desert, where the ground sinks inward into a mirror-smooth depression in the landscape, made of fused glass, vitrified sand and blackened stone. 
 
 At its center stands a single, half-melted obelisk of brass and sandstone, scholars debate whether it is a natural formation or the relic of some forgotten ritual, but no records of its origin survive.
 
-`
+You've learned that each of the pillars here has some brass looking core. All but one, when touched, shows a glimpse of the crater at another point in time. All but one broken pillar.
 
-        },{
+*When touched by those with a flame, you very briefly see:* 
+
+A great big domed in tact.
+`
+},{
         name: "Grand Cathedral of Flame", x:3404, y:3034,
-        color:"#EDC26B", size:6, tags:["other"],
+        color:"#EDC26B", size:5, tags:["landmark"],
         text:`### **Grand Cathedral**
         
 Home to The Ashen Knight, a paladin of Balance and Burden.
@@ -779,13 +793,115 @@ There is a large pipe organ that resides in the Cathedral's main room, that can 
 `
         },{
         name: "Vil's Shack", x:3742, y:1947,
-        color:"#15E858", size:3, tags:["other"],
+        color:"#15E858", size:4, tags:["camp"],
         text:`### **Camp**
         
 A lumberjack's shack that lives on the outskirts of Cianthus. 
 
 Welcomes people to stay over, shelters the weak when needed.
 
+`
+        },{
+        name: "Sunial Pillar 1", x:1582, y:633,
+        color:"#ffdf91", size:4, tags:["other"],
+        text:`### **Other**
+        
+*When touched by those with a flame, you very briefly see:* 
+
+A battefield on the desert, what seems like a lot of people going to war. 
+
+The sand in the Desert is bloodied.
+
+`
+        },{
+        name: "Sunial Pillar 2", x:1503, y:776,
+        color:"#ffdf91", size:4, tags:["other"],
+        text:`### **Other**
+        
+*When touched by those with a flame, you very briefly see:* 
+
+Someone in armor, looking down at his shadow, frantically swinging at it. 
+
+His shadow does not seem to line up with his own body movements.
+
+He looks panicked.
+
+`
+        },{
+        name: "Sunial Pillar 3", x:1576, y:912,
+        color:"#ffdf91", size:4, tags:["other"],
+        text:`### **Other**
+        
+*When touched by those with a flame, you very briefly hear:* 
+
+A man shouting "HOLD THE SUN-" amidst other screaming.
+
+Sounds like chaos
+
+`
+        },{
+        name: "Sunial Pillar 4", x:1976, y:865,
+        color:"#ffdf91", size:4, tags:["other"],
+        text:`### **Other**
+        
+*When touched by those with a flame, you very briefly see:* 
+
+A blinding light, brighter than anything youve ever seen.
+
+`
+        },{
+        name: "Sunial Pillar 5", x:2042, y:746,
+        color:"#ffdf91", size:4, tags:["other"],
+        text:`### **Other**
+
+This pillar seems to be much more worn down than the others.
+
+You're able to see that this pillar has a similar brass-looking core similar to those fragments people go to the desert to collect and scrap.
+
+Oddly enough, the frozen dawn causes the central sunial pillar's shadow to point towards this one.
+
+`
+        },{
+        name: "Sunial Pillar 6", x:1967, y:645,
+        color:"#ffdf91", size:4, tags:["other"],
+        text:`### **Other**
+        
+*When touched by those with a flame, you very briefly see:* 
+
+A great big domed structure collapsing and crumbling down.
+
+`
+        },{
+        name: "Time Stuttered Ruins", x:2537, y:1321,
+        color:"#ffdf91", size:3, tags:["ruins"],
+        text:`### **Ruins**
+        
+Equidistant footsteps circle the ruins, all the same. Perfectly in-tact furniture, and a sealed letter in pristine condition. Shadows seem to lag behind around this place. 
+
+A small directionaly waystone pulses its cracked with light glow. 
+
+The text on the stone read <br>
+*"Time will remember the faithful"* <br>
+
+The word *"fateful"* flickered in place where it said *"faithful"*, but now it is seemingly stuck on it.
+`
+        },{
+        name: "Rain Ruins", x:3451, y:2941,
+        color:"#ffdf91", size:3, tags:["ruins"],
+        text:`### **Ruins**
+        
+Weirdly well kept ruins, when compared to the rest scattered about the Great Expanse & Sunscorched Wastes.
+
+A well that goes very, very, very far down. Something was down there.
+
+It rained for a second while you were here?
+`
+        },{
+        name: "Meros Natives' Camp", x:2324, y:605,
+        color:"#ffdf91", size:4, tags:["camp"],
+        text:`### **Camp**
+        
+A small camp of Meros natives, generally kind people were here.
 `
         },
     ];
