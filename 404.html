@@ -7,7 +7,7 @@
   <style>
     @font-face {
       font-family: "NDS";
-      src: url("rework/assets/fonts/nds.ttf") format("truetype");
+      src: url('/rework/assets/fonts/nds.ttf') format("truetype");
       font-display: swap;
       image-rendering: pixelated;
       font-smooth: never;
@@ -26,6 +26,7 @@
       --font-base: 1rem;
       --line-height: 1;
       --custom-font-scale: 1.5;
+      
     }
 
     html { font-size: var(--font-base); }
@@ -34,7 +35,7 @@
       margin: 0;
       font-family: 'NDS', sans-serif;
       font-size: calc(1rem * var(--custom-font-scale));
-      background: #e8eff7 url('rework/assets/general/bkg1.png');
+      background: #e8eff7 url('/rework/assets/general/bkg1.png');
       image-rendering: pixelated;
       color: var(--text-color);
       line-height: var(--line-height);
@@ -77,7 +78,7 @@
     .pseudo-button {
       width: 20%;
       margin: 0 auto;
-      border-image: url('rework/assets/general/divborder1.png') 9 fill round;
+      border-image: url('/rework/assets/general/divborder1.png') 9 fill round;
       border-style: solid;
       border-width: .75rem;
       image-rendering: pixelated;
