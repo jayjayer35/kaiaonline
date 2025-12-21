@@ -1,543 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<script>
-  const siteTitle = " ✦ y u look at the titlebar! look at my";
-  let scrollTitle = siteTitle;
-  setInterval(() => {
-    scrollTitle = scrollTitle.substring(1) + scrollTitle.charAt(0);
-    document.title = scrollTitle;
-  }, 300); //speed
-</script>
-  <!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet" />
-<!-- matter -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
-<!-- hide scrollbars -->
-<script src="hide-scrollbars.js"></script>
-
-
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaia online | welcome!</title>
+  <style>
+    @font-face {
+      font-family: "NDS";
+      src: url("rework/assets/fonts/nds.ttf") format("truetype");
+      font-display: swap;
+      image-rendering: pixelated;
+      font-smooth: never;
+      -webkit-font-smoothing: none;
     }
 
-    html, body {
-        width: 100%;
-        height: 100%;
-        font-family: 'Space Mono', monospace;
-        /* background: url('assets/galaxybkgndblue.jpg') center center / contain; */
-        background: url('assets/winter.png') center center / contain; /* fall */
-        color: #e0e0e0;
-        overflow: hidden;
-        -ms-overflow-style: none; 
-        scrollbar-width: none; 
-    }
-    
-    body::after {
-        content: '';
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: url('assets/static.gif');
-        background-repeat: no-repeat;      
-        background-size: cover;            
-        background-position: center center; 
-        background-attachment: fixed;     
-        opacity: 0.03;
-        mix-blend-mode: screen;
-        pointer-events: none;
-        z-index: 100;
+    :root {
+      --bg-tile: #fff;
+      --bg-header: #9eb4d1;
+      --border-tile: #b6c6df;
+      --border-header: #7e8ba3;
+      --header-shadow: #9ca7c3;
+      --tile-header-bg: #b6c6df;
+      --tile-header-border: #8a99b8;
+      --text-color: #444;
+      --font-base: 1rem;
+      --line-height: 1;
+      --custom-font-scale: 1.5;
     }
 
-    .container {
-        display: grid;
-        grid-template-columns: 200px 1fr 260px;
-        height: 100vh;
+    html { font-size: var(--font-base); }
+
+    body {
+      margin: 0;
+      font-family: 'NDS', sans-serif;
+      font-size: calc(1rem * var(--custom-font-scale));
+      background: #e8eff7 url('rework/assets/general/bkg1.png');
+      image-rendering: pixelated;
+      color: var(--text-color);
+      line-height: var(--line-height);
+      
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
-    .panel {
-        backdrop-filter: blur(4px);
-        /* background: rgba(10, 10, 20, 0.65); normal */
-        background: rgba(20, 14, 10, 0.65); /* fall */
-        padding: 16px;
-        overflow-y: auto;
-        height: 100%;
-        border-right: 1px solid rgba(255,255,255,0.05);
+    .tile {
+      background: var(--bg-tile);
+      border: 0.15rem solid var(--border-tile);
+      border-radius: 0.375rem;
+      padding: 0.625rem;
+      box-shadow: 0 0 0.25rem var(--header-shadow);
+      position: relative;
+      max-width: 40rem;
+      text-align: center;
     }
 
-    .panel.right {
-        border-left: 1px solid rgba(255,255,255,0.05);
-        border-right: none;
+    .tile h2 {
+      background: var(--tile-header-bg);
+      border: none;
+      margin: 0 0 0.625rem 0;
+      padding: 0;
+      color: #fff;
     }
 
-    h2 {
-        font-size: 1rem;
-        /* color: #9ed0ff; */
-        color: #9efff7; /* fall */
-        margin-bottom: 1rem;
+    .tile .decor {
+      position: absolute;
+      width: 2.5rem;
+      pointer-events: none;
+      user-select: none;
     }
 
-    summary {
-        font-size: 1rem;
-        /* color: #9ed0ff; */
-        color: #9efff7; /* fall */
-        margin-bottom: 1rem;
+    .corner-top-right { top: -0.4rem; right: -0.4rem; }
+
+
+    .pseudo-button {
+      width: 20%;
+      margin: 0 auto;
+      border-image: url('rework/assets/general/divborder1.png') 9 fill round;
+      border-style: solid;
+      border-width: .75rem;
+      image-rendering: pixelated;
+      box-shadow: none;
+      transition: transform 0.2s ease-in-out;
+      display: inline-block;
     }
 
-    .left a {
-        display: block;
-        text-decoration: none;
-        color: #aaa;
-        margin-bottom: 0.6rem;
-        transition: 0.2s;
-        cursor: pointer;
+    .pseudo-button:hover {
+      transform: scale(1.05) rotate(2deg);
+      cursor: pointer;
     }
-
-    .left a:hover {
-        color: white;
-        /* border-left: 3px solid #88c0d0; */
-        border-left: 3px solid #88bfd0; /* fall */
-        background: rgba(255, 255, 255, 0.05);
-        padding-left: 5px;
-    }
-
-    .middle {
-        padding: 24px;
-        /* background: rgba(0,0,0,0.4); */
-        background: rgba(0, 0, 0, 0.4); /* fall */
-        overflow: hidden;
-        position: relative;
-    }
-
-    .log-window {
-        border: 1px solid rgba(255,255,255,0.1);
-        box-shadow: 0 0 8px rgba(0,0,0,0.5);
-        background: rgba(0,0,0,0.6);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden; 
-    }
-
-    iframe {
-        flex: 1;             
-        border: none;
-        width: 100%;
-        height: auto;         
-        background: transparent;
-    }
-
-    .log-title {
-        background: rgba(0,0,0,0.7);
-        padding: 8px 12px;
-        font-weight: bold;
-        font-size: 0.95rem;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        /* color: #c2f0ff; */
-        color: #c2e9ff; /* fall */
-    }
-
-    .status, .music {
-        font-size: 0.85rem;
-        color: #bbb;
-        line-height: 1.4;
-    }
-
-    ::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        /* background: rgba(100,100,150,0.4); */
-        background: rgba(150, 127, 100, 0.4); /* fall */
-    }
-
-    input[type="range"] {
-        appearance: none;
-        -webkit-appearance: none;
-        width: 100%;
-        height: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 3px;
-        outline: none;
-        transition: background 0.2s ease;
-        cursor: pointer;
-        /* box-shadow: 0 0 5px rgba(0, 170, 255, 0.3);  */
-        box-shadow: 0 0 5px rgba(0, 89, 255, 0.3); /* fall */
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        height: 14px;
-        width: 14px;
-        /* background: #9ed0ff;
-        border: 2px solid #0e1a2b; */
-        background: #9edbff; /* fall */
-        border: 2px solid #2b1e0e; /* fall */
-        border-radius: 50%;
-        /* box-shadow: 0 0 6px #88c0d0; */
-        box-shadow: 0 0 6px #88b6d0; /* fall */
-        transition: background 0.3s ease;
-    }
-
-    input[type="range"]::-moz-range-thumb {
-        height: 14px;
-        width: 14px;
-        /* background: #9ed0ff;
-        border: 2px solid #0e1a2b; */
-        background: #9ed0ff; /* fall */
-        border: 2px solid #2b1f0e; /* fall */
-        border-radius: 50%;
-        /* box-shadow: 0 0 6px #88c0d0;  */
-        box-shadow: 0 0 6px #88add0;/* fall */
-        cursor: pointer;
-    }
-    input[type="range"]:hover {
-        background: rgba(255, 255, 255, 0.2);
-    }
-    button {
-        /* font-family: 'Space Mono', monospace;
-        background: rgba(50, 100, 150, 0.15);
-        border: 1px solid #88c0d0;
-        color: #c2f0ff;
-        padding: 6px 12px;
-        border-radius: 3px;
-        box-shadow: 0 0 6px rgba(100, 200, 255, 0.2);
-        transition: 0.2s ease;
-        cursor: pointer; */
-        font-family: 'Space Mono', monospace; /* fall */
-        background: rgba(150, 107, 50, 0.15);
-        border: 1px solid #88b6d0;
-        color: #c2ecff;
-        padding: 6px 12px;
-        border-radius: 3px;
-        box-shadow: 0 0 6px rgba(100, 193, 255, 0.2);
-        transition: 0.2s ease;
-        cursor: pointer;
-    }
-
-    button:hover {
-        /* background: rgba(100, 180, 255, 0.3);
-        color: white;
-        border-color: #aeefff; */
-        background: rgba(100, 180, 255, 0.3); /* fall */
-        color: white; 
-        border-color: #aee1ff;
-    }
-    #fadeout-overlay {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%;
-        height: 100%;
-        background: white;
-        opacity: 0;
-        pointer-events: none; 
-        z-index: 9999;
-        transition: opacity 3s ease-in-out;
-    }
-
-    #fadeout-overlay.active {
-        opacity: 1;
-        pointer-events: all; 
-    }
-    input[type="range"]:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-    }
-    #statuscafe {
-        margin: 1rem auto;
-        max-width: 700px;
-        padding: 0em;
-    }
-    #statuscafe-username {
-        visibility: hidden;
-        position: relative;
-        margin-bottom: 1rem;
-    }
-    #statuscafe-username::before {
-        content: "LAST TRANSMISSION";
-        visibility: visible;
-        position: absolute;
-        top: 0;
-        left: 0;
-        font-size: 1.1rem;
-        font-weight: 1000;
-        /* color: #9ed0ff;  */
-        color: #9efff7; /* fall */
-    }
-    #statuscafe-content {
-        margin: 0 0em;
-    }
-    @keyframes blink {
-        50% { opacity: 0; }
-    }
-    
-#falling-leaves {
-  pointer-events: none; /* so clicks pass through */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: 9999; /* make sure it's above content */
-}
-
-.leaf {
-  position: absolute;
-  top: -10%;
-  width: 30px;
-  height: 30px;
-  background-image: url('assets/flake.png'); /*  leaf  */
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 0.8;
-  animation: fall linear forwards;
-}
-
-@keyframes fall {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-  100% {
-    transform: translateY(110vh) rotate(360deg);
-  }
-}
-
-    .glow {
-    /* color: #aeefff; */
-    color: #ffe3ae; /* fall */
-    animation: pulseGlowOff 3s ease-in-out infinite;
-    }
-
-    @keyframes pulseGlowOff {
-    0%, 100% {
-        text-shadow: none;
-    }
-    50% {
-        text-shadow:
-        /* 0 0 5px #aeefff,
-        0 0 10px #88c0d0; */
-        0 0 5px #aed8ff, /* fall */
-        0 0 10px #88aad0;
-    }
-    }
-    ul {
-        list-style: none; 
-        padding-left: .2rem;  
-        padding-bottom: 10px;
-    }
-    summary {
-        cursor: pointer;
-        list-style: none; 
-        /* color: rgb(204, 176, 255); */
-        color: rgb(176, 217, 255); /* fall */
-        transition: 0.3s;
-    }
-    details[open] > summary {
-        background-color: #7caecf1e;
-        color: rgb(255, 255, 255);
-        font-weight: bold;
-        /* border-left: 6px solid #a488d0; */
-        border-left: 6px solid #88aad0; /* fall */
-        background: rgba(255, 255, 255, 0.05);
-        padding-left: 4px;
-        transition: 0.3s;
-    }
-
-    li {
-    cursor: pointer; 
-    }
-    summary:hover {
-        /* color: rgb(158, 105, 255);
-        border-left: 3px solid #aa88d0; */
-        color: rgb(105, 140, 255); /* fall */
-        border-left: 3px solid #88a5d0;
-        background: rgba(255, 255, 255, 0.05);
-        padding-left: 4px;
-        transition: 0.3s;
-    }
-    .bottom-gif {
-      position: fixed;
-      bottom: 0;
-      left: 0%;
-      width: 300px; 
-      z-index: 9999;
-    }
-
-    #splash {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #111;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    opacity: 1;
-    transition: opacity 0.8s ease;
-    }
-
-    .splash-center {
-    text-align: center;
-    color: #fff;
-    }
-
-    #splash img {
-    width: 200px;
-    height: 200px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    }
-
-    #splash img:hover {
-    transform: scale(1.1);
-    box-shadow: goldenrod;
-    }
-
-    .splash-text {
-    margin-top: 15px;
-    font-size: 1.2rem;
-    color: #eee;
-    }
-
-    #splash.hidden {
-    opacity: 0;
-    pointer-events: none;
-    }
-    #leafCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 9998;         
-    pointer-events: none;  
-    }
-    img.blinkie {
-    width: auto;   
-    height: 20px;   
-    }
-</style>
+  </style>
 </head>
 <body>
 
-<div id="splash">
-  <div class="splash-center">
-    <img src="assets/campfire.gif" alt="Click to start" id="splashImage" onclick="loadAndPlaySong()">
-    <p class="splash-text">welcome, click the fire to start!<br><em style="font-size: 70%;">turn on autoplay for some chill music and funstuff :3</em><br><em style="font-size: 50%;">(refresh after you put autoplay)</em></p>
-    <p><br><br>also if stuff looks weird, ctrl+shift+r. yknow the deal</p>
-</div>
-</div>
+  <div class="tile" style="text-align: center; box-shadow: none; background: #ffffff56;">
+    <h2 style="border-radius: .25rem; letter-spacing: .3rem;">hold on!</h2>
+    <p>
+      hi, welcome to my random pile of garbage in a weird corner of the internet. the page you're about to 
+      enter is a personal site filled with random things, so be warned! <br><br>
 
-<audio id="splatSound" src="assets/splat.mp3" preload="auto"></audio>
-<div class="container">
-    <!-- Left Panel -->
-    <div class="panel left">
-        <h2 style="text-align: center; font-size: 1.2rem;">Navigator</h2>
-        <marquee width="100%" direction="left" height="30px" scrollamount="3">
-            <img src="assets/big_shot.gif" class="blinkie" alt="[BIG SHOT]">
-            <img src="assets/lancered.gif" class="blinkie" alt="get lancered">
-            <img src="assets/x16.gif" class="blinkie" alt="portal">
-            <img src="assets/ineedsomesleep.gif" class="blinkie" alt="i need sleep">
-            <img src="assets/stillyou.gif" class="blinkie" alt="despite everything, its still you">
-            <img src="assets/5.gif" class="blinkie" alt="i will remember you">
-            <img src="assets/stargazer.gif" class="blinkie" alt="stargazer">
-            <img src="assets/mycomputer.gif" class="blinkie" alt="i <3 my computer">
-            <img src="assets/gec.gif" class="blinkie" alt="GEC GEC GEC">
-            <img src="assets/Blinkie_Divorce.gif" class="blinkie" alt="spamton & tenna divorce">
-            <img src="assets/ublock origin.gif" class="blinkie" alt="install ublock origin!">
-            <img src="assets/catsmeow.gif" class="blinkie" alt="i am the cats meow">
-            <img src="assets/Blinkie_Starwalker.gif" class="blinkie" alt="the original starwalker">
-            <img src="assets/pixels.gif" class="blinkie" alt="i dream in pixels">
-            <img src="assets/Blinkie_The_Pipis.gif" class="blinkie" alt="pipis">
-            <img src="assets/l1.gif" class="blinkie" alt="SHUT UP!">
-            <img src="assets/vs code.gif" class="blinkie" alt="vs code user!">
-        </marquee>
-        <details open>
-            <summary>Entry</summary>
-            <ul> 
-                <li><a onclick="loadPage('ofb/welcome.html')">Welcome!</a></li>
-                <li><a onclick="loadPage('ofb/updates.html')" >Site Updates</a></li>
-                <li><a onclick="loadPage('ofb/bio.html')">Me Me ME!</a></li>
-                <li><a onclick="loadPage('blog/index.html')" class="glow">Blog</a></li>
-            </ul>
-        </details>
-    
-        <details open>
-            <summary>The Web</summary>
-            <ul>
-                <li><a onclick="loadPage('ofb/internetstuf2.html')">Links!</a></li>
-                <li><a onclick="loadPage('ofb/webrings.html')">Webrings</a></li>
-                <li><a onclick="loadPage('https://kaiasei.atabook.org/')" class="glow">Guestbook</a></li>
-            </ul>
-        </details>
+      <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia1.tenor.com%2Fimages%2Fefbdbe63a4c6cfc1d0a65659711640f8%2Ftenor.gif%3Fitemid%3D17582159&f=1&nofb=1&ipt=50618fb39702affe8bdde6a55d6535ab5b0ecaf6888ab34991fda8cf5172b273" alt="rosie from animal crossing shaking maracas" style="width: 10rem; height: 10rem; border-radius: 1rem;"><br><br>
 
-        <details>
-            <summary>Creative</summary>
-            <ul>
-                <!-- <li><a onclick="loadPage('ofb/music.html')">Music</a></li> -->
-                <li><a onclick="loadPage('ofb/video.html')">Videos</a></li>
-                <!-- <li><a onclick="loadPage('ofb/baking.html')">Baking</a></li> -->
-                <li><a onclick="loadPage('ofb/photo.html')">Photos</a></li>
-            </ul>
-        </details>
+      
 
-        <details>
-            <summary>Ramblings</summary>
-            <ul>
-                <li><a onclick="loadPage('ofb/wilds.html')">Outer Wilds</a></li>
-                <li><a onclick="loadPage('ofb/deepestfear.html')">Our Deepest Fear</a></li>
-                <li><a onclick="loadPage('ofb/starwalker.html')" style="color: rgb(180, 180, 130);">Starwalker</a></li>
-                <!-- <li><a onclick="loadPage('undertale.html')">Undertale</a></li> -->
-            </ul>
-        </details>
-
-        <details>
-            <summary>Misc</summary>
-            <ul>
-                <li><a href="../grid.html" target="_parent">Combat Grid</a></li>
-                <li><a href="../map.html" target="_parent">Thalenrose</a></li>
-                <li><a href="ofb/darkness.html" target="_parent">???</a></li>
-            </ul>
-        </details>
-
-        <details>
-            <summary>Friends</summary>
-            <ul>
-                <li><a onclick="loadPage('ofb/friends.html')">On friends</a></li>
-                <li><a onclick="loadPage('friends/kris.html')">Kris</a></li>
-                <li><a onclick="loadPage('friends/gabe.html')">Gabriel</a></li>
-                <!-- <li><a onclick="loadPage('friends/eric.html')">Eric</a></li> -->
-                <!-- <li><a onclick="loadPage('friends/brandon.html')">Brandon</a></li> -->
-                <li><a onclick="loadPage('https://obsidica.com')">Luis</a></li>
-            </ul>
-        </details>
-    
-        <details>
-            <summary>Dusty Shelf</summary>
-            <ul>
-                <li><a onclick="loadPage('ofb/template.html')">My blank page template</a></li>
-                <li><a onclick="loadPage('jacobonline-old/index.html')">My Original Site <span style="color: indianred;">(outdated!)</span></a></li>
-                <li><a href="ofb/indexrm.html" target="_parent">Load layout 2 <span style="color: indianred;">(outdated!)</span></a></li>
-                <li><a href="ofb/indexlog.html" target="_parent">Load layout 3 <span style="color: indianred;">(outdated!)</span></a></li>
-            </ul>
-        </details>
-    </div>
-
-    <!-- Middle Panel -->
-    <div class="middle">
-      <div class="log-window">
-        <div class="log-title" id="log-title">Log Entry</div>
-        <iframe id="logframe" src="ofb/welcome.html"></iframe>
+      this site also has sound, and i use javascript and iframes here and there. everything <em>should</em> be mobile friendly, as i tried designing it this go 
+      around keeping that in mind, so if there are any issues please let me know!<br>
+      <em style="font-size: 75%;">i have been making an attempt to make this as accessible as possible, and its putting my design skills to the test -.-</em>
+      <div style="text-align: center;">
+        <a href="indexnew.html" style="text-decoration: none; color: var(--text-color);">
+          <div class="pseudo-button">
+            let me in!
+          </div>
+        </a>
       </div>
+<<<<<<< HEAD
     </div>
 
     <!-- Right Panel -->
@@ -675,501 +252,13 @@
     setInterval(updateTimer, 1000); // update every second  
 
     //vitals script -===========================================================-
+=======
+      
+    </p>
+    <a href="https://www.mabsland.com/Adoption.html"><img src="http://www.mabsland.com/Pandas/Censor_14c.gif" alt="web rated 14!"></a>
+>>>>>>> 1857986 (v5.0.0 - main rework now sees the light of day, although very much a WIP.  im takin a break.)
     
-    const endpoint = "/.netlify/functions/getSteamStatus";
-
-    let health = Math.floor(Math.random() * 31) + 70;      // 70-100%
-    let battery = Math.floor(Math.random() * 101);         // 0-100%
-
-    function updateKaiaStatus() {
-    const changeHealth = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1);
-    const changeBattery = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1);
-
-    health = Math.min(100, Math.max(0, health + changeHealth));
-    battery = Math.min(100, Math.max(0, battery + changeBattery));
-
-    document.getElementById("health").textContent = `- Health: ${health}%`;
-    document.getElementById("battery").textContent = `- Social Battery: ${battery}%`;
-
-    fetch(endpoint)
-        .then(res => res.json())
-        .then(data => {
-            console.log("Fetched Steam data:", data);
-            document.getElementById("game").textContent = `- Playing: ${data.game}`;
-
-            const stateMap = {
-                "0": "Radio-silent",
-                "1": "Active!",
-                "2": "Preoccupied",
-                "3": "Exploring the Stars",
-                "4": "Half-asleep",
-                "5": "Looking to Trade",
-                "6": "Looking to Play",
-            };
-
-            const status = stateMap[data.status?.toString()] || "Unknown";
-            document.getElementById("availability").textContent = `- Steam Status: ${status}`;
-        })
-        .catch((err) => {
-            console.error("Fetch error:", err);
-            document.getElementById("game").textContent = "- Playing: ???";
-        });
-    }
-
-    updateKaiaStatus();
-
-    //music player script -===========================================================-
-
-    const musicPlayer = document.getElementById('musicPlayer');
-    musicPlayer.volume = 0.03; // vol start
-    const songTitle = document.getElementById('song-title');
-    const skipButton = document.getElementById('skipButton');
-    const pauseButton = document.getElementById('pauseButton');
-    const progressBar = document.getElementById('progressBar');
-    const volumeSlider = document.getElementById('volumeSlider');
-
-  
-
-    const songs = [
-        { title: "14.3 Billion Years - Andrew Prahlow", file: "14.3.mp3" },
-        /* { title: "Comforting Memories - Kumi Tanioka", file: "memories.mp3" }, */
-        { title: "Falling Stars - A Shell In The Pit", file: "stars.mp3" },
-        { title: "Timber Hearth - Andrew Prahlow", file: "timber.mp3" },
-        /* { title: "serenity - kaiasei", file: "serenity.mp3" }, */
-        /* { title: "dawn - kaiasei", file: "dawn.mp3" }, */
-        { title: "Main Title - Andrew Prahlow", file: "title.mp3" },
-        /* { title: "The Ancient Glade - Andrew Prahlow", file: "glade.mp3" }, */
-        { title: "The Sun Station - Andrew Prahlow", file: "sun.mp3" },
-        /* { title: "Castaways - Andrew Prahlow", file: "castaways.mp3" }, */
-        /* { title: "Beacon - Disasterpiece", file: "beacon.mp3" }, */
-        { title: "Xeno Arcadia - Mason Lindroth & Chuck Salamone", file: "xeno.mp3"},
-        { title: "Outer Wilds - Reprise - Andrew Prahlow", file: "reprise.mp3" },
-        { title: "Something to Look For - Andrew Prahlow", file: "look.mp3" },
-        { title: "Before the Story - Toby Fox", file: "story.mp3" },
-        { title: "Secunda - Jeremy Soule", file: "secunda.mp3" },
-        { title: "Quiet and Falling - Lena Raine", file: "quiet.mp3" },
-        { title: "Cylene - kaiasei", file: "cylene.mp3" },
-        { title: "Kodoku - Hideki Taniuchi", file: "kodoku.mp3" },
-        { title: "The Millhouse - Talisk", file: "millhouse.mp3" },
-        { title: "Kokoro's Oolong Tea - Yusuke Tanaka, agehasprings", file: "tea.mp3" }
-    ];
-
-    const finalSong = {
-        file: "endtimes.mp3",
-        title: "End Times - Andrew Prahlow"
-    };
-    const historyLimit = 5;
-    let playHistory = [];
-
-    function getRandomSong() {
-        let candidates = songs.filter(song => !playHistory.includes(song.file));
-        if (candidates.length === 0) {
-        playHistory = [];
-        candidates = [...songs];
-        }
-        const chosen = candidates[Math.floor(Math.random() * candidates.length)];
-        playHistory.push(chosen.file);
-        if (playHistory.length > historyLimit) {
-        playHistory.shift();
-        }
-        return chosen;
-    }
-
-    function loadAndPlaySong() {
-        const song = getRandomSong();
-        musicPlayer.src = `music/${song.file}`;
-        musicPlayer.play();
-        songTitle.innerHTML = `<strong>${song.title}</strong>`;
-    }
-
-    musicPlayer.addEventListener('ended', () => {
-        if (!musicPlayer.src.includes(finalSong.file)) {
-                loadAndPlaySong();
-            }
-    });
-    skipButton.addEventListener('click', loadAndPlaySong);
-
-    musicPlayer.addEventListener('timeupdate', () => {
-        if (musicPlayer.duration) {
-        progressBar.value = (musicPlayer.currentTime / musicPlayer.duration) * 100;
-        }
-    });
-
-    progressBar.addEventListener('input', () => {
-        if (musicPlayer.duration) {
-        musicPlayer.currentTime = (progressBar.value / 100) * musicPlayer.duration;
-        }
-    });
-
-    volumeSlider.addEventListener('input', () => {
-        musicPlayer.volume = volumeSlider.value;
-    });
-
-
-    pauseButton.addEventListener('click', () => {
-    if (musicPlayer.paused) {
-        musicPlayer.play();
-        pauseButton.textContent = '⏸';
-    } else {
-        musicPlayer.pause();
-        pauseButton.textContent = '▶';
-    }
-    });
-
-    // end times logic -===========================================================-
-
-    function playFinalSong() {
-        // store current song
-        const oldSong = musicPlayer;
-
-        // create a new audio element for the final song
-        const newSong = new Audio(`music/${finalSong.file}`);
-        newSong.volume = musicPlayer.volume;
-        newSong.loop = false;
-        newSong.preload = 'auto';
-        newSong.play();
-        newSong.addEventListener('timeupdate', () => {
-        if (newSong.duration) {
-                progressBar.value = (newSong.currentTime / newSong.duration) * 100;
-            }
-        });
-        newSong.volume = volumeSlider.value; // match current volume
-        volumeSlider.addEventListener('input', () => {
-            newSong.volume = volumeSlider.value;
-        });
-        newSong.addEventListener('timeupdate', () => {
-        if (newSong.currentTime >= 80 && !specialFX.hasPlayed) {
-                specialFX.play();
-                specialFX.hasPlayed = true; // prevent it from triggering again
-            }
-        });
-
-        songTitle.innerHTML = `<strong>${finalSong.title}</strong>`;
-
-        // disable controls
-        skipButton.disabled = true;
-        pauseButton.disabled = true;
-        progressBar.disabled = true;
-
-        // crossfade logic
-        let fadeDuration = 5000; // 3 seconds
-        let fadeSteps = 30;
-        let stepTime = fadeDuration / fadeSteps;
-        let oldVolume = oldSong.volume;
-        let currentStep = 0;
-
-        let fadeInterval = setInterval(() => {
-            currentStep++;
-            let progress = currentStep / fadeSteps;
-
-            // fade out old song
-            oldSong.volume = oldVolume * (1 - progress);
-
-            // fade in new song
-            newSong.volume = 0.03 * progress; // your default volume
-
-            if (currentStep >= fadeSteps) {
-                clearInterval(fadeInterval);
-                oldSong.pause();
-            }
-        }, stepTime);
-
-        // after 1 min 30 sec, fade screen and close
-        newSong.addEventListener('ended', () => {
-        setTimeout(() => {
-            document.body.style.overflow = 'hidden'; // block scroll
-            document.getElementById('fadeout-overlay').classList.add('active');
-            setTimeout(() => {
-                window.history.back(); //send back a page
-            }, 3000); // wait for fade animation
-            musicPlayer.pause()
-        }, 16000); // 16 sec after song ends
-    });
-
-    }
-
-    //supernoca logic -===========================================================-
-
-    const specialFX = new Audio('music/supernova.mp3');
-    specialFX.addEventListener('ended', () => {
-        document.body.style.overflow = 'hidden'; // block scroll
-        document.getElementById('fadeout-overlay').classList.add('active');
-        setTimeout(() => {
-            window.history.back(); //send back a page
-        }, 3000); // wait for fade animation
-    }, 16000); // 16 sec after song ends
-
-    specialFX.volume = volumeSlider.value; // match current volume
-    volumeSlider.addEventListener('input', () => {
-        specialFX.volume = volumeSlider.value;
-    });
-
-    // Initial load
-    loadAndPlaySong();
-    updateKaiaStatus();
-    setInterval(updateKaiaStatus, 120000); // every 120s
-
-    //custom page music -===========================================================-
-
-    const pageSongMap = {
-    "wilds.html": "reprise.mp3",
-    "friends.html": "14.3.mp3",
-    };
-    function crossfadeToSong(songFile, songTitleText) {
-    return new Promise((resolve) => {
-        const fadeDuration = 3000; 
-        const steps = 30;
-        const stepTime = fadeDuration / steps;
-        let currentStep = 0;
-        const targetVolume = musicPlayer.volume || 0.07; 
-
-        let fadeOutInterval = setInterval(() => {
-        currentStep++;
-        const progress = currentStep / steps;
-        musicPlayer.volume = targetVolume * (1 - progress);
-
-        if (currentStep >= steps) {
-            clearInterval(fadeOutInterval);
-
-            musicPlayer.src = `music/${songFile}`;
-            musicPlayer.volume = 0;
-            musicPlayer.play();
-            songTitle.innerHTML = `<strong>${songTitleText}</strong>`;
-
-            currentStep = 0;
-            let fadeInInterval = setInterval(() => {
-            currentStep++;
-            const progressIn = currentStep / steps;
-            musicPlayer.volume = targetVolume * progressIn;
-
-            if (currentStep >= steps) {
-                clearInterval(fadeInInterval);
-                musicPlayer.volume = targetVolume;
-                resolve();
-            }
-            }, stepTime);
-        }
-        }, stepTime);
-    });
-    }
-
-    //click sound -===========================================================-
-
-    document.addEventListener('click', () => {
-      try {
-        const sound = new Audio('assets/click.mp3');
-        sound.volume = 0.02;
-        sound.play().catch(()=>{});
-      } catch(e){}
-    }, true);
-
-    let visitorID = localStorage.getItem('visitorID');
-    if (!visitorID) {
-    visitorID = crypto.randomUUID();
-    localStorage.setItem('visitorID', visitorID);
-    }
-
-    fetch(`/.netlify/functions/countVisits?visitorID=${visitorID}`)
-    .then(res => res.json())
-    .then(data => {
-        const el = document.getElementById('visitor-count');
-        if (el && data.totalCount !== undefined) {
-        el.textContent = data.totalCount;
-        }
-    })
-    .catch(err => console.error(err));
-
-
-    const splash = document.getElementById('splash');
-    const splashImage = document.getElementById('splashImage');
-
-    splashImage.addEventListener('click', () => {
-        splash.classList.add('hidden');
-    });
-
-// ---------- AUTUMN LEAF LOGIC (transparent, fall-through) ----------
-window.addEventListener('load', () => {
-  if (!window.Matter) { console.error('Matter.js missing — add the CDN script first.'); return; }
-  const { Engine, Runner, World, Bodies, Body, Constraint, Events, Query } = Matter;
-
-  const canvas = document.getElementById('leafCanvas');
-  if (!canvas) { console.error('Add <canvas id="leafCanvas"></canvas> to your page.'); return; }
-  const ctx = canvas.getContext('2d');
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  const engine = Engine.create();
-  const world = engine.world;
-  engine.gravity.y = 0.06; // gentle gravity
-
-  // only side walls so leaves don’t drift off screen
-  const leftWall = Bodies.rectangle(-60, window.innerHeight/2, 120, window.innerHeight*3, { isStatic: true });
-  const rightWall = Bodies.rectangle(window.innerWidth+60, window.innerHeight/2, 120, window.innerHeight*3, { isStatic: true });
-  World.add(world, [leftWall, rightWall]);
-
-  const leaves = [];
-  const MAX_LEAVES = 50;
-
-  const leafImg = new Image();
-  leafImg.src = 'assets/flake.png';
-
-  function spawnLeaf() {
-  const size = 22 + Math.random() * 36;
-  const x = 20 + Math.random() * (canvas.width - 40);
-  const y = -40 - Math.random() * 200;
-
-  // random initial velocity
-  const vx = (Math.random() - 0.5) * 1; // horizontal drift
-  const vy = Math.random() * 1;          // slight vertical speed
-
-  const leaf = Bodies.rectangle(x, y, size * 0.9, size * 0.6, {
-    restitution: 0.18,
-    frictionAir: 0.03,
-    friction: 0.8,
-    density: 0.0008,
-    angle: Math.random() * Math.PI * 2,
-    velocity: { x: vx, y: vy }
-  });
-  leaf.renderSize = size;
-  World.add(world, leaf);
-  leaves.push(leaf);
-}
-
-  // ambient float & wind
-  Events.on(engine, 'beforeUpdate', (ev) => {
-    const t = ev.timestamp;
-    for (let b of leaves) {
-      const windX = Math.sin((b.position.y + t*0.5) / 900) * 0.00002;
-      const floatY = -0.000018 * (0.6 + 0.4 * Math.sin((b.position.x + t) / 1200));
-      Body.applyForce(b, b.position, { x: windX, y: floatY });
-      Body.setAngularVelocity(b, b.angularVelocity * 0.995);
-    }
-
-    // remove leaves below viewport
-    for (let i = leaves.length - 1; i >= 0; i--) {
-      if (leaves[i].position.y > window.innerHeight + 100) {
-        World.remove(world, leaves[i]);
-        leaves.splice(i, 1);
-      }
-    }
-    // gentle oscillating rotation
-    const ROTATION_SPEED = 0.00004; // lower to reduce rotation amount
-    const ROTATION_FREQ = 1200;     // higher to slow down the oscillation
-
-    for (let b of leaves) {
-    const swing = Math.sin((b.position.y + t * 0.3) / ROTATION_FREQ) * ROTATION_SPEED;
-    Body.setAngularVelocity(b, b.angularVelocity + swing);
-    }
-  });
-
-  // push & drag handling (unchanged from your code)
-  let dragConstraint = null;
-  function getLeafAtPoint(pt) {
-    try {
-      const found = Query.point(leaves, pt);
-      return found.length ? found[0] : null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  document.addEventListener('pointerdown', (ev) => {
-    const pt = { x: ev.clientX, y: ev.clientY };
-    const hit = getLeafAtPoint(pt);
-    if (hit) {
-      dragConstraint = Constraint.create({
-        pointA: { x: pt.x, y: pt.y },
-        bodyB: hit,
-        pointB: { x: 0, y: 0 },
-        stiffness: 0.12,
-        damping: 0.2,
-        length: 0
-      });
-      World.add(world, dragConstraint);
-      ev.preventDefault();
-    }
-  });
-
-  document.addEventListener('pointermove', (ev) => {
-    const pt = { x: ev.clientX, y: ev.clientY };
-    if (dragConstraint) {
-      dragConstraint.pointA.x = pt.x;
-      dragConstraint.pointA.y = pt.y;
-    }
-
-    // pushing
-    const PUSH_RADIUS = 96;
-    const PUSH_STRENGTH = 0.0009;
-    for (let b of leaves) {
-      const dx = b.position.x - pt.x;
-      const dy = b.position.y - pt.y;
-      const d2 = dx*dx + dy*dy;
-      if (d2 < PUSH_RADIUS * PUSH_RADIUS) {
-        const d = Math.sqrt(d2) || 1;
-        const mag = (1 - d / PUSH_RADIUS) * PUSH_STRENGTH;
-        Body.applyForce(b, b.position, { x: (dx/d)*mag, y: (dy/d)*mag });
-      }
-    }
-  });
-
-  document.addEventListener('pointerup', () => {
-    if (dragConstraint) {
-      World.remove(world, dragConstraint);
-      dragConstraint = null;
-    }
-  });
-
-  // renderer
-  function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let b of leaves) {
-      const size = b.renderSize || 28;
-      ctx.save();
-      ctx.translate(b.position.x, b.position.y);
-      ctx.rotate(b.angle);
-      ctx.globalAlpha = 0.1; // semi-transparent
-      if (leafImg.complete && leafImg.naturalWidth !== 0) {
-        ctx.drawImage(leafImg, -size/2, -size/2, size, size);
-      } else {
-        ctx.fillStyle = 'rgba(200,120,45,0.7)';
-        ctx.beginPath();
-        ctx.ellipse(0, 0, size*0.45, size*0.28, 0, 0, Math.PI*2);
-        ctx.fill();
-      }
-      ctx.restore();
-    }
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(render);
-  }
-
-  const runner = Runner.create();
-  Runner.run(runner, engine);
-  render();
-
-  setInterval(() => {
-    if (leaves.length < MAX_LEAVES) spawnLeaf();
-  }, 2000);
-
-  for (let i=0;i<8;i++) spawnLeaf();
-
-  window.addEventListener('resize', () => {
-    Body.setPosition(leftWall, { x: -60, y: window.innerHeight/2 });
-    Body.setPosition(rightWall, { x: window.innerWidth+60, y: window.innerHeight/2 });
-  });
-
-  console.log('Floating leaves active — semi-transparent, fall-through, auto-removed.');
-});
-// ---------- end AUTUMN LEAF LOGIC ----------
-
-  </script>
-</div>
-<canvas id="leafCanvas"></canvas>
-<div id="fadeout-overlay"></div>
+  </div>
 
 </body>
 </html>
