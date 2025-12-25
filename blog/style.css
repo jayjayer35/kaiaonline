@@ -375,6 +375,7 @@ main {
  * remember on the actual page you can write the tag however you want!*/
 .tagged:has(#all:checked) article,
 .tagged:has(#intro:checked) article[class~="intro"],
+.tagged:has(#life:checked) article[class~="life"],
 .tagged:has(#music:checked) article[class~="music"],
 .tagged:has(#games:checked) article[class~="games"],
 .tagged:has(#dnd:checked) article[class~="d&d"],

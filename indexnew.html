@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kaia online</title>
+  <title>kaia online - home</title>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
   <script src="hide-scrollbars.js"></script>
   <!-- matter -->
@@ -318,9 +318,10 @@
     <div class="dropdown">
       <a href="#">kaia</a> - 
       <div class="dropdown-content">
-        <a href="rework/pages/about.html">about me</a>
+        <a href="about.html">about me</a>
         <a href="https://kaia.starscene.com/blog/index.html">blog</a>
-        <a href="rework/pages/100.html">100 questions</a>
+        <a href="100.html">100 questions</a>
+        <a href="lists.html">my lists</a>
         <a href="contact.html">contact/socials</a>
       </div>
     </div>
@@ -328,26 +329,26 @@
       <a href="#">site</a> - 
       <div class="dropdown-content">
         <a href="https://kaiasei.atabook.org/">guestbook</a>
-        <a href="">webrings</a>
-        <a href="">manifesto</a>
+        <a href="webrings.html">webrings</a>
+        <a href="manifesto">manifesto</a>
       </div>
     </div>
     <div class="dropdown">
       <a href="#">for u</a> - 
       <div class="dropdown-content">
         <a href="bookmarks.html">bookmarks</a>
-        <a href="rework/pages/mystuff.html">my creations</a>
-        <a href="rework/pages/mystuff.html">my recs!</a>
-        <a href="">misc projects</a>
+        <a href="mystuf.html">my stuff!</a>
+        <a href="myrecs.html">my recs!</a>
       </div>
     </div>
     <div class="dropdown">
       <a href="#">other</a>
       <div class="dropdown-content">
-        <a href="wilds.html">outer wilds</a>
+        <a href="/ofb/wilds.html">outer wilds</a>
         <a href="dontforget.html">dont forget</a>
         <a href="deepestfear.html">deepest fear</a>
-        <a href="/rework/pages/template.html">template</a>
+        <a href="msgs.html">hall of messages</a>
+        <a href="template.html">template</a>
       </div>
     </div>
   </header>
@@ -424,6 +425,8 @@
           <a href="https://adnyx.nekoweb.org" target="_parent"><img src="https://adnyx.nekoweb.org/images/adnyx_button.gif" alt="adnyx's page"></a> 
           <a href="https://bugkisser.neocities.org/" target="_parent"><img src="https://bugkisser.neocities.org/buttons/bugkisser!.png"></a>            
           <a href="https://nomnomnami.com/" target="_parent"><img src="https://nomnomnami.com/images/site_button.gif" alt="nomnomnami"></a>
+          <a href="https://immjs.dev/"><img src="https://immjs.dev/88x31s/immjs.dev.gif"/></a>
+          <a href="https://melps.neocities.org" target="_blank"><img src="https://melps.neocities.org/limk2.jpg" width='88px'></a> 
         </marquee>
         <!-- row 3  NOT links-->
         <marquee width="100%" direction="left" height="30px" scrollamount="6">
@@ -473,7 +476,7 @@
             There will be a bunch of stuff that I am interested/like, which could be videos, music, stuff I make, and much more! You can learn more about me in the about me tab 
             and also more about the page on the about site page! <br><br>
 
-            also- sign the <strong>guestbook</strong>! I love reading the comments and seeing others' sites! I always keep an eye on it! <br>
+            also- sign the <a href="https://kaiasei.atabook.org/" style="text-decoration: none;"><strong style="color: #444;">guestbook</strong></a>! I love reading the comments and seeing others' sites! I always keep an eye on it! <br>
             <div style="text-align: center
             ;">◕‿↼</div>
           </p>
@@ -492,14 +495,14 @@
         </div>
       </div>
 
-      <div class="tile">
+      <!-- <div class="tile">
         <img src="" class="decor corner-top-right">
         <h2>unused temporarily</h2>
-        <ul>
-          <li>this will also eventually have something in it!</li>
-        </ul>
+        <div style="text-align: center;">
+          <img src="assets/zomboid_read.gif" alt="me reading a book in project zomboid">
+        </div>
       </div>
-
+ -->
       <!-- image on right -->
       <!-- <div class="tile-row reverse">
         <img src="assets/rose.gif" class="side-image" alt="Side Image Right" style="transform: scale(1.6) translateY(1rem);">
@@ -514,6 +517,13 @@
         <h2>updates</h2>
         <div class="update-log">
           <div style="padding-bottom: .5rem;">
+            <em style="font-size: 80%;">10:49 AM - 12/25/25</em><br>
+            - PAGE IS STILL HEAVY WIP, chiseling away at it slowly, byte by byte <br>
+            - blog post <br>
+            - "list" page setup (under 'kaia')<br>
+            - "my stuff" page setup (under 'for u') <br>
+            - added 404 page (i think) <br>
+            - fixed some dead asset links on old archived pages of mine for... archiving purposes. duh. <br><br>
             <em style="font-size: 80%;">11:26 AM - 12/21/25</em><br>
             - blog post <br>
             - published new ver of site for main index<br><br>
@@ -535,11 +545,13 @@
 
     <!-- RIGHT -->
     <div class="column right">
+
       <div class="tile" style="text-align: center;">
-        <h2>notices</h2>
-        <em>!!</em><br>
-        this layout is entirely new, as im ditching the old way how i had my page organized, so give it some time<br>
-        <em>!!</em>
+        <h2>stats</h2>
+        <p>
+          you are (unique) visitor <br>
+          #<span id="visitor-count">...</span>!<br>
+        </p>  
       </div>
 
       <div class="tile" 
@@ -575,20 +587,12 @@
         <h2>moooon</h2>
         <b><!-- © wdisseny --><div id="contain_moon" style="text-align:center;padding-bottom:5px;"><div style="font-weight:bold"></div><div style="margin-bottom:-15px;padding:30px;filter:drop-shadow(0 0 30px hsl(229,100%,0%))"></div><div>.</div><div style="font-size:small"></div></div><script>(function(){var d=new Date().getDate();var m=document.querySelectorAll("#contain_moon div");var a=new XMLHttpRequest();var url="https://www.icalendar37.net/lunar/api/?lang=en&month="+(new Date().getMonth()+1)+"&year="+(new Date().getFullYear())+"&size=100&lightColor=rgb(245,245,245)&shadeColor=rgb(37,40,59)&t&LDZ="+new Date(new Date().getFullYear(),new Date().getMonth(),1)/1000+"";m[1].style.height="100px";a.onreadystatechange=function(){if(a.readyState==4&&a.status==200){var b=JSON.parse(a.responseText);m[1].innerHTML=b.phase[d].svg;if(typeof moon_widget_loaded=="function")moon_widget_loaded(b);m[2].innerHTML=b.phase[d].npWidget}};a.open("GET",url,true);a.send()})()</script></b>
       </div>
-
-      <div class="tile" style="text-align: center;">
-        <h2>stats</h2>
-        <p>
-          you are (unique) visitor <br>
-          #<span id="visitor-count">...</span>!<br>
-        </p>  
-      </div>
     </div>
   </div>
 
   <footer>
-    <em>made for humans, by a human! | since 2022 - til the end of time! <br>
-    ~ kaia</em>
+    <em>~kaia 2022 - til the end of time! <br>
+    stop and smell the pine trees</em>
   </footer>
 
   <script>

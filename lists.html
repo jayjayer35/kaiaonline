@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaia online — stuff to get to!</title>
+
+  <style>
+    /* ---------- GLOBAL FIX ---------- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    @font-face {
+      font-family: "NDS";
+      src: url("rework/assets/fonts/nds.ttf") format("truetype");
+      font-display: swap;
+      image-rendering: pixelated;
+      font-smooth: never;
+      -webkit-font-smoothing: none;
+    }
+
+    :root {
+      --bg-tile: #fff;
+      --bg-header: #9eb4d1;
+      --border-tile: #b6c6df;
+      --border-header: #7e8ba3;
+      --header-shadow: #9ca7c3;
+      --tile-header-bg: #b6c6df;
+      --tile-header-border: #8a99b8;
+      --text-color: #444;
+      --font-base: 1rem;
+      --line-height: 1;
+      --custom-font-scale: 1.5;
+    }
+
+    html { font-size: var(--font-base); }
+
+    body {
+      margin: 0;
+      font-family: 'NDS', sans-serif;
+      font-size: calc(1rem * var(--custom-font-scale));
+      background: #e8eff7 url('../assets/general/bkg1.png');
+      image-rendering: pixelated;
+      color: var(--text-color);
+      line-height: var(--line-height);
+    }
+
+    /* ---------- HEADER (UNCHANGED) ---------- */
+    header {
+      width: 100%;
+      background: var(--bg-header);
+      border-bottom: 0.2rem solid var(--border-header);
+      padding: 0.625rem 0;
+      text-align: center;
+      box-shadow: 0 0.125rem 0.25rem var(--header-shadow);
+      font-weight: bold;
+      font-size: 1.75rem;
+      position: relative;
+      z-index: 20;
+    }
+
+    header a {
+      margin: 0 0.5rem;
+      color: white;
+      text-decoration: none;
+      letter-spacing: .1rem;
+    }
+
+    /* dropdown */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      background-color: #cfddffc5;
+      border: 1px solid var(--border-header);
+      border-radius: 3px;
+      z-index: 10;
+      top: 100%;
+      left: 40%;
+      transform: translateX(-50%);
+      min-width: 5rem;
+      font-size: 1.1rem;
+      padding: 0.1rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 0.2rem 0.4rem;
+      text-decoration: none;
+      color: var(--text-color);
+      white-space: nowrap;
+      transition: transform .2s ease-in-out;
+    }
+
+    .dropdown-content a:hover {
+      transform: scale(1.1);
+      cursor: pointer;
+    }
+
+    .dropdown:hover .dropdown-content {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ---------- LAYOUT ---------- */
+
+    .wrapper {
+      display: flex;
+      max-width: 75rem;
+      margin: auto;
+      gap: 1rem;
+      padding: 1.25rem;
+      justify-content: flex-start; /* FIX */
+    }
+
+    .tile {
+      background: var(--bg-tile);
+      border: 0.15rem solid var(--border-tile);
+      border-radius: 0.375rem;
+      padding: 0.625rem;
+      box-shadow: 0 0 0.25rem var(--header-shadow);
+      position: relative;
+    }
+
+    .tile h2 {
+      background: var(--tile-header-bg);
+      color: white;
+      margin: -0.625rem -0.625rem 0.625rem -0.625rem;
+      padding: 0.375rem;
+      font-size: 1.5rem;
+      text-align: center;
+      border-bottom: 0.15rem solid var(--tile-header-border);
+      letter-spacing: .15rem;
+    }
+
+    /* ---------- MEDIA GRID ---------- */
+
+    .media-layout {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .wide-tile {
+      grid-column: 1 / -1;
+    }
+
+    .media-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 18rem;    
+      overflow-y: auto;
+      padding-right: 0.5rem; 
+    }
+
+    .media-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 0.123rem dashed var(--border-tile);
+    }
+
+    .media-list li:last-child {
+      border-bottom: none;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.2rem;
+      background: #d6e0f0;
+      border: 0.1rem solid var(--tile-header-border);
+      letter-spacing: 0.05rem;
+    }
+
+    .tag.red {background: #ffc1c1; border: 0.1rem solid #694f4f;}
+    .tag.orange {background: #ffd6ab; border: 0.1rem solid #69594f;}
+    .tag.yellow {background: #ffffaf; border: 0.1rem solid #69664f;}
+    .tag.green {background: #aeffaa; border: 0.1rem solid #50694f;}
+    .tag.blue {background: #aeb4ff; border: 0.1rem solid #4f5b69;}
+    .tag.purple {background: #bf98ff; border: 0.1rem solid #614f69;}
+    .tag.pink {background: #ffb1fb; border: 0.1rem solid #694f63;}
+
+    /* ---------- MOBILE ---------- */
+    @media (max-width: 56.25rem) {
+      .media-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .wide-tile {
+        grid-column: auto;
+      }
+
+      .wrapper {
+        padding: 0.625rem;
+      }
+    }
+
+    footer {
+      text-align: center;
+      font-size: 80%;
+      margin-top: 2rem;
+    }
+
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #8a99b8 #e8eff7;
+        }
+
+        /* Global scrollbar (WebKit browsers) */
+::-webkit-scrollbar {
+  width: 0.6rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #e8eff7;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #b6c6df;
+  border: 0.15rem solid #e8eff7;
+  border-radius: 0.3rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #9eb4d1;
+}
+
+  </style>
+</head>
+
+<body>
+
+<header style="color: #fff;">
+    <div class="dropdown">
+      <a href="indexnew.html" 
+      style="text-decoration: none; cursor: pointer;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">home</a> - 
+    </div>
+    <div class="dropdown">
+      <a href="#">kaia</a> - 
+      <div class="dropdown-content">
+        <a href="about.html">about me</a>
+        <a href="https://kaia.starscene.com/blog/index.html">blog</a>
+        <a href="100.html">100 questions</a>
+        <a href="lists.html">my lists</a>
+        <a href="contact.html">contact/socials</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">site</a> - 
+      <div class="dropdown-content">
+        <a href="https://kaiasei.atabook.org/">guestbook</a>
+        <a href="webrings.html">webrings</a>
+        <a href="manifesto">manifesto</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">for u</a> - 
+      <div class="dropdown-content">
+        <a href="bookmarks.html">bookmarks</a>
+        <a href="mystuf.html">my stuff!</a>
+        <a href="myrecs.html">my recs!</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">other</a>
+      <div class="dropdown-content">
+        <a href="/ofb/wilds.html">outer wilds</a>
+        <a href="dontforget.html">dont forget</a>
+        <a href="deepestfear.html">deepest fear</a>
+        <a href="msgs.html">hall of messages</a>
+        <a href="template.html">template</a>
+      </div>
+    </div>
+  </header>
+<main>
+  <div class="wrapper">
+    <div class="media-layout">
+
+      <div class="tile wide-tile">
+        <h2>media log</h2>
+        <p style="text-align:center;">
+            This page serves mostly as a collection of things that I wanna read, watch, or play. there's so much to look forward to! I hope in time that I can 
+            eventually consume all this media. Usually I hear from these things from my friends, and sometimes youtube. <br><br>
+            Don't kill me over the categories (mostly for the games) because I just mainly put what I've seen/heard about the game <br>
+            and those tags dont mean too much to anyone other than me.
+        </p>
+      </div>
+
+      <div class="tile">
+        <h2>to play!</h2>
+        <ul class="media-list">
+          <li><a href="https://store.steampowered.com/app/1091500/Cyberpunk_2077/">Cyberpunk 2077</a><em>(in progress)</em><span class="tag">Story / RPG</span></li>
+          <li><a href="https://store.steampowered.com/app/632470/Disco_Elysium__The_Final_Cut/">Disco Elysium - The Final Cut</a><span class="tag">Story / RPG</span></li>
+          <li><a href="https://store.steampowered.com/app/220/HalfLife_2/">Half-Life 2</a><span class="tag">Story / FPS</span></li>
+          <li><a href="https://store.steampowered.com/app/546560/HalfLife_Alyx/">Half-Life: Alyx</a><span class="tag">Story / FPS</span></li>
+          <li><a href="https://store.steampowered.com/app/1229490/ULTRAKILL/">ULTRAKILL</a><span class="tag">FPS</span></li>
+          <li><a href="https://store.steampowered.com/app/881100/Noita/">Noita</a><span class="tag">Roguelike</span></li>
+          <li><a href="https://store.steampowered.com/app/397740/Hylics/">Hylics</a><span class="tag">RPG</span></li>
+          <li><a href="https://store.steampowered.com/app/1286710/Hylics_2/">Hylics 2</a><span class="tag">RPG</span></li>
+          <li><a href="https://store.steampowered.com/app/210970/The_Witness/">The Witness</a><span class="tag">Puzzle</span></li>
+          <li><a href="https://store.steampowered.com/app/553420/TUNIC/">TUNIC</a><span class="tag">Puzzle</span></li>
+          <li><a href="https://store.steampowered.com/app/559210/Rakuen/">Rakuen</a><span class="tag">Story / RPG</span></li>
+          <li><a href="https://store.steampowered.com/app/1451940/NEEDY_STREAMER_OVERLOAD/">NEEDY STREAMER OVERLOAD</a><span class="tag">Visual novel</span></li>
+          <li><a href="https://store.steampowered.com/app/489830/The_Elder_Scrolls_V_Skyrim_Special_Edition/">Skyrim</a><span class="tag">RPG</span></li>
+          <li><a href="https://store.steampowered.com/app/426790/Grow_Up?snr=1_25_4__318">Grow Up</a><span class="tag">Story / Platformer</span></li>
+          <li><a href="https://store.steampowered.com/app/367520/Hollow_Knight/">Hollow Knight</a><span class="tag">Metroidvania</span></li>
+          <li><a href="https://store.steampowered.com/app/383870/Firewatch/">Firewatch</a><span class="tag">Story</span></li>
+          <li><a href="https://store.steampowered.com/app/1240060/A_Highland_Song/">A Highland Song</a><span class="tag">Story</span></li>
+          <li><a href="https://store.steampowered.com/app/1055540/A_Short_Hike/">A Short Hike</a><span class="tag">Adventure</span></li>
+          <li><a href="https://store.steampowered.com/app/1903340/Clair_Obscur_Expedition_33/">Clair Obscur: Expedition 33</a><span class="tag">RPG</span></li>
+        </ul>
+      </div>
+
+      <div class="tile">
+        <h2>to watch!</h2>
+        <ul class="media-list">
+          <li>Neon Genesis Evangelion<span class="tag">show</span></li>
+          <li>Girls Band Cry <span class="tag">show</span></li>
+          <li>Solo Leveling <span class="tag">show</span></li>
+          <li>Fullmetal Alchemist <span class="tag">show</span></li>
+          <li>Fallout <span class="tag">show</span></li>
+          <li>Literally every Ghibli movie<span class="tag">movie(s)</span></li>
+          <li>The Sandman <span class="tag">show</span></li>
+          <li>Monty Python and the Holy Grail<span class="tag">movie</span></li>
+        </ul>
+      </div>
+
+      <div class="tile">
+        <h2>to read!</h2>
+        <ul class="media-list">
+          <li>Dune <em>(in progress)</em><span class="tag">sci-fi</span></li>
+          <li>The Dispossessed <span class="tag">sci-fi</span></li>
+          <li>Wool<span class="tag">dystopian</span></li>
+          <li>Shift<span class="tag">dystopian</span></li>
+          <li>Dust<span class="tag">dystopian</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <em>coded by my own two hands | since 2022 – til the end of time!<br>~ kaia</em>
+</footer>
+
+</body>
+</html>

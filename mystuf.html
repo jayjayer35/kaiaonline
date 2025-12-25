@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaia online - creations!</title>
+
+  <style>
+    /* ---------- GLOBAL FIX ---------- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    @font-face {
+      font-family: "NDS";
+      src: url("rework/assets/fonts/nds.ttf") format("truetype");
+      font-display: swap;
+      image-rendering: pixelated;
+      font-smooth: never;
+      -webkit-font-smoothing: none;
+    }
+
+    :root {
+      --bg-tile: #fff;
+      --bg-header: #9eb4d1;
+      --border-tile: #b6c6df;
+      --border-header: #7e8ba3;
+      --header-shadow: #9ca7c3;
+      --tile-header-bg: #b6c6df;
+      --tile-header-border: #8a99b8;
+      --color-extra: #485775;
+      --text-color: #444;
+      --font-base: 1rem;
+      --line-height: 1;
+      --custom-font-scale: 1.5;
+    }
+
+    html {
+      font-size: var(--font-base);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'NDS', sans-serif;
+      font-size: calc(1rem * var(--custom-font-scale));
+      background: #e8eff7 url('rework/assets/general/bkg1.png');
+      image-rendering: pixelated;
+      color: var(--text-color);
+      line-height: var(--line-height);
+    }
+
+    /* ---------- HEADER (UNTOUCHED) ---------- */
+    header {
+      width: 100%;
+      background: var(--bg-header);
+      border-bottom: 0.2rem solid var(--border-header);
+      padding: 0.625rem 0;
+      text-align: center;
+      box-shadow: 0 0.125rem 0.25rem var(--header-shadow);
+      font-weight: bold;
+      font-size: 1.75rem;
+      position: relative;
+      z-index: 20;
+    }
+
+    header a {
+      margin: 0 0.5rem;
+      color: white;
+      text-decoration: none;
+      letter-spacing: .1rem;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      background-color: #cfddffc5;
+      border: 1px solid var(--border-header);
+      border-radius: 3px;
+      z-index: 10;
+      top: 100%;
+      left: 40%;
+      transform: translateX(-50%);
+      min-width: 5rem;
+      font-size: 1.1rem;
+      padding: 0.1rem 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 0.2rem 0.4rem;
+      text-decoration: none;
+      color: var(--text-color);
+      white-space: nowrap;
+      transition: transform .2s ease-in-out;
+    }
+
+    .dropdown-content a:hover {
+      transform: scale(1.1);
+      cursor: pointer;
+    }
+
+    .dropdown:hover .dropdown-content {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ---------- LAYOUT ---------- */
+
+    .split-layout {
+      display: grid;
+      grid-template-columns: 22rem 1fr;
+      gap: 1rem;
+      max-width: 75rem;
+      margin: auto;
+      padding: 1.25rem;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .sidebar.sticky {
+      position: sticky;
+      top: 1.25rem;
+      align-self: start;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .content .tile {
+      display: none; /* hide all tiles initially */
+    }
+
+    .tile {
+      background: var(--bg-tile);
+      border: 0.15rem solid var(--border-tile);
+      border-radius: 0.375rem;
+      padding: 0.625rem;
+      box-shadow: 0 0 0.25rem var(--header-shadow);
+      position: relative;
+      transition: opacity 0.25s ease;
+    }
+
+    .tile h2 {
+      background: var(--tile-header-bg);
+      color: white;
+      margin: -0.625rem -0.625rem 0.625rem -0.625rem;
+      padding: 0.375rem;
+      font-size: 1.5rem;
+      text-align: center;
+      border-bottom: 0.15rem solid var(--tile-header-border);
+      letter-spacing: .15rem;
+    }
+
+    .sidebar .tile ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .sidebar .tile ul a {
+      color: var(--color-extra);          /* use tile text color */
+      text-decoration: none;   /* remove underline */
+      display: inline-block;               /* required for transform */
+      transition: transform 0.15s ease;
+    }
+
+    .sidebar .tile ul a:hover {
+      transform: scale(1.06);
+    }
+
+    .sidebar .tile ul li {
+      position: relative;
+      padding-left: 1.2rem;
+      margin-bottom: 0.1rem;
+      padding-left: 1.5rem;
+    }
+
+    .sidebar .tile ul li::before {
+      content: "  - ";
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 1em;
+      color: var(--border-header);
+    }
+
+    details summary {
+      list-style: none; /* removes default marker in most browsers */
+      cursor: pointer;
+      position: relative;
+      padding-left: 1em; /* optional, for spacing */
+    }
+
+    /* Add custom arrow using pseudo-element */
+    details summary::before {
+      content: '>'; /* your replacement symbol */
+      position: absolute;
+      left: 0;
+      transition: transform 0.2s;
+    }
+
+    /* Rotate the arrow when open */
+    details[open] summary::before {
+      transform: rotate(90deg); /* points down */
+    }
+
+    /* ---------- MOBILE ---------- */
+    @media (max-width: 56.25rem) {
+      .split-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar.sticky {
+        position: static;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header style="color: #fff;">
+    <div class="dropdown">
+      <a href="indexnew.html" 
+      style="text-decoration: none; cursor: pointer;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">home</a> - 
+    </div>
+    <div class="dropdown">
+      <a href="#">kaia</a> - 
+      <div class="dropdown-content">
+        <a href="about.html">about me</a>
+        <a href="https://kaia.starscene.com/blog/index.html">blog</a>
+        <a href="100.html">100 questions</a>
+        <a href="lists.html">my lists</a>
+        <a href="contact.html">contact/socials</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">site</a> - 
+      <div class="dropdown-content">
+        <a href="https://kaiasei.atabook.org/">guestbook</a>
+        <a href="webrings.html">webrings</a>
+        <a href="manifesto">manifesto</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">for u</a> - 
+      <div class="dropdown-content">
+        <a href="bookmarks.html">bookmarks</a>
+        <a href="mystuf.html">my stuff!</a>
+        <a href="myrecs.html">my recs!</a>
+      </div>
+    </div>
+    <div class="dropdown">
+      <a href="#">other</a>
+      <div class="dropdown-content">
+        <a href="/ofb/wilds.html">outer wilds</a>
+        <a href="dontforget.html">dont forget</a>
+        <a href="deepestfear.html">deepest fear</a>
+        <a href="msgs.html">hall of messages</a>
+        <a href="template.html">template</a>
+      </div>
+    </div>
+  </header>
+
+<main>
+  <div class="split-layout">
+
+    <!-- sidebar -->
+    <aside class="sidebar sticky">
+
+      <div class="tile">
+        <div></div>
+        <h2>stuff i made</h2>
+          <p>A big list of things things I've made. this can range from music, art, webdev stuff, and anything else that I wish to share.</p>
+          
+          <ul style="max-height: 10rem; overflow-y: auto; padding-left: 0; margin: 0;">
+            <li>
+              <a href="#thalenrose">thalenrose map <em style="font-size: 75%;">(2025->)</em></a>
+            </li>
+
+            <li>
+              <a href="#voidwalker">voidwalker <em style="font-size: 75%;">(2025->)</em></a>
+            </li>
+
+            <li>
+              <a href="#vid3">playing catch up <em style="font-size: 75%;">(2023-2025)</em></a>
+            </li>
+
+            <li>
+              <a href="#vid2">first-year <em style="font-size: 75%;">(2022-2023)</em></a>
+            </li>
+            
+            <li>
+              <a href="#site1">site archive 1 <em style="font-size: 75%;">(2022)</em></a>
+            </li>
+            
+            <li>
+              <a href="#vid1">senior memories <em style="font-size: 75%;">(2021-2022)</em></a>
+            </li>
+          </ul>
+        
+      </div>
+
+      <!-- quick info -->
+      <div class="tile" id="info-tile">
+        <h2 id="info-title">info</h2>
+        <p id="info-text" style="text-align:center;">
+          <img id="info-image" src="assets/zomboid_read.gif" alt="">
+        </p>
+      </div>
+
+    </aside>
+
+    <!-- content -->
+    <section class="content">
+
+      <div class="tile" id="thalenrose"> <!-- THALENROSE -->
+        <h2>thalenrose map</h2>
+        <div style="text-align: center;">
+          <a href="https://kaia.starscene.com/map"><img src="assets/thalenrose_nolabel.png" alt="map of my d&d camapign" style="max-width: 100%; max-height: 30rem; height: auto;"> </a>
+        </div>
+        <p style="text-align: center;">
+          The above photo is linked to the page on my site. <br>
+          I made the site with a JS map lib called <a href="https://leafletjs.com/">leaflet</a>. I designed the map with something called <a href="https://www.wonderdraft.net/">Wonderdraft</a>, which you can get on their own site, or on Humble Bundle if you wish!
+        </p>
+      </div>
+
+      <div class="tile" id="voidwalker"> <!-- VOIDWALKER -->
+        <h2>voidwalker</h2>
+        <div style="text-align: center;">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?si=lnD6BeLU8hhNFQQL&amp;list=PLo8f1dE0cReasyZgaOFK0POy17lmsN75X" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <p style="text-align: center;">
+          I think the youtube playlist embed shows the most recent song which is added to the playlist, which is pretty cool. But check out the rest if you've got the time! Specifically "And the Stars were Forever Collecting" is one of my favorites, kinda changed the way I approach making music when I finished that song.
+        </p>
+      </div>
+
+      <div class="tile" id="vid3"> <!-- CATCH UP -->
+        <h2>playing catch up</h2>
+        <div style="text-align: center;">
+          Song: Cheerleader - Porter Robinson <br> <br>
+
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/LXvZtiaYW7Y?si=IzkZTiErB0XWAcsI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <div class="tile" id="vid2"> <!-- FIRST YEAR -->
+        <h2>first-year!</h2>
+        <div style="text-align: center;">
+          Song: Memory - Sugarcult <br> <br>
+
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/cU1WR_B41uE?si=9s14OkV8tjgWMr9m" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <div class="tile" id="site1"> <!-- SITE 1 -->
+        <h2>site archive 1</h2>
+        <div style="text-align: center;">
+          <a href="https://kaia.starscene.com/jacobonline-old/"><img src="assets/jacobonline-snapshot.png" alt="screenshot of my old site" style="max-width: 100%; max-height: 30rem; height: auto;"></a>
+        <br><br>You know I made this crap during my computer science class because the teacher was <em>that</em> bad, loved him though, he was very nice! Please please pleaseee don't be suprised if anything is broken, I haven't looked at the code on those files in years because its THAT bad. <br><br> You can click the photo above to go view the site if you wish.
+        </div>
+      </div>
+
+      <div class="tile" id="vid1"> <!-- SENIOR MEMORIES -->
+        <h2>senior memories</h2>
+        <div style="text-align: center;">
+          Song: First Date - blink-182 <br> <br>
+
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/4wLQMUtWyD0?si=DgIx-vv1U4eXbfu8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+
+
+    </section>
+
+  </div>
+</main>
+
+<script>
+const infoTile = document.getElementById('info-tile');
+const infoTitle = document.getElementById('info-title');
+const infoText = document.getElementById('info-text');
+
+// Map content tiles to their info
+const contentInfo = {
+  vid3: {
+    title: "note:",
+    text: "One of my memory-scrapbooking videos. You know, I dont know why but I finally felt myself when editing this. This is my favorite video of them all so far. It is a much bigger timeframe of clips, so it took me a while to get them all, but I do think it was worth it. Also the song choice was done out on a whim. I was rollerblading around Miami Beach, and it hit me, I just knew this had to be the song.",
+  },
+  vid2: {
+    title: "note:",
+    text: "One of my memory-scrapbooking videos. Honestly, this is one of the roughest ones quality wise. I made it during lunch between some classes at college (yeah), but I needed to get this one out, despite not really wanting to make it. The song choice was because this was the first song my band covered, because i kinda harassed them to, LOLZ.",
+  },
+  vid1: {
+    title: "note:",
+    text: "One of my memory-scrapbooking videos. This video was the first one I recorded and edited, so the audio is a little quiet, and the cuts may not be as clean, but it's one of the ones i hold near and dear to my heart, the year of me being a high school senior!",
+  },
+  voidwalker: {
+    title: "note:",
+    text: "A collection of songs I decided to make over the course of a couple months. They all relate to a d&d campaign my friend hosts, and usually the songs relate to the characters we play, or something happening in the game, duh. Whenever I feel inspired to make another song for this campaign, it usually gets added to this playlist.",
+  },
+  thalenrose: {
+    title: "note:",
+    text: "A large, interactable map I made for my d&d camapaign that I DM for. I'm always adding on to it, it's a really good visual for my players to understand where they are in the world, and also an excuse for me to nerd out on making stuff for my website haha, but it is seriously cool. There is also lore on my world there! Usually important stuff pertaining to the party though, I keep some light notes for them on important things.",
+  },
+  site1: {
+    title: "note:",
+    text: "The very first iteration of my site, which is SO hideous, but it has its charm. I was learning back then, so I never am too harsh on myself for it.",
+  },
+};
+
+// Optional: update info tile on sidebar click too
+document.querySelectorAll('.sidebar a[href^="#"]').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault(); // prevent jump
+    const id = link.getAttribute('href').substring(1);
+
+    // hide all tiles
+    document.querySelectorAll('.content .tile').forEach(tile => {
+      tile.style.display = 'none';
+    });
+
+    // show clicked tile
+    const tile = document.getElementById(id);
+    if(tile) tile.style.display = 'block';
+
+    // update info
+    updateInfo(contentInfo[id]);
+
+    // optional: scroll into view
+    tile.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// Intersection Observer
+const observerOptions = {
+  root: null, // viewport
+  rootMargin: '0px',
+  threshold: 0.5 // 50% of tile must be visible
+};
+
+const observerCallback = (entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      const id = entry.target.id;
+      updateInfo(contentInfo[id]);
+    }
+  });
+};
+
+const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+// Observe each content tile
+document.querySelectorAll('.content .tile').forEach(tile => observer.observe(tile));
+
+function updateInfo(data){
+  if(!data) return;
+  infoTile.style.opacity = '0';
+  setTimeout(() => {
+    infoTitle.textContent = data.title;
+    infoText.textContent = data.text;
+    infoTile.style.opacity = '1';
+  }, 150);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const firstTile = document.querySelector('.content .tile');
+  if(firstTile) firstTile.style.display = 'block';
+});
+
+</script>
+
+</body>
+</html>

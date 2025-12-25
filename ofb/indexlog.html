@@ -22,20 +22,20 @@
   </div>
   <div class="scanlines"></div>
 </div>
-<audio id="splashBootSound" src="altsite/sfx/shiplog_switchmode_forward.wav" preload="auto"></audio>
-<audio id="splashSoundOut" src="altsite/sfx/shiplog_switchmode_back.wav" preload="auto"></audio>
-<audio id="typeSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
-<audio id="startupSound" src="altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
+<audio id="splashBootSound" src="../altsite/sfx/shiplog_switchmode_forward.wav" preload="auto"></audio>
+<audio id="splashSoundOut" src="../altsite/sfx/shiplog_switchmode_back.wav" preload="auto"></audio>
+<audio id="typeSound" src="../altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
+<audio id="startupSound" src="../altsite/fx/shiplog_highlight2.wav" preload="auto"></audio>
 
 
   <!-- main site -->
 <div id="siteContainer">
 <!-- audio refs -->
-<audio id="hoverSound" src="altsite/fx/shiplog_highlight2.wav" preload="none"></audio>
-<audio id="clickSound" src="altsite/fx/1selectentry.wav" preload="none"></audio>
-<audio id="clickOutSound" src="altsite/fx/1leaventry.wav" preload="none"></audio>
-<audio id="zoomSound" src="altsite/fx/zoom.wav" preload="none"></audio>
-<audio id="revealSound" src="altsite/fx/newentry.wav" preload="none"></audio>
+<audio id="hoverSound" src="../altsite/fx/shiplog_highlight2.wav" preload="none"></audio>
+<audio id="clickSound" src="../altsite/fx/1selectentry.wav" preload="none"></audio>
+<audio id="clickOutSound" src="../altsite/fx/1leaventry.wav" preload="none"></audio>
+<audio id="zoomSound" src="../altsite/fx/zoom.wav" preload="none"></audio>
+<audio id="revealSound" src="../altsite/fx/newentry.wav" preload="none"></audio>
 
 
 <div id="screenPadding"></div>
@@ -55,7 +55,7 @@
     <!--entries--> 
     <div class="frame frame-normal color-gray" style="left: 880px; top: 400px;" data-page="welcome.html"> <!-- welcome 0 -->
         <h2>Welcome</h2>
-        <img src="altsite/entrypng/welcome.png" alt="welcome">
+        <img src="../altsite/entrypng/welcome.png" alt="welcome">
     </div>
     <div class="frame frame-large color-gray" style="left: -50px; top: 430px;" data-page="bio.html"> <!-- me 1 -->
         <h2>Me</h2>
@@ -67,7 +67,7 @@
     </div>
     <div class="frame frame-normal color-green" style="left: 1600px; top: -390px;" data-page="internetstuf.html"> <!-- internet 3 -->
         <h2>Internet</h2>
-        <img src="altsite/entrypng/warp.png" alt="my site">
+        <img src="../altsite/entrypng/warp.png" alt="my site">
     </div>
     <div class="frame frame-small color-gray" style="left: 50px; top: 550px; max-width: 90px;" data-page="altsite/juststatus.html"> <!-- status 4 -->
         <h2>Status</h2>
@@ -75,7 +75,7 @@
     </div>
     <div class="frame color-purple" style="left: 770px; top: 1335px;" data-page="wilds.html"> <!-- wilds 5 -->
         <h2>Outer Wilds</h2>
-        <img src="altsite/entrypng/wilds.jpg" alt="outer wilds">
+        <img src="../altsite/entrypng/wilds.jpg" alt="outer wilds">
     </div>
     <div class="frame color-blue" style="left: 283px; top: -1500px;" data-page="konsole.html"> <!-- console 6 -->
         <h2>Console</h2>
@@ -95,11 +95,11 @@
     </div>
     <div class="frame color-orange" style="left: -1100px; top: -540px;" data-page="photo.html"> <!-- photo 10 -->
         <h2>Photos</h2>
-        <img src="altsite/entrypng/photo.jpg" alt="photography">
+        <img src="../altsite/entrypng/photo.jpg" alt="photography">
     </div>
     <div class="frame color-orange" style="left: -1030px; top: 720px;" data-page="video.html"> <!-- video 11 -->
         <h2>Videos</h2>
-        <img src="altsite/entrypng/video.jpg" alt="video">
+        <img src="../altsite/entrypng/video.jpg" alt="video">
     </div>
     <div class="frame color-green" style="left: 2310px; top: -110px;" data-page="https://kaiasei.atabook.org/"> <!-- guestbook 12 -->
         <h2>Guestbook</h2>
@@ -183,7 +183,7 @@
     </div>
     <div class="frame color-eric" style="left: -550px; top: 2620px; display:none;" data-page="friends/eric.html"> <!-- eric 32 -->
         <h2>Eric</h2>
-        <img src="altsite/entrypng/friends.png" alt="brandon">
+        <img src="../altsite/entrypng/friends.png" alt="brandon">
     </div>
   </div>
 </div>
@@ -396,7 +396,7 @@ document.querySelectorAll(".frame").forEach(frame => {
     windowEl.style.resize = "both";
 
     // special sizing for status
-    if (targetPage === "altsite/juststatus.html") {
+    if (targetPage === "../altsite/juststatus.html") {
       windowEl.style.width = "25vw";
       windowEl.style.height = "17vh";
       windowEl.style.top = "10vh";
@@ -492,7 +492,7 @@ function updateTransform() {
 const hoverSound = document.getElementById("hoverSound");
 document.querySelectorAll(".frame").forEach(frame => {
   frame.addEventListener("mouseenter", () => {
-    const hsound = new Audio('altsite/fx/shiplog_highlight.wav');
+    const hsound = new Audio('../altsite/fx/shiplog_highlight.wav');
     hsound.volume = 0.3;
     hsound.play();
   });
