@@ -15,12 +15,12 @@
   --sidebar-bg: #bbcae6da;
   --sidebar-button-bg: #2bff00;
   --sidebar-button-bg-hover: #807368;
-  --sidebar-button-text: #4E223D;
+  --sidebar-button-text: #22314e;
   --sidebar-button-text-hover: #DA587E;
   --sidebar-border-color: #444079;
   
  /*this is for the collapsible sections at the top (status and tag filters)*/
-  --pinned-text: #4E223D;
+  --pinned-text: #22304e;
   --pinned-bg: rgb(164, 186, 226);
   /*tag filter button colors*/
   --button-bg: #b4d0fc;
