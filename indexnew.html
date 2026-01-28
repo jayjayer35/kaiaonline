@@ -953,9 +953,12 @@ let currentDate = new Date();
 const posts = {
   // example:
   // "2026-01-25": { text: "text", color: "#c7d8ff" }
+  "2026-01-27": { text: "calendar creation", color: "#F59682" },
+
   "2026-02-03": { text: "my birthday!", color: "#FFB0F9" },
   "2026-02-10": { text: "daniel's birthday", color: "#FFB0F9" },
   "2026-03-05": { text: "brandon's birthday", color: "#FFB0F9" },
+  "2026-03-13": { text: "jayden's birthday", color: "#FFB0F9" },
   "2026-04-12": { text: "break's birthday", color: "#FFB0F9" },
   "2026-04-14": { text: "noah's birthday", color: "#FFB0F9" },
   "2026-05-30": { text: "matija's birthday", color: "#FFB0F9" },
@@ -971,6 +974,22 @@ const posts = {
   "2026-10-10": { text: "eli's birthday", color: "#FFB0F9" },
   "2026-12-10": { text: "jacob's birthday", color: "#FFB0F9" },
   "2026-12-22": { text: "eric's birthday", color: "#FFB0F9" },
+
+  "2026-02-02": { text: "groundhog day", color: "#BDE897" },
+  "2026-02-14": { text: "valentine's day", color: "#BDE897" },
+  "2026-03-17": { text: "saint patrick's day", color: "#BDE897" },
+  "2026-04-01": { text: "april fools' day", color: "#BDE897" },
+  "2026-04-22": { text: "earth day", color: "#BDE897" },
+  "2026-05-10": { text: "mother's day", color: "#BDE897" },
+  "2026-06-19": { text: "juneteenth", color: "#BDE897" },
+  "2026-06-21": { text: "father's day", color: "#BDE897" },
+  "2026-07-04": { text: "independence day", color: "#BDE897" },
+  "2026-10-31": { text: "halloween day", color: "#BDE897" },
+  "2026-11-11": { text: "veteran's day", color: "#BDE897" },
+  "2026-12-24": { text: "christmas eve", color: "#BDE897" },
+  "2026-12-25": { text: "christmas day", color: "#BDE897" },
+  "2026-12-31": { text: "new years eve", color: "#BDE897" },
+
 
   "2026-02-09": { text: "artemis II launch!", color: "#D9AB5F" },
 };
@@ -1024,7 +1043,7 @@ function renderCalendar() {
     calendarGrid.appendChild(cell);
   }
 }
-
+// TOGGLE MONTH CYCLE
 document.getElementById("prevMonth").onclick = () => {
   currentDate.setMonth(currentDate.getMonth() - 1);
   renderCalendar();
