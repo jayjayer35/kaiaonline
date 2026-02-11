@@ -404,6 +404,7 @@
         <a href="bookmarks.html">bookmarks</a>
         <a href="mystuf.html">my stuff!</a>
         <a href="myrecs.html">my recs!</a>
+        <a href="myrecipes.html">my recipes!</a>
       </div>
     </div>
     <div class="dropdown">
@@ -416,11 +417,11 @@
         <a href="template.html">template</a>
       </div>
     </div>
-  </header>
+</header>
 
-  <div class="banner">
+  <!-- <div class="banner">
     <img src="assets/christmas_lights.png" alt="banner Image" style="z-index: 10000;">
-  </div>
+  </div> -->
 
   <div class="wrapper">
 
@@ -912,7 +913,7 @@ window.addEventListener('load', () => {
       ctx.save();
       ctx.translate(b.position.x, b.position.y);
       ctx.rotate(b.angle);
-      ctx.globalAlpha = 0.7; // semi-transparent
+      ctx.globalAlpha = 0; // semi-transparent OPACITY OPACITY OPACITY OPACITY OPACITY OPACITY OPACITY OPACITY def = 0.7
       if (leafImg.complete && leafImg.naturalWidth !== 0) {
         ctx.drawImage(leafImg, -size/2, -size/2, size, size);
       } else {
@@ -960,6 +961,7 @@ const posts = {
   // "2026-01-25": { text: "text", color: "#c7d8ff" }
   "2026-01-27": { text: "calendar creation", color: "#F59682" },
 
+  //yearlies
   "2026-02-03": { text: "my birthday!", color: "#FFB0F9" },
   "2026-02-10": { text: "daniel's birthday", color: "#FFB0F9" },
   "2026-03-05": { text: "brandon's birthday", color: "#FFB0F9" },
@@ -980,6 +982,7 @@ const posts = {
   "2026-12-10": { text: "jacob's birthday", color: "#FFB0F9" },
   "2026-12-22": { text: "eric's birthday", color: "#FFB0F9" },
 
+  //holidays
   "2026-02-02": { text: "groundhog day", color: "#BDE897" },
   "2026-02-14": { text: "valentine's day", color: "#BDE897" },
   "2026-03-17": { text: "saint patrick's day", color: "#BDE897" },
@@ -995,8 +998,8 @@ const posts = {
   "2026-12-25": { text: "christmas day", color: "#BDE897" },
   "2026-12-31": { text: "new years eve", color: "#BDE897" },
 
+  //
 
-  "2026-02-09": { text: "artemis II launch!", color: "#D9AB5F" },
 };
 
 function renderCalendar() {
