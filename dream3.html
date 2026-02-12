@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>dream</title>
+<style>
+  html,body{
+    height:100%;
+    margin:0;
+  }
+  body{
+    background:#001314;
+    color:rgb(180, 255, 245);
+    font-family:'Courier New', Courier, monospace;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    cursor:default;
+    overflow:hidden;
+    transition: opacity 2s ease; 
+  }
+
+  #container {
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+    text-align:center;
+    max-width:80%;
+  }
+
+  .line {
+    font-size: 2rem;
+    white-space: pre-wrap;
+    transition: opacity 0.5s ease, filter 0.5s ease;
+    opacity: 1;
+    filter: none;
+  }
+
+  .line.fade {
+    opacity: 0;
+    filter: blur(2px);
+  }
+
+
+  .hint{
+    position:fixed;
+    bottom:18px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:.95rem;
+    color:rgba(180,180,180,0.6);
+    pointer-events:none;
+  }
+
+  .line.glitch {
+    animation: glitch 0.25s linear 3;
+  }
+
+  @keyframes glitch {
+    0%   { transform: translate(0, 0); text-shadow: 1px 0 red, -1px 0 cyan; }
+    20%  { transform: translate(-1px, 0); }
+    40%  { transform: translate(1px, -1px); }
+    60%  { transform: translate(-1px, 1px); }
+    80%  { transform: translate(1px, 0); }
+    100% { transform: translate(0, 0); text-shadow: none; }
+  }
+</style>
+</head>
+<body>
+  <div id="container"></div>
+  <div class="hint" id="hint"></div>
+  <audio id="bgAudio" src="music/lament_balance.mp3" preload="auto"></audio>
+
+<script>
+const messages = [
+  "THESE THREADS STILL HOLD.",
+  ". . .",
+  "WILL YOU BE SCARED TO", 
+  "FORGET?",
+  "WILL YOU BE SCARED TO",
+  "BE FORGOTTEN?",
+  "",
+  "THANK YOU," ,
+  "FOR PUTTING THIS PIECE INTO PLACE.",
+  " ",
+  "",
+  "AS FOR THIS. . .",
+  "HOST.",
+  "",
+  "LET US SEE. . .",
+  "IS HE WORTH SOMETHING?",
+];
+
+const container = document.getElementById("container");
+const hint = document.getElementById("hint");
+const audio = document.getElementById("bgAudio");
+
+function typeText(element, text, speed = 45) {
+  return new Promise(resolve => {
+    let i = 0;
+    const interval = setInterval(() => {
+      element.textContent = text.slice(0, i++);
+      if (i > text.length) {
+        clearInterval(interval);
+        resolve();
+      }
+    }, speed);
+  });
+}
+
+function requestFullscreen() {
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if (el.msRequestFullscreen) el.msRequestFullscreen();
+}
+
+async function startSequence() {
+  hint.style.display = "none";
+  requestFullscreen();
+
+  const line = document.createElement("div");
+  line.classList.add("line");
+  container.appendChild(line);
+
+  for (let i = 0; i < messages.length; i++) {
+    // fade out old text
+    line.classList.add("fade");
+    await new Promise(r => setTimeout(r, 100));
+
+    line.textContent = "";
+    line.classList.remove("fade");
+
+    await typeText(line, messages[i], 90);
+
+    if (messages[i].trim() === "HOST.") {
+      line.classList.add("glitch");
+      await new Promise(r => setTimeout(r, 300));
+      line.classList.remove("glitch");
+    }
+
+    // pause between lines
+    const pause = messages[i].trim() === "" ? 3200 : 2000;
+    await new Promise(r => setTimeout(r, pause));
+  }
+
+  audio.addEventListener("ended", () => {
+    document.body.style.background = "black";
+    document.body.innerHTML = "";
+    window.close();
+  });
+}
+
+let started = false;
+document.body.addEventListener("click", async () => {
+  if (started) return;
+  started = true;
+
+  try {
+    audio.volume = 0.05;
+    await audio.play();
+  } catch (e) {
+    console.warn("play blocked", e);
+  }
+
+  startSequence();
+});
+</script>
+
+
+
+
+</script>
+</body>
+</html>
