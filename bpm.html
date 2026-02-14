@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>my heart rate :3</title>
+<style>
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background: #1e1e1e;
+    font-family: system-ui, sans-serif;
+    color: #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .heart-widget {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    max-width: 60rem;
+    padding: 1.5rem;
+    box-sizing: border-box;
+  }
+
+  .iframe-wrap {
+    width: 400px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .iframe-wrap iframe {
+    width: 400px;
+    height: 200px;
+    border: none;
+    transform: scale(0.6);
+    transform-origin: center center;
+  }
+
+  .text-panel {
+    max-width: 28rem;
+    padding-right: 3rem;
+  }
+
+  .text-panel p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5em;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 48rem) {
+    html, body {
+      align-items: flex-start;
+    }
+
+    .heart-widget {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1.5rem;
+      padding-top: 2rem;
+    }
+
+    .text-panel {
+      max-width: 32rem;
+      padding-right: 0;
+    }
+
+    .text-panel p {
+      font-size: 0.95rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="heart-widget">
+    <div class="iframe-wrap">
+      <iframe
+        src="https://pulsoid.net/widget/view/fa53129c-4437-4f3d-bc12-1f44de35870e"
+        loading="lazy"
+      ></iframe>
+    </div>
+
+    <div class="text-panel">
+      <p>
+        here’s my current heart bpm. this is a testing page and will most likely be finished soon,
+        but i needed to publish it to test some things.<br><br>
+
+        if it gets low, im probably asleep or rotting at my computer. and if it gets too high, im probably rollerblading,
+        stressed, or other stuff that keeps me moving. <br>
+
+        if it is at 0, or not showing anything, im probably dead. <br><br>
+        <em>(on real note: its impossible to keep the monitor up all the time, this thing has to charge like once a week)</em>
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>
