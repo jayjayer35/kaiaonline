@@ -6,32 +6,40 @@
 <title>my heart rate :3</title>
 
 <style>
+  /* Fix width math everywhere */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
   html, body {
-    width: 100%;
-    height: 100%;
     margin: 0;
+    min-height: 100vh;
     background: #1e1e1e;
     font-family: system-ui, sans-serif;
     color: #e5e5e5;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
   }
 
   .heart-widget {
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 2rem;
-    max-width: 60rem;
     width: 100%;
+    max-width: 60rem;
     padding: 1.5rem;
-    box-sizing: border-box;
   }
 
   .iframe-wrap {
+    display: flex;
+    justify-content: center;
     width: 100%;
     max-width: 400px;
-    aspect-ratio: 2 / 1; 
+    aspect-ratio: 2 / 1;
     flex-shrink: 0;
   }
 
@@ -53,6 +61,7 @@
     opacity: 0.85;
   }
 
+  /* Mobile */
   @media (max-width: 48rem) {
     html, body {
       align-items: flex-start;
@@ -60,10 +69,9 @@
 
     .heart-widget {
       flex-direction: column;
-      align-items: center;
       text-align: center;
-      gap: 1.5rem;
       padding-top: 2rem;
+      gap: 1.5rem;
     }
 
     .iframe-wrap {
@@ -93,17 +101,15 @@
 
     <div class="text-panel">
       <p>
-        here's my heart rate, feel free to call me out on it whenever! <br>also, this is a testing page and will most likely be finished soon,
-        i just needed to publish it to test some things.<br><br>
+        here's my heart rate, lol<br><br>
 
-        if it gets too low, im probably asleep or rotting at my computer <br> if it gets too high, im probably rollerblading or 
-        having a panic attack. <br>if it's like above average consistently it's 'cause im a little out of shape or something so, idunno.<br><br>
+        if it gets too low, im probably asleep or rotting at my computer. <br>
+        if it gets too high, im probably rollerblading or having a panic attack. <br>
+        if it's above average consistently it's 'cause im a little out of shape or something so… idunno. <br><br>
 
-        oh, and if it is at 0, or not showing anything, im probably dead.<br><br>
-        <em>(on real note: its impossible to keep this monitoring all the time, so there is some downtime here and there.)</em>
-      
-        <br>
-        <br>
+        oh, and if it is at 0 or not showing anything, im probably dead. <br><br>
+
+        <em>(real note: it's impossible to keep this monitoring all the time, so there is some downtime here and there.)</em>
       </p>
     </div>
   </div>
