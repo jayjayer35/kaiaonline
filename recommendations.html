@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kaia online - about me</title>
+  <title>kaia online - recommendations</title>
+  <script src="hide-scrollbars.js"></script>
   <style>
     @font-face {
       font-family: "NDS";
-      src: url("rework/assets/fonts/nds.ttf") format("truetype");
+      src: url("/rework/assets/fonts/nds.ttf") format("truetype");
       font-display: swap;
       image-rendering: pixelated;
       font-smooth: never;
@@ -25,7 +26,6 @@
       --text-color: #444;
       --font-base: 1rem;
       --line-height: 1;
-      --custom-font-scale: 1.5;
     }
 
     html { font-size: var(--font-base); }
@@ -34,7 +34,7 @@
       margin: 0;
       font-family: 'NDS', sans-serif;
       font-size: calc(1rem * var(--custom-font-scale));
-      background: #e8eff7 url('rework/assets/general/bkg3.gif');
+      background: #e8eff7 url('rework/assets/general/bkg1.png');
       image-rendering: pixelated;
       color: var(--text-color);
       line-height: var(--line-height);
@@ -84,13 +84,32 @@
       margin: auto;
       gap: 1rem;
       padding: 1.25rem;
-      justify-content: center;
+      justify-content: center; 
     }
 
     .column {
       display: flex;
       flex-direction: column;
       gap: 1rem;
+    }
+
+    .centered-column {
+      align-items: center;
+    }
+
+    .questionnaire dt {
+      margin-top: 0.75rem;
+      font-size: 125%;
+      font-weight: 400;
+      letter-spacing: .03rem;
+    }
+
+    .questionnaire dd {
+      margin-left: 1rem;
+      margin-top: .25rem;
+      padding-left: 1rem; 
+      border-left: 1px dashed rgba(0, 0, 0, 0.3);
+      font-size: 105%; 
     }
 
     .tile {
@@ -100,6 +119,7 @@
       padding: 0.625rem;
       box-shadow: 0 0 0.25rem var(--header-shadow);
       position: relative;
+      max-width: 75rem;
     }
 
     .tile h2 {
@@ -257,104 +277,11 @@
       opacity: 1;
       visibility: visible;
     }
-
-    /* ABOUT PAGE LAYOUT */
-
-.about-wrapper{
-  max-width:70rem;
-  margin:auto;
-  padding:1.5rem;
-  display:flex;
-  flex-direction:column;
-  gap:1.5rem;
-}
-
-
-/* HERO */
-
-.about-hero{
-  padding-bottom:1rem;
-}
-
-.hero-content{
-  display:flex;
-  gap:1rem;
-  align-items:center;
-}
-
-.about-avatar{
-  width:8rem;
-  image-rendering:pixelated;
-  flex-shrink:0;
-}
-
-.hero-text{
-  flex:1;
-}
-
-
-/* GRID */
-
-.about-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:1rem;
-}
-
-.about-grid.small{
-  grid-template-columns:repeat(3,1fr);
-}
-
-
-/* STAGGER SECTION */
-
-.about-stagger{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:2rem;
-}
-
-.stagger-left{
-  transform:translateY(1rem);
-}
-
-.stagger-right{
-  transform:translateY(-1rem);
-}
-
-
-/* MOBILE */
-
-@media (max-width:700px){
-
-  .hero-content{
-    flex-direction:column;
-    text-align:center;
-  }
-
-  .about-grid{
-    grid-template-columns:1fr;
-  }
-
-  .about-grid.small{
-    grid-template-columns:1fr;
-  }
-
-  .about-stagger{
-    grid-template-columns:1fr;
-  }
-
-  .stagger-left,
-  .stagger-right{
-    transform:none;
-  }
-
-}
   </style>
 </head>
 <body>
 
-  <header style="color: #fff;">
+<header style="color: #fff;">
     <div class="dropdown">
       <a href="indexnew.html" 
       style="text-decoration: none; cursor: pointer;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">home</a> - 
@@ -364,15 +291,16 @@
       <div class="dropdown-content">
         <a href="about.html">about me</a>
         <a href="https://kaia.starscene.com/blog/index.html">blog</a>
+        <a href="100.html">100 questions</a>
         <a href="lists.html">my lists</a>
+        <a href="contact.html">contact/socials</a>
       </div>
     </div>
     <div class="dropdown">
-      <a href="#">web</a> - 
+      <a href="#">site</a> - 
       <div class="dropdown-content">
         <a href="https://kaiasei.atabook.org/">guestbook</a>
         <a href="webrings.html">webrings</a>
-        <a href="webrings.html">resources</a>
         <a href="manifesto">manifesto</a>
       </div>
     </div>
@@ -380,9 +308,8 @@
       <a href="#">for u</a> - 
       <div class="dropdown-content">
         <a href="bookmarks.html">bookmarks</a>
-        <a href="recommendations.html">recs</a>
-        <a href="mystuf.html">creations</a>
-        <a href="myrecipes.html">recipes</a>
+        <a href="mystuf.html">my stuff!</a>
+        <a href="myrecs.html">my recs!</a>
       </div>
     </div>
     <div class="dropdown">
@@ -397,22 +324,32 @@
     </div>
   </header>
 
-
-  <div class="banner">
-    <img src="" alt="">
-  </div>
+  <!-- <div class="banner">
+    <img src="assets/christmas_lights.png" alt="Banner Image">
+  </div> -->
 
 <main>
  <div class="wrapper">
-    <div class="column">
-      <div class="tile">
-        <h2>Test one two three four</h2>
-        <p>this is the about me page that is under some very big construction <br><br>
-        there is code for this page but its hidden right now, soon this will be done.</p>
-      </div>
+  <div class="column centered-column">
+    <div class="tile">
+      <h2>100 Questions</h2>
+      <dl class="questionnaire">
+        <dl>
+          <dt>main thing</dt>
+          <dd>my response</dd>
+
+
+        </dl>
+      </dl>
     </div>
- </div>
+  </div>
+</div>
+
 </main>
+
+<footer><em>coded by my own two hands | since 2022 - til the end of time!<br>
+    ~ kaia</em>
+</footer>
 
 </body>
 </html>
