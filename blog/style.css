@@ -376,6 +376,7 @@ main {
 .tagged:has(#all:checked) article,
 .tagged:has(#intro:checked) article[class~="intro"],
 .tagged:has(#life:checked) article[class~="life"],
+.tagged:has(#vent:checked) article[class~="vent"],
 .tagged:has(#music:checked) article[class~="music"],
 .tagged:has(#games:checked) article[class~="games"],
 .tagged:has(#dnd:checked) article[class~="d&d"],
