@@ -92,7 +92,7 @@
     /* wrapper w/ columns */
     .wrapper {
       display: flex;
-      max-width: 75rem;
+      max-width: 85rem;
       margin: auto;
       gap: 1rem;
       padding: 1.25rem;
@@ -383,6 +383,82 @@
       height: 200px;
       border: none;
     }
+
+
+    .about-photo{
+      width:18rem;
+      image-rendering:pixelated;
+      border-radius:.1rem;
+    }
+
+    .about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+}
+
+.about-grid.small{
+  grid-template-columns:repeat(3,1fr);
+}
+
+
+/* ABOUT PAGE */
+
+.about-wrapper{
+  max-width:70rem;
+  margin:auto;
+  padding:1.5rem;
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+
+
+/* intro layout */
+
+.intro-layout{
+  display:flex;
+  gap:0rem;
+  align-items:center;
+}
+
+
+/* grid sections */
+
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0rem;
+}
+
+.about-grid.small{
+  grid-template-columns:repeat(3,1fr);
+}
+
+
+/* photos */
+
+.photo-row{
+  display:flex;
+  gap:.5rem;
+  margin-bottom:.5rem;
+}
+
+.photo-row img{
+  width:100%;
+  max-width:10rem;
+  border-radius:.3rem;
+  object-fit:cover;
+}
+
+.yt-link {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.yt-link:hover {
+  transform: scale(1.12) rotate(-4deg);
+}
    </style>
 </head>
 
@@ -395,7 +471,6 @@
     <div class="dropdown">
       <a href="#">kaia</a> - 
       <div class="dropdown-content">
-        <a href="about.html">about me</a>
         <a href="https://kaia.starscene.com/blog/index.html">blog</a>
         <a href="lists.html">my lists</a>
       </div>
@@ -471,27 +546,36 @@
 
     <!-- MIDDLE -->
     <div class="column center">
-      <div class="tile">
+
+      <div class="tile about-intro">
         <h2>welcome to my site! (◕‿◕✿)</h2>
 
-        <div style="display: flex; gap: 16px; align-items: center;">
-          <img src="assets/boostrpog.png"
-              alt="cute image"
-              style="width: 96px; height: auto;">
+        <div class="intro-layout">
 
-          <p style="text-align: left;">
-            Haia, I'm Kaia and this is my own little personal site! <br><br>
+        <img src="assets/puppygirl.png" class="about-photo">
 
-            There will be a bunch of stuff here that I am interested and like. Which can really range from anything to anything so, enjoy!<br><br>
+        <div>
+            <p>Haia, I'm Kaia <em style="font-size: 75%;">(she/her)</em> and this is my own little personal site!<br><br>
 
-            Also- sign my <a href="https://kaiasei.atabook.org/" style="text-decoration: none;"><strong style="color: #444;">guestbook</strong></a>! 
-            please please please please please. <br>
-            I love reading the comments and seeing others' sites! I always keep an eye on it! <br>
-            <div style="text-align: center
-            ;">◕‿↼</div>
-          </p>
+
+              I'm a 22 year old music comp. student from the states! I like to use this website more than any social media really. I have much more freedom of expression here, and I can sculpt it to my liking. <br><br>
+             <em> <- That's me!</em>
+            </p>
+            <p>
+            This site originally went live in early March 2022, and has been in construction ever since. A handful of important people to me have encouraged me to keep this little project alive, so I try my best to. <br
+            </p>
+
+            <p>
+              Check out my blog if you wanna know the more personal side of me <br><em> (you have been warned)</em> <br>
+              
+              And be sure to stop by the <a href="https://kaiasei.atabook.org/" style="text-decoration: dotted; color: #5d7aaf;">guestbook</a> to leave a message! 
+              I read them all and it's always a joy to hear what people have to say, and to see their sites!
+            </p>
         </div>
-      </div>
+
+        </div>
+        
+    </div>
 
       
 
@@ -503,19 +587,25 @@
           <span style="text-align: center; font-size: 50%;"></span></h2>
         <div class="update-log">
           <div style="padding-bottom: .5rem;">
+            <em style="font-size: 80%;">9:17 PM - 3/9/26</em><br>
+            - blog post <br>
+            - index overhaul <br>
+            - about me removed, information added on index <br><br>
+
             <em style="font-size: 80%;">6:34 PM - 3/8/26</em><br>
             - bunch of blog posts since last update (again)<br>
             - misc fixes across the board <br>
             - front page rework <br>
             - about me page construction <br>
             - categories renamed in header<br> 
-            - added quotes from vintage story on main page <br>
+            - added quotes from vintage story on main page <br><br>
 
             <em style="font-size: 80%;">1:14 PM - 2/11/26</em><br>
             - bunch of blog posts since last update <br>
             - fleshing out more of the broken links<br>
             - started work on a recipes page! (not visible yet) <br>
             - being trans <br><br>
+
             <em style="font-size: 80%;">11:03 PM - 1/27/26</em><br>
             - blog post <br>
             - calendar added to main page<br><br>
@@ -559,21 +649,24 @@
       </div>
  -->
       <!-- image on right -->
-      <!-- <div class="tile-row reverse">
+      <div class="tile-row reverse">
         <img src="assets/rose.gif" class="side-image" alt="Side Image Right" style="transform: scale(1.6) translateY(1rem);">
         <div class="tile narrow-tile">
-          <h2>placeholderrrrr</h2>
-          <p>this tile will eventually have something of value in it, this page is under construction.</p>
-        </div>
-      </div> -->
+          <h2>find me!</h2>
+          <p style="text-align: center;">if you want to (for some reason) follow me, you can on these sites!
+            <br>
+            <a class="yt-link" href="https://www.youtube.com/@kaiasei" style="text-decoration: none; color: rgb(206, 91, 91);">youtube</a> | 
+            <a class="yt-link" href="https://bandcamp.com/kaiasei" style="text-decoration: none; color: rgb(107, 107, 107);">bandcamp</a> | 
+            <a class="yt-link" href="https://www.instagram.com/hazel.aac/" style="text-decoration: none; color: rgb(89, 35, 100);">instagram</a> | 
+            <a class="yt-link" href="https://kaia.starscene.com/404_special.html" style="text-decoration: none; color: rgb(38, 28, 94);">twitter</a>
 
-     <div class="tile">
-        <h2><3</h2>
-        <p style="text-align: center;">
-          <em id="magnificence-quote"></em>
-        </p>
+          </p>
+        </div>
       </div>
 
+     
+
+      
 
       <div class="tile">
         <h2>buttons</h2>
@@ -657,6 +750,14 @@
           #<span id="visitor-count">...</span>!<br>
         </p>  
       </div>
+
+      <div class="tile">
+        <h2><3</h2>
+        <p style="text-align: center;">
+          <em id="magnificence-quote"></em>
+        </p>
+      </div>
+
           <!-- rosie cam vvv -->
       <div class="tile" 
         style="border-image: url('rework/assets/general/divborder1.png') 7 fill round; 

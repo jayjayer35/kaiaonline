@@ -22,7 +22,7 @@
       --header-shadow: #9ca7c3;
       --tile-header-bg: #b6c6df;
       --tile-header-border: #8a99b8;
-      --text-color: #444;
+      --text-color: #444444;
       --font-base: 1rem;
       --line-height: 1;
       --custom-font-scale: 1.5;
@@ -295,71 +295,7 @@
 
 /* GRID */
 
-.about-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:1rem;
-}
 
-.about-grid.small{
-  grid-template-columns:repeat(3,1fr);
-}
-
-
-/* ABOUT PAGE */
-
-.about-wrapper{
-  max-width:70rem;
-  margin:auto;
-  padding:1.5rem;
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-}
-
-
-/* intro layout */
-
-.intro-layout{
-  display:flex;
-  gap:1rem;
-  align-items:center;
-}
-
-.about-photo{
-  width:8rem;
-  image-rendering:pixelated;
-  border-radius:.3rem;
-}
-
-
-/* grid sections */
-
-.about-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:1rem;
-}
-
-.about-grid.small{
-  grid-template-columns:repeat(3,1fr);
-}
-
-
-/* photos */
-
-.photo-row{
-  display:flex;
-  gap:.5rem;
-  margin-bottom:.5rem;
-}
-
-.photo-row img{
-  width:100%;
-  max-width:10rem;
-  border-radius:.3rem;
-  object-fit:cover;
-}
 
 
 /* mobile */
@@ -436,27 +372,7 @@
     <div class="about-wrapper">
 
     <!-- intro -->
-    <div class="tile about-intro">
-        <h2>about me</h2>
-
-        <div class="intro-layout">
-
-        <img src="" class="about-photo">
-
-        <div>
-            <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-
-            <p>
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco
-            laboris nisi ut aliquip ex ea commodo consequat.
-            </p>
-        </div>
-
-        </div>
-    </div>
+    
 
 
     <!-- 2 column section -->
@@ -465,12 +381,11 @@
         <div class="tile">
         <h2>interests</h2>
         <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Pellentesque habitant morbi tristique senectus.
+        I love music, rollerblading, d&d, video games, baking, 
         </p>
         </div>
 
-        <div class="tile">
+        <div class="tile" style="text-align: right;">
         <h2>favorites</h2>
         <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -512,7 +427,7 @@
         </div>
 
         <div class="tile">
-        <h2>books</h2>
+        <h2>elsewhere</h2>
         <p>Lorem ipsum dolor sit amet.</p>
         </div>
 
