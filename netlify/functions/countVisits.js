@@ -12,7 +12,7 @@ function getRandomMessage() {
     "New Website Visit lololololol",
     "New visitor detected!",
     "Someone just stopped by!",
-    "Frequency spike! A new signal has been found.",
+    "A new name, forever etched into the hall of remembrance.",
     "A new traveler has entered the solar system!",
     "A strange light fills the room...",
     "A mysterious figure is across the horizon",
