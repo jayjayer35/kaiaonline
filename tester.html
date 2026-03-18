@@ -3,215 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <title>DM Combat Console</title>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-@font-face{
-  font-family:"NDS";
-  src:url("rework/assets/fonts/nds.ttf") format("truetype");
-}
-
 :root{
-  --bg:#0b0f16;
-  --panel:#141a24;
-  --panel-soft:#1b2230;
-  --border:#2a3447;
-  --accent:#8ea6ff;
-  --text:#e6ecf7;
-  --muted:#9aa6bd;
+--bg:#0b0f16;
+--panel:#141a24;
+--panel-soft:#1b2230;
+--border:#2a3447;
+--accent:#8ea6ff;
+--text:#e6ecf7;
+--muted:#9aa6bd;
 }
 
-*{
- box-sizing:border-box;
- cursor:url("rework/assets/cur/kaiacursor.png"),auto;
-}
+*{box-sizing:border-box;cursor:url("rework/assets/cur/kaiacursor.png"),auto}
 
 body{
- margin:0;
- font-family:"NDS",sans-serif;
- font-size:1.5rem;
- background:var(--bg);
- color:var(--text);
- height:100vh;
- display:flex;
- flex-direction:column;
+margin:0;
+font-family:"Comfortaa",sans-serif;
+font-size:1.1rem;
+background:var(--bg);
+color:var(--text);
+height:100vh;
+display:flex;
+flex-direction:column;
 }
 
-/* LAYOUT */
-
-#layout{
- flex:1;
- display:flex;
- min-height:0;
-}
+#layout{flex:1;display:flex;min-height:0}
 
 .sidebar{
- display:flex;
- flex-direction:column;
- flex:0 0 15em;
- min-width:15em;
- background:var(--panel);
- border-right:.08em solid var(--border);
- padding:1.2em;
- overflow-y:auto;
- gap:.6em;
- transition:flex .25s ease;
+flex:0 0 15em;
+min-width:15em;
+background:var(--panel);
+border-right:.08em solid var(--border);
+padding:.7em;
+overflow-y:auto;
+display:flex;
+flex-direction:column;
+gap:.2em
 }
 
-#log{
- border-right:none;
- border-left:.08em solid var(--border);
-}
+#log{border-right:none;border-left:.08em solid var(--border)}
 
-.sidebar.collapsed{
- display:none;
-}
+.sidebar.collapsed{display:none}
 
-#content{
- flex:1;
- padding:1.6em;
- overflow-y:auto;
- background:linear-gradient(180deg,#0b0f16,#0e1420);
-}
+#content{flex:1;padding:1.4em;overflow-y:auto;background:linear-gradient(180deg,#0b0f16,#0e1420)}
 
 .section{
- background:var(--panel-soft);
- border:.08em solid var(--border);
- border-radius:.35em;
- padding:1em;
- margin-bottom:1em;
+background:var(--panel-soft);
+border:.08em solid var(--border);
+border-radius:.25em;
+padding:.8em;
+margin-bottom:.8em
 }
 
-.section h2{
- margin:0 0 .5em 0;
- font-size:1.2rem;
- color:var(--accent);
-}
-
-/* BUTTONS */
+.section h2{margin:0 0 .4em 0;font-size:1rem;color:var(--accent)}
 
 button{
- background:#1f2736;
- border:.08em solid #3a4560;
- color:var(--text);
- font-family:"NDS";
- font-size:.9rem;
- padding:.45em .8em;
- border-radius:.25em;
- transition:background .15s, transform .05s;
- cursor: pointer;
+background:#1f2736;
+border:.08em solid #3a4560;
+color:var(--text);
+font-family:"Comfortaa";
+font-size:.75rem;
+padding:.35em .6em;
+border-radius:.2em
 }
 
-button:hover{
- background:#273250;
-}
-
-button:active{
- transform:translateY(.05em);
-}
-
-/* INPUTS */
+button:hover{background:#273250}
 
 input,textarea{
- width:100%;
- background:#0f141c;
- border:.08em solid var(--border);
- color:var(--text);
- padding:.45em;
- font-family:"NDS";
- font-size:.9rem;
- border-radius:.25em;
- margin-top:.2em;
- margin-bottom:.5em;
+width:100%;
+background:#0f141c;
+border:.08em solid var(--border);
+color:var(--text);
+padding:.35em;
+font-family:"Comfortaa";
+font-size:.75rem;
+border-radius:.2em;
+margin-top:.15em;
+margin-bottom:.3em
 }
 
-textarea{resize:vertical}
-
-.statgrid{
- display:grid;
- grid-template-columns:repeat(6,1fr);
- gap:.4em;
- margin-top:.5em;
-}
+.statgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:.25em;margin-top:.4em}
 
 .statbox{
- background:#0f141c;
- border:.08em solid var(--border);
- padding:.4em;
- text-align:center;
- border-radius:.25em;
- font-size: 0.8rem;
+background:#0f141c;
+border:.08em solid var(--border);
+padding:.25em;
+text-align:center;
+border-radius:.2em;
+cursor:pointer
 }
 
-.enemy{
- padding:.3em .4em;
- color:var(--accent);
- cursor:pointer;
- border-radius:.25em;
-}
+.enemy{padding:.12em .2em;color:var(--accent);cursor:pointer}
+.enemy:hover{color:white}
 
-.enemy:hover{
- background:#1c2434;
- color:white;
-}
+.folder{margin-top:.4em;font-size:.7rem;color:var(--muted)}
 
-.folder{
- margin-top:.6em;
- font-size:.75rem;
- letter-spacing:.05em;
- color:var(--muted);
- text-transform: uppercase;
-}
-
-.logEntry{
- border-bottom:.08em solid var(--border);
- padding:.3em 0;
- font-size:1rem;
- color:var(--muted);
-}
-
-/* INITIATIVE */
-
-.initInputs{
- display:flex;
- gap:.4em;
- margin-bottom:.4em;
-}
+.logEntry{border-bottom:.08em solid var(--border);padding:.3em 0;font-size:.9rem}
+.logAttack{color:#7fb3ff}
+.logDamage{color:#ff7f7f}
+.logCheck{color:#c58cff}
 
 .initRow{
- display:flex;
- justify-content:space-between;
- padding:.35em .4em;
- border-bottom:.08em solid var(--border);
- cursor:pointer;
- border-radius:.25em;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:.25em .2em;
+border-bottom:.08em solid var(--border);
+cursor:pointer
 }
 
-.initRow:hover{
- background:#1c2434;
+.initRow.active{background:#273250}
+
+.initHP{
+width:3em;
+text-align:center;
+background:#0f141c;
+border:.08em solid var(--border);
 }
 
-.initRow.active{
- background:#273250;
- border-left: 4px solid var(--accent);
-}
+#init_list{max-height:220px;overflow-y:auto}
 
-.hpRow{
- display:flex;
- gap:.4em;
- align-items:center;
-}
-
-/* SIDEBAR TOGGLE BUTTONS */
-
-.sidebarToggle{
- position:fixed;
- bottom:.8em;
- z-index:20;
- font-size:.8rem;
- padding:.45em .8em;
- opacity:.9;
-}
-
+.sidebarToggle{position:fixed;bottom:.8em;z-index:20;font-size:.75rem;padding:.35em .6em}
 #toggleCreaturesBtn{left:.8em}
 #toggleLogBtn{right:.8em}
 
@@ -223,16 +137,12 @@ textarea{resize:vertical}
 <button id="toggleCreaturesBtn" class="sidebarToggle" onclick="toggleCreatures()">Creatures</button>
 <button id="toggleLogBtn" class="sidebarToggle" onclick="toggleLog()">Dice / Init</button>
 
-
 <div id="layout">
 
 <div id="creatures" class="sidebar"></div>
 
 <div id="content">
-    <div class="section">
-        <h2>Welcome</h2>
-        Select a creature or create one from the library.
-    </div>
+<div class="section"><h2>Welcome</h2>Select a creature.</div>
 </div>
 
 <div id="log" class="sidebar">
@@ -240,12 +150,14 @@ textarea{resize:vertical}
 <div class="section">
 <h2>Initiative</h2>
 
-<div class="initInputs">
+<div style="display:flex;gap:.3em;margin-bottom:.3em">
 <input id="init_name" placeholder="Name">
 <input id="init_score" placeholder="Init">
-<button onclick="addInit()">Add</button>
+<input id="init_hp" placeholder="HP">
+<button onclick="addInitCustom()">Add</button>
 </div>
 
+<button onclick="nextTurn()">Next Turn</button>
 <button onclick="clearInitiative()">Clear</button>
 
 <div id="init_list"></div>
@@ -263,316 +175,374 @@ textarea{resize:vertical}
 
 <script>
 
-let creatures = JSON.parse(localStorage.getItem("dm_creatures")||"[]");
-let editingIndex = null;
-let initiative = [];
-let activeTurn = null;
+let creatures=JSON.parse(localStorage.getItem("dm_creatures")||"[]")
+let editingIndex=null
 
-function saveCreatures(){
-    localStorage.setItem("dm_creatures",JSON.stringify(creatures));
+let initiative=[]
+let activeTurn=0
+
+function toggleCreatures(){document.getElementById("creatures").classList.toggle("collapsed")}
+function toggleLog(){document.getElementById("log").classList.toggle("collapsed")}
+
+function saveCreatures(){localStorage.setItem("dm_creatures",JSON.stringify(creatures))}
+
+function buildLibrary(filter=""){
+
+const nav=document.getElementById("creatures")
+nav.innerHTML=""
+
+const search=document.createElement("input")
+search.placeholder="Search"
+search.value=filter
+search.oninput=()=>buildLibrary(search.value)
+nav.appendChild(search)
+
+const newBtn=document.createElement("button")
+newBtn.textContent="Create Creature"
+newBtn.onclick=()=>openBuilder()
+nav.appendChild(newBtn)
+
+const folders={}
+
+creatures.forEach((c,i)=>{
+if(filter && !c.name.toLowerCase().includes(filter.toLowerCase())) return
+
+if(!folders[c.folder]) folders[c.folder]=[]
+folders[c.folder].push({data:c,index:i})
+})
+
+for(const f in folders){
+
+const folder=document.createElement("div")
+folder.className="folder"
+folder.textContent=f||"Misc"
+nav.appendChild(folder)
+
+folders[f].forEach(obj=>{
+
+const e=document.createElement("div")
+e.className="enemy"
+e.textContent=obj.data.name
+
+e.onclick=()=>loadEnemy(obj.index)
+
+nav.appendChild(e)
+
+})
+
 }
 
-function toggleCreatures(){
-    document.getElementById("creatures").classList.toggle("collapsed");
 }
 
-function toggleLog(){
-    document.getElementById("log").classList.toggle("collapsed");
-}
-
-/* MODIFIER CALCULATOR */
 function mod(v){
-    v = parseInt(v) || 0;
-    const m = Math.floor((v - 10) / 2);
-    return (m >= 0 ? "+" : "") + m;
+v=parseInt(v)||0
+const m=Math.floor((v-10)/2)
+return (m>=0?"+":"")+m
 }
 
-/* LIBRARY */
-function buildLibrary(){
-    const nav = document.getElementById("creatures");
-    nav.innerHTML = "";
-
-    const newBtn = document.createElement("button");
-    newBtn.textContent = "Create Creature";
-    newBtn.onclick = () => openBuilder();
-    nav.appendChild(newBtn);
-
-    const folders = {};
-
-    creatures.forEach((c, i) => {
-        const fName = c.folder || "Misc";
-        if(!folders[fName]) folders[fName] = [];
-        folders[fName].push({data: c, index: i});
-    });
-
-    for(const f in folders){
-        const folderHead = document.createElement("div");
-        folderHead.className = "folder";
-        folderHead.textContent = f;
-        nav.appendChild(folderHead);
-
-        folders[f].forEach(obj => {
-            const e = document.createElement("div");
-            e.className = "enemy";
-            e.textContent = obj.data.name;
-            e.onclick = () => loadEnemy(obj.index);
-            nav.appendChild(e);
-        });
-    }
+function collapseSection(id){
+const el=document.getElementById(id)
+el.style.display=(el.style.display=="none"?"block":"none")
 }
 
-/* LOAD CREATURE */
-function loadEnemy(i){
-    const c = creatures[i];
-    let actionsHtml = "";
+function loadEnemy(i,instance=null){
 
-    if(c.actions){
-        c.actions.forEach(a => {
-            actionsHtml += `
-            <div class="section">
-                <h2>${a.name}</h2>
-                <p>${a.desc}</p>
-                <button onclick="roll('${a.roll}','${a.name}')">Roll ${a.roll}</button>
-            </div>`;
-        });
-    }
+const c=creatures[i]
 
-    let hpSection = "";
-    if(c.hp){
-        const currentHP = c.hp_current !== undefined ? c.hp_current : c.hp;
-        hpSection = `
-        <div class="section">
-            <h2>HP Tracker</h2>
-            <div id="hpDisplay" style="font-size:1.5rem; margin-bottom:0.5em;">${currentHP} / ${c.hp}</div>
-            <div class="hpRow">
-                <input id="hpAmount" type="number" placeholder="Amt">
-                <button onclick="damage(${i})">-</button>
-                <button onclick="heal(${i})">+</button>
-                <button onclick="resetHP(${i})">Reset</button>
-            </div>
-        </div>`;
-    }
+let hp=instance?initiative[instance].hp:c.hp
 
-    const html = `
-    <div class="section">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2>${c.name}</h2>
-            <div>
-                <button onclick="editCreature(${i})">Edit</button>
-                <button onclick="deleteCreature(${i})" style="color:#ff8e8e">Delete</button>
-            </div>
-        </div>
-        <p>${c.desc || "No description provided."}</p>
-    </div>
+let actions=""
 
-    <div class="section">
-        <h2>Stats</h2>
-        <div style="font-size:1.35em; font-weight:600; letter-spacing:.03em; margin-bottom:.4em">AC ${c.ac} | HP ${c.hp} | Spd ${c.speed}</div>
-        <div class="statgrid">
-            <div class="statbox">STR<br>${c.str} (${mod(c.str)})</div>
-            <div class="statbox">DEX<br>${c.dex} (${mod(c.dex)})</div>
-            <div class="statbox">CON<br>${c.con} (${mod(c.con)})</div>
-            <div class="statbox">INT<br>${c.int} (${mod(c.int)})</div>
-            <div class="statbox">WIS<br>${c.wis} (${mod(c.wis)})</div>
-            <div class="statbox">CHA<br>${c.cha} (${mod(c.cha)})</div>
-        </div>
-    </div>
-    ${hpSection}
-    ${actionsHtml}`;
+c.actions.forEach(a=>{
+actions+=`<div class="section"><h2 onclick="collapseSection('act${a.name}')">${a.name}</h2><div id="act${a.name}"><p>${a.desc}</p><button onclick="roll('${a.roll}','${a.name}','damage')">Roll ${a.roll}</button></div></div>`
+})
 
-    document.getElementById("content").innerHTML = html;
+const html=`
+
+<div class="section">
+<h2>${c.name}</h2>
+<p>${c.desc}</p>
+<button onclick="editCreature(${i})">Edit</button>
+<button onclick="deleteCreature(${i})">Delete</button>
+<button onclick="duplicateCreature(${i})">Duplicate</button>
+<button onclick="addCreatureToInitiative(${i})">Add to Initiative</button>
+</div>
+
+<div class="section">
+<h2 onclick="collapseSection('stats')">Stats</h2>
+<div id="stats">
+<div style="margin-bottom:.4em">AC ${c.ac} | HP ${hp} | Speed ${c.speed}</div>
+
+<div class="statgrid">
+<div class="statbox" onclick="roll('1d20+${mod(c.str)}','STR Check','check')">STR<br>${c.str} (${mod(c.str)})</div>
+<div class="statbox" onclick="roll('1d20+${mod(c.dex)}','DEX Check','check')">DEX<br>${c.dex} (${mod(c.dex)})</div>
+<div class="statbox" onclick="roll('1d20+${mod(c.con)}','CON Check','check')">CON<br>${c.con} (${mod(c.con)})</div>
+<div class="statbox" onclick="roll('1d20+${mod(c.int)}','INT Check','check')">INT<br>${c.int} (${mod(c.int)})</div>
+<div class="statbox" onclick="roll('1d20+${mod(c.wis)}','WIS Check','check')">WIS<br>${c.wis} (${mod(c.wis)})</div>
+<div class="statbox" onclick="roll('1d20+${mod(c.cha)}','CHA Check','check')">CHA<br>${c.cha} (${mod(c.cha)})</div>
+</div>
+</div>
+</div>
+
+${actions}`
+
+ document.getElementById("content").innerHTML=html
+
 }
 
-/* HP FUNCTIONS */
-function damage(i){
-    const amt = parseInt(document.getElementById("hpAmount").value) || 0;
-    if(creatures[i].hp_current === undefined) creatures[i].hp_current = creatures[i].hp;
-    creatures[i].hp_current -= amt;
-    saveCreatures();
-    loadEnemy(i);
+function duplicateCreature(i){
+const copy=JSON.parse(JSON.stringify(creatures[i]))
+copy.name=copy.name+" Copy"
+creatures.push(copy)
+saveCreatures()
+buildLibrary()
 }
 
-function heal(i){
-    const amt = parseInt(document.getElementById("hpAmount").value) || 0;
-    if(creatures[i].hp_current === undefined) creatures[i].hp_current = creatures[i].hp;
-    creatures[i].hp_current += amt;
-    saveCreatures();
-    loadEnemy(i);
+function deleteCreature(i){
+creatures.splice(i,1)
+saveCreatures()
+buildLibrary()
+document.getElementById("content").innerHTML=""
 }
 
-function resetHP(i){
-    creatures[i].hp_current = creatures[i].hp;
-    saveCreatures();
-    loadEnemy(i);
+function addCreatureToInitiative(i){
+
+const c=creatures[i]
+
+initiative.push({
+name:c.name,
+score:0,
+hp:c.hp,
+creatureIndex:i
+})
+
+renderInit()
+
 }
 
-/* INITIATIVE */
-function addInit(){
-    const name = document.getElementById("init_name").value;
-    const score = parseInt(document.getElementById("init_score").value) || 0;
-    if(!name) return;
-    initiative.push({name, score});
-    initiative.sort((a,b) => b.score - a.score);
-    renderInit();
+function addInitCustom(){
+
+const name=document.getElementById("init_name").value
+const score=parseInt(document.getElementById("init_score").value)||0
+const hp=parseInt(document.getElementById("init_hp").value)||0
+
+initiative.push({name,score,hp,creatureIndex:null})
+
+initiative.sort((a,b)=>b.score-a.score)
+
+renderInit()
+
 }
 
-function clearInitiative(){
-    initiative = [];
-    activeTurn = null;
-    renderInit();
+function nextTurn(){
+if(initiative.length===0) return
+activeTurn++
+if(activeTurn>=initiative.length) activeTurn=0
+renderInit()
 }
+
+function clearInitiative(){initiative=[];renderInit()}
 
 function renderInit(){
-    const list = document.getElementById("init_list");
-    list.innerHTML = "";
-    initiative.forEach((c, i) => {
-        const row = document.createElement("div");
-        row.className = "initRow" + (i === activeTurn ? " active" : "");
-        row.innerHTML = `<span>${c.name}</span> <span>${c.score}</span>`;
-        row.onclick = () => {
-            activeTurn = i;
-            renderInit();
-        };
-        list.appendChild(row);
-    });
+
+const list=document.getElementById("init_list")
+list.innerHTML=""
+
+initiative.forEach((c,i)=>{
+
+const row=document.createElement("div")
+row.className="initRow"
+
+if(i===activeTurn) row.classList.add("active")
+
+row.innerHTML=`
+<span>${c.name}</span>
+<input class="initHP" value="${c.hp}" onchange="updateHP(${i},this.value)">
+`
+
+row.onclick=(e)=>{
+
+if(e.target.classList.contains("initHP")) return
+
+activeTurn=i
+
+if(c.creatureIndex!==null)
+loadEnemy(c.creatureIndex,i)
+
+renderInit()
+
+}
+
+list.appendChild(row)
+
+})
+
+}
+
+function updateHP(i,val){
+initiative[i].hp=parseInt(val)||0
+}
+
+function roll(formula,label,type="attack"){
+
+const parts=formula.split("d")
+const count=parseInt(parts[0])
+const rest=parts[1].split("+")
+
+const sides=parseInt(rest[0])
+const bonus=rest[1]?parseInt(rest[1]):0
+
+let total=bonus
+
+for(let i=0;i<count;i++) total+=Math.floor(Math.random()*sides)+1
+
+log(`${label} ${formula} → ${total}`,type)
+
+}
+
+function log(text,type){
+
+const e=document.createElement("div")
+
+e.className="logEntry"
+if(type==="damage") e.classList.add("logDamage")
+if(type==="attack") e.classList.add("logAttack")
+if(type==="check") e.classList.add("logCheck")
+
+e.textContent=`[${new Date().toLocaleTimeString()}] ${text}`
+
+document.getElementById("logEntries").appendChild(e)
+
 }
 
 /* BUILDER */
-function openBuilder(data=null, index=null){
-    editingIndex = index;
-    const c = document.getElementById("content");
-    c.innerHTML = `
-    <div class="section">
-        <h2>${data ? 'Edit' : 'Create'} Creature</h2>
-        Name <input id="c_name" value="${data?.name||""}">
-        Folder <input id="c_folder" value="${data?.folder||""}">
-        Description <textarea id="c_desc">${data?.desc||""}</textarea>
-        AC <input id="c_ac" value="${data?.ac||""}">
-        HP <input id="c_hp" value="${data?.hp||""}">
-        Speed <input id="c_speed" value="${data?.speed||""}">
-        <div class="statgrid">
-            <input id="c_str" placeholder="STR" value="${data?.str||""}">
-            <input id="c_dex" placeholder="DEX" value="${data?.dex||""}">
-            <input id="c_con" placeholder="CON" value="${data?.con||""}">
-            <input id="c_int" placeholder="INT" value="${data?.int||""}">
-            <input id="c_wis" placeholder="WIS" value="${data?.wis||""}">
-            <input id="c_cha" placeholder="CHA" value="${data?.cha||""}">
-        </div>
-        <h2>Actions</h2>
-        <div id="actions_fields"></div>
-        <button onclick="addActionField()">+ Add Action</button>
-        <br><br>
-        <button onclick="saveCreature()" style="background:var(--accent); color:var(--bg); font-weight:bold;">Save Creature</button>
-        <button onclick="buildLibrary()">Cancel</button>
-    </div>`;
 
-    if(data && data.actions){
-        data.actions.forEach(a => addActionField(a));
-    } else {
-        addActionField();
-    }
+function openBuilder(data=null,index=null){
+editingIndex=index
+
+const c=document.getElementById("content")
+
+c.innerHTML=`
+<div class="section">
+<h2>Create Creature</h2>
+
+Name
+<input id="c_name" value="${data?.name||""}">
+
+Folder
+<input id="c_folder" value="${data?.folder||""}">
+
+Description
+<textarea id="c_desc">${data?.desc||""}</textarea>
+
+AC
+<input id="c_ac" value="${data?.ac||""}">
+
+HP
+<input id="c_hp" value="${data?.hp||""}">
+
+Speed
+<input id="c_speed" value="${data?.speed||""}">
+
+<div class="statgrid">
+<input id="c_str" placeholder="STR" value="${data?.str||""}">
+<input id="c_dex" placeholder="DEX" value="${data?.dex||""}">
+<input id="c_con" placeholder="CON" value="${data?.con||""}">
+<input id="c_int" placeholder="INT" value="${data?.int||""}">
+<input id="c_wis" placeholder="WIS" value="${data?.wis||""}">
+<input id="c_cha" placeholder="CHA" value="${data?.cha||""}">
+</div>
+
+<h2>Actions</h2>
+<div id="actions"></div>
+
+<button onclick="addActionField()">Add Action</button>
+
+<br><br>
+
+<button onclick="saveCreature()">Save Creature</button>
+
+</div>`
+
+if(data && data.actions){data.actions.forEach(a=>addActionField(a))}
+else addActionField()
+
 }
 
 function addActionField(a=null){
-    const container = document.getElementById("actions_fields");
-    const div = document.createElement("div");
-    div.style.borderBottom = "1px solid var(--border)";
-    div.style.marginBottom = "1em";
-    div.innerHTML = `
-        Action Name <input class="a_name" value="${a?.name||""}">
-        Description <textarea class="a_desc">${a?.desc||""}</textarea>
-        Roll (e.g. 1d20+5) <input class="a_roll" value="${a?.roll||""}">
-    `;
-    container.appendChild(div);
+
+const container=document.getElementById("actions")
+
+const div=document.createElement("div")
+
+ div.innerHTML=`
+Action Name
+<input class="a_name" value="${a?.name||""}">
+
+Description
+<textarea class="a_desc">${a?.desc||""}</textarea>
+
+Roll
+<input class="a_roll" value="${a?.roll||""}">
+`
+
+container.appendChild(div)
+
 }
 
 function saveCreature(){
-    const nameVal = document.getElementById("c_name").value;
-    if(!nameVal){ alert("Name is required"); return; }
 
-    const actions = [];
-    const names = document.querySelectorAll(".a_name");
-    const descs = document.querySelectorAll(".a_desc");
-    const rolls = document.querySelectorAll(".a_roll");
+const actions=[]
 
-    for(let i=0; i<names.length; i++){
-        if(names[i].value.trim() === "") continue;
-        actions.push({
-            name: names[i].value,
-            desc: descs[i].value,
-            roll: rolls[i].value
-        });
-    }
+const names=document.querySelectorAll(".a_name")
+const descs=document.querySelectorAll(".a_desc")
+const rolls=document.querySelectorAll(".a_roll")
 
-    const creature = {
-        name: nameVal,
-        folder: document.getElementById("c_folder").value,
-        desc: document.getElementById("c_desc").value,
-        ac: document.getElementById("c_ac").value,
-        hp: parseInt(document.getElementById("c_hp").value) || 0,
-        speed: document.getElementById("c_speed").value,
-        str: document.getElementById("c_str").value,
-        dex: document.getElementById("c_dex").value,
-        con: document.getElementById("c_con").value,
-        int: document.getElementById("c_int").value,
-        wis: document.getElementById("c_wis").value,
-        cha: document.getElementById("c_cha").value,
-        actions: actions
-    };
+for(let i=0;i<names.length;i++){
 
-    if(editingIndex !== null){
-        creatures[editingIndex] = creature;
-        editingIndex = null;
-    } else {
-        creatures.push(creature);
-    }
+if(names[i].value.trim()==="") continue
 
-    saveCreatures();
-    buildLibrary();
-    alert("Creature saved");
+ actions.push({
+ name:names[i].value,
+ desc:descs[i].value,
+ roll:rolls[i].value
+ })
+
 }
 
-function editCreature(i){ openBuilder(creatures[i], i); }
-
-function deleteCreature(i){
-    if(!confirm("Delete creature?")) return;
-    creatures.splice(i, 1);
-    saveCreatures();
-    buildLibrary();
-    document.getElementById("content").innerHTML = '<div class="section"><h2>Welcome</h2>Select a creature.</div>';
+const creature={
+name:document.getElementById("c_name").value,
+folder:document.getElementById("c_folder").value,
+desc:document.getElementById("c_desc").value,
+ac:document.getElementById("c_ac").value,
+hp:parseInt(document.getElementById("c_hp").value)||0,
+speed:document.getElementById("c_speed").value,
+str:document.getElementById("c_str").value,
+dex:document.getElementById("c_dex").value,
+con:document.getElementById("c_con").value,
+int:document.getElementById("c_int").value,
+wis:document.getElementById("c_wis").value,
+cha:document.getElementById("c_cha").value,
+actions
 }
 
-/* DICE */
-function roll(formula, label){
-    try {
-        const parts = formula.toLowerCase().split("d");
-        const count = parseInt(parts[0]) || 1;
-        const rest = parts[1].split("+");
-        const sides = parseInt(rest[0]);
-        const bonus = rest[1] ? parseInt(rest[1]) : 0;
-
-        let total = bonus;
-        let rolls = [];
-        for(let i=0; i<count; i++){
-            let r = Math.floor(Math.random() * sides) + 1;
-            rolls.push(r);
-            total += r;
-        }
-        log(`${label}: ${formula} (${rolls.join('+')}${bonus ? '+'+bonus : ''}) → ${total}`);
-    } catch(e) {
-        log(`Invalid formula: ${formula}`);
-    }
+if(editingIndex!==null){
+creatures[editingIndex]=creature
+editingIndex=null
+}else{
+creatures.push(creature)
 }
 
-function log(text){
-    const e = document.createElement("div");
-    e.className = "logEntry";
-    e.innerHTML = `[${new Date().toLocaleTimeString()}] ${text}`;
-    const logBox = document.getElementById("logEntries");
-    logBox.prepend(e);
+saveCreatures()
+buildLibrary()
+alert("Creature saved")
+
 }
 
-buildLibrary();
+function editCreature(i){openBuilder(creatures[i],i)}
+
+buildLibrary()
+
 </script>
 
 </body>
