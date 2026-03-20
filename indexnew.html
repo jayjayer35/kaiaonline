@@ -209,6 +209,25 @@
         margin: 0 auto;
       }
       .narrow-tile { max-width: 100%; }
+      .intro-layout {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .about-photo {
+        width: 10rem; /* shrink image */
+        max-width: 80%;
+        margin-bottom: 0.5rem;
+      }
+      .column.center {
+        display: flex;
+        flex-direction: column;
+      }
+
+      #alert-tile {
+        order: -1;
+      }
     }
 
     @media (max-width: 37.5rem) {
@@ -459,6 +478,17 @@
 .yt-link:hover {
   transform: scale(1.12) rotate(-4deg);
 }
+
+.alert-tile {
+  background: #e6d6ff; /* lavender */
+  border: 0.15rem solid #c2a8f0;
+}
+
+.alert-tile h2 {
+  background: #cbb3f5;
+  border-bottom: 0.15rem solid #a98edc;
+  color: white;
+}
    </style>
 </head>
 
@@ -487,6 +517,7 @@
     <div class="dropdown">
       <a href="#">for u</a> - 
       <div class="dropdown-content">
+        <!-- <a href="vintagestory.html">vintage story</a> -->
         <a href="bookmarks.html">bookmarks</a>
         <a href="recommendations.html">recs</a>
         <a href="mystuf.html">creations</a>
@@ -545,7 +576,16 @@
     </div>
 
     <!-- MIDDLE -->
-    <div class="column center">
+    <div class="column center" id="alert-tile">
+      <div class="tile alert-tile">
+        <h2>hey!</h2>
+        <p style="text-align: center;">
+          i have a vintage story server! if you'd like to join, the ip is 169.155.120.184:9010 !!<br> <br>
+
+          you'll have 3 lives, and a 10000 block spawn radius. 30 day months and alsooo a bunch of mods. :3 <br>
+          (they will auto install on joining)
+        </p>
+      </div>
 
       <div class="tile about-intro">
         <h2>welcome to my site! (◕‿◕✿)</h2>
@@ -587,6 +627,12 @@
           <span style="text-align: center; font-size: 50%;"></span></h2>
         <div class="update-log">
           <div style="padding-bottom: .5rem;">
+            <em style="font-size: 80%;">7:13 PM - 3/19/26</em><br>
+            - blog post(s) probably? <br>
+            - creature creator hidden page still a WIP <br>
+            - fixed about tile on mobile!<br>
+            - added alert tile that will occasionally appear at the top of the site whenever i have something i want 
+            to say to anyone who visits the site!<br>
             <em style="font-size: 80%;">5:59 PM - 3/14/26</em><br>
             - blog post <br>
             - creature creator hidden page WIP <br>
