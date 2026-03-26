@@ -261,6 +261,7 @@ const html=`
 
 <div class="section">
 <h2>${c.name}</h2>
+<p style="color:var(--muted);font-size:.85em">${c.type||""}</p>
 <p>${c.desc}</p>
 <button onclick="editCreature(${i})">Edit</button>
 <button onclick="deleteCreature(${i})">Delete</button>
@@ -284,7 +285,16 @@ const html=`
 </div>
 </div>
 
-${actions}`
+
+
+${actions}
+
+<div class="section">
+<h2 onclick="collapseSection('notes')">Notes</h2>
+<div id="notes">
+<textarea onchange="updateNotes(${i},this.value)">${c.notes||""}</textarea>
+</div>
+</div>`
 
  document.getElementById("content").innerHTML=html
 
@@ -432,8 +442,14 @@ Name
 Folder
 <input id="c_folder" value="${data?.folder||""}">
 
+Type (Undead, Celestial, etc)
+<input id="c_type" value="${data?.type||""}">
+
 Description
 <textarea id="c_desc">${data?.desc||""}</textarea>
+
+Notes (session notes, tactics, reminders)
+<textarea id="c_notes">${data?.notes||""}</textarea>
 
 AC
 <input id="c_ac" value="${data?.ac||""}">
@@ -443,6 +459,12 @@ HP
 
 Speed
 <input id="c_speed" value="${data?.speed||""}">
+
+Resistances
+<input id="resist" value="${data?.resist||""}">
+
+Immunities
+<input id="immune" value="${data?.immune||""}">
 
 <div class="statgrid">
 <input id="c_str" placeholder="STR" value="${data?.str||""}">
@@ -490,6 +512,11 @@ container.appendChild(div)
 
 }
 
+function updateNotes(i,val){
+ creatures[i].notes = val
+ saveCreatures()
+}
+
 function saveCreature(){
 
 const actions=[]
@@ -511,12 +538,16 @@ if(names[i].value.trim()==="") continue
 }
 
 const creature={
+ notes:document.getElementById("c_notes").value,
+ type:document.getElementById("c_type").value,
 name:document.getElementById("c_name").value,
 folder:document.getElementById("c_folder").value,
 desc:document.getElementById("c_desc").value,
 ac:document.getElementById("c_ac").value,
 hp:parseInt(document.getElementById("c_hp").value)||0,
 speed:document.getElementById("c_speed").value,
+resist:document.getElementById("resist").value,
+immune:document.getElementById("immune").value,
 str:document.getElementById("c_str").value,
 dex:document.getElementById("c_dex").value,
 con:document.getElementById("c_con").value,
