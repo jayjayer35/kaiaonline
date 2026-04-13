@@ -6,19 +6,7 @@ const IPINFO_TOKEN = process.env.IPINFO_TOKEN;
 // Random messages
 function getRandomMessage() {
   const messages = [
-    "A new traveler has arrived.",
-    "Welcome! Someone new is here.",
-    "THAT'S RIGHT!! NOW'S YOUR CHANCE TO BE A [[BIG SHOT]]!!",
-    "New Website Visit lololololol",
-    "New visitor detected!",
-    "Someone just stopped by!",
-    "A new name, forever etched into the hall of remembrance.",
-    "A new traveler has entered the solar system!",
-    "A strange light fills the room...",
-    "A mysterious figure is across the horizon",
-    "Welcome home!",
-    "A follower of the flame has arrived",
-    "Horizon cracks in light of someone new"
+    "Look, someone stopped by"
   ];
   return messages[Math.floor(Math.random() * messages.length)];
 }
@@ -33,6 +21,11 @@ const gifs = [
   "https://kaia.starscene.com/assets/owgames.gif",
   "https://kaia.starscene.com/assets/owlk.gif",
   "https://kaia.starscene.com/assets/ratsss.gif",
+  "https://kaia.starscene.com/assets/garn47.gif",
+  "https://kaia.starscene.com/assets/skeleton.gif",
+  "https://kaia.starscene.com/assets/snailien.gif",
+  "https://kaia.starscene.com/assets/franz.gif",
+  "https://kaia.starscene.com/assets/.gif",
 ];
 
 // Get location from IP
@@ -141,10 +134,10 @@ exports.handler = async (event) => {
           embeds: [
             {
               title: getRandomMessage(),
-              description: `Visitor #**${record.count}** just visited.`,
+              description: `Visitor #**${record.count}**.`,
               color: 0xffb6c1,
               fields: [
-                { name: "Location", value: locationText, inline: true },
+                { name: "From:", value: locationText, inline: true },
                 /* { name: "IP Address", value: visitorIP, inline: true } */
               ],
               image: { url: randomGif },
