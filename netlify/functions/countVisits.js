@@ -1,12 +1,16 @@
-const BIN_URL = 'https://api.jsonbin.io/v3/b/689937f9ae596e708fc718f9'; // replace with your bin URL
-const BIN_API_KEY = '$2a$10$UzWzekC9pYB.ho/FqEH7oOGidp3/9ZBv4JcsLsTFj00vfuAVbVfSy'; // replace with your JSON bin API key
-const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL; // put in Netlify env vars
+const BIN_URL = 'https://api.jsonbin.io/v3/b/689937f9ae596e708fc718f9'; //your bin URL you IDIOT
+const BIN_API_KEY = '$2a$10$UzWzekC9pYB.ho/FqEH7oOGidp3/9ZBv4JcsLsTFj00vfuAVbVfSy'; //JSON bin API key
+const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL; //Netlify env vars
 const IPINFO_TOKEN = process.env.IPINFO_TOKEN;
 
 // Random messages
 function getRandomMessage() {
   const messages = [
-    "Look, someone stopped by"
+    "Look, someone stopped by",
+    "How kind of this person to check out my site!",
+    "Welcome :)",
+    "Hi :3",
+    "Grab a snack!"
   ];
   return messages[Math.floor(Math.random() * messages.length)];
 }
