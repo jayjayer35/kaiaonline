@@ -577,12 +577,12 @@
 
     <!-- MIDDLE -->
     <div class="column center" id="alert-tile">
-      <!-- <div class="tile alert-tile">
+      <div class="tile alert-tile">
         <h2>alert!</h2>
         <p style="text-align: center;">
-          this site is on a temporary hiatus. i lack the energy to work on it as of now, which means a lot of the site will remain broken for a little bit. sorry! <br><br>also thank you for (over) 1000 unique visitors!
+          hi hi :3
         </p>
-      </div> -->
+      </div>
 
       <div class="tile about-intro">
         <h2>welcome to my site! (◕‿◕✿)</h2>
@@ -885,7 +885,7 @@
     const endpoint = "/.netlify/functions/getSteamStatus";
 
     let health = Math.floor(Math.random() * 31) + 70;      // 70-100%
-    let battery = Math.floor(Math.random() * 101);         // 0-100%
+    let battery = Math.floor(Math.random() * 51) + 0;         // 0-100%
 
     function updateKaiaStatus() {
     const changeHealth = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1);
