@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kaia online — dont forget</title>
+  <title>a storm of tomorrow</title>
   <style>
     @font-face {
       font-family: "NDS";
@@ -257,6 +257,155 @@
       opacity: 1;
       visibility: visible;
     }
+
+    /* deepest fear poem sequence */
+    body {
+      position: relative;
+      min-height: 100vh;
+      transition: background-color 2.8s ease, color 2.8s ease;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: #080912 url('rework/assets/general/bkg1_dark.png');
+      image-rendering: pixelated;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 2.8s ease;
+      z-index: 0;
+    }
+
+    body.poem-started {
+      background-color: #080912;
+      color: #dfe7ff;
+    }
+
+    body.poem-started::before { opacity: 1; }
+
+    main { position: relative; z-index: 1; }
+
+    body.poem-started header {
+      background: #41506b;
+      border-bottom-color: #2d364d;
+      box-shadow: 0 0.125rem 0.75rem #080912;
+      transition: background 2.8s ease, border-color 2.8s ease, box-shadow 2.8s ease;
+    }
+
+    .poem-scene {
+      position: relative;
+      width: min(44rem, 88vw);
+      min-height: 15rem;
+      margin: 0 auto;
+    }
+
+    body.poem-reading .poem-scene { min-height: 80vh; }
+
+    .poem-tile {
+      width: min(30rem, 88vw);
+      max-width: 44rem;
+      text-align: center;
+      overflow: hidden;
+      margin: 0 auto;
+      transition: opacity 1.8s ease, filter 1.8s ease, background 2.8s ease, border-color 2.8s ease, box-shadow 2.8s ease;
+    }
+
+    body.poem-started .poem-tile {
+      background: rgba(12, 14, 26, 0.88);
+      border-color: #465273;
+      box-shadow: 0 0 1.5rem rgba(137, 166, 230, 0.24);
+    }
+
+    body.poem-started .poem-tile h2 {
+      background: #303a56;
+      border-bottom-color: #55658a;
+      transition: background 2.8s ease, border-color 2.8s ease;
+    }
+
+    body.poem-reading .poem-tile {
+      opacity: 0;
+      transform: translateY(-0.75rem) scale(0.98);
+      filter: blur(0.1rem);
+      pointer-events: none;
+    }
+
+    .poem-intro {
+      margin: 1.4rem auto 1rem;
+      max-width: 32rem;
+      line-height: 1.2;
+    }
+
+    .poem-start-button {
+      font-family: 'NDS', sans-serif;
+      font-size: 1.35rem;
+      color: white;
+      background: var(--tile-header-bg);
+      border: 0.15rem solid var(--tile-header-border);
+      border-radius: 0.1em;
+      padding: 0.45rem 1rem;
+      cursor: pointer;
+      image-rendering: pixelated;
+      transition: transform 0.2s ease, background 2.8s ease, border-color 2.8s ease, opacity 1s ease;
+    }
+
+    .poem-start-button:hover { transform: scale(1.06); }
+
+    body.poem-started .poem-start-button {
+      background: #303a56;
+      border-color: #55658a;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .poem-stage {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: min(42rem, 88vw);
+      transform: translateX(-50%) translateY(1rem);
+      opacity: 0;
+      pointer-events: none;
+      text-align: center;
+      color: #dfe7ff;
+      text-shadow: 0 0 0.6rem rgba(8, 9, 18, 0.95);
+      transition: opacity 2s ease, transform 2s ease;
+    }
+
+    body.poem-reading .poem-stage {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .poem-lines {
+      margin: 0 auto;
+      padding: 0.5rem 0 4rem;
+      line-height: 1.25;
+    }
+
+    .poem-line {
+      display: block;
+      opacity: 0;
+      transform: translateY(0.45rem);
+      transition: opacity 1.4s ease, transform 1.4s ease;
+      margin: 0.25rem 0;
+      white-space: pre-wrap;
+    }
+
+    .poem-line.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .poem-line.gap { margin-top: 1.2rem; }
+
+    @media (max-width: 37.5rem) {
+      .poem-scene { width: min(92vw, 42rem); }
+      .poem-tile { width: min(30rem, 92vw); }
+      .poem-stage { width: min(42rem, 92vw); }
+      .poem-start-button { font-size: 1rem; }
+    }
+
   </style>
 </head>
 <body>
@@ -309,18 +458,141 @@
 <main>
   <div class="wrapper">
     <div class="column">
-      <div class="tile">
-        <h2>wip</h2>
-        <p style="text-align: center;">will write something soon, probably emotional<br><br>---<br><br>
-          
-<em></em> 
-</p>
+      <div class="poem-scene">
+        <div class="tile poem-tile">
+          <h2>a storm of tomorrow</h2>
+          <p class="poem-intro">written by me, for you.</p>
+          <button class="poem-start-button" id="startPoem" type="button">begin</button>
+        </div>
+
+        <div class="poem-stage" id="poemStage" aria-live="polite">
+          <div class="poem-lines" id="poemLines"></div>
+        </div>
       </div>
     </div>
   </div>
- 
 </main>
 
+
+
+<script>
+  const poemLines = [
+    '“their heart aches,“',
+    '',
+    '“Not of sadness, look closer.”',
+    '',
+    '“joy, then?”',
+    '',
+    '“Something like it.“',
+    '“Something fuller.”',
+    '',
+    '“…and yet they cry”',
+    '',
+    '“Of course they do.”',
+    '',
+    '“those tears,“',
+    '“they think it means something is wrong”',
+    '',
+    '“They always do.”',
+    '',
+    '"confusion floods their mind,',
+    '"they can’t make sense of any of it"',
+    '',
+    '“They aren’t meant to.”',
+    '',
+    '“…then what is this?”',
+    '',
+    '“Becoming.”',
+    '',
+    '“they believe they are breaking,”',
+    '',
+    '“They are stretching.”',
+    '',
+    '“into what?”',
+    '',
+    '',
+    '“Someone who can hold this much.”',
+    '',
+    '“it looks painful”',
+    '',
+    '“It is.”',
+    '',
+    '“…should we help?”',
+    '',
+    '“They would call it silence if we took it away.”',
+    '',
+    '“look,”',
+    '',
+    '“Yes.”',
+    '',
+    '“they’re choosing to stay”',
+    '',
+    '“They always do.”',
+    '',
+    '“see how they hold it now?”',
+    '',
+    '“They’re not asking it to stop anymore,”',
+    '',
+    '“…no.”',
+    '“they’re listening to it.”',
+    '',
+    '...',
+    '',
+    '“I do not think this is pain to them.”',
+    '',
+    '"then what do you think it is?',
+    '',
+    '"A moment of survivability."',
+    '',
+    '"do you think they would want this again?"',
+    '',
+    '"Yes."',
+    '"This is the closest they will come to touching everything at once"',
+    '',
+    '"what will they make of this?"',
+    '',
+    '"They will call it love."',
+  ];
+
+
+  const startButton = document.getElementById('startPoem');
+  const poemContainer = document.getElementById('poemLines');
+  let hasStarted = false;
+
+  function buildPoemLines() {
+    poemContainer.innerHTML = '';
+
+    poemLines.forEach((text) => {
+      const line = document.createElement('span');
+      line.className = text === '' ? 'poem-line gap' : 'poem-line';
+      line.textContent = text === '' ? '\u00A0' : text;
+      poemContainer.appendChild(line);
+    });
+  }
+
+  startButton.addEventListener('click', () => {
+    if (hasStarted) return;
+    hasStarted = true;
+
+    document.body.classList.add('poem-started');
+
+    window.setTimeout(() => {
+      buildPoemLines();
+      document.body.classList.add('poem-reading');
+
+      const lines = poemContainer.querySelectorAll('.poem-line');
+
+      window.setTimeout(() => {
+        lines.forEach((line, index) => {
+          window.setTimeout(() => {
+            line.classList.add('visible');
+            line.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, index * 3000);
+        });
+      }, 900);
+    }, 2800);
+  });
+</script>
 
 </body>
 </html>
