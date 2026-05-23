@@ -222,8 +222,8 @@
     .rail-button:hover,
     .rail-button.active {
       background: #cfddffc5;
-      transform: translateX(0.25rem);
-      box-shadow: 0.18rem 0.18rem 0 var(--tile-header-border);
+      transform: translateX(0.15rem);
+      box-shadow: 0.18rem 0.18rem 0 rgba(32, 7, 255, 0.14);
     }
 
     .bookmark-content {
@@ -287,8 +287,8 @@
     }
 
     .lane:hover {
-      transform: translateX(0.3rem);
-      box-shadow: 0.25rem 0.25rem 0 rgba(156,167,195,.55);
+      transform: translateX(0.2rem);
+      box-shadow: 0.15rem 0.15rem 0 rgba(156,167,195,.55);
     }
 
     .lane-label {
@@ -318,7 +318,7 @@
       text-decoration: none;
       background: var(--pale-blue);
       border: 0.1rem solid transparent;
-      border-radius: 999rem;
+      border-radius: 0.2rem;
       padding: 0.28rem 0.55rem 0.22rem;
       font-size: 1.15rem;
       line-height: 0.9;
@@ -367,6 +367,8 @@
       transform: translateY(-0.15rem);
       background: var(--soft-pink);
       border-color: #d6bfd0;
+
+      border-radius: 0.2rem;
     }
 
     .site-link:hover::after {
@@ -391,7 +393,7 @@
     .bookmark-bottom span {
       background: rgba(255,255,255,.8);
       border: 0.1rem solid var(--border-tile);
-      border-radius: 0.25rem;
+      border-radius: 0.01rem;
       padding: 0.35rem 0.45rem;
     }
 
@@ -530,6 +532,8 @@
             <button class="rail-button" data-filter="web">web</button>
             <button class="rail-button" data-filter="inspo">inspo</button>
             <button class="rail-button" data-filter="fun">fun</button>
+            <button class="rail-button" data-filter="games">games</button>
+            <button class="rail-button" data-filter="wikis">wikis</button>
             <button class="rail-button" data-filter="misc">misc</button>
           </aside>
 
@@ -540,7 +544,8 @@
                 <strong>my virtual bookmarks!</strong>
                 <p>
                   a little directory for links i do not want to lose,
-                  i encourage you to explore!
+                  i encourage you to explore! <br><br>
+                  these will open in a new tab!
                 </p>
               </div>
 
@@ -556,19 +561,38 @@
 
                 <div class="lane-links">
                   <a class="site-link"
+                  href="https://learn-anything.xyz/"
+                  target="_blank"
+                  data-note="a great resource to find out how to begin or learn something new">learn anything xyz</a>
+                  <a class="site-link"
+                  href="https://fmhy.net/"
+                  target="_blank"
+                  data-note="a large library of useful resources, you didnt get this from me!">free media heck yeah</a>
+
+                  <a class="site-link"
                   href="https://dicecloud.com/"
                   target="_blank"
                   data-note="a very useful and modular character building site for D&D">dicecloud</a>
 
                   <a class="site-link"
-                  href="https://dicecloud.com/"
+                  href="https://www.strawberrymusicplayer.org/"
                   target="_blank"
-                  data-note="anvil calculator for the minecraft modpack terrafirmagreg">tfg anvil calculator</a>
+                  data-note="my music player of choice">strawberry music player!</a>
 
                   <a class="site-link"
-                  href="https://pzfans.com/en/B42/"
+                  href="https://kaomoji.you/en/"
                   target="_blank"
-                  data-note="full map for build 42 on project zomboid">b42 zomboid map</a>
+                  data-note="my go to kaomoji site">kaomoji</a>
+
+                  <a class="site-link"
+                  href="https://www.remove.bg/upload"
+                  target="_blank"
+                  data-note="tool for removing backgrounds on photos.">remove bg</a>
+
+                  <a class="site-link"
+                  href="https://vert.sh/"
+                  target="_blank"
+                  data-note="all purpose online file converter. images, audio, docs, and vids. entirely local">vert.sh</a>
                 </div>
               </div>
 
@@ -599,7 +623,22 @@
                   <a class="site-link"
                   href="https://www.imood.com/"
                   target="_blank"
-                  data-note="allows you to switch moods, and embed on your site">imood</a>
+                  data-note="allows you to switch a mood display, and embed on your site">imood</a>
+
+                  <a class="site-link"
+                  href="https://idbuttons.neocities.org/database/"
+                  target="_blank"
+                  data-note="cute collectable buttons to display on your site, to describe you!">identity buttons</a>
+
+                  <a class="site-link"
+                  href="https://docs.google.com/spreadsheets/d/1Q6LqU2nnnU60ARfc4NPdPbpCMIMl6WSDP_NWomr5OB4/edit?gid=1004256205#gid=1004256205"
+                  target="_blank"
+                  data-note="more identity buttons">identity buttons (spreadsheet)</a>
+
+                  <a class="site-link"
+                  href="https://wiby.org/"
+                  target="_blank"
+                  data-note="old and niche website finder">wiby</a>
                 </div>
               </div>
 
@@ -608,9 +647,9 @@
 
                 <div class="lane-links">
                   <a class="site-link"
-                  href="about:blank"
+                  href="https://libraryofbabel.info/"
                   target="_blank"
-                  data-note="boards and references">placeholder</a>
+                  data-note="a site i often use to figure out names for things">the library of babel</a>
                 </div>
               </div>
 
@@ -621,7 +660,7 @@
                   <a class="site-link"
                   href="https://wplace.live/"
                   target="_blank"
-                  data-note="a global version or r/place">wplace.live</a>
+                  data-note="a global version or r/place, set on the map of the world!">wplace.live</a>
 
                   <a class="site-link"
                   href="https://thankshrew.itch.io/skaian-survey"
@@ -632,7 +671,76 @@
                   href="https://radio.garden/"
                   target="_blank"
                   data-note="radio from around the world">radio garden</a>
+
+                  <a class="site-link"
+                  href="https://spinningrat.online/"
+                  target="_blank"
+                  data-note="spinning rats...">spinningrat.online</a>
+
+                  <a class="site-link"
+                  href="https://theuselessweb.com/"
+                  target="_blank"
+                  data-note="a random website!">the useless web</a>
+
+                  <a class="site-link"
+                  href="http://derpg.xyz/index.php"
+                  target="_blank"
+                  data-note="an interesting puzzle.">DERPG</a>
+
+                  <a class="site-link"
+                  href="https://neal.fun/deep-sea/"
+                  target="_blank"
+                  data-note="what lies at the bottom of the ocean??">The Deep Sea</a>
                   
+                </div>
+              </div>
+
+              <div class="lane" data-category="games">
+                <div class="lane-label">games</div>
+
+                <div class="lane-links">
+                  <a class="site-link"
+                  href="https://tetr.io/"
+                  target="_blank"
+                  data-note="my online tetris of choice, fun to play against people">TETR.IO</a>
+
+                  <a class="site-link"
+                  href="https://osu.ppy.sh/"
+                  target="_blank"
+                  data-note="one of my fav rhythm games~">osu!</a>
+
+                  <a class="site-link"
+                  href="https://oniichan.wtf/"
+                  target="_blank"
+                  data-note="resources for getting into and playing SDVX, for free">Oniichan.wtf</a>
+
+                  <a class="site-link"
+                  href="https://arcader.org/game/"
+                  target="_blank"
+                  data-note="html5 pac-man that i always played in high school to kill time">pac-man</a>
+
+                  <a class="site-link"
+                  href="https://prismlauncher.org/"
+                  target="_blank"
+                  data-note="my minecraft launcher of choice. you still need an account to use it!">prism launcher</a>
+                  
+                </div>
+              </div>
+
+              <div class="lane" data-category="wikis">
+                <div class="lane-label">wikis</div>
+
+                <div class="lane-links">
+
+                  <a class="site-link"
+                  href="https://www.allaboutbirds.org/guide/"
+                  target="_blank"
+                  data-note="resource for bird nerds to find out what they're looking at! or what they wish to find :3 (this includes me)">Cornell Bird Guide</a>
+
+                  <a class="site-link"
+                  href="https://www.quotev.com/JadeiteBrushes/journal/2361506/Aspects-and-Classes-Explained-Homestuck"
+                  target="_blank"
+                  data-note="...homestuck classpects explained">classpects explained</a>
                 </div>
               </div>
 
@@ -640,15 +748,21 @@
                 <div class="lane-label">misc</div>
 
                 <div class="lane-links">
+
                   <a class="site-link"
-                  href="https://www.quotev.com/JadeiteBrushes/journal/2361506/Aspects-and-Classes-Explained-Homestuck"
+                  href="https://dicecloud.com/"
                   target="_blank"
-                  data-note="...homestuck classpects explained">classpects explained</a>
+                  data-note="anvil calculator for the minecraft modpack terrafirmagreg">tfg anvil calculator</a>
+
+                  <a class="site-link"
+                  href="https://pzfans.com/en/B42/"
+                  target="_blank"
+                  data-note="full map for build 42 on project zomboid">b42 zomboid map</a>
 
                   <a class="site-link"
                   href="https://jonathangaynor.github.io/"
                   target="_blank"
-                  data-note="a buddy's website! mine is better muahahaha ">jonny's webstie</a>
+                  data-note="a irl buddy's website! mine is better muahahaha ">jonny's webstie</a>
                   
                 </div>
               </div>
