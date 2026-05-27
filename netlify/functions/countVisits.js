@@ -29,7 +29,9 @@ const gifs = [
   "https://kaia.starscene.com/assets/skeleton.gif",
   "https://kaia.starscene.com/assets/snailien.gif",
   "https://kaia.starscene.com/assets/franz.gif",
-  "https://kaia.starscene.com/assets/.gif",
+  "https://kaia.starscene.com/assets/nepeta.gif",
+  "https://kaia.starscene.com/assets/johnegbert.gif",
+  "https://kaia.starscene.com/assets/jade-jade-harley.gif",
 ];
 
 // Get location from IP
