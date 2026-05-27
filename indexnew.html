@@ -3,1287 +3,634 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kaia online - home</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
+  <title>kaia online</title>
   <script src="hide-scrollbars.js"></script>
-  <!-- matter -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <style>
+
+    /* ── font ── */
     @font-face {
       font-family: "NDS";
       src: url("rework/assets/fonts/nds.ttf") format("truetype");
       font-display: swap;
-      image-rendering: pixelated;
-      font-smooth: never;
       -webkit-font-smoothing: none;
     }
 
+    /* ── tokens (Light Mode) ── */
     :root {
-      --bg-tile: #fff;
-      --bg-header: #9eb4d1;
-      --border-tile: #b6c6df;
+      --sky:          #d8eaf8;
+      --sky2:         #eef5fc;
+
+      --panel-bg:     #fff;
+      --panel-border: #b6c6df;
+      --panel-shadow: #9ca7c3;
+      --panel-head:   #b6c6df;
+      --panel-head-b: #8a99b8;
+      
+      --head-t-shadow:  #7a93b0;
+      --head-b-shadow1: #cddaea;
+      --head-b-shadow2: #8a99b8;
+
+      --text:         #2a3a50;
+      --text-soft:    #6a7e96;
+      --link:         #3a7acf;
+      
+      --update-line:  rgba(182,198,223,0.4);
+      --today-bg:     rgba(100,160,220,0.18);
+
+      /* kept for header.js */
+      --bg-header:     #9eb4d1;
       --border-header: #7e8ba3;
-      --header-shadow: #9ca7c3;
-      --tile-header-bg: #b6c6df;
-      --tile-header-border: #8a99b8;
-      --text-color: #444;
-      --font-base: 1rem;
-      --line-height: 1;
-      --custom-font-scale: 1.25;
     }
 
-    * {
-      cursor: url("rework/assets/cur/kaiacursor.png"), auto;
+    /* ── tokens (Dark Mode Overrides) ── */
+    body.dark-mode {
+      --sky:          #1a2028;
+      --sky2:         #11151a;
+
+      --panel-bg:     #1e2530;
+      --panel-border: #151a22;
+      --panel-shadow: #0d1117;
+      --panel-head:   #2a3340;
+      --panel-head-b: #151a22;
+      
+      --head-t-shadow:  #000;
+      --head-b-shadow1: #3a4a60;
+      --head-b-shadow2: #10141a;
+
+      --text:         #e0e8f0;
+      --text-soft:    #8a99b8;
+      --link:         #6b9ac4;
+      
+      --update-line:  rgba(255,255,255,0.05);
+      --today-bg:     rgba(255,255,255,0.1);
+
+      --bg-header:     #2a3340;
+      --border-header: #1a2028;
+      
+      /* Blends your background gif into the dark gradient */
+      background-blend-mode: multiply; 
     }
 
-    html { font-size: var(--font-base); 
-    }
+    /* ── reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { cursor: url("rework/assets/cur/kaiacursor.png"), auto; }
+
+    html, body { min-height: 100%; }
 
     body {
-      margin: 0;
-      font-family: 'NDS', sans-serif;
-      font-size: calc(1rem * var(--custom-font-scale));
-      background: #e8eff7 url('rework/assets/general/bkg3.gif');
-      image-rendering: pixelated;
-      color: var(--text-color);
-      line-height: var(--line-height);
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: var(--text);
+      background:
+        url('rework/assets/general/bkg3.gif'),
+        linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
+      background-attachment: fixed;
+      background-size: auto, 100% 100%;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    /* header bar */
-    header {
-      width: 100%;
-      background: var(--bg-header);
-      border-bottom: 0.2rem solid var(--border-header);
-      padding: 0.625rem 0;
-      text-align: center;
-      box-shadow: 0 0.125rem 0.25rem var(--header-shadow);
-      font-weight: bold;
-      font-size: 1.75rem;
-      position: relative;
-      z-index: 20;
-    }
-
-    header a {
-      margin: 0 0.5rem;
-      color: white;
-      text-decoration: none;
-      letter-spacing: .1rem;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 80%;
-    }
-
-    /* banner image */
-    .banner {
-      max-height: 2rem;
-      width: auto;
-      height: auto;
-      object-fit: contain;
-    }
-
-    .banner img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    /* wrapper w/ columns */
-    .wrapper {
+    /* ── three-column layout ── */
+    .page {
       display: flex;
-      max-width: 85rem;
-      margin: auto;
-      gap: 1rem;
-      padding: 1.25rem;
-      justify-content: center;
-    }
-
-    /* column */
-    .column {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    /* l/r column */
-    .column.left,
-    .column.right {
-      flex: 1;
-    }
-
-    /* mid columns */
-    .column.center {
-      flex: 2.5;
-    }
-
-    /* tiles */
-    .tile {
-      background: var(--bg-tile);
-      border: 0.15rem solid var(--border-tile);
-      border-radius: 0.375rem;
-      padding: 0.625rem;
-      box-shadow: 0 0 0.25rem var(--header-shadow);
-      position: relative;
-      
-    }
-
-    .update-log {
-      height: 7.5rem;
-      overflow-y: auto;
-      /* font-size: 0.8rem; */
-      padding-right: 0.5rem;
-      text-align: center;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-
-  
-    /* tile headers */
-    .tile h2 {
-      background: var(--tile-header-bg);
-      color: white;
-      margin: -0.625rem -0.625rem 0.625rem -0.625rem;
-      padding: 0.375rem;
-      font-size: 1.5rem;
-      text-align: center;
-      border-bottom: 0.15rem solid var(--tile-header-border);
-      letter-spacing: .2rem;
-    }
-
-    /* fun deco imgs */
-    .tile .decor {
-      position: absolute;
-      width: 2.5rem;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .corner-top-left { top: -0.4rem; left: -0.4rem; }
-    .corner-top-right { top: -0.4rem; right: -0.4rem; }
-    .corner-bottom-left { bottom: -0.4rem; left: -0.4rem; }
-    .corner-bottom-right { bottom: -0.4rem; right: -0.4rem; }
-
-    /* float animation */
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-0.25rem); }
-      100% { transform: translateY(0); }
-    }
-
-    .hover { animation: float 2.5s ease-in-out infinite; }
-    .hover-float.slow { animation-duration: 4s; }
-    .hover-float.fast { animation-duration: 1s; }
-
-    .tile-row {
-      display: flex;
-      width: 100%;        
+      gap: 0.875rem;
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 1rem;
       align-items: flex-start;
-      gap: 1rem;
-      margin-top: 1rem;
     }
 
-    .tile-row.reverse {
-      flex-direction: row-reverse;
+    .col       { display: flex; flex-direction: column; gap: 0.875rem; }
+    .col.left  { flex: 0 0 14rem; }
+    .col.mid   { flex: 1; min-width: 0; }
+    .col.right { flex: 0 0 14rem; }
+
+    /* ── panel / tile ── */
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+      position: relative;
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
     }
 
-    .side-image {
-      width: 6rem;       
-      height: auto;
-      image-rendering: pixelated;
-      flex-shrink: 0;
-    }
-
-    .narrow-tile {
-      flex: 1;                 
-    }
-
-    /* mobile adjustments */
-    @media (max-width: 56.25rem) {
-      .wrapper { flex-direction: column; }
-      .tile-row {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      .side-image {
-        margin: 0 auto;
-      }
-      .narrow-tile { max-width: 100%; }
-      .intro-layout {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-
-      .about-photo {
-        width: 10rem; /* shrink image */
-        max-width: 80%;
-        margin-bottom: 0.5rem;
-      }
-      .column.center {
-        display: flex;
-        flex-direction: column;
-      }
-
-      #alert-tile {
-        order: -1;
-      }
-    }
-
-    @media (max-width: 37.5rem) {
-      header { font-size: 0.9rem; padding: 0.5rem 0; }
-      .wrapper { padding: 0.625rem; gap: 0.625rem; }
-      .tile { font-size: 0.9rem; }
-    }
-
-    .piclog-img {
-      width: auto;      
-      max-width: 100%;  
-      height: auto;     
-      display: block;
-      margin: 0 auto; 
-      image-rendering: pixelated;
-    }
-
-    #status-tile #statuscafe {
-      padding: 0.5rem;
-      background: transparent;          
-      border: none;                     
-      color: var(--text-color);          
-      font-family: 'NDS', sans-serif;   
-    }
-
-    #status-tile #statuscafe-username {
-      margin-bottom: 0.5rem;
+    .panel-head {
+      background: var(--panel-head);
+      border-bottom: 1px solid var(--panel-head-b);
+      padding: 0.125rem 0.5rem;
+      font-size: 1rem;
       font-weight: bold;
+      letter-spacing: 0.15em;
+      color: #fff;
+      text-shadow: 0 1px 0 var(--head-t-shadow);
+      box-shadow:
+        inset 0 1px 0 var(--head-b-shadow1),
+        inset 0 -1px 0 var(--head-b-shadow2);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .panel-body {
+      padding: 0.5rem;
       font-size: 1rem;
     }
 
-    #status-tile #statuscafe-content {
-      margin: 0;
-      padding: 0;
-      font-size: 1.5rem;
-      line-height: .75;
+    /* ── about ── */
+    .about-layout {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
     }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
+    .about-photo {
+      width: 7rem;
+      flex-shrink: 0;
+      image-rendering: pixelated;
     }
+    .about-text p { margin-bottom: 0.375rem; }
+    .about-text p:last-child { margin-bottom: 0; }
+    .about-text a { color: var(--link); }
 
-    .dropdown-content {
-      /* display: none; */
-      position: absolute;
-      background-color: #cfddffc5;
-      border: 1px solid var(--border-header);
-      border-radius: 3px;
-      /* box-shadow: 2px 2px 0 var(--border-header); */
-      z-index: 10;
-      
-      top: 100%; 
-      left: 40%;
-      transform: translateX(-50%);
-      
-      min-width: 5rem;
-      font-size: 1.1rem;
-      padding: 0.1rem 0;
-      /* fade in out */
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    /* ── update log ── */
+    .update-scroll {
+      max-height: 8rem;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--panel-head) transparent;
     }
+    .update-entry { padding-bottom: 0.375rem; margin-bottom: 0.375rem; border-bottom: 1px solid var(--update-line); }
+    .update-entry:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .update-date { font-size: 1rem; color: var(--text-soft); }
 
-    .dropdown-content a {
-      display: block;
-      padding: 0.2rem 0.4rem;
+    /* ── find me ── */
+    .social-list { display: flex; flex-direction: column; gap: 0.25rem; }
+    .social-list a {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
       text-decoration: none;
-      color: var(--text-color);
-      white-space: nowrap;
-      transition: transform .2s ease-in-out;
+      color: var(--text);
+      font-size: 1rem;
+      padding: 0.1rem 0.25rem;
+      transition: background 0.08s;
     }
+    .social-list a:hover { background: rgba(182,198,223,0.35); }
+    .social-dot { width: 0.375rem; height: 0.375rem; border-radius: 50%; flex-shrink: 0; }
 
-    .dropdown-content a:hover {
-      /* background-color: #d6e0f0; */
-      transform: scale(1.1);
-      cursor: pointer;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-      /* fade in out */
-      opacity: 1;
-      visibility: visible;
-    }
-    #leafCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 9998;         
-      pointer-events: none;  
-    }
-
-    .calendar {
+    /* ── status.cafe ── */
+    .cafe-quote {
+      font-style: italic;
+      font-size: 1rem;
       text-align: center;
-      font-size: 1.1rem;
+      color: var(--text-soft);
+      line-height: 1.4;
     }
 
-    .calendar-header {
+    /* ── quote ── */
+    .quote-text {
+      font-style: italic;
+      font-size: 1rem;
+      text-align: center;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    /* ── calendar ── */
+    .cal-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: .5rem;
-    }
-
-    .calendar-header button {
-      background: var(--tile-header-bg);
-      border: 0.15rem solid var(--tile-header-border);
-      color: white;
-      font-family: 'NDS', sans-serif;
-      cursor: pointer;
-      padding: .2rem .4rem;
-    }
-
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: .25rem;
-    }
-
-    .calendar-day {
-      border: 0.1rem solid var(--border-tile);
-      padding: .35rem 0;
-      position: relative;
-    }
-    .calendar-tooltip {
-      position: absolute;
-      bottom: 120%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #9eabc7;
-      border: 0.15rem solid var(--border-tile);
-      padding: .3rem .45rem;
-      font-size: 1.rem;
-      white-space: nowrap;
-      z-index: 50;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .15s ease;
-      box-shadow: 0 0 .25rem var(--header-shadow);
-    }
-
-    .calendar-day:hover .calendar-tooltip {
-      opacity: 1;
-    }
-
-    .calendar-day.post {
-      background: #c7d8ff;
-      cursor: pointer;
-    }
-
-    .calendar-day.post:hover {
-      filter: brightness(1.1);
-    }
-    .calendar-day.today {
-      outline: 0.02rem solid #9eb4d1;
-      background: #849ab16e;
+      margin-bottom: 0.375rem;
+      font-size: 1rem;
       font-weight: bold;
     }
-    .heart-widget {
-      margin-top: 40px;
-      text-align: left;
+    .cal-btn {
+      background: var(--panel-head);
+      border: 1px solid var(--panel-head-b);
+      color: #fff;
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1rem;
+      padding: 0.1rem 0.35rem;
+      cursor: pointer;
+      box-shadow: 1px 1px 0 var(--panel-shadow);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .cal-btn:active { box-shadow: none; transform: translate(1px,1px); }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7,1fr);
+      gap: 0.1rem;
+    }
+    .cal-day {
+      text-align: center;
+      font-size: 1rem;
+      padding: 0.15rem 0;
+      border: 1px solid transparent;
+      position: relative;
+    }
+    .cal-day.today {
+      background: var(--today-bg);
+      border-color: var(--bg-header);
+      font-weight: bold;
+    }
+    .cal-day.event { cursor: pointer; }
+    .cal-day.event:hover { filter: brightness(0.93); }
+    .cal-tip {
+      position: absolute;
+      bottom: 115%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #5a80a8;
+      color: #fff;
+      padding: 0.125rem 0.3rem;
+      font-size: 1rem;
+      white-space: nowrap;
+      z-index: 20;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s;
+      box-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+    }
+    .cal-day:hover .cal-tip { opacity: 1; }
+
+    /* ── buttons marquee ── */
+    .btn-rows { display: flex; flex-direction: column; gap: 0.2rem; }
+    .btn-rows marquee img { image-rendering: pixelated; height: 31px; width: auto; vertical-align: middle; }
+
+    /* ── piclog ── */
+    .piclog-img { display: block; max-width: 100%; image-rendering: pixelated; }
+
+    /* ── navlink iframe ── */
+    .navlink-frame { display: block; border: none; width: 100%; height: 14rem; }
+
+    /* ── moon ── */
+    #contain_moon { text-align: center; }
+
+    /* ── decor sprites ── */
+    .decor {
+      position: absolute;
+      width: 2rem;
+      pointer-events: none;
+      image-rendering: pixelated;
+    }
+    .corner-tr { top: -0.35rem; right: -0.35rem; }
+    .corner-bl { bottom: -0.35rem; left: -0.35rem; }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-0.25rem); }
+    }
+    .hover      { animation: float 2.5s ease-in-out infinite; }
+    .hover.fast { animation-duration: 1s; }
+
+    /* ── footer ── */
+    footer {
+      text-align: center;
+      font-size: 1rem;
+      color: var(--text-soft);
+      padding: 0.75rem 0 1.5rem;
     }
 
-    .heart-widget iframe {
-      transform: scale(0.5);
-      transform-origin: top left;
-      width: 400px;
-      height: 200px;
-      border: none;
+    /* ── leaf canvas ── */
+    #leafCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 9998;
+      pointer-events: none;
     }
 
-
-    .about-photo{
-      width:18rem;
-      image-rendering:pixelated;
-      border-radius:.1rem;
+    /* ── responsive ── */
+    @media (max-width: 56rem) {
+      .page { flex-direction: column; }
+      .col.left, .col.right { flex: 0 0 auto; width: 100%; }
+      .about-layout { flex-direction: column; align-items: center; text-align: center; }
+      .about-photo  { width: 8rem; }
     }
 
-    .about-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:1rem;
-}
+    @media (max-width: 30rem) {
+      .page { padding: 0.5rem; gap: 0.5rem; }
+    }
 
-.about-grid.small{
-  grid-template-columns:repeat(3,1fr);
-}
-
-
-/* ABOUT PAGE */
-
-.about-wrapper{
-  max-width:70rem;
-  margin:auto;
-  padding:1.5rem;
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-}
-
-
-/* intro layout */
-
-.intro-layout{
-  display:flex;
-  gap:0rem;
-  align-items:center;
-}
-
-
-/* grid sections */
-
-.about-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:0rem;
-}
-
-.about-grid.small{
-  grid-template-columns:repeat(3,1fr);
-}
-
-
-/* photos */
-
-.photo-row{
-  display:flex;
-  gap:.5rem;
-  margin-bottom:.5rem;
-}
-
-.photo-row img{
-  width:100%;
-  max-width:10rem;
-  border-radius:.3rem;
-  object-fit:cover;
-}
-
-.yt-link {
-  display: inline-block;
-  transition: transform 0.2s ease;
-}
-
-.yt-link:hover {
-  transform: scale(1.12) rotate(-4deg);
-}
-
-.alert-tile {
-  background: #e6d6ff; /* lavender */
-  border: 0.15rem solid #c2a8f0;
-}
-
-.alert-tile h2 {
-  background: #cbb3f5;
-  border-bottom: 0.15rem solid #a98edc;
-  color: white;
-}
-   </style>
+  </style>
 </head>
-
 <body>
-  <header style="color: #fff;">
-    <div class="dropdown">
-      <a href="indexnew.html" 
-      style="text-decoration: none; cursor: pointer;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">home</a> - 
-    </div>
-    <div class="dropdown">
-      <a href="#">kaia</a> - 
-      <div class="dropdown-content">
-        <a href="https://kaia.starscene.com/blog/index.html">blog</a>
-        <a href="lists.html">my lists</a>
-      </div>
-    </div>
-    <div class="dropdown">
-      <a href="#">web</a> - 
-      <div class="dropdown-content">
-        <a href="https://kaiasei.atabook.org/">guestbook</a>
-        <a href="webrings.html">webrings</a>
-        <a href="webrings.html">resources</a>
-        <a href="manifesto">manifesto</a>
-      </div>
-    </div>
-    <div class="dropdown">
-      <a href="#">for u</a> - 
-      <div class="dropdown-content">
-        <!-- <a href="vintagestory.html">vintage story</a> -->
-        <a href="bookmarks.html">bookmarks</a>
-        <a href="recommendations.html">recs</a>
-        <a href="mystuf.html">creations</a>
-        <a href="myrecipes.html">recipes</a>
-      </div>
-    </div>
-    <div class="dropdown">
-      <a href="#">other</a>
-      <div class="dropdown-content">
-        <a href="/ofb/wilds.html">outer wilds</a>
-        <a href="dontforget.html">dont forget</a>
-        <a href="deepestfear.html">an interaction</a>
-        <a href="msgs.html">hall of messages</a>
-        <a href="template.html">template</a>
-      </div>
-    </div>
-  </header>
 
-  <!-- <div class="banner">
-    <img src="assets/christmas_lights.png" alt="banner Image" style="z-index: 10000;">
-  </div> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script src="header.js"></script>
 
-  <div class="wrapper">
+  <div class="page">
 
-    <!-- LEFT -->
-    <div class="column left">
-      <div class="tile" style="text-align: center;">
-        <img src="assets/funnyalien.gif" style="image-rendering: pixelated; text-align: center;" class="decor corner-top-right hover fast">
-        <img src="rework/assets/decor/rosie1.png" class="decor corner-bottom-left" style="transform: scale(1.5); transform-origin: bottom left; bottom: -2.8rem; left: -2.8rem;z-index: 999;">
-        <h2>status</h2>
-        <p>kaia's health: <span id="health">--%</span><br>
-        social battery: <span id="battery">--%</span><br>
-        steam status: <span id="availability">loading...</span><br>
-        playing: <span id="game">loading...</span>
-        <img src="rework/assets/general/divider2.png" alt="divider image lol" style="width: 100%; height: 100%; object-fit: cover; transform: scaleY(0.375rem);">
-        <div id="statuscafe" style="transform: translateY(-1rem);">
-          "<span id="statuscafe-content" style="text-align: center;"></span>"<br>
-          <span id="statuscafe-date" style="font-size: 75%;"></span><span style="font-size: 75%;"> - </span><span id="statuscafe-name" style="font-size: 75%;"></span>
-        </div>
-        <script src="rework/scripts/statuscafe.js" defer></script></p>
-      </div>
+    <div class="col left">
 
-
-      <div class="tile">
-        <h2>piclog</h2>
-        <a href="https://piclog.blue/profile.php?id=1554">
-          <img src="https://piclog.blue/latest.php?id=1554" alt="Piclog Widget" class="piclog-img">
-        </a>
-      </div>
-
-      <div class="tile">
-          <h2>navlink</h2>
-          <iframe width="235" height="235" style="border:none" src="https://dimden.neocities.org/navlink/" name="neolink"></iframe>
-      </div>
-
-    </div>
-
-    <!-- MIDDLE -->
-    <div class="column center" id="alert-tile">
-      <!-- <div class="tile alert-tile">
-        <h2>alert!</h2>
-        <p style="text-align: center;">
-          hahahahahaha
-        </p>
-      </div> -->
-
-      <div class="tile about-intro">
-        <h2>welcome to my site! (◕‿◕✿)</h2>
-
-        <div class="intro-layout">
-
-        <img src="assets/puppygirl.png" class="about-photo">
-
-        <div>
-            <p>Haia, I'm Kaia <em style="font-size: 75%;">(she/her)</em> and this is my own little personal site!<br><br>
-
-
-              I'm a 22 year old music comp. student from the states! I like to use this website more than any social media really. I have much more freedom of expression here, and I can sculpt it to my liking. <br><br>
-             <em> <- That's me!</em>
-            </p>
-            <p>
-            This site originally went live in early March 2022, and has been in construction ever since. A handful of important people to me have encouraged me to keep this little project alive, so I try my best to. <br
-            </p>
-
-            <p>
-              Check out my blog if you wanna know the more personal side of me <br><em> (you have been warned)</em> <br>
-              
-              And be sure to stop by the <a class="yt-link" href="https://kaiasei.atabook.org/" style="text-decoration: dotted; color: #5d7aaf;">guestbook</a> to leave a message! 
-              I read them all and it's always a joy to hear what people have to say, and to see their sites!
-            </p>
-        </div>
-
-        </div>
-        
-    </div>
-
-      
-
-      <!-- image on left -->
-      <div class="tile-row">
-        <img src="assets/orchid.gif" class="side-image" alt="Side Image Left" style="transform: scale(1.2) translateY(3.2rem)">
-        <div class="tile narrow-tile">
-          <h2>updates (scroll!)<br>
-          <span style="text-align: center; font-size: 50%;"></span></h2>
-        <div class="update-log">
-          <div style="padding-bottom: .5rem;">
-            <em style="font-size: 80%;">9:18 PM - 5/22/26</em><br>
-            - handful of blog posts <br>
-            - new page finished! see bookmarks!<br>
-            - many many bugfixes<br>
-            <em style="font-size: 80%;">11:08 PM - 4/26/26</em><br>
-            - handful of blog posts <br>
-            - new page finished! o.O<br>
-            - loving and living life as much as i can <br>
-            <em style="font-size: 80%;">2:00 AM - 4/15/26</em><br>
-            - blog posts <br>
-            - many fixes since last update, too many to count<br>
-            <em style="font-size: 80%;">7:13 PM - 3/19/26</em><br>
-            - blog post(s) probably? <br>
-            - creature creator hidden page still a WIP <br>
-            - fixed about tile on mobile!<br>
-            - added alert tile that will occasionally appear at the top of the site whenever i have something i want 
-            to say to anyone who visits the site!<br>
-            <em style="font-size: 80%;">5:59 PM - 3/14/26</em><br>
-            - blog post <br>
-            - creature creator hidden page WIP <br>
-            - i promise next update ill fix the main center tail being all fucky on mobile @.@ <br><br>
-            <em style="font-size: 80%;">9:17 PM - 3/9/26</em><br>
-            - blog post <br>
-            - index overhaul <br>
-            - about me removed, information added on index <br><br>
-
-            <em style="font-size: 80%;">6:34 PM - 3/8/26</em><br>
-            - bunch of blog posts since last update (again)<br>
-            - misc fixes across the board <br>
-            - front page rework <br>
-            - about me page construction <br>
-            - categories renamed in header<br> 
-            - added quotes from vintage story on main page <br><br>
-
-            <em style="font-size: 80%;">1:14 PM - 2/11/26</em><br>
-            - bunch of blog posts since last update <br>
-            - fleshing out more of the broken links<br>
-            - started work on a recipes page! (not visible yet) <br>
-            - being trans <br><br>
-
-            <em style="font-size: 80%;">11:03 PM - 1/27/26</em><br>
-            - blog post <br>
-            - calendar added to main page<br><br>
-            <em style="font-size: 80%;">12:55 AM - 1/25/26</em><br>
-            - blog post(s) <br>
-            - backend cleanup <br>
-            - heart monitor code WIP <br>
-            - added new media to list of stuffs<br><br>
-            <em style="font-size: 80%;">10:49 AM - 12/25/25</em><br>
-            - PAGE IS STILL HEAVY WIP, chiseling away at it slowly, byte by byte <br>
-            - blog post <br>
-            - "list" page setup (under 'kaia')<br>
-            - "my stuff" page setup (under 'for u') <br>
-            - added 404 page (i think) <br>
-            - fixed some dead asset links on old archived pages of mine for... archiving purposes. duh. <br><br>
-            <em style="font-size: 80%;">11:26 AM - 12/21/25</em><br>
-            - blog post <br>
-            - published new ver of site for main index<br><br>
-            <em style="font-size: 80%;">6:51 PM - 12/14/25</em><br>
-            - under the hood work <br>
-            - more assets created behind the scenes<br><br>
-            <em style="font-size: 80%;">11:45 PM - 12/3/25</em><br>
-            - worked on site more, built new pages with consistent headers<br><br>
-            <em style="font-size: 80%;">8:24 PM - 11/16/25</em><br>
-            - small update box added, new updates log now in effect!<br><br>
-            <em style="font-size: 80%;">12:11 PM - 11/18/25</em><br>
-            - finalized new main page <br>
-            - this new header/nav bar is giving me a headache<br><br>
-            
-          <br><br></div>
-        </div>
-        </div>
-      </div>
-
-      <!-- <div class="tile">
-        <img src="" class="decor corner-top-right">
-        <h2>unused temporarily</h2>
-        <div style="text-align: center;">
-          <img src="assets/zomboid_read.gif" alt="me reading a book in project zomboid">
-        </div>
-      </div>
- -->
-      <!-- image on right -->
-      <div class="tile-row reverse">
-        <img src="assets/rose.gif" class="side-image" alt="Side Image Right" style="transform: scale(1.6) translateY(1rem);">
-        <div class="tile narrow-tile">
-          <h2>find me!</h2>
-          <p style="text-align: center;">if you want to (for some reason) follow me, you can on these sites!
-            <br>
-            <a class="yt-link" href="https://www.youtube.com/@kaiasei" style="text-decoration: none; color: rgb(206, 91, 91);">youtube</a> | 
-            <a class="yt-link" href="https://bandcamp.com/kaiasei" style="text-decoration: none; color: rgb(107, 107, 107);">bandcamp</a> | 
-            <a class="yt-link" href="https://www.instagram.com/hazel.aac/" style="text-decoration: none; color: rgb(89, 35, 100);">instagram</a> | 
-            <a class="yt-link" href="https://kaia.starscene.com/404_special.html" style="text-decoration: none; color: rgb(38, 28, 94);">twitter</a>
-            <br><br>
-            if you wish to contact me, heres my <a class="yt-link" href="mailto:blue.jay02304@gmail.com" style="text-decoration: none; color: rgb(23, 99, 20);">email</a>!
-          </p>
-        </div>
-      </div>
-
-     
-
-      
-
-      <div class="tile">
-        <h2>buttons</h2>
-        <!-- row 1 link-->
-        <marquee width="100%" direction="left" height="30px" scrollamount="3">
-          <a href="https://lu.tiny-universes.net/index.html" target="_parent"><img src="assets/lulu2.gif" alt="lu tiny universes" style="image-rendering:pixelated"/></a>
-          <a href="https://biggulpsupreme.neocities.org/" target="_parent"><img src="https://i.imgur.com/ZU3CcjO.gif" alt="biggulp" style="image-rendering:pixelated"/></a>
-          <a href="https://purplehello98.neocities.org/" target="_parent"><img src="https://purplehello98.neocities.org/graphics/buttons/purplehello98.gif" alt="purple hello 98" style="image-rendering:pixelated"/></a>
-          <a href="https://the-simple-site.neocities.org/" target="_parent"><img src="https://the-simple-site.neocities.org/images/simpdark88.gif" alt="the simple site" style="image-rendering:pixelated"/></a>
-          <a href="https://aegi.neocities.org/" target="_parent" ><img src="https://aegi.neocities.org/images/aegi_button.gif" alt="aegi's site" style="image-rendering:pixelated"/></a>
-          <a href="https://2bit.neocities.org/" target="_parent"><img src="https://2bit.neocities.org/2bit_button.png" alt="2bit's site" style="image-rendering:pixelated"/></a>
-          <a href="https://devils.neocities.org/" target="_parent"><img src="https://66.media.tumblr.com/777717d122b4e7d3ae82524b44d21f67/tumblr_inline_pswuk76Sda1w1xdc5_1280.gif" alt="devils" style="image-rendering:pixelated"/></a>
-          <a href="https://wiby.me/" target="_parent"><img src="https://wiby.me/about/wiby.gif" alt="wiby search engine" style="image-rendering:pixelated"/></a>
-          <a href="https://yumeoi.skin/" target="_parent"><img src="https://yumeoi.skin/image-files/my-buttons/yumeoiskin.gif" alt="yumeoi" style="image-rendering:pixelated"/></a>
-          <a href="https://layercake.nekoweb.org/" target="_parent"><img src="assets/layercake3.gif" alt="layercake" style="image-rendering:pixelated"/></a>
-          <a href="https://4377.neocities.org" target="_parent"><img src="assets/4377.png" alt="4377 (please click this site is just crazy enough. also i need the VIEWS)" style="image-rendering:pixelated"> </a>
-          <a href="https://cyberdemon.nekoweb.org/" target="_parent"><img src="https://cyberdemon.nekoweb.org/button.png" alt="cyberdemon" style="image-rendering:pixelated"/></a>
-          <a href="https://beaniepines.neocities.org/garden" target="_parent"><img src="assets/bpdusk.gif" alt="beanie pines" style="image-rendering:pixelated"/></a>
-          <a href="https://starrs.neocities.org/" target="_parent"><img src="assets/tiny_space.gif" alt="tiny space" style="image-rendering:pixelated"/></a>
-          <a href="https://www.lejlart.com/apple.html" target="_parent"><img src="assets/ad_skullsprinkles.gif" alt="appledust" style="image-rendering:pixelated"/></a>
-          <a href="https://e10.neocities.org/" target="_parent"><img src="https://e10.neocities.org/imgs/other/e10.neocities-button.gif"/></a>
-        </marquee>
-        <!-- row 2  more links-->
-        <marquee width="100%" direction="right" height="30px" scrollamount="3">
-          <a href="https://exo.pet/" target="_parent"><img src="assets/exopetbutton1.png" alt="exo pet" style="image-rendering:pixelated"/></a>
-          <a href="https://frutigeraeroarchive.org/" target="_parent"><img src="assets/frutigeraeroarchive_button.png" alt="frutiger aero archive" style="image-rendering:pixelated"/></a>
-          <a href="https://petrapixel.neocities.org/" target="_parent"><img src="https://cdn.jsdelivr.net/gh/petracoding/petrapixel.neocities.org@latest/public/assets/img/linkback.gif" alt="petrapixel" style="image-rendering:pixelated"/></a>
-          <a href="https://alynxolotl.neocities.org" target="_parent"><img src="https://files.catbox.moe/di03jx.gif" alt="alynxolotl" style="image-rendering:pixelated"/></a>
-          <a href="https://astrito.nekoweb.org" target="_parent"><img src="https://astrito.nekoweb.org/astrito_sitebutton.gif" alt="astrito" style="image-rendering:pixelated"/></a>
-          <a href="https://aoki553.nekoweb.org/" target="_parent"><img src="https://aoki553.neocities.org/nekoweb/deco/aoki553button.gif" alt="aoki553" style="image-rendering:pixelated"/></a>
-          <a href="https://status.cafe" target="_parent"><img src="https://status.cafe/assets/button.png" alt="Status Cafe" style="image-rendering:pixelated"/></a>
-          <a href="https://neocities.org/" target="_parent"><img src="assets/neocities.gif" alt="neocities!" style="image-rendering:pixelated"/></a>
-          <a href="https://www.w3schools.com/" target="_parent"><img src="assets/w3schools_site-btn.gif" alt="w3 schools" style="image-rendering:pixelated"/></a>
-          <a href="https://ultrakill.nekoweb.org" target="_parent"><img src="https://file.garden/ZkRD3wbiZDsBIZnn/solbutton.png" alt="a button of the word ULTRAKILL in all caps and bright blue above two shooting stars and an open black eye with a blue background." style="filter:brightness(3); image-rendering: pixelated;"></a>
-          <a href="https://zziz.nekoweb.org/" target="_parent"><img src="https://zziz.nekoweb.org/zzizbutton.gif" style="image-rendering:pixelated"></a>
-          <a href="https://r3ckoning.nekoweb.org" target="_parent"><img src="https://r3ckoning.nekoweb.org/fishy-animated.gif" alt="r3ckoner" style="image-rendering:pixelated"></a>
-          <a href="https://sillyfes.neocities.org/" target="_parent"><img src="https://sillyfes.neocities.org/images/sillybutton.png" alt="sillfes" style="image-rendering:pixelated"></a>
-          <a href="https://lazer-bunny.neocities.org/" target="_parent"><img src="assets/PTTYSwz.gif" alt="lazer-bunny" style="image-rendering:pixelated"></a>
-          <a href="https://adnyx.nekoweb.org" target="_parent"><img src="https://adnyx.nekoweb.org/images/adnyx_button.gif" alt="adnyx's page"></a> 
-          <a href="https://bugkisser.neocities.org/" target="_parent"><img src="https://bugkisser.neocities.org/buttons/bugkisser!.png"></a>            
-          <a href="https://nomnomnami.com/" target="_parent"><img src="https://nomnomnami.com/images/site_button.gif" alt="nomnomnami"></a>
-          <a href="https://immjs.dev/"><img src="https://immjs.dev/88x31s/immjs.dev.gif"/></a>
-          <a href="https://melps.neocities.org" target="_blank"><img src="https://melps.neocities.org/limk2.jpg" width='88px'></a>
-          <a href='https://mn1ca.neocities.org' target='_blank'><img src= 'https://www.mn1ca.fish/about/img/buttons/mn1ca.gif' style='image-rendering: pixelated'></a> 
-          <a href="https://projectc190.net/" target="_blank"><img src="assets/button_huicat_pixel.gif" style="image-rendering: pixelated;" alt="project c190's page"></a>
-          <a href="https://claranguyen.me/index.php" target="_blank"><img src="https://claranguyen.me/img/buttons/idestykk.v1.gif" style="image-rendering: pixelated;" alt="iDestyKK's homepage"></a>
-        </marquee>
-        <!-- row 3  NOT links-->
-        <marquee width="100%" direction="left" height="30px" scrollamount="6">
-          <a><img src="assets/america-ya-button.gif" alt="america ya!" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/b-campaignagainstcampaignagainstframes.gif" alt="we love frames!" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/chrome.gif" alt="chrome is ass" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/css.gif" alt="i love css!" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/queer.png" alt="a queer coded this" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/i-love-physical-media-button-cd.gif" alt="i love physical media!" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/gcworldwide.gif" alt="geocities" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/hatewindowsbutton.jpg" alt="i hate windows" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/makeasite.jpg" alt="make a webpage" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/filetransit.gif" alt="the file transit" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/internetprivacy.gif" alt="internet privacy!" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/netscape3a.gif" alt="netscape navigator" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/noweb32.gif" alt="web3 sux" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/pinetreesbutton.png" alt="stop and smell the pine trees" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/rainbow.gif" alt="beautiful rainbow" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/want-to-believe.gif" alt="i wanna believeeee" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/wwwbutton.gif" alt="world wide web" style="image-rendering:pixelated"/></a>
-          <a><img src="assets/fuckyeah-cyberot.png" alt="fuck yeah, it hurts" style="image-rendering:pixelated"/></a>
-
-        </marquee>
-        <p>
-        </p>
-        </div>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="column right">
-
-      <div class="tile" style="text-align: center;"> <!-- visitor count -->
-        <h2>stats</h2>
-        <p>
-          you are (unique) visitor <br>
-          #<span id="visitor-count">...</span>!<br>
-        </p>  
-      </div>
-
-      <div class="tile">
-        <h2><3</h2>
-        <p style="text-align: center;">
-          <em id="magnificence-quote"></em>
-        </p>
-      </div>
-
-          <!-- rosie cam vvv -->
-      <div class="tile" 
-        style="border-image: url('rework/assets/general/divborder1.png') 7 fill round; 
-               border-style: solid; border-width: .75rem; 
-               image-rendering: pixelated; box-shadow: none; border-radius: 2rem;">
-        <h2 style="background: white; color: var(--bg-header); border-bottom-color: var(--bg-header);">
-          rosie cam !!!
-        </h2>
-        <div id="rosie-gif"></div>
-      </div>
-      
-      <div class="tile" id="calendar-tile"> <!-- calendar -->
-        <h2>calendar</h2>
-
-        <div class="calendar">
-          <div class="calendar-header">
-            <button id="prevMonth">◄</button>
-            <span id="calendarTitle"></span>
-            <button id="nextMonth">►</button>
+      <div class="panel" style="text-align:center;">
+        <img src="rework/assets/decor/rosie1.png" class="decor corner-bl hover slow" alt="">
+        <div class="panel-head">status</div>
+        <div class="panel-body">
+          <div id="statuscafe" style="background:transparent;border:none;">
+            <div class="cafe-quote">
+              "<span id="statuscafe-content"></span>"<br>
+              <span id="statuscafe-name" style="font-size:1rem;color:var(--text-soft);"></span>
+            </div>
           </div>
-
-          <div class="calendar-grid" id="calendarGrid"></div>
+          <script src="rework/scripts/statuscafe.js" defer></script>
         </div>
       </div>
 
-      <div class="tile"> <!-- moons -->
-        <h2>moooon</h2>
-        <b><!-- © wdisseny --><div id="contain_moon" style="text-align:center;padding-bottom:5px;"><div style="font-weight:bold"></div><div style="margin-bottom:-15px;padding:30px;filter:drop-shadow(0 0 30px hsl(229,100%,0%))"></div><div>.</div><div style="font-size:small"></div></div><script>(function(){var d=new Date().getDate();var m=document.querySelectorAll("#contain_moon div");var a=new XMLHttpRequest();var url="https://www.icalendar37.net/lunar/api/?lang=en&month="+(new Date().getMonth()+1)+"&year="+(new Date().getFullYear())+"&size=100&lightColor=rgb(245,245,245)&shadeColor=rgb(37,40,59)&t&LDZ="+new Date(new Date().getFullYear(),new Date().getMonth(),1)/1000+"";m[1].style.height="100px";a.onreadystatechange=function(){if(a.readyState==4&&a.status==200){var b=JSON.parse(a.responseText);m[1].innerHTML=b.phase[d].svg;if(typeof moon_widget_loaded=="function")moon_widget_loaded(b);m[2].innerHTML=b.phase[d].npWidget}};a.open("GET",url,true);a.send()})()</script></b>
+      <div class="panel">
+        <div class="panel-head">piclog</div>
+        <div class="panel-body" style="padding:0.25rem;">
+          <a href="https://piclog.blue/profile.php?id=1554" target="_blank">
+            <img src="https://piclog.blue/latest.php?id=1554" alt="piclog" class="piclog-img">
+          </a>
+        </div>
       </div>
+
+      <div class="panel">
+        <div class="panel-head">navlink</div>
+        <div class="panel-body" style="padding:0;">
+          <iframe class="navlink-frame" src="https://dimden.neocities.org/navlink/" name="neolink" title="navlink webring"></iframe>
+        </div>
+      </div>
+
+    </div><div class="col mid">
+
+      <div class="panel">
+        <div class="panel-head">welcome to my site! (◕‿◕✿)</div>
+        <div class="panel-body">
+          <div class="about-layout">
+            <img src="assets/puppygirl.png" alt="kaia" class="about-photo">
+            <div class="about-text">
+              <p>Haia, I'm Kaia <em>(she/her)</em> and this is my own little personal site!</p>
+              <p>I'm a 22 year old music comp. student from the states. I like to use this website more than any social media because I have so much more 
+                freedom of expression to make this look like how i want! <br>
+                 <em>&lt;- That's me!!</em></p>
+              <p>This site went live in early March 2022 and has been in construction ever since. Check out my <a href="https://kaia.starscene.com/blog/index.html">blog</a> for a more personal side of me <em>(you have been warned)</em>. Obviously, leave me a message on the <a href="https://kaiasei.atabook.org/">guestbook</a> as well! ♡</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+  <div class="panel-head">VRC friends</div>
+
+  <div class="panel-body">
+    <p style="margin-bottom:0.375rem; text-align:center;">
+      a photo with some buddies i made on VRC
+      they wanted to be featured on the site for a bit ^^
+    </p>
+
+    <div>
+      <img
+        src="assets/VRC/VRChat_2026-05-26_07-25-05.457_1920x1080.png"
+        alt="VRC friends!~"
+
+        onclick="openImageViewer(this.src)"
+
+        style="
+          max-width:100%;
+          height:auto;
+          display:block;
+          margin:auto;
+        "
+      >
     </div>
   </div>
+</div>
 
-  <footer>
-    <em>~kaia 2022 - til the end of time! <br>
-    stop and smell the pine trees</em>
-  </footer>
+      <div class="panel">
+        <div class="panel-head">updates <span style="font-size:1rem;letter-spacing:0;">(scroll!)</span></div>
+        <div class="panel-body">
+          <div class="update-scroll">
+            <div class="update-entry"><div class="update-date">[7:36 PM - 5/26/26]</div>+ couple blog posts<br>+ site visual overhaul<br>+ new universal header with darkmode toggle<br>+ addition to creations page!<br>- removed some broken links<br>- removed alert tile</div>
+            <div class="update-entry"><div class="update-date">[9:18 PM - 5/22/26]</div>+ handful of blog posts<br>+ new page finished! see bookmarks!<br>+ many many bugfixes</div>
+            <div class="update-entry"><div class="update-date">[11:08 PM - 4/26/26]</div>+ handful of blog posts<br>+ loving and living life as much as i can</div>
+            <div class="update-entry"><div class="update-date">[2:00 AM - 4/15/26]</div>+ blog posts<br>+ many fixes since last update, too many to count</div>
+            <div class="update-entry"><div class="update-date">[7:13 PM - 3/19/26]</div>+ blog post(s) probably?<br>+ creature creator hidden page still a WIP<br>+ fixed about tile on mobile<br>+ added alert tile that will occasionally appear at the top of the site whenever i have something i want to say on the front page!</div>
+            <div class="update-entry"><div class="update-date">[5:59 PM - 3/14/26]</div>+ happy pi day!<br>+ blog post<br>+ creature creator hidden page WIP<br>+ i promise next update ill fix the main center tile being all fucky on mobile @.@</div>
+            <div class="update-entry"><div class="update-date">[9:17 PM - 3/9/26]</div>+ blog post<br>+ index overhaul<br>+ about me removed, information added on index</div>
+            <div class="update-entry"><div class="update-date">[6:34 PM - 3/8/26]</div>+ bunch of blog posts since last update (again)<br>+ misc fixes across the board<br>+ front page rework<br>+ about me page cosntruction<br>+ categories renamed in header<br>+ added quotes from vintage story on main page</div>
+            <div class="update-entry"><div class="update-date">[1:14 PM - 2/11/26]</div>+ buncha blog posts since last update<br>+ cleaning up more broken links<br>+ started work on recipes page!<br>+ bein trans</div>
+            <div class="update-entry"><div class="update-date">[11:03 PM - 1/27/26]</div>+ blog post<br>+ calendar added to main page</div>
+            <div class="update-entry"><div class="update-date">[12:55 AM - 1/25/26]</div>+ blog post(s)<br>+ backend cleanup<br>+ heart monitor code WIP<br>+ added new media to list of stuffs</div>
+            <div class="update-entry"><div class="update-date">[10:49 AM - 12/25/25]</div>+ PAGE IS STILL HEAVY WIP, chiseling away at it slowly, byte by byte<br>+ blog post<br>+ "list" page setup (under 'kaia')<br>+ "my stuff" page setup (under 'for u')<br>+ added 404 page (i think)<br>+ fixed some dead asset lnks on old archived pages of mine for... archiving purposes. duh.</div>
+            <div class="update-entry"><div class="update-date">[11:26 AM - 12/21/25]</div>+ blog post<br>+ published new ver of site for main index</div>
+            <div class="update-entry"><div class="update-date">[6:51 PM - 12/14/25]</div>+ under the hood work<br>+ more assets created behind the scenes</div>
+            <div class="update-entry"><div class="update-date">[11:45 PM - 12/3/26]</div>+ worked on site more, built new pages with consistent headers</div>
+            <div class="update-entry"><div class="update-date">[8:24 PM - 11/18/25]</div>+ small update box added, new updates log now in effect!</div>
+            <div class="update-entry"><div class="update-date">[12:11 PM - 11/26/25]</div>+ finalized new main page<br>+ this new header/nav bar is giving me a headache</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">find me!</div>
+        <div class="panel-body">
+          <p style="margin-bottom:0.375rem;">if you want to (for some reason) follow me:</p>
+          <div class="social-list">
+            <a href="https://www.youtube.com/@kaiasei" target="_blank"><span class="social-dot" style="background:#e05555;"></span>youtube</a>
+            <a href="https://bandcamp.com/kaiasei" target="_blank"><span class="social-dot" style="background:#888;"></span>bandcamp</a>
+            <a href="https://www.instagram.com/hazel.aac/" target="_blank"><span class="social-dot" style="background:#833ab4;"></span>instagram</a>
+            <a href="https://kaia.starscene.com/404_special.html" target="_blank"><span class="social-dot" style="background:#1da1f2;"></span>twitter</a>
+            <a href="mailto:blue.jay02304@gmail.com"><span class="social-dot" style="background:#4caf50;"></span>email</a>
+            <a href="https://kaiasei.atabook.org/" target="_blank"><span class="social-dot" style="background:var(--link);"></span>guestbook</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">the web!</div>
+        <div class="panel-body">
+          <div class="btn-rows">
+            <marquee width="100%" direction="left" height="31px" scrollamount="3">
+              <a href="https://lu.tiny-universes.net/index.html" target="_blank"><img src="assets/lulu2.gif" alt="lu"></a>
+              <a href="https://biggulpsupreme.neocities.org/" target="_blank"><img src="https://i.imgur.com/ZU3CcjO.gif" alt="biggulp"></a>
+              <a href="https://purplehello98.neocities.org/" target="_blank"><img src="https://purplehello98.neocities.org/graphics/buttons/purplehello98.gif" alt="ph98"></a>
+              <a href="https://the-simple-site.neocities.org/" target="_blank"><img src="https://the-simple-site.neocities.org/images/simpdark88.gif" alt="simple site"></a>
+              <a href="https://aegi.neocities.org/" target="_blank"><img src="https://aegi.neocities.org/images/aegi_button.gif" alt="aegi"></a>
+              <a href="https://2bit.neocities.org/" target="_blank"><img src="https://2bit.neocities.org/2bit_button.png" alt="2bit"></a>
+              <a href="https://wiby.me/" target="_blank"><img src="https://wiby.me/about/wiby.gif" alt="wiby"></a>
+              <a href="https://yumeoi.skin/" target="_blank"><img src="https://yumeoi.skin/image-files/my-buttons/yumeoiskin.gif" alt="yumeoi"></a>
+              <a href="https://layercake.nekoweb.org/" target="_blank"><img src="assets/layercake3.gif" alt="layercake"></a>
+              <a href="https://4377.neocities.org" target="_blank"><img src="assets/4377.png" alt="4377"></a>
+              <a href="https://cyberdemon.nekoweb.org/" target="_blank"><img src="https://cyberdemon.nekoweb.org/button.png" alt="cyberdemon"></a>
+              <a href="https://beaniepines.neocities.org/garden" target="_blank"><img src="assets/bpdusk.gif" alt="beanie pines"></a>
+              <a href="https://starrs.neocities.org/" target="_blank"><img src="assets/tiny_space.gif" alt="tiny space"></a>
+              <a href="https://e10.neocities.org/" target="_blank"><img src="https://e10.neocities.org/imgs/other/e10.neocities-button.gif" alt="e10"></a>
+            </marquee>
+            <marquee width="100%" direction="right" height="31px" scrollamount="3">
+              <a href="https://exo.pet/" target="_blank"><img src="assets/exopetbutton1.png" alt="exo pet"></a>
+              <a href="https://petrapixel.neocities.org/" target="_blank"><img src="https://cdn.jsdelivr.net/gh/petracoding/petrapixel.neocities.org@latest/public/assets/img/linkback.gif" alt="petrapixel"></a>
+              <a href="https://status.cafe" target="_blank"><img src="https://status.cafe/assets/button.png" alt="status cafe"></a>
+              <a href="https://neocities.org/" target="_blank"><img src="assets/neocities.gif" alt="neocities"></a>
+              <a href="https://zziz.nekoweb.org/" target="_blank"><img src="https://zziz.nekoweb.org/zzizbutton.gif" alt="zziz"></a>
+              <a href="https://r3ckoning.nekoweb.org" target="_blank"><img src="https://r3ckoning.nekoweb.org/fishy-animated.gif" alt="r3ckoner"></a>
+              <a href="https://sillyfes.neocities.org/" target="_blank"><img src="https://sillyfes.neocities.org/images/sillybutton.png" alt="sillyfes"></a>
+              <a href="https://nomnomnami.com/" target="_blank"><img src="https://nomnomnami.com/images/site_button.gif" alt="nomnomnami"></a>
+              <a href="https://immjs.dev/" target="_blank"><img src="https://immjs.dev/88x31s/immjs.dev.gif" alt="immjs"></a>
+              <a href="https://adnyx.nekoweb.org" target="_blank"><img src="https://adnyx.nekoweb.org/images/adnyx_button.gif" alt="adnyx"></a>
+              <a href="https://bugkisser.neocities.org/" target="_blank"><img src="https://bugkisser.neocities.org/buttons/bugkisser!.png" alt="bugkisser"></a>
+              <a href="https://melps.neocities.org" target="_blank"><img src="https://melps.neocities.org/limk2.jpg" width="88" alt="melps"></a>
+              <a href="https://mn1ca.neocities.org" target="_blank"><img src="https://www.mn1ca.fish/about/img/buttons/mn1ca.gif" alt="mn1ca"></a>
+            </marquee>
+            <marquee width="100%" direction="left" height="31px" scrollamount="5">
+              <img src="assets/america-ya-button.gif" alt="america ya!">
+              <img src="assets/css.gif" alt="i love css!">
+              <img src="assets/queer.png" alt="a queer coded this">
+              <img src="assets/i-love-physical-media-button-cd.gif" alt="i love physical media!">
+              <img src="assets/makeasite.jpg" alt="make a webpage">
+              <img src="assets/internetprivacy.gif" alt="internet privacy!">
+              <img src="assets/noweb32.gif" alt="web3 sux">
+              <img src="assets/pinetreesbutton.png" alt="smell the pine trees">
+              <img src="assets/rainbow.gif" alt="rainbow">
+              <img src="assets/want-to-believe.gif" alt="i wanna believe">
+              <img src="assets/fuckyeah-cyberot.png" alt="fuck yeah">
+              <img src="assets/chrome.gif" alt="chrome is ass">
+              <img src="assets/wwwbutton.gif" alt="www">
+            </marquee>
+          </div>
+        </div>
+      </div>
+
+    </div><div class="col right">
+
+      <div class="panel">
+        <div class="panel-head">&lt;3</div>
+        <div class="panel-body">
+          <div class="quote-text" id="magnificence-quote"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">rosie cam!!!</div>
+        <div class="panel-body" style="padding:0.25rem;">
+          <div id="rosie-gif"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">calendar</div>
+        <div class="panel-body">
+          <div class="cal-head">
+            <button class="cal-btn" id="prevMonth">◄</button>
+            <span id="calendarTitle"></span>
+            <button class="cal-btn" id="nextMonth">►</button>
+          </div>
+          <div class="cal-grid" id="calendarGrid"></div>
+        </div>
+      </div>
+
+    </div></div><footer>- kaia (c) 2022 - til the end of time! -</footer>
+
 
   <script>
+    // rosie cam
+    (function(){
+      const n = Math.floor(Math.random()*13)+1;
+      document.getElementById('rosie-gif').innerHTML =
+        `<img src="rework/assets/general/rosie/rosie${n}.gif" alt="Rosie" style="max-width:100%;image-rendering:pixelated;">`;
+    })();
 
-    /* random rosie gif :3 */
-
-    const gifFolder = 'rework/assets/general/rosie/';
-    const totalGifs = 13;
-
-    function getRandomGif() {
-      const num = Math.floor(Math.random() * totalGifs) + 1;
-      return `rosie${num}.gif`;
-    }
-
-    function displayGif() {
-      const gifPath = gifFolder + getRandomGif();
-      const imgElement = `<img src="${gifPath}" alt="Rosie GIF" 
-                               style="max-width: 100%; border-radius: 1rem; image-rendering: pixelated;">`;
-      document.getElementById('rosie-gif').innerHTML = imgElement;
-    }
-
-    displayGif();
-
-    /* UPDATE TILE AND STATUS BLOCK */
-    
-    const visitorID = localStorage.getItem('visitorID') || crypto.randomUUID();
-    localStorage.setItem('visitorID', visitorID);
-
-    fetch(`/.netlify/functions/countVisits?visitorID=${visitorID}`)
-      .then(res => res.json())
-      .then(data => {
-        const el = document.getElementById('visitor-count');
-        if (el && data.totalCount !== undefined) {
-          el.textContent = data.totalCount;
-        }
-      })
-      .catch(err => console.error("Visitor count error:", err));
-
-    const endpoint = "/.netlify/functions/getSteamStatus";
-
-    let health = Math.floor(Math.random() * 31) + 70;      // 70-100%
-    let battery = Math.floor(Math.random() * 51) + 0;         // 0-100%
-
-    function updateKaiaStatus() {
-    const changeHealth = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1);
-    const changeBattery = (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1);
-
-    health = Math.min(100, Math.max(0, health + changeHealth));
-    battery = Math.min(100, Math.max(0, battery + changeBattery));
-
-    document.getElementById("health").textContent = `${health}%`;
-    document.getElementById("battery").textContent = `${battery}%`;
-
-    fetch(endpoint)
-        .then(res => res.json())
-        .then(data => {
-            console.log("Fetched Steam data:", data);
-            document.getElementById("game").textContent = `${data.game}`;
-
-            const stateMap = {
-                "0": "radio-silent",
-                "1": "active!",
-                "2": "preoccupied",
-                "3": "away~",
-                "4": "half-asleep",
-                "5": "looking to trade",
-                "6": "looking to play",
-            };
-
-            const status = stateMap[data.status?.toString()] || "api error";
-            document.getElementById("availability").textContent = `${status}`;
-        })
-        .catch((err) => {
-            console.error("Fetch error:", err);
-            document.getElementById("game").textContent = "nothing!";
-        });
-    }
-
-    updateKaiaStatus();
-
-    /* FALLING STUFF SCRIPT */
-
-    // ---------- AUTUMN LEAF LOGIC (transparent, fall-through) ----------
-window.addEventListener('load', () => {
-  if (!window.Matter) { console.error('Matter.js missing — add the CDN script first.'); return; }
-  const { Engine, Runner, World, Bodies, Body, Constraint, Events, Query } = Matter;
-
-  const canvas = document.getElementById('leafCanvas');
-  if (!canvas) { console.error('Add <canvas id="leafCanvas"></canvas> to your page.'); return; }
-  const ctx = canvas.getContext('2d');
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  const engine = Engine.create();
-  const world = engine.world;
-  engine.gravity.y = 0.06; // gentle gravity
-
-  // only side walls so leaves don’t drift off screen
-  const leftWall = Bodies.rectangle(-60, window.innerHeight/2, 120, window.innerHeight*3, { isStatic: true });
-  const rightWall = Bodies.rectangle(window.innerWidth+60, window.innerHeight/2, 120, window.innerHeight*3, { isStatic: true });
-  World.add(world, [leftWall, rightWall]);
-
-  const leaves = [];
-  const MAX_LEAVES = 50;
-
-  const leafImg = new Image();
-  leafImg.src = 'assets/flake.png';
-
-  function spawnLeaf() {
-  const size = 22 + Math.random() * 36;
-  const x = 20 + Math.random() * (canvas.width - 40);
-  const y = -40 - Math.random() * 200;
-
-  // random initial velocity
-  const vx = (Math.random() - 0.5) * 1; // horizontal drift
-  const vy = Math.random() * 1;          // slight vertical speed
-
-  const leaf = Bodies.rectangle(x, y, size * 0.9, size * 0.6, {
-    restitution: 0.18,
-    frictionAir: 0.03,
-    friction: 0.8,
-    density: 0.0008,
-    angle: Math.random() * Math.PI * 2,
-    velocity: { x: vx, y: vy }
-  });
-  leaf.renderSize = size;
-  World.add(world, leaf);
-  leaves.push(leaf);
-}
-
-  // ambient float & wind
-  Events.on(engine, 'beforeUpdate', (ev) => {
-    const t = ev.timestamp;
-    for (let b of leaves) {
-      const windX = Math.sin((b.position.y + t*0.5) / 900) * 0.00002;
-      const floatY = -0.000018 * (0.6 + 0.4 * Math.sin((b.position.x + t) / 1200));
-      Body.applyForce(b, b.position, { x: windX, y: floatY });
-      Body.setAngularVelocity(b, b.angularVelocity * 0.995);
-    }
-
-    // remove leaves below viewport
-    for (let i = leaves.length - 1; i >= 0; i--) {
-      if (leaves[i].position.y > window.innerHeight + 100) {
-        World.remove(world, leaves[i]);
-        leaves.splice(i, 1);
-      }
-    }
-    // gentle oscillating rotation
-    const ROTATION_SPEED = 0.00004; // lower to reduce rotation amount
-    const ROTATION_FREQ = 1200;     // higher to slow down the oscillation
-
-    for (let b of leaves) {
-    const swing = Math.sin((b.position.y + t * 0.3) / ROTATION_FREQ) * ROTATION_SPEED;
-    Body.setAngularVelocity(b, b.angularVelocity + swing);
-    }
-  });
-
-  // push & drag handling (unchanged from your code)
-  let dragConstraint = null;
-  function getLeafAtPoint(pt) {
-    try {
-      const found = Query.point(leaves, pt);
-      return found.length ? found[0] : null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  document.addEventListener('pointerdown', (ev) => {
-    const pt = { x: ev.clientX, y: ev.clientY };
-    const hit = getLeafAtPoint(pt);
-    if (hit) {
-      dragConstraint = Constraint.create({
-        pointA: { x: pt.x, y: pt.y },
-        bodyB: hit,
-        pointB: { x: 0, y: 0 },
-        stiffness: 0.12,
-        damping: 0.2,
-        length: 0
-      });
-      World.add(world, dragConstraint);
-      ev.preventDefault();
-    }
-  });
-
-  document.addEventListener('pointermove', (ev) => {
-    const pt = { x: ev.clientX, y: ev.clientY };
-    if (dragConstraint) {
-      dragConstraint.pointA.x = pt.x;
-      dragConstraint.pointA.y = pt.y;
-    }
-
-    // pushing
-    const PUSH_RADIUS = 96;
-    const PUSH_STRENGTH = 0.0009;
-    for (let b of leaves) {
-      const dx = b.position.x - pt.x;
-      const dy = b.position.y - pt.y;
-      const d2 = dx*dx + dy*dy;
-      if (d2 < PUSH_RADIUS * PUSH_RADIUS) {
-        const d = Math.sqrt(d2) || 1;
-        const mag = (1 - d / PUSH_RADIUS) * PUSH_STRENGTH;
-        Body.applyForce(b, b.position, { x: (dx/d)*mag, y: (dy/d)*mag });
-      }
-    }
-  });
-
-  document.addEventListener('pointerup', () => {
-    if (dragConstraint) {
-      World.remove(world, dragConstraint);
-      dragConstraint = null;
-    }
-  });
-
-  // renderer
-  function render() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let b of leaves) {
-      const size = b.renderSize || 28;
-      ctx.save();
-      ctx.translate(b.position.x, b.position.y);
-      ctx.rotate(b.angle);
-      ctx.globalAlpha = 0; // semi-transparent OPACITY OPACITY OPACITY OPACITY OPACITY OPACITY OPACITY OPACITY def = 0.7
-      if (leafImg.complete && leafImg.naturalWidth !== 0) {
-        ctx.drawImage(leafImg, -size/2, -size/2, size, size);
-      } else {
-        ctx.fillStyle = 'rgba(200,120,45,0.7)';
-        ctx.beginPath();
-        ctx.ellipse(0, 0, size*0.45, size*0.28, 0, 0, Math.PI*2);
-        ctx.fill();
-      }
-      ctx.restore();
-    }
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(render);
-  }
-
-  const runner = Runner.create();
-  Runner.run(runner, engine);
-  render();
-
-  setInterval(() => {
-    if (leaves.length < MAX_LEAVES) spawnLeaf();
-  }, 2000);
-
-  for (let i=0;i<8;i++) spawnLeaf();
-
-  window.addEventListener('resize', () => {
-    Body.setPosition(leftWall, { x: -60, y: window.innerHeight/2 });
-    Body.setPosition(rightWall, { x: window.innerWidth+60, y: window.innerHeight/2 });
-  });
-
-  console.log('Floating leaves active — semi-transparent, fall-through, auto-removed.');
-});
-// ---------- end AUTUMN LEAF LOGIC ----------
+    // random quote 
+    (function(){
+      const q=[
+        "If you only do what is easy, your life will be hard.",
+        "If there is no enemy inside, the enemy outside can do no harm.",
+        "You will face many defeats in life, but never let yourself be defeated.",
+        "Better to have loved and lost, than never to have loved at all.",
+        "The journey of a thousand miles begins with one step.",
+        "The best way out is always through.",
+        "It always seems impossible until it's done.",
+        "No one can make you feel inferior without your consent.",
+        "One finds limits by pushing them.",
+        "It's never too late to be what you might have been.",
+        "Everything you've ever wanted is on the other side of fear.",
+        "A problem is a chance for you to do your best.",
+        "If opportunity doesn't knock, build a door.",
+        "You must do the things you think you cannot do.",
+        "No act of kindness, no matter how small, is ever wasted.",
+        "Too low they build, who build beneath the stars.",
+        "Lead by example.",
+        "Experience is what you get, when you don't get what you want.",
+        "You are star dust. You are a thermodynamic miracle.",
+        "Success is not based on who has the most, but who needs the least.",
+      ];
+      document.getElementById('magnificence-quote').textContent=`"${q[Math.floor(Math.random()*q.length)]}"`;
+    })();
   </script>
 
+  <script>
+    (function(){
+      const titleEl=document.getElementById('calendarTitle');
+      const gridEl =document.getElementById('calendarGrid');
+      let curr=new Date();
+      const EVENT_COLORS = {
+            birthday: "#A98FD1",      //  lavender
+            holiday: "#8FA8C9",  //   muted blue
+            special: "#D7C46A",    //  gold
+            concert:  "#D98C8C",    //  red
+            milestone: "#8CB7E8",  // blue
+        };
+      const events={
+        "2026-01-27":{text:"calendar creation",color: EVENT_COLORS.milestone},
+        "2026-02-03":{text:"my birthday!",color: EVENT_COLORS.birthday},
+        "2026-02-10":{text:"daniel's birthday",color: EVENT_COLORS.birthday},
+        "2026-03-05":{text:"brandon's birthday",color: EVENT_COLORS.birthday},
+        "2026-03-13":{text:"jayden's birthday",color: EVENT_COLORS.birthday},
+        "2026-04-12":{text:"break's birthday",color: EVENT_COLORS.birthday},
+        "2026-04-14":{text:"noah's birthday",color: EVENT_COLORS.birthday},
+        "2026-05-30":{text:"matija's birthday",color: EVENT_COLORS.birthday},
+        "2026-06-11":{text:"julian's birthday",color: EVENT_COLORS.birthday},
+        "2026-06-13":{text:"luis' birthday",color: EVENT_COLORS.birthday},
+        "2026-07-28":{text:"lei's birthday",color: EVENT_COLORS.birthday},
+        "2026-08-08":{text:"jonny's birthday",color: EVENT_COLORS.birthday},
+        "2026-08-09":{text:"twig's birthday",color: EVENT_COLORS.birthday},
+        "2026-08-10":{text:"jose's birthday",color: EVENT_COLORS.birthday},
+        "2026-08-13":{text:"carl's birthday",color: EVENT_COLORS.birthday},
+        "2026-08-16":{text:"kris' birthday",color: EVENT_COLORS.birthday},
+        "2026-08-20":{text:"steven's birthday",color: EVENT_COLORS.birthday},
+        "2026-10-05":{text:"luca's birthday",color: EVENT_COLORS.birthday},
+        "2026-10-10":{text:"eli's birthday",color: EVENT_COLORS.birthday},
+        "2026-12-10":{text:"jacob's birthday",color: EVENT_COLORS.birthday},
+        "2026-12-22":{text:"eric's birthday",color: EVENT_COLORS.birthday},
+        "2026-02-02":{text:"groundhog day",color:EVENT_COLORS.holiday},
+        "2026-02-14":{text:"valentine's day",color:EVENT_COLORS.holiday},
+        "2026-03-17":{text:"saint patrick's day",color:EVENT_COLORS.holiday},
+        "2026-04-22":{text:"earth day",color:EVENT_COLORS.holiday},
+        "2026-05-10":{text:"mother's day",color:EVENT_COLORS.holiday},
+        "2026-06-19":{text:"juneteenth",color:EVENT_COLORS.holiday},
+        "2026-06-21":{text:"father's day",color:EVENT_COLORS.holiday},
+        "2026-07-04":{text:"independence day",color:EVENT_COLORS.holiday},
+        "2026-11-11":{text:"veteran's day",color:EVENT_COLORS.holiday},
+        "2026-12-24":{text:"christmas eve",color:EVENT_COLORS.holiday},
+        "2026-12-25":{text:"christmas day",color:EVENT_COLORS.holiday},
+        "2026-12-31":{text:"new years eve",color:EVENT_COLORS.holiday},
+        "2026-04-01":{text:"april fools & artemis II!",color:EVENT_COLORS.concert},
+        "2026-04-02":{text:"dead butterflies concert",color:EVENT_COLORS.concert},
+        "2026-10-31":{text:"TLT concert (god save me)",color:EVENT_COLORS.concert},
+      };
+      function render(){
+        gridEl.innerHTML='';
+        const y=curr.getFullYear(),mo=curr.getMonth();
+        titleEl.textContent=curr.toLocaleString('default',{month:'long',year:'numeric'});
+        const first=new Date(y,mo,1).getDay(),days=new Date(y,mo+1,0).getDate(),today=new Date();
+        for(let i=0;i<first;i++) gridEl.appendChild(document.createElement('div'));
+        for(let day=1;day<=days;day++){
+          const cell=document.createElement('div');
+          cell.className='cal-day'; cell.textContent=day;
+          const key=`${y}-${String(mo+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+          if(day===today.getDate()&&mo===today.getMonth()&&y===today.getFullYear()) cell.classList.add('today');
+          if(events[key]){
+            cell.classList.add('event'); cell.style.background=events[key].color;
+            const tip=document.createElement('div'); tip.className='cal-tip'; tip.textContent=events[key].text;
+            cell.appendChild(tip);
+          }
+          gridEl.appendChild(cell);
+        }
+      }
+      document.getElementById('prevMonth').onclick=()=>{curr.setMonth(curr.getMonth()-1);render();};
+      document.getElementById('nextMonth').onclick=()=>{curr.setMonth(curr.getMonth()+1);render();};
+      render();
+    })();
+  </script>
 
-<!-- calendar script -->
-<script>
-const calendarTitle = document.getElementById("calendarTitle");
-const calendarGrid = document.getElementById("calendarGrid");
-
-let currentDate = new Date();
-
-const posts = {
-  // example:
-  // "2026-01-25": { text: "text", color: "#c7d8ff" }
-  "2026-01-27": { text: "calendar creation", color: "#F59682" },
-
-  //birthdays - pink
-  "2026-02-03": { text: "my birthday!", color: "#FFB0F9" },
-  "2026-02-10": { text: "daniel's birthday", color: "#FFB0F9" },
-  "2026-03-05": { text: "brandon's birthday", color: "#FFB0F9" },
-  "2026-03-13": { text: "jayden's birthday", color: "#FFB0F9" },
-  "2026-04-12": { text: "break's birthday", color: "#FFB0F9" },
-  "2026-04-14": { text: "noah's birthday", color: "#FFB0F9" },
-  "2026-05-30": { text: "matija's birthday", color: "#FFB0F9" },
-  "2026-06-11": { text: "julian's birthday", color: "#FFB0F9" },
-  "2026-06-13": { text: "luis' birthday", color: "#FFB0F9" },
-  "2026-07-28": { text: "lei's birthday", color: "#FFB0F9" },
-  "2026-08-08": { text: "jonny's birthday", color: "#FFB0F9" },
-  "2026-08-09": { text: "twig's birthday", color: "#FFB0F9" },
-  "2026-08-10": { text: "jose's birthday", color: "#FFB0F9" },
-  "2026-08-13": { text: "carl's birthday", color: "#FFB0F9" },
-  "2026-08-16": { text: "kris' birthday", color: "#FFB0F9" },
-  "2026-08-20": { text: "steven's birthday", color: "#FFB0F9" },
-  "2026-10-05": { text: "luca's birthday", color: "#FFB0F9" },
-  "2026-10-10": { text: "eli's birthday", color: "#FFB0F9" },
-  "2026-12-10": { text: "jacob's birthday", color: "#FFB0F9" },
-  "2026-12-22": { text: "eric's birthday", color: "#FFB0F9" },
-
-  //holidays - green
-  "2026-02-02": { text: "groundhog day", color: "#BDE897" },
-  "2026-02-14": { text: "valentine's day", color: "#BDE897" },
-  "2026-03-17": { text: "saint patrick's day", color: "#BDE897" },
-  "2026-04-01": { text: "april fools' day", color: "#BDE897" },
-  "2026-04-22": { text: "earth day", color: "#BDE897" },
-  "2026-05-10": { text: "mother's day", color: "#BDE897" },
-  "2026-06-19": { text: "juneteenth", color: "#BDE897" },
-  "2026-06-21": { text: "father's day", color: "#BDE897" },
-  "2026-07-04": { text: "independence day", color: "#BDE897" },
-  "2026-10-31": { text: "halloween day", color: "#BDE897" },
-  "2026-11-11": { text: "veteran's day", color: "#BDE897" },
-  "2026-12-24": { text: "christmas eve", color: "#BDE897" },
-  "2026-12-25": { text: "christmas day", color: "#BDE897" },
-  "2026-12-31": { text: "new years eve", color: "#BDE897" },
-
-  //events! - orange
-  "2026-04-01": { text: 'april fools & artemis II launch!', color: "#D6F07F" },
-  "2026-04-02": { text: "dead butterflies concert", color: "#F0B77F" },
-  "2026-10-31": { text: "TLT concert (god save me)", color: "#F0B77F" },
-};
-
-function renderCalendar() {
-  calendarGrid.innerHTML = "";
-
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-
-  calendarTitle.textContent =
-    currentDate.toLocaleString("default", { month: "long", year: "numeric" });
-
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  for (let i = 0; i < firstDay; i++) {
-    calendarGrid.appendChild(document.createElement("div"));
-  }
-
-  const today = new Date();
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    const cell = document.createElement("div");
-    cell.textContent = day;
-    cell.className = "calendar-day";
-
-    const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-
-    // highlight today
-    if (
-      day === today.getDate() &&
-      month === today.getMonth() &&
-      year === today.getFullYear()
-    ) {
-      cell.classList.add("today");
-    }
-
-    // event bubble
-    if (posts[key]) {
-      cell.classList.add("post");
-      cell.style.background = posts[key].color || "#c7d8ff";
-
-      const tooltip = document.createElement("div");
-      tooltip.className = "calendar-tooltip";
-      tooltip.textContent = posts[key].text;
-
-      cell.appendChild(tooltip);
-    }
-
-    calendarGrid.appendChild(cell);
-  }
-}
-// month cycle toiggle
-document.getElementById("prevMonth").onclick = () => {
-  currentDate.setMonth(currentDate.getMonth() - 1);
-  renderCalendar();
-};
-
-document.getElementById("nextMonth").onclick = () => {
-  currentDate.setMonth(currentDate.getMonth() + 1);
-  renderCalendar();
-};
-
-renderCalendar();
-
-const magnificenceQuotes = [
-"If you only do what is easy, your life will be hard.",
-"If there is no enemy inside, the enemy outside can do no harm.",
-"It is hard to fail, but it is worse never to have tried to succeed.",
-"You will face many defeats in life, but never let yourself be defeated.",
-"Success is not final, failure is not fatal: it is the courage to continue that counts.",
-"Better to have loved and lost, than never to have loved at all.",
-"The journey of a thousand miles begins with one step.",
-"You must be the change you wish to see in the world.",
-"The best way out is always through.",
-"Good, better, best. Never let it rest. 'Til your good is better and your better is best.",
-"The past cannot be changed. The future is yet in your power.",
-"It always seems impossible until it's done.",
-"People who are crazy enough to think they can change the world, are the ones who do.",
-"No one can make you feel inferior without your consent.",
-"One finds limits by pushing them.",
-"Every day, we choose who we are by how we define ourselves.",
-"It's never too late to be what you might have been.",
-"Believe you can and you're halfway there",
-"Build your own dreams, or someone else will hire you to build theirs.",
-"I'm not afraid of storms, for I'm learning how to sail my ship.",
-"Everything you've ever wanted is on the other side of fear.",
-"A problem is a chance for you to do your best.",
-"If opportunity doesn't knock, build a door.",
-"What you think, you become. What you feel, you attract. What you imagine,you create.",
-"You must do the things you think you cannot do.",
-"No act of kindness, no matter how small, is ever wasted.",
-"Your big opportunity may be right where you are now.",
-"Everything has beauty, but not everyone can see.",
-"The time is always right to do what is right.",
-"Too low they build, who build beneath the stars.",
-"There is no excuse to not live up to your fullest potential.",
-"Lead by example.",
-"Allow for the possibility that you have something important to contribute to the world.",
-"Experience is what you get, when you don't get what you want.",
-"You are star dust. You are a thermodynamic miracle. You are the waking universe looking back at itself.",
-"Success is not based on who has the most, but who needs the least.",
-];
-
-function setMagnificenceQuote(){
-  const random = Math.floor(Math.random() * magnificenceQuotes.length);
-  document.getElementById("magnificence-quote").textContent = 
-  `"${magnificenceQuotes[random]}"`;
-}
-
-setMagnificenceQuote();
-
-
-</script>
-
-  <canvas id="leafCanvas"></canvas>
 </body>
 </html>

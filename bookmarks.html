@@ -5,113 +5,119 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>kaia online - bookmarks & resources</title>
   <style>
+    /* ── font ── */
     @font-face {
       font-family: "NDS";
       src: url("rework/assets/fonts/nds.ttf") format("truetype");
       font-display: swap;
-      image-rendering: pixelated;
-      font-smooth: never;
       -webkit-font-smoothing: none;
     }
 
+    /* ── tokens (Light Mode) ── */
     :root {
-      --bg-tile: #fff;
-      --bg-header: #9eb4d1;
-      --border-tile: #b6c6df;
+      --sky:          #d8eaf8;
+      --sky2:         #eef5fc;
+
+      --panel-bg:     #fff;
+      --panel-border: #b6c6df;
+      --panel-shadow: #9ca7c3;
+      --panel-head:   #b6c6df;
+      --panel-head-b: #8a99b8;
+
+      --head-t-shadow:  #7a93b0;
+      --head-b-shadow1: #cddaea;
+      --head-b-shadow2: #8a99b8;
+
+      --text:         #2a3a50;
+      --text-soft:    #6a7e96;
+      --link:         #3a7acf;
+
+      --update-line:  rgba(182,198,223,0.4);
+      --today-bg:     rgba(100,160,220,0.18);
+
+      /* kept for header.js */
+      --bg-header:     #9eb4d1;
       --border-header: #7e8ba3;
-      --header-shadow: #9ca7c3;
-      --tile-header-bg: #b6c6df;
-      --tile-header-border: #8a99b8;
-      --text-color: #444;
+
+      /* bookmarks-specific aliases mapped to the new token set */
+      --bg-tile:           var(--panel-bg);
+      --border-tile:       var(--panel-border);
+      --header-shadow:     var(--panel-shadow);
+      --tile-header-bg:    var(--panel-head);
+      --tile-header-border:var(--panel-head-b);
+      --text-color:        var(--text);
+      --ink-light:         var(--text-soft);
+      --soft-blue:  #dfe9f8;
+      --pale-blue:  #eef5ff;
+      --soft-pink:  #ffeef7;
+      --soft-yellow:#eed8ff;
+
       --font-base: 1rem;
       --line-height: 1;
       --custom-font-scale: 1.5;
-      --soft-blue: #dfe9f8;
-      --pale-blue: #eef5ff;
-      --soft-pink: #ffeef7;
-      --soft-yellow: #eed8ff;
-      --ink-light: #70809a;
     }
 
-    html { font-size: var(--font-base); }
+    /* ── tokens (Dark Mode Overrides) ── */
+    body.dark-mode {
+      --sky:          #1a2028;
+      --sky2:         #11151a;
+
+      --panel-bg:     #1e2530;
+      --panel-border: #151a22;
+      --panel-shadow: #0d1117;
+      --panel-head:   #2a3340;
+      --panel-head-b: #151a22;
+
+      --head-t-shadow:  #000;
+      --head-b-shadow1: #3a4a60;
+      --head-b-shadow2: #10141a;
+
+      --text:         #e0e8f0;
+      --text-soft:    #8a99b8;
+      --link:         #6b9ac4;
+
+      --update-line:  rgba(255,255,255,0.05);
+      --today-bg:     rgba(255,255,255,0.1);
+
+      --bg-header:     #2a3340;
+      --border-header: #1a2028;
+
+      /* dark overrides for bookmarks-specific colours */
+      --soft-blue:  #1e2d40;
+      --pale-blue:  #1a2535;
+      --soft-pink:  #2d1e2a;
+      --soft-yellow:#2a1e35;
+
+      background-blend-mode: multiply;
+    }
+
+    /* ── reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { cursor: url("rework/assets/cur/kaiacursor.png"), auto; }
+
+    html { font-size: var(--font-base); min-height: 100%; }
 
     body {
       margin: 0;
-      font-family: 'NDS', sans-serif;
+      font-family: 'NDS', monospace, sans-serif;
       font-size: calc(1rem * var(--custom-font-scale));
-      background: #e8eff7 url('rework/assets/general/bkg1.png');
-      image-rendering: pixelated;
-      color: var(--text-color);
+      color: var(--text);
       line-height: var(--line-height);
-    }
-
-    header {
-      width: 100%;
-      background: var(--bg-header);
-      border-bottom: 0.2rem solid var(--border-header);
-      padding: 0.625rem 0;
-      text-align: center;
-      box-shadow: 0 0.125rem 0.25rem var(--header-shadow);
-      font-weight: bold;
-      font-size: 1.75rem;
-      position: relative;
-      z-index: 20;
-    }
-
-    header a {
-      margin: 0 0.5rem;
-      color: white;
-      text-decoration: none;
-      letter-spacing: .1rem;
+      background:
+        url('rework/assets/general/bkg3.gif'),
+        linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
+      background-attachment: fixed;
+      background-size: auto, 100% 100%;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     footer {
       text-align: center;
       font-size: 80%;
       margin: 0.75rem 0 1rem;
+      color: var(--text-soft);
+      transition: color 0.3s;
     }
-
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-content {
-      position: absolute;
-      background-color: #cfddffc5;
-      border: 1px solid var(--border-header);
-      border-radius: 3px;
-      z-index: 10;
-      top: 100%;
-      left: 40%;
-      transform: translateX(-50%);
-      min-width: 5rem;
-      font-size: 1.1rem;
-      padding: 0.1rem 0;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-    }
-
-    .dropdown-content a {
-      display: block;
-      padding: 0.2rem 0.4rem;
-      text-decoration: none;
-      color: var(--text-color);
-      white-space: nowrap;
-      transition: transform .2s ease-in-out;
-    }
-
-    .dropdown-content a:hover {
-      transform: scale(1.1);
-      cursor: pointer;
-    }
-
-    .dropdown:hover .dropdown-content {
-      opacity: 1;
-      visibility: visible;
-    }
-
     .wrapper {
       display: flex;
       max-width: 75rem;
@@ -129,22 +135,28 @@
     }
 
     .tile {
-      background: var(--bg-tile);
-      border: 0.15rem solid var(--border-tile);
-      border-radius: 0.375rem;
-      box-shadow: 0 0 0.25rem var(--header-shadow);
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
       position: relative;
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
     }
 
     .tile h2 {
-      background: var(--tile-header-bg);
-      color: white;
+      background: var(--panel-head);
+      border-bottom: 1px solid var(--panel-head-b);
+      padding: 0.125rem 0.5rem;
       margin: 0;
-      padding: 0.5rem;
       font-size: 1.5rem;
+      font-weight: bold;
+      letter-spacing: 0.2rem;
       text-align: center;
-      border-bottom: 0.15rem solid var(--tile-header-border);
-      letter-spacing: .2rem;
+      color: #fff;
+      text-shadow: 0 1px 0 var(--head-t-shadow);
+      box-shadow:
+        inset 0 1px 0 var(--head-b-shadow1),
+        inset 0 -1px 0 var(--head-b-shadow2);
+      transition: background 0.3s, border-color 0.3s;
     }
 
     .decor {
@@ -177,28 +189,30 @@
       grid-template-columns: 13rem minmax(0, 1fr);
       min-height: 34rem;
 
-      background:
+      /* background:
         linear-gradient(90deg, rgba(182,198,223,.45) 0 0.1rem, transparent 0.1rem 100%),
         linear-gradient(0deg, rgba(182,198,223,.25) 0 0.1rem, transparent 0.1rem 100%),
-        var(--bg-tile);
+        var(--panel-bg); */
 
       background-size: 1.25rem 1.25rem;
+      transition: background 0.3s;
     }
 
     .bookmark-rail {
-      border-right: 0.15rem solid var(--border-tile);
-      background: rgba(238,245,255,.9);
+      border-right: 0.15rem solid var(--panel-border);
+      background: var(--panel-bg);
       padding: 0.8rem;
       display: flex;
       flex-direction: column;
       gap: 0.45rem;
+      transition: background 0.3s, border-color 0.3s;
     }
 
     .rail-note {
       font-size: 1.05rem;
       line-height: 0.95;
       margin: 0 0 0.45rem;
-      color: var(--ink-light);
+      color: var(--text-soft);
       text-align: center;
     }
 
@@ -206,24 +220,26 @@
       font-family: 'NDS', sans-serif;
       font-size: 1.2rem;
       text-align: left;
-      color: var(--text-color);
-      background: #fff;
-      border: 0.12rem solid var(--border-tile);
-      border-radius: 0.25rem;
+      color: var(--text);
+      background: var(--panel-bg);
+      border: 0.12rem solid var(--panel-border);
+      border-radius: 0;
       padding: 0.35rem 0.55rem;
-      box-shadow: 0.12rem 0.12rem 0 var(--soft-blue);
+      box-shadow: 0.12rem 0.12rem 0 var(--panel-shadow);
       cursor: pointer;
       transition:
         transform .16s ease,
         background-color .16s ease,
-        box-shadow .16s ease;
+        box-shadow .16s ease,
+        color 0.3s;
     }
 
     .rail-button:hover,
     .rail-button.active {
-      background: #cfddffc5;
+      background: var(--panel-head);
+      color: #fff;
       transform: translateX(0.15rem);
-      box-shadow: 0.18rem 0.18rem 0 rgba(32, 7, 255, 0.14);
+      box-shadow: 0.18rem 0.18rem 0 var(--panel-shadow);
     }
 
     .bookmark-content {
@@ -236,7 +252,7 @@
       gap: 1rem;
       align-items: flex-start;
       margin-bottom: 0.8rem;
-      border-bottom: 0.15rem dashed var(--border-tile);
+      border-bottom: 0.15rem dashed var(--panel-border);
       padding-bottom: 0.65rem;
     }
 
@@ -244,7 +260,7 @@
       margin: 0.15rem 0 0;
       font-size: 1.15rem;
       line-height: 0.9;
-      color: var(--ink-light);
+      color: var(--text-soft);
       max-width: 34rem;
     }
 
@@ -252,18 +268,19 @@
       display: block;
       font-size: 1.9rem;
       letter-spacing: .12rem;
-      color: #53657f;
+      color: var(--text);
     }
 
     .counter {
       flex: 0 0 auto;
       background: var(--soft-yellow);
-      border: 0.12rem solid #b987d8;
-      border-radius: 0.25rem;
+      border: 0.12rem solid var(--panel-head-b);
+      border-radius: 0;
       padding: 0.35rem 0.5rem;
       font-size: 1.1rem;
-      color: #5c4275;
-      box-shadow: 0.12rem 0.12rem 0 #cda2ee;
+      color: var(--text);
+      box-shadow: 0.12rem 0.12rem 0 var(--panel-shadow);
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
     }
 
     .link-lanes {
@@ -276,31 +293,34 @@
       display: grid;
       grid-template-columns: 8.5rem minmax(0, 1fr);
       align-items: stretch;
-      border: 0.14rem solid var(--border-tile);
-      background: rgba(255,255,255,.86);
-      border-radius: 0.35rem;
+      border: 0.14rem solid var(--panel-border);
+      background: var(--panel-bg);
+      border-radius: 0;
       overflow: visible;
-      box-shadow: 0.14rem 0.14rem 0 rgba(156,167,195,.45);
+      box-shadow: 0.14rem 0.14rem 0 var(--panel-shadow);
       transition:
         transform .18s ease,
-        box-shadow .18s ease;
+        box-shadow .18s ease,
+        background 0.3s,
+        border-color 0.3s;
     }
 
     .lane:hover {
       transform: translateX(0.2rem);
-      box-shadow: 0.15rem 0.15rem 0 rgba(156,167,195,.55);
+      box-shadow: 0.15rem 0.15rem 0 var(--panel-shadow);
     }
 
     .lane-label {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--soft-blue);
-      border-right: 0.14rem solid var(--border-tile);
+      background: var(--panel-head);
+      border-right: 0.14rem solid var(--panel-head-b);
       color: #fff;
-      text-shadow: 0.08rem 0.08rem 0 var(--tile-header-border);
+      text-shadow: 0.08rem 0.08rem 0 var(--head-t-shadow);
       letter-spacing: .1rem;
       padding: 0.45rem;
+      transition: background 0.3s, border-color 0.3s;
     }
 
     .lane-links {
@@ -314,18 +334,19 @@
 
     .site-link {
       position: relative;
-      color: var(--text-color);
+      color: var(--text);
       text-decoration: none;
-      background: var(--pale-blue);
+      background: var(--soft-blue);
       border: 0.1rem solid transparent;
-      border-radius: 0.2rem;
+      border-radius: 0;
       padding: 0.28rem 0.55rem 0.22rem;
       font-size: 1.15rem;
       line-height: 0.9;
       transition:
         transform .16s ease,
         background-color .16s ease,
-        border-color .16s ease;
+        border-color .16s ease,
+        color 0.3s;
     }
 
     .site-link::after {
@@ -340,18 +361,18 @@
       width: max-content;
       max-width: 13rem;
 
-      background: #fff;
-      color: var(--text-color);
+      background: var(--panel-bg);
+      color: var(--text);
 
-      border: 0.12rem solid var(--border-tile);
-      border-radius: 0.25rem;
+      border: 0.12rem solid var(--panel-border);
+      border-radius: 0;
 
       padding: 0.3rem 0.45rem;
 
       font-size: 0.95rem;
       line-height: 0.9;
 
-      box-shadow: 0.12rem 0.12rem 0 var(--soft-blue);
+      box-shadow: 0.12rem 0.12rem 0 var(--panel-shadow);
 
       opacity: 0;
       pointer-events: none;
@@ -366,9 +387,9 @@
     .site-link:hover {
       transform: translateY(-0.15rem);
       background: var(--soft-pink);
-      border-color: #d6bfd0;
+      border-color: var(--panel-border);
 
-      border-radius: 0.2rem;
+      border-radius: 0;
     }
 
     .site-link:hover::after {
@@ -386,15 +407,17 @@
       gap: 0.75rem;
       margin-top: 0.9rem;
       font-size: 1.05rem;
-      color: var(--ink-light);
+      color: var(--text-soft);
       line-height: 0.9;
+      transition: color 0.3s;
     }
 
     .bookmark-bottom span {
-      background: rgba(255,255,255,.8);
-      border: 0.1rem solid var(--border-tile);
-      border-radius: 0.01rem;
+      background: var(--panel-bg);
+      border: 0.1rem solid var(--panel-border);
+      border-radius: 0;
       padding: 0.35rem 0.45rem;
+      transition: background 0.3s, border-color 0.3s;
     }
 
     @media (max-width: 50rem) {
@@ -404,7 +427,7 @@
 
       .bookmark-rail {
         border-right: none;
-        border-bottom: 0.15rem solid var(--border-tile);
+        border-bottom: 0.15rem solid var(--panel-border);
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
@@ -424,7 +447,7 @@
 
       .lane-label {
         border-right: none;
-        border-bottom: 0.14rem solid var(--border-tile);
+        border-bottom: 0.14rem solid var(--panel-border);
       }
     }
 
@@ -463,55 +486,7 @@
   </style>
 </head>
 <body>
-
-<header style="color: #fff;">
-  <div class="dropdown">
-    <a href="indexnew.html"
-    style="text-decoration: none; cursor: pointer;"
-    onmouseover="this.style.textDecoration='underline';"
-    onmouseout="this.style.textDecoration='none';">home</a> -
-  </div>
-
-  <div class="dropdown">
-    <a href="#">kaia</a> -
-    <div class="dropdown-content">
-      <a href="https://kaia.starscene.com/blog/index.html">blog</a>
-      <a href="lists.html">my lists</a>
-    </div>
-  </div>
-
-  <div class="dropdown">
-    <a href="#">web</a> -
-    <div class="dropdown-content">
-      <a href="https://kaiasei.atabook.org/">guestbook</a>
-      <a href="webrings.html">webrings</a>
-      <a href="webrings.html">resources</a>
-      <a href="manifesto">manifesto</a>
-    </div>
-  </div>
-
-  <div class="dropdown">
-    <a href="#">for u</a> -
-    <div class="dropdown-content">
-      <a href="bookmarks.html">bookmarks</a>
-      <a href="recommendations.html">recs</a>
-      <a href="mystuf.html">creations</a>
-      <a href="myrecipes.html">recipes</a>
-    </div>
-  </div>
-
-  <div class="dropdown">
-    <a href="#">other</a>
-    <div class="dropdown-content">
-      <a href="/ofb/wilds.html">outer wilds</a>
-      <a href="dontforget.html">dont forget</a>
-      <a href="deepestfear.html">an interaction</a>
-      <a href="msgs.html">hall of messages</a>
-      <a href="template.html">template</a>
-    </div>
-  </div>
-</header>
-
+  <script src="header.js"></script>
 <main>
   <div class="wrapper">
     <div class="column bookmarks-page">
@@ -550,7 +525,7 @@
               </div>
 
               <div class="counter">
-                <span id="visible-count">20</span> links
+                <span id="visible-count">...</span> links
               </div>
             </div>
 
@@ -593,6 +568,11 @@
                   href="https://vert.sh/"
                   target="_blank"
                   data-note="all purpose online file converter. images, audio, docs, and vids. entirely local">vert.sh</a>
+
+                  <a class="site-link"
+                  href="https://wigglypaint.net/"
+                  target="_blank"
+                  data-note="draw with wiggly lines!">wigglypaint</a>
                 </div>
               </div>
 
@@ -691,6 +671,11 @@
                   href="https://neal.fun/deep-sea/"
                   target="_blank"
                   data-note="what lies at the bottom of the ocean??">The Deep Sea</a>
+
+                  <a class="site-link"
+                  href="https://theendpoem.com/"
+                  target="_blank"
+                  data-note="The End Poem by Julian Gough">The End Poem</a>
                   
                 </div>
               </div>
@@ -723,6 +708,11 @@
                   href="https://prismlauncher.org/"
                   target="_blank"
                   data-note="my minecraft launcher of choice. you still need an account to use it!">prism launcher</a>
+
+                  <a class="site-link"
+                  href="https://jcw87.github.io/c2-sans-fight/"
+                  target="_blank"
+                  data-note="fight sans!">bad time simulator</a>
                   
                 </div>
               </div>
@@ -762,7 +752,12 @@
                   <a class="site-link"
                   href="https://jonathangaynor.github.io/"
                   target="_blank"
-                  data-note="a irl buddy's website! mine is better muahahaha ">jonny's webstie</a>
+                  data-note="a irl buddy's website! mine is better muahahaha">jonny's webstie</a>
+
+                  <a class="site-link"
+                  href="https://jonathangaynor.github.io/"
+                  target="_blank"
+                  data-note="a testing version of my page where i put to use some ideas to see how they would work. almost always broken">kaia online BETA</a>
                   
                 </div>
               </div>

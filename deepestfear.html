@@ -40,26 +40,6 @@
       line-height: var(--line-height);
     }
 
-    header {
-      width: 100%;
-      background: var(--bg-header);
-      border-bottom: 0.2rem solid var(--border-header);
-      padding: 0.625rem 0;
-      text-align: center;
-      box-shadow: 0 0.125rem 0.25rem var(--header-shadow);
-      font-weight: bold;
-      font-size: 1.75rem;
-      position: relative;
-      z-index: 20;
-    }
-
-    header a {
-      margin: 0 0.5rem;
-      color: white;
-      text-decoration: none;
-      letter-spacing: .1rem;
-    }
-
     footer {
       text-align: center;
       font-size: 80%;
@@ -206,56 +186,6 @@
       padding: 0;
       font-size: 1.5rem;
       line-height: .75;
-    }
-
-    /* d down wrapper */
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropdown-content {
-      /* display: none; */
-      position: absolute;
-      background-color: #cfddffc5;
-      border: 1px solid var(--border-header);
-      border-radius: 3px;
-      /* box-shadow: 2px 2px 0 var(--border-header); */
-      z-index: 10;
-      
-      top: 100%; 
-      left: 40%;
-      transform: translateX(-50%);
-      
-      min-width: 5rem;
-      font-size: 1.1rem;
-      padding: 0.1rem 0;
-      /* fade in out */
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-    }
-
-    .dropdown-content a {
-      display: block;
-      padding: 0.2rem 0.4rem;
-      text-decoration: none;
-      color: var(--text-color);
-      white-space: nowrap;
-      transition: transform .2s ease-in-out;
-    }
-
-    .dropdown-content a:hover {
-      /* background-color: #d6e0f0; */
-      transform: scale(1.1);
-      cursor: pointer;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-      /* fade in out */
-      opacity: 1;
-      visibility: visible;
     }
 
     /* deepest fear poem sequence */
@@ -409,48 +339,7 @@
   </style>
 </head>
 <body>
-
-<header style="color: #fff;">
-    <div class="dropdown">
-      <a href="indexnew.html" 
-      style="text-decoration: none; cursor: pointer;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">home</a> - 
-    </div>
-    <div class="dropdown">
-      <a href="#">kaia</a> - 
-      <div class="dropdown-content">
-        <a href="https://kaia.starscene.com/blog/index.html">blog</a>
-        <a href="lists.html">my lists</a>
-      </div>
-    </div>
-    <div class="dropdown">
-      <a href="#">web</a> - 
-      <div class="dropdown-content">
-        <a href="https://kaiasei.atabook.org/">guestbook</a>
-        <a href="webrings.html">webrings</a>
-        <a href="webrings.html">resources</a>
-        <a href="manifesto">manifesto</a>
-      </div>
-    </div>
-    <div class="dropdown">
-      <a href="#">for u</a> - 
-      <div class="dropdown-content">
-        <a href="bookmarks.html">bookmarks</a>
-        <a href="recommendations.html">recs</a>
-        <a href="mystuf.html">creations</a>
-        <a href="myrecipes.html">recipes</a>
-      </div>
-    </div>
-    <div class="dropdown">
-      <a href="#">other</a>
-      <div class="dropdown-content">
-        <a href="/ofb/wilds.html">outer wilds</a>
-        <a href="dontforget.html">dont forget</a>
-        <a href="deepestfear.html">an interaction</a>
-        <a href="msgs.html">hall of messages</a>
-        <a href="template.html">template</a>
-      </div>
-    </div>
-  </header>
+<script src="header.js"></script>
   <!-- <div class="banner">
     <img src="assets/christmas_lights.png" alt="Banner Image">
   </div> -->
