@@ -3,7 +3,7 @@
 
   // ── ALERT BAR ───────────────────────────────────────────────────────────────
   // Set to null or "" to hide the alert bar entirely.
-  const ALERT_TEXT = "a ";
+  const ALERT_TEXT = "gay activites taking place (i love my new alert bar) :3";
 
   // ── PLAYLIST ────────────────────────────────────────────────────────────────
   // { file: "/music/filename.mp3", name: "Display Name" }
@@ -11,6 +11,9 @@
   const PLAYLIST = [
     { file: "/music/again.mp3",  name: "again, someday - kaiasei" },
     { file: "/music/moonsetter.mp3",  name: "Moonsetter - Homestuck" },
+    { file: "/music/paradise.mp3",  name: "Welcome to Paradise - Emile van Krieken"   },
+    { file: "/music/onceupon.mp3",  name: "Once upon a time... - Synthion"   },
+    { file: "/music/aLupi.mp3",  name: "a Lupi - Synthion"   },
     { file: "/music/tea.mp3",  name: "Kokoro's Oolong Tea - Yusuka Tanaka"   },
     { file: "/music/memories.mp3",  name: "Comforting Memories - Kumi Tanioka" },
     { file: "/music/secunda.mp3",  name: "Secunda - Jeremy Soule"   },
@@ -26,14 +29,14 @@
 
   // ── UI SOUNDS ───────────────────────────────────────────────────────────────
   const SOUNDS = {
-    enabled: false,
-    volume: 0.4,
+    enabled: true,
+    volume: 0.2,
     files: {
-      click: "/assets/click.mp3",
-      open:  "/assets/open.mp3",
-      close: "/assets/close.mp3",
-      hover: "/assets/hover.mp3",
-      nav:   "/assets/nav.mp3",
+      click: "/altsite/fx/1leaventry.wav",
+      open:  "/altsite/fx/1selectentry.wav",
+      close: "/altsite/fx/1selectentry.wav",
+      hover: "/altsite/fx/shiplog_highlight2.wav",
+      nav:   "/altsite/fx/shiplog_highlight2.wav",
     },
   };
   const _cache = {};
@@ -59,7 +62,14 @@
       children: [
         { label: "blog",     href: "/blog/index.html" },
         { label: "my lists", href: "/lists.html" },
+        { label: "photo museum",   href: "/museum.html" },
+        { label: "friends",
+          submenu: [
+            { label: "hall of messages", href: "/msgs.html" },
+          ]
+        },
       ],
+      
     },
     {
       label: "web",
@@ -91,12 +101,6 @@
       children: [
         { label: "dont forget",    href: "/dontforget.html" },
         { label: "an interaction", href: "/deepestfear.html" },
-        { label: "friends",
-          submenu: [
-            { label: "hall of messages", href: "/msgs.html" },
-            { label: "VRChat photos!",   href: "/vrcmemories.html" },
-          ]
-        },
         { label: "shrines",
           submenu: [
             { label: "outer wilds", href: "/wilds.html" },
@@ -1089,7 +1093,7 @@
 
     let hp  = Math.floor(Math.random() * 31) + 70;
     let bat = Math.floor(Math.random() * 101);
-    const stateMap = { "0":"silent","1":"active!","2":"busy","3":"away~","4":"snooze","5":"trade","6":"play" };
+    const stateMap = { "0":"offline","1":"active!","2":"busy","3":"away~","4":"snooze","5":"trade","6":"play" };
     function nudge(v) {
       return Math.min(100, Math.max(0,
         v + (Math.random() < 0.5 ? -1 : 1) * (Math.floor(Math.random() * 4) + 1)));

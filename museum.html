@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaia online - photo museum</title>
+  <style>
+
+    /* ── font ── */
+    @font-face {
+      font-family: "NDS";
+      src: url("rework/assets/fonts/nds.ttf") format("truetype");
+      font-display: swap;
+      -webkit-font-smoothing: none;
+    }
+
+    /* ── tokens: light ── */
+    :root {
+      --sky:           #d8eaf8;
+      --sky2:          #eef5fc;
+      --panel-bg:      #fff;
+      --panel-border:  #b6c6df;
+      --panel-shadow:  #9ca7c3;
+      --panel-head:    #b6c6df;
+      --panel-head-b:  #8a99b8;
+      --head-t-shadow: #7a93b0;
+      --head-b-s1:     #cddaea;
+      --head-b-s2:     #8a99b8;
+      --text:          #2a3a50;
+      --text-soft:     #6a7e96;
+      --link:          #3a7acf;
+      --divider:       rgba(182,198,223,0.4);
+      --bg-header:     #9eb4d1;
+      --border-header: #7e8ba3;
+      /* museum-specific */
+      --wall:          #dce8f4;
+      --plaque-bg:     #f4f0e8;
+      --plaque-border: #c8b89a;
+      --plaque-text:   #3a2e20;
+      --plaque-soft:   #7a6a52;
+      --mat:           #e8e0d0;
+    }
+
+    /* ── tokens: dark ── */
+    body.dark-mode {
+      --sky:           #1a2028;
+      --sky2:          #11151a;
+      --panel-bg:      #1e2530;
+      --panel-border:  #151a22;
+      --panel-shadow:  #0d1117;
+      --panel-head:    #2a3340;
+      --panel-head-b:  #151a22;
+      --head-t-shadow: #000;
+      --head-b-s1:     #3a4a60;
+      --head-b-s2:     #10141a;
+      --text:          #e0e8f0;
+      --text-soft:     #8a99b8;
+      --link:          #6b9ac4;
+      --divider:       rgba(255,255,255,0.05);
+      --bg-header:     #2a3340;
+      --border-header: #1a2028;
+      /* museum-specific dark */
+      --wall:          #141a20;
+      --plaque-bg:     #1e1a14;
+      --plaque-border: #3a2e1a;
+      --plaque-text:   #d0c4a8;
+      --plaque-soft:   #8a7a60;
+      --mat:           #28221a;
+      background-blend-mode: multiply;
+    }
+
+    /* ── reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { cursor: url("rework/assets/cur/kaiacursor.png"), auto; }
+    html { min-height: 100%; }
+
+    body {
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1.5rem;
+      color: var(--text);
+      line-height: 1.5;
+      background:
+        url('rework/assets/general/bkg3.gif'),
+        linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
+      background-attachment: fixed;
+      background-size: auto, 100% 100%;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* ── page shell ── */
+    .museum-shell {
+      display: grid;
+      grid-template-columns: 17rem 1fr;
+      gap: 1rem;
+      max-width: 78rem;
+      margin: 0 auto;
+      padding: 1.25rem;
+    }
+
+    /* ── panel primitive ── */
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+      position: relative;
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .panel-head {
+      background: var(--panel-head);
+      border-bottom: 1px solid var(--panel-head-b);
+      padding: 0.125rem 0.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 0.15rem;
+      color: #fff;
+      text-shadow: 0 1px 0 var(--head-t-shadow);
+      box-shadow:
+        inset 0 1px 0 var(--head-b-s1),
+        inset 0 -1px 0 var(--head-b-s2);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .panel-body {
+      padding: 0.625rem;
+    }
+
+    /* ───────────────────────────────
+       SIDEBAR
+    ─────────────────────────────── */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: sticky;
+      top: 1.25rem;
+      align-self: start;
+    }
+
+    /* intro blurb */
+    .museum-intro {
+      font-size: 1.1rem;
+      color: var(--text-soft);
+      line-height: 1.5;
+      transition: color 0.3s;
+    }
+
+    /* room list */
+    .room-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .room-list li a {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 1.25rem;
+      line-height: 1.2;
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .room-list li a:hover     { background: rgba(182,198,223,0.25); color: var(--link); }
+    .room-list li a.active    { background: var(--panel-head); color: #fff; }
+
+    .room-count {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      margin-left: auto;
+      transition: color 0.3s;
+    }
+
+    .room-list li a.active .room-count { color: rgba(255,255,255,0.65); }
+
+    /* stats tile */
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.2rem 0;
+      border-bottom: 1px solid var(--divider);
+      font-size: 1.1rem;
+      transition: border-color 0.3s;
+    }
+
+    .stat-row:last-child { border-bottom: none; }
+
+    .stat-label { color: var(--text-soft); transition: color 0.3s; }
+    .stat-val   { color: var(--text);      transition: color 0.3s; }
+
+    /* ───────────────────────────────
+       MAIN GALLERY AREA
+    ─────────────────────────────── */
+    .gallery-area {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* room section header */
+    .room-section { display: none; }
+    .room-section.active { display: block; }
+
+    .room-banner {
+      background: var(--wall);
+      border: 1px solid var(--panel-border);
+      border-bottom: 3px solid var(--panel-head-b);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+      padding: 0.5rem 0.875rem;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .room-banner-title {
+      font-size: 1.75rem;
+      font-weight: bold;
+      letter-spacing: 0.2rem;
+      color: var(--text);
+      transition: color 0.3s;
+    }
+
+    .room-banner-desc {
+      font-size: 1rem;
+      color: var(--text-soft);
+      margin-top: 0.1rem;
+      transition: color 0.3s;
+    }
+
+    /* photo grid */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* ───────────────────────────────
+       EXHIBIT FRAME (the core unit)
+    ─────────────────────────────── */
+    .exhibit {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .exhibit:hover { transform: translateY(-3px); }
+
+    /* outer frame */
+    .frame {
+      background: var(--panel-bg);
+      border: 3px solid var(--panel-border);
+      box-shadow:
+        4px 4px 0 var(--panel-shadow),
+        inset 0 0 0 1px rgba(255,255,255,0.4);
+      padding: 0.5rem;
+      position: relative;
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .exhibit:hover .frame {
+      border-color: var(--panel-head);
+      box-shadow:
+        4px 4px 0 var(--panel-head-b),
+        inset 0 0 0 1px rgba(255,255,255,0.4);
+    }
+
+    /* mat inside the frame */
+    .mat {
+      background: var(--mat);
+      border: 1px solid var(--panel-border);
+      padding: 0.375rem;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    /* the photo itself */
+    .exhibit-photo {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      object-position: center top;
+      transition: opacity 0.2s;
+    }
+
+    .exhibit:hover .exhibit-photo { opacity: 0.92; }
+
+    /* placeholder for empty slots */
+    .exhibit-placeholder {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: repeating-linear-gradient(
+        45deg,
+        var(--panel-border) 0,
+        var(--panel-border) 1px,
+        transparent 0,
+        transparent 50%
+      );
+      background-size: 0.75rem 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-soft);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* museum plaque below the frame */
+    .plaque {
+      background: var(--plaque-bg);
+      border: 1px solid var(--plaque-border);
+      border-top: none;
+      padding: 0.4rem 0.625rem 0.5rem;
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .plaque-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      letter-spacing: 0.08em;
+      color: var(--plaque-text);
+      line-height: 1.2;
+      transition: color 0.3s;
+    }
+
+    .plaque-meta {
+      font-size: 0.9rem;
+      color: var(--plaque-soft);
+      margin-top: 0.1rem;
+      line-height: 1.2;
+      transition: color 0.3s;
+    }
+
+    /* ───────────────────────────────
+       LIGHTBOX
+    ─────────────────────────────── */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(10, 14, 20, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      cursor: default;
+    }
+
+    #lightbox.open { display: flex; }
+
+    .lb-inner {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      max-width: 70rem;
+      width: 100%;
+      cursor: default;
+    }
+
+    /* prev / next arrows */
+    .lb-arrow {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7);
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 2rem;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      align-self: center;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .lb-arrow:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    /* photo + plaque */
+    .lb-frame-wrap {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lb-frame {
+      background: var(--panel-bg);
+      border: 4px solid var(--panel-border);
+      box-shadow: 6px 6px 0 var(--panel-shadow);
+      padding: 0.625rem;
+    }
+
+    .lb-mat {
+      background: var(--mat);
+      border: 1px solid var(--panel-border);
+      padding: 0.5rem;
+    }
+
+    #lb-img {
+      display: block;
+      max-width: 100%;
+      max-height: 70vh;
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .lb-plaque {
+      background: var(--plaque-bg);
+      border: 1px solid var(--plaque-border);
+      border-top: none;
+      padding: 0.5rem 0.75rem 0.625rem;
+      box-shadow: 6px 6px 0 var(--panel-shadow);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    #lb-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      letter-spacing: 0.1em;
+      color: var(--plaque-text);
+      transition: color 0.3s;
+    }
+
+    #lb-meta {
+      font-size: 1rem;
+      color: var(--plaque-soft);
+      margin-top: 0.15rem;
+      transition: color 0.3s;
+    }
+
+    #lb-desc {
+      font-size: 1.1rem;
+      color: var(--plaque-text);
+      margin-top: 0.4rem;
+      line-height: 1.5;
+      transition: color 0.3s;
+      -webkit-font-smoothing: none;
+      -moz-osx-font-smoothing: grayscale;
+      font-smooth: never;
+      text-rendering: optimizeSpeed;
+
+      image-rendering: pixelated;
+    }
+
+    .lb-counter {
+      font-size: 0.9rem;
+      color: var(--plaque-soft);
+      margin-top: 0.35rem;
+      text-align: right;
+      transition: color 0.3s;
+    }
+
+    /* close button */
+    #lb-close {
+      position: fixed;
+      top: 0.875rem;
+      right: 1rem;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.7);
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1.5rem;
+      padding: 0.1rem 0.5rem;
+      cursor: pointer;
+      z-index: 10001;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    #lb-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+    /* ── footer ── */
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      margin: 0.75rem 0 1rem;
+      color: var(--text-soft);
+      transition: color 0.3s;
+    }
+
+    /* ── scrollbar ── */
+    * { scrollbar-width: thin; scrollbar-color: var(--panel-head) transparent; }
+    ::-webkit-scrollbar { width: 0.5rem; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background-color: var(--panel-border); }
+    ::-webkit-scrollbar-thumb:hover { background-color: var(--panel-head); }
+
+    /* ── mobile ── */
+    @media (max-width: 56rem) {
+      .museum-shell { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .lb-inner { flex-direction: column; }
+      .lb-arrow { align-self: auto; }
+    }
+  </style>
+</head>
+
+<body>
+  <script src="header.js"></script>
+
+<main>
+  <div class="museum-shell">
+
+    <!-- ── sidebar ── -->
+    <aside class="sidebar">
+
+      <div class="panel">
+        <div class="panel-head">photo museum</div>
+        <div class="panel-body">
+          <p class="museum-intro">the photo museum! it is collection of photos and screenshots from everywhere that i wish to produly put on display. <br><br> yes. proudly.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">rooms</div>
+        <div class="panel-body" style="padding: 0.375rem 0;">
+          <ul class="room-list" id="room-list">
+            <!-- filled by JS -->
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel" id="stats-tile">
+        <div class="panel-head">exhibit info</div>
+        <div class="panel-body">
+          <div class="stat-row">
+            <span class="stat-label">total photos</span>
+            <span class="stat-val" id="stat-total">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">rooms</span>
+            <span class="stat-val" id="stat-rooms">0</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">viewing</span>
+            <span class="stat-val" id="stat-viewing">—</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── gallery ── -->
+    <section class="gallery-area" id="gallery-area">
+      <!-- js injects here -->
+    </section>
+
+  </div>
+</main>
+
+<footer>- kaia (c) 2022 - til the end of time! -</footer>
+
+<!-- lightbox -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button id="lb-close" aria-label="Close">[ x ]</button>
+  <div class="lb-inner">
+    <button class="lb-arrow" id="lb-prev" aria-label="Previous photo">◄</button>
+    <div class="lb-frame-wrap">
+      <div class="lb-frame">
+        <div class="lb-mat">
+          <img id="lb-img" src="" alt="">
+        </div>
+      </div>
+      <div class="lb-plaque">
+        <div id="lb-title"></div>
+        <div id="lb-meta"></div>
+        <div id="lb-desc"></div>
+        <div class="lb-counter" id="lb-counter"></div>
+      </div>
+    </div>
+    <button class="lb-arrow" id="lb-next" aria-label="Next photo">►</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   PHOTO DATA
+   ─ To add a photo: add an object to the right room's `photos` array.
+   ─ To add a room: add a new object to ROOMS.
+   ─ src:   path to your photo file
+   ─ title: name shown on the plaque
+   ─ meta:  small line (date, location, etc.)
+   ─ desc:  optional longer note
+═══════════════════════════════════════════════ */
+const ROOMS = [
+  {
+    id: "actual photography",
+    label: "actual photography",
+    desc: "photos that i took that im fond of",
+    photos: [
+      { src: "assets/museum/irl/DSC00650.JPG", title: "equanimity", meta: "04-02-2026 · Miami, FL", desc: "saw a dude at a hardcore/emo show, reading a book between sets. looked really cool. i couldnt get a stable photo amidst the chaos, but i still really like this photo"},
+      { src: "assets/museum/irl/DSC00609.JPG", title: "shadowed", meta: "02-09-2026 · Big Cypress National Preserve, FL", desc: "a photo i took of the moon through a telescope when i was celebrating my birthday with a friend."},
+      { src: "assets/museum/irl/unnamed3.jpg", title: "******", meta: "??-??-2026 · Sunset, FL", desc: "some graffiti i saw while walking along some train tracks when i was feeling particularly terrible. my camera died just after i took this photo funny enough, glad i got it though. typically i dont like hearing, saying, or reading this word, but here it felt like more 'home-y'. theres also a little peace sign in the o. <br><br> im such a #faggot"},
+      { src: "assets/museum/irl/unnamed.jpg", title: "GUARDIAN", meta: "??-??-2025 · Miami Beach, FL", desc: "a photo i took of myself just before skating, i was really feeling myself here okay... also i named it as a reference to DELTARUNE lol (cause the guardian fight has a big star of light on its face..)"},
+      { src: "assets/museum/irl/DSC_0264.JPG", title: "probably the best photo ive taken like ever", meta: "??-??-???? · San Juan, PR", desc: "a photo i took while on vacation in puerto rico. i dont know why i like this photo, but its very pleasing to look at"},
+      { src: "assets/museum/irl/unnamed2.jpg", title: "sunscape", meta: "??-??-2025 · Puerto Rico", desc: "a photo i took while on vacation in puerto rico, a beautiful view"},
+      
+    ],
+  },
+  {
+    id: "friends",
+    label: "friends",
+    desc: "photos usually taken by my friends, or containing my friends",
+    photos: [
+      { src: "assets/museum/irl/eroticstevenbrandon.jpg", title: "sexual tension", meta: "??-??-???? · a random parking lot", desc: "dude this is one of the best photos ive take ever" },
+    ],
+  },
+  {
+    id: "vrc",
+    label: "vrc",
+    desc: "screenies and photos of shenanigans and people i meet in vrchat",
+    photos: [
+      { src: "assets/museum/VRC/VRC_2026-05-28.png", title: "unexpected acceptance", meta: "05-28-2026 · VR Chat (The Black Cat)", desc: "two freaks that i met that pressed me to speak from the get go. did i? no lmao, but the more i stayed and listened, the more they felt like they wanted to include me, and they were accepting of my voice (and even said it was good?!?) regardless, a fun experience! Also, one of them went to the SAME MIDDLE SCHOOL THAT I DID!? crazy coincedence on vrchat of all places. <br><br> From left to right: Director Bright, Me, DeathIce" },
+      { src: "assets/museum/VRC/VRC_2026-05-26.png", title: "'you should put us on your site!'", meta: "05-26-2026 · VR Chat (Fruitiger Aero World)", desc: "a couple people i came across in vrc as i lurked, and they saw my website link and got curious. they loved it and asked to be featured on the site! they kinda inspired this entire page to be constructed. thank you guys as a thanks you will forever be immortalized as the first photo of the vrc section<br><br>From left to right FishoNChips, Romeida, Me, Zynel, Squnk"},
+      ],
+  },
+];
+
+/* ═══════════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════════ */
+const roomList    = document.getElementById("room-list");
+const galleryArea = document.getElementById("gallery-area");
+const statTotal   = document.getElementById("stat-total");
+const statRooms   = document.getElementById("stat-rooms");
+const statViewing = document.getElementById("stat-viewing");
+
+let totalPhotos = 0;
+ROOMS.forEach(r => totalPhotos += r.photos.length);
+statTotal.textContent = totalPhotos;
+statRooms.textContent = ROOMS.length;
+
+/* build sidebar room links + gallery sections */
+ROOMS.forEach((room, ri) => {
+  /* sidebar link */
+  const li = document.createElement("li");
+  const a  = document.createElement("a");
+  a.href = "#";
+  a.dataset.room = room.id;
+  a.innerHTML = `${room.label}<span class="room-count">${room.photos.length}</span>`;
+  li.appendChild(a);
+  roomList.appendChild(li);
+
+  /* gallery section */
+  const section = document.createElement("div");
+  section.className = "room-section";
+  section.id = `room-${room.id}`;
+
+  /* banner */
+  const banner = document.createElement("div");
+  banner.className = "room-banner";
+  banner.innerHTML = `<div class="room-banner-title">${room.label}</div><div class="room-banner-desc">${room.desc}</div>`;
+  section.appendChild(banner);
+
+  /* grid */
+  const grid = document.createElement("div");
+  grid.className = "photo-grid";
+
+  room.photos.forEach((photo, pi) => {
+    const exhibit = document.createElement("div");
+    exhibit.className = "exhibit";
+    exhibit.dataset.room = ri;
+    exhibit.dataset.idx  = pi;
+
+    const frame = document.createElement("div");
+    frame.className = "frame";
+    const mat = document.createElement("div");
+    mat.className = "mat";
+
+    if (photo.src) {
+      const img = document.createElement("img");
+      img.className = "exhibit-photo";
+      img.src = photo.src;
+      img.alt = photo.title;
+      mat.appendChild(img);
+    } else {
+      const ph = document.createElement("div");
+      ph.className = "exhibit-placeholder";
+      ph.textContent = "[ photo ]";
+      mat.appendChild(ph);
+    }
+
+    frame.appendChild(mat);
+
+    const plaque = document.createElement("div");
+    plaque.className = "plaque";
+    plaque.innerHTML = `<div class="plaque-title">${photo.title}</div><div class="plaque-meta">${photo.meta}</div>`;
+
+    exhibit.appendChild(frame);
+    exhibit.appendChild(plaque);
+    exhibit.addEventListener("click", () => openLightbox(ri, pi));
+    grid.appendChild(exhibit);
+  });
+
+  section.appendChild(grid);
+  galleryArea.appendChild(section);
+});
+
+/* ── room switching ── */
+function showRoom(id) {
+  document.querySelectorAll(".room-section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".room-list a").forEach(a => a.classList.remove("active"));
+
+  const section = document.getElementById(`room-${id}`);
+  if (section) section.classList.add("active");
+
+  const link = document.querySelector(`.room-list a[data-room="${id}"]`);
+  if (link) link.classList.add("active");
+
+  const room = ROOMS.find(r => r.id === id);
+  if (room) statViewing.textContent = room.label;
+}
+
+roomList.addEventListener("click", e => {
+  const a = e.target.closest("a[data-room]");
+  if (!a) return;
+  e.preventDefault();
+  showRoom(a.dataset.room);
+});
+
+/* show first room on load */
+showRoom(ROOMS[0].id);
+
+/* ═══════════════════════════════════════════════
+   LIGHTBOX
+═══════════════════════════════════════════════ */
+const lightbox = document.getElementById("lightbox");
+const lbImg    = document.getElementById("lb-img");
+const lbTitle  = document.getElementById("lb-title");
+const lbMeta   = document.getElementById("lb-meta");
+const lbDesc   = document.getElementById("lb-desc");
+const lbCnt    = document.getElementById("lb-counter");
+
+let lbRoomIdx = 0;
+let lbPhotoIdx = 0;
+
+function openLightbox(roomIdx, photoIdx) {
+  lbRoomIdx  = roomIdx;
+  lbPhotoIdx = photoIdx;
+  renderLightbox();
+  lightbox.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  lightbox.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function renderLightbox() {
+  const room  = ROOMS[lbRoomIdx];
+  const photo = room.photos[lbPhotoIdx];
+
+  lbImg.src        = photo.src || "";
+  lbImg.alt        = photo.title;
+
+  lbTitle.textContent = photo.title;
+  lbMeta.textContent  = photo.meta;
+
+  /* lbDesc.textContent  = photo.desc || ""; not rendering br properly */
+  lbDesc.innerHTML = photo.desc || "";
+  lbCnt.textContent   = `${lbPhotoIdx + 1} / ${room.photos.length}`;
+}
+
+function lbStep(dir) {
+  const room = ROOMS[lbRoomIdx];
+  lbPhotoIdx = (lbPhotoIdx + dir + room.photos.length) % room.photos.length;
+  renderLightbox();
+}
+
+document.getElementById("lb-close").addEventListener("click", closeLightbox);
+document.getElementById("lb-prev").addEventListener("click", () => lbStep(-1));
+document.getElementById("lb-next").addEventListener("click", () => lbStep(1));
+
+/* close on backdrop click */
+lightbox.addEventListener("click", e => { if (e.target === lightbox) closeLightbox(); });
+
+/* keyboard nav */
+document.addEventListener("keydown", e => {
+  if (!lightbox.classList.contains("open")) return;
+  if (e.key === "Escape")      closeLightbox();
+  if (e.key === "ArrowLeft")   lbStep(-1);
+  if (e.key === "ArrowRight")  lbStep(1);
+});
+</script>
+
+</body>
+</html>
