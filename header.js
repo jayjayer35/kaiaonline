@@ -76,14 +76,15 @@
     {
       label: "web",
       children: [
+        { label: "the indie web!", href: "/indieweb.html" },
         { label: "guestbook",   href: "https://kaiasei.atabook.org/" },
-        { label: "the indie web! (new!)", href: "/indieweb.html" },
         { label: "site archives",
           submenu: [
             { label: "archive 1 (original)", href: "/jacobonline-old/index.html" },
             { label: "archive 2 (revival)",  href: "/ofb/indexrm.html" },
             { label: "archive 3 (ship log)", href: "/ofb/indexlog.html" },
             { label: "archive 4 (dashboard)",href: "/indexold.html" },
+          { label: "old update log", href: "/ofb/updates.html" },
           ]
         },
       ],

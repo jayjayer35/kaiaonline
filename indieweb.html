@@ -182,6 +182,11 @@
       display: flex;
       flex-direction: column;
       transition: background 0.3s, border-color 0.3s, transform 0.15s;
+      max-height: 15rem;
+    }
+
+    .webring-card-body {
+      overflow-y: auto;
     }
 
     .webring-card:hover { transform: translateY(-2px); }
@@ -198,6 +203,7 @@
       box-shadow:
         inset 0 1px 0 var(--head-b-s1),
         inset 0 -1px 0 var(--head-b-s2);
+      text-align: center;
     }
 
     .webring-card-body {
@@ -413,23 +419,13 @@
     <div class="panel">
       <div class="panel-head">webrings i'm in</div>
       <div class="panel-body">
+          <div class="manifesto-text" style="padding-bottom: 1rem;">
+            pardon the dust and bear with the broken links for the time being i just reapplied to these since they led to dead links for a while. hopefully there will be more webrings here soon! (this section of the page is still getting tweaked so mind the layout as well)
+          </div>
         <div class="webring-grid" id="webring-grid">
- 
-          <!--
-            ── HOW TO ADD A WEBRING ──────────────────────────────────
-            Copy one of the .webring-card blocks below and fill in:
-              - card head: the ring's name
-              - .webring-desc: short description of the ring
-              - .webring-widget: paste the ring's prev/next/home HTML
-                (most rings give you a snippet — drop it right in the
-                .ring-nav div, or replace it with their iframe/widget)
-            ─────────────────────────────────────────────────────────
-          -->
- 
           <div class="webring-card">
-            <div class="webring-card-head">hotline webring</div>
+            <div class="webring-card-head">Hotline Webring</div>
             <div class="webring-card-body">
-              <p class="webring-desc">hotline webring</p>
               <div class="webring-widget">
                 <div class="ring-nav">
                   <a href="https://hotlinewebring.club/kaia_online/previous">◄ prev</a>
@@ -455,7 +451,7 @@
           </div>
  
           <div class="webring-card">
-            <div class="webring-card-head">godfucking dammit kris, where the fuck are we? webring</div>
+            <div class="webring-card-head">the gfdkwtfaw webring</div>
             <div class="webring-card-body;">
               <div id='gfdkris' style="text-align: center; padding-top: .8rem;">
                   <script type="text/javascript" src="https://fabstarotcorner.neocities.org/webring/onionring-variables.js"></script>
@@ -492,24 +488,6 @@
                 <noscript>
                 This site is part of the <a href="https://jack-dawlia.neocities.org/page/shrines/portal/aperturewebring">Aperture Webring</a>!
                 </noscript>
-              </div>
-            </div>
-          </div>
- 
-          <div class="webring-card">
-            <div class="webring-card-head">placeholda</div>
-            <div class="webring-card-body;">
-              <div style="text-align: center; padding-top: .8rem;">
-                
-              </div>
-            </div>
-          </div>
- 
-          <div class="webring-card">
-            <div class="webring-card-head">placeholda</div>
-            <div class="webring-card-body;">
-              <div style="text-align: center; padding-top: .8rem;">
-                
               </div>
             </div>
           </div>
