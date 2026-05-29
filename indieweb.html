@@ -219,11 +219,8 @@
       margin-top: auto;
       padding-top: 0.5rem;
       border-top: 1px dashed var(--divider);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+      display: block;
+      text-align: center;
       font-size: 1rem;
       color: var(--text-soft);
       transition: border-color 0.3s, color 0.3s;
@@ -244,13 +241,13 @@
     }
 
     .ring-nav {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       font-size: 1.1rem;
     }
 
-    .ring-nav a {
+    .ring-nav > a {
       color: var(--link);
       text-decoration: none;
       padding: 0.1rem 0.35rem;
@@ -258,7 +255,17 @@
       transition: background 0.1s, color 0.3s, border-color 0.3s;
     }
 
-    .ring-nav a:hover { background: var(--panel-head); color: #fff; border-color: var(--panel-head-b); }
+    .ring-nav > a:hover { background: var(--panel-head); color: #fff; border-color: var(--panel-head-b); }
+
+
+    /* stops map images from being squished */
+    .ring-nav img[usemap] {
+      display: block;
+      width: auto !important;
+      max-width: 100%;
+      height: auto !important;
+      image-rendering: pixelated;
+    }
 
     .buttons-intro {
       font-size: 1.1rem;
@@ -418,14 +425,14 @@
           -->
  
           <div class="webring-card">
-            <div class="webring-card-head">retronauts webring</div>
+            <div class="webring-card-head">hotline webring</div>
             <div class="webring-card-body">
-              <p class="webring-desc"></p>
+              <p class="webring-desc">hotline webring</p>
               <div class="webring-widget">
                 <div class="ring-nav">
-                  <a href="https://webring.dinhe.net/prev/https://kaia.starscene.com">◄ prev</a>
-                  <a href="https://webring.dinhe.net/">home</a>
-                  <a href="https://webring.dinhe.net/next/https://kaia.starscene.com">next ►</a>
+                  <a href="https://hotlinewebring.club/kaia_online/previous">◄ prev</a>
+                  <a href="https://hotlinewebring.club/">home</a>
+                  <a href="https://hotlinewebring.club/kaia_online/next">next ►</a>
                 </div>
               </div>
             </div>
@@ -437,9 +444,6 @@
               <p class="webring-desc">a short description of what this ring is about and why you joined it.</p>
               <div class="webring-widget">
                 <div class="ring-nav">
-                  <a href="#">◄ prev</a>
-                  <a href="#">home</a>
-                  <a href="#">next ►</a>
                 </div>
               </div>
             </div>
