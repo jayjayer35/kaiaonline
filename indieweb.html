@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaia online - indie web center</title>
+  <style>
+
+    @font-face {
+      font-family: "NDS";
+      src: url("rework/assets/fonts/nds.ttf") format("truetype");
+      font-display: swap;
+      -webkit-font-smoothing: none;
+    }
+
+    :root {
+      --sky:           #d8eaf8;
+      --sky2:          #eef5fc;
+      --panel-bg:      #fff;
+      --panel-border:  #b6c6df;
+      --panel-shadow:  #9ca7c3;
+      --panel-head:    #b6c6df;
+      --panel-head-b:  #8a99b8;
+      --head-t-shadow: #7a93b0;
+      --head-b-s1:     #cddaea;
+      --head-b-s2:     #8a99b8;
+      --text:          #2a3a50;
+      --text-soft:     #6a7e96;
+      --link:          #3a7acf;
+      --divider:       rgba(182,198,223,0.4);
+      --bg-header:     #9eb4d1;
+      --border-header: #7e8ba3;
+      --pull-bg:       #eef5ff;
+      --pull-border:   #b6c6df;
+    }
+
+    body.dark-mode {
+      --sky:           #1a2028;
+      --sky2:          #11151a;
+      --panel-bg:      #1e2530;
+      --panel-border:  #151a22;
+      --panel-shadow:  #0d1117;
+      --panel-head:    #2a3340;
+      --panel-head-b:  #151a22;
+      --head-t-shadow: #000;
+      --head-b-s1:     #3a4a60;
+      --head-b-s2:     #10141a;
+      --text:          #e0e8f0;
+      --text-soft:     #8a99b8;
+      --link:          #6b9ac4;
+      --divider:       rgba(255,255,255,0.05);
+      --bg-header:     #2a3340;
+      --border-header: #1a2028;
+      --pull-bg:       #1a2030;
+      --pull-border:   #2a3a50;
+      background-blend-mode: multiply;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { cursor: url("rework/assets/cur/kaiacursor.png"), auto; }
+    html { min-height: 100%; }
+
+    body {
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1.5rem;
+      color: var(--text);
+      line-height: 1.5;
+      background:
+        url('rework/assets/general/bkg3.gif'),
+        linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
+      background-attachment: fixed;
+      background-size: auto, 100% 100%;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .page-wrap {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .panel-head {
+      background: var(--panel-head);
+      border-bottom: 1px solid var(--panel-head-b);
+      padding: 0.125rem 0.625rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      letter-spacing: 0.15rem;
+      color: #fff;
+      text-shadow: 0 1px 0 var(--head-t-shadow);
+      box-shadow:
+        inset 0 1px 0 var(--head-b-s1),
+        inset 0 -1px 0 var(--head-b-s2);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .panel-body {
+      padding: 0.75rem;
+    }
+
+    .manifesto-layout {
+      display: block;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .manifesto-text {
+      font-size: 1rem;
+      color: var(--text);
+      line-height: 1.6;
+      transition: color 0.3s;
+    }
+
+    .manifesto-text p { margin-bottom: 0.75rem; }
+    .manifesto-text p:last-child { margin-bottom: 0; }
+
+    .pull {
+      background: var(--pull-bg);
+      /* border-left: 3px solid var(--panel-head); */
+      padding: 0.5rem 0.75rem;
+      font-size: 1.25rem;
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0.75rem 0;
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    .principles {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .principles li {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      font-size: 1.1rem;
+      color: var(--text);
+      line-height: 1.45;
+      transition: color 0.3s;
+    }
+
+    .principle-num {
+      flex-shrink: 0;
+      width: 1.8rem;
+      height: 1.8rem;
+      background: var(--panel-head);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.1rem;
+      transition: background 0.3s;
+    }
+
+    .webring-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+      gap: 0.875rem;
+    }
+
+    .webring-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s, border-color 0.3s, transform 0.15s;
+    }
+
+    .webring-card:hover { transform: translateY(-2px); }
+
+    .webring-card-head {
+      background: var(--panel-head);
+      border-bottom: 1px solid var(--panel-head-b);
+      padding: 0.1rem 0.5rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      letter-spacing: 0.1rem;
+      color: #fff;
+      text-shadow: 0 1px 0 var(--head-t-shadow);
+      box-shadow:
+        inset 0 1px 0 var(--head-b-s1),
+        inset 0 -1px 0 var(--head-b-s2);
+    }
+
+    .webring-card-body {
+      padding: 0.5rem 0.625rem 0.625rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+    }
+
+    .webring-desc {
+      font-size: 1rem;
+      color: var(--text-soft);
+      line-height: 1.4;
+      transition: color 0.3s;
+    }
+
+    .webring-widget {
+      margin-top: auto;
+      padding-top: 0.5rem;
+      border-top: 1px dashed var(--divider);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 1rem;
+      color: var(--text-soft);
+      transition: border-color 0.3s, color 0.3s;
+    }
+
+    .webring-widget a {
+      color: var(--link);
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    .webring-widget a:hover { text-decoration: underline; }
+
+    .webring-widget img {
+      image-rendering: pixelated;
+      max-height: 2rem;
+    }
+
+    .ring-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .ring-nav a {
+      color: var(--link);
+      text-decoration: none;
+      padding: 0.1rem 0.35rem;
+      border: 1px solid var(--panel-border);
+      transition: background 0.1s, color 0.3s, border-color 0.3s;
+    }
+
+    .ring-nav a:hover { background: var(--panel-head); color: #fff; border-color: var(--panel-head-b); }
+
+    .buttons-intro {
+      font-size: 1.1rem;
+      color: var(--text-soft);
+      margin-bottom: 0.625rem;
+      line-height: 1.5;
+      transition: color 0.3s;
+    }
+
+    .btn-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn-filter-tab {
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1.1rem;
+      padding: 0.1rem 0.5rem;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: 1px 1px 0 var(--panel-shadow);
+      color: var(--text);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: background 0.1s, color 0.1s, border-color 0.3s;
+    }
+
+    .btn-filter-tab:hover  { background: rgba(182,198,223,0.3); }
+    .btn-filter-tab.active { background: var(--panel-head); color: #fff; border-color: var(--panel-head-b); box-shadow: 1px 1px 0 var(--panel-shadow); }
+
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .badge-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .badge-wrap img {
+      display: block;
+      width: 88px;
+      height: 31px;
+      image-rendering: pixelated;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+
+    .badge-wrap a:hover img {
+      border-color: var(--panel-head);
+      transform: scale(1.06);
+      z-index: 2;
+    }
+
+    .badge-wrap::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: calc(100% + 0.3rem);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 0.85rem;
+      font-family: 'NDS', monospace, sans-serif;
+      background: var(--panel-bg);
+      color: var(--text);
+      border: 1px solid var(--panel-border);
+      box-shadow: 1px 1px 0 var(--panel-shadow);
+      padding: 0.1rem 0.35rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 10;
+    }
+
+    .badge-wrap:hover::after { opacity: 1; }
+
+    .badge-wrap.hidden { display: none; }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      margin: 0.75rem 0 1rem;
+      color: var(--text-soft);
+      transition: color 0.3s;
+    }
+
+    * { scrollbar-width: thin; scrollbar-color: var(--panel-head) transparent; }
+    ::-webkit-scrollbar { width: 0.5rem; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background-color: var(--panel-border); }
+    ::-webkit-scrollbar-thumb:hover { background-color: var(--panel-head); }
+
+    @media (max-width: 52rem) {
+      .manifesto-layout { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+
+<body>
+  <script src="header.js"></script>
+
+<main>
+  <div class="page-wrap">
+
+    <div class="panel">
+      <div class="panel-head">'manifesto'</div>
+      <div class="panel-body">
+        <div class="manifesto-layout">
+          <div>
+            <div class="manifesto-text">
+              <p>
+                i am a firm believer of making things for the sake of making them. stumbling across the indie web movement back in 2022 for me was awe-inspiring, and pushed me to be more creative than i ever have been. 
+                it would be an understatment to say that this little site project of mine has made me into the creative person i am today. to show my appreciation in this, i create exactly what you see here, a site of my own. 
+                so while i may be late to the party in writing a manifesto, i still want to because it means a lot to <em>me</em>.
+              </p>
+              <div class="pull" style="text-align: center;">
+                "find something you'd die for, then live for it."
+              </div>
+              <p>
+                go make shit. it doesn't matter what it is, but make something. anything. your reasons need to be your own and not someone else's. im not going to state the real 
+                reason i keep this site running here, which would be contradictory to my own statment (even though ive prob overshared it somewhere on this site). but when you create something artistically, you 
+                must be involved in the process the entire time, you <em>are</em> the process after all.
+              </p>
+              <p>
+                so this manifesto isnt overly long to just go tell you to make a site in defiance of social media or anything like that (although thats a valid reason). i want to encourage you 
+                to be creative, and share things that you'd otherwise not. make shit out of love. make shit out of spite and hatred. make shit for your dog or cat. make shit for that one ex that makes you 
+                genuinely want to burn a forest. make shit for the mosquito in your room. make shit for your friends. and i can not stress it enough, <span style="text-decoration: underline;">make shit for yourself</span>.
+              </p >
+              <p><br>
+                be human, create art.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="panel">
+        <div class="panel-head">webrings i'm in</div>
+        <div class="panel-body">
+            <div class="webring-grid" id="webring-grid">
+
+            <!--
+                ── HOW TO ADD A WEBRING ──────────────────────────────────
+                Copy one of the .webring-card blocks below and fill in:
+                - card head: the ring's name
+                - .webring-desc: short description of the ring
+                - .webring-widget: paste the ring's prev/next/home HTML
+                    (most rings give you a snippet — drop it right in the
+                    .ring-nav div, or replace it with their iframe/widget)
+                ─────────────────────────────────────────────────────────
+            -->
+
+                <div class="webring-card">
+                    <div class="webring-card-head">ring name here</div>
+                        <div class="webring-card-body">
+                            <div class="webring-widget">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">buttons!</div>
+      <div class="panel-body">
+
+        <p class="manifesto-text">
+          a collection of 88×31 buttons. <br>
+          'neighbors' are sites that have put my button up! 'funsies' are buttons i like, that dont (usually) lead to another page.<br>
+          (let me know by email or on the guestbook if you've included my button on your site!! ill add you here!) br
+        </p>
+
+        <!-- filter tabs ADD here ffs -->
+        <div class="btn-filters" id="btn-filters" style="padding-top: .5rem;">
+          <button class="btn-filter-tab active" data-filter="all">all</button>
+          <button class="btn-filter-tab" data-filter="neighbor">neighbors</button>
+          <button class="btn-filter-tab" data-filter="sites">cool sites</button>
+          <button class="btn-filter-tab" data-filter="fun">funsies</button>
+        </div>
+
+        <div class="button-grid" id="button-grid">
+
+          <!-- dude this shit is afucking mess -->
+          <div class="badge-wrap" data-label="Liz's place!" data-cat="neighbor">
+            <a href="https://adnyx.nekoweb.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/adnyx_button.gif" alt="adynx's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="iDestyKK's Homepage!" data-cat="neighbor">
+            <a href="https://claranguyen.me/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/idestykk.v1.gif" alt="iDestyKK's button">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="r3ckoner's site!" data-cat="neighbor">
+            <a href="https://r3ckoning.nekoweb.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/fishy-animated.gif" alt="r3ckoner's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="sillyfes" data-cat="neighbor">
+            <a href="https://sillyfes.neocities.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/sillybutton.png" alt="sillyfes' button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="lu's space, one of the first indie websites i stumbled across... a huge inspo!" data-cat="sites">
+            <a href="https://lu.tiny-universes.net/index.html" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/lulu2.gif" alt="lu tinyuniverses' button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="big gulp supreme" data-cat="sites">
+            <a href="https://biggulpsupreme.neocities.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/biggulp.gif" alt="big gulp supreme's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="purplehello98" data-cat="sites">
+            <a href="https://purplehello98.neocities.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/purplehello98.gif" alt="purplehello's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="aegi's site" data-cat="sites">
+            <a href="https://aegi.neocities.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/aegi_button.gif" alt="aegi's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="a website about 2bit stuff" data-cat="sites">
+            <a href="https://2bit.neocities.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/2bit_button.png" alt="2bit's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="layercake's site" data-cat="sites">
+            <a href="https://layercake.nekoweb.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/layercake3.gif" alt="layercake's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="4377" data-cat="neighbor">
+            <a href="https://4377.neocities.org" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/4377.png" alt="4377's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="cyberdemon's site!" data-cat="sites">
+            <a href="https://cyberdemon.nekoweb.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/cyberdemon.png" alt="cyberdemon's  button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="bean's diy garden" data-cat="sites">
+            <a href="https://diygarden.nekoweb.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/beaniepies.gif" alt="beaniepine's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="tinyspace" data-cat="sites">
+            <a href="https://starrs.neocities.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/tinyspace.gif" alt="tinyspace's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="e10 blog" data-cat="sites">
+            <a href="https://e10.neocities.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/e10.neocities-button.gif" alt="e10's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="exo.pet" data-cat="sites">
+            <a href="https://exo.pet/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/exopet.png" alt="exopet's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="petra's site" data-cat="sites">
+            <a href="https://petrapixel.neocities.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/petra.gif" alt="petrapixel's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="status.cafe's button!" data-cat="sites">
+            <a href="https://status.cafe" target="_blank" rel="noopener">
+              <img src="https://status.cafe/assets/button.png" alt="status.cafe's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="neocities! go make a site..." data-cat="sites">
+            <a href="https://neocities.org/" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/neocities-pink.gif" alt="neocities' pink button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="the internet is for cats! nekoweb's landing page" data-cat="sites">
+            <a href="https://neocities.org/" target="_blank" rel="noopener">
+              <img src="https://nekoweb.org/assets/buttons/button11.gif" alt="nekoweb's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="zzizful space" data-cat="sites">
+            <a href="https://zziz.nekoweb.org/" target="_blank" rel="noopener">
+              <img src="https://zziz.nekoweb.org/zzizbutton.gif" alt="zziz's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="nomnomnami's site" data-cat="sites">
+            <a href="https://nomnomnami.com/" target="_blank" rel="noopener">
+              <img src="https://nomnomnami.com/images/site_button.gif" alt="nomnomnami's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="bugkisser's paradise" data-cat="sites">
+            <a href="https://bugkisser.neocities.org/home" target="_blank" rel="noopener">
+              <img src="https://bugkisser.neocities.org/buttons/bugkisser!.png" alt="bugkisser's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="melps' html abomination" data-cat="sites">
+            <a href="https://melps.neocities.org" target="_blank" rel="noopener">
+              <img src="https://melps.neocities.org/limk2.jpg" alt="melps' button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/america-ya-button.gif" alt="america ya!" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/css.gif" alt="css button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/queer.png" alt="a queer coded this" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/i-love-physical-media-button-cd.gif" alt="i love physical media!" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/makeasite.jpg" alt="make a webpage" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/internetprivacy.gif" alt="internet privacy!" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/noweb32.gif" alt="web3 sux" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="i made this one!" data-cat="fun">
+            <a>
+              <img src="/assets/pinetreesbutton.png" alt="smell the pine trees" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/rainbow.gif" alt="rainbow" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/want-to-believe.gif" alt="i wanna believe" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/fuckyeah-cyberot.png" alt="fuck yeah" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/chrome.gif" alt="chrome is ass" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/wwwbutton.gif" alt="www" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/ao3gif.gif" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/5srvdSo.gif" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/amiga.gif" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/anythingbut.gif" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/beyes.gif" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/bluepantsu.gif" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/e-hs.gif" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/goodieblink.png" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/queenDelta.gif" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/wii.gif" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="massive 88x31 button list" data-cat="sites">
+            <a href="https://capstasher.neocities.org/88x31collection-page1" target="_blank" rel="noopener">
+              <img src="assets/buttons/sitelinks/the-largest-88x31-collection-2.png" alt="88x31 button archive" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="BLOODBATHSPITES website" data-cat="sites">
+            <a href="https://bloodbathspite.neocities.org/" target="_blank" rel="noopener">
+              <img src="https://bloodbathspite.neocities.org/button.gif" alt="bloodbathspite's button" style="image-rendering: pixelated;">
+            </a>
+          </div> 
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/kaomoji.gif" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-cat="fun">
+            <a>
+              <img src="/assets/buttons/rec/trans.png" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="feysound's site" data-cat="sites">
+            <a href="https://feysound.neocities.org/" target="_blank" rel="noopener">
+              <img src="assets/buttons/sitelinks/feysound.gif" alt="feysound's button" style="image-rendering: pixelated;">
+            </a>
+          </div> 
+          <div class="badge-wrap" data-label="s1nez's site!" data-cat="sites">
+            <a href="https://dirk.horse/home" target="_blank" rel="noopener">
+              <img src="https://dirk.horse/BUTTON.gif" alt="dirk.horse's button" style="image-rendering: pixelated;">
+            </a>
+          </div> 
+          <!-- <div class="badge-wrap" data-label="" data-cat="sites">
+            <a href="" target="_blank" rel="noopener">
+              <img src="" alt="" style="image-rendering: pixelated;">
+            </a>
+          </div> -->
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>for humans by humans <3 <br>kaia © 2022 - til the web is entirely explored!</footer>
+
+<script>
+/* ── 88x31 filter tabs ── */
+const filters  = document.getElementById("btn-filters");
+const allBadges = document.querySelectorAll(".badge-wrap");
+
+filters.addEventListener("click", e => {
+  const tab = e.target.closest(".btn-filter-tab");
+  if (!tab) return;
+
+  document.querySelectorAll(".btn-filter-tab").forEach(t => t.classList.remove("active"));
+  tab.classList.add("active");
+
+  const cat = tab.dataset.filter;
+  allBadges.forEach(badge => {
+    if (cat === "all" || badge.dataset.cat === cat) {
+      badge.classList.remove("hidden");
+    } else {
+      badge.classList.add("hidden");
+    }
+  });
+});
+</script>
+
+</body>
+</html>

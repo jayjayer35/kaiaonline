@@ -3,7 +3,7 @@
 
   // ── ALERT BAR ───────────────────────────────────────────────────────────────
   // Set to null or "" to hide the alert bar entirely.
-  const ALERT_TEXT = "gay activites taking place (i love my new alert bar) :3";
+  const ALERT_TEXT = "";
 
   // ── PLAYLIST ────────────────────────────────────────────────────────────────
   // { file: "/music/filename.mp3", name: "Display Name" }
@@ -60,12 +60,14 @@
     {
       label: "kaia",
       children: [
+        { label: "#me (wip)",     href: "/blog/me.html" },
         { label: "blog",     href: "/blog/index.html" },
+        { label: "music (wip)", href: "/music.html" },
         { label: "my lists", href: "/lists.html" },
-        { label: "photo museum",   href: "/museum.html" },
+        { label: "photo museum (new!)",   href: "/museum.html" },
         { label: "friends",
           submenu: [
-            { label: "hall of messages", href: "/msgs.html" },
+            { label: "hall of messages (wip)", href: "/msgs.html" },
           ]
         },
       ],
@@ -75,9 +77,7 @@
       label: "web",
       children: [
         { label: "guestbook",   href: "https://kaiasei.atabook.org/" },
-        { label: "indie sites", href: "/indiesites.html" },
-        { label: "webrings",    href: "/webrings.html" },
-        { label: "manifesto",   href: "/manifesto.html" },
+        { label: "the indie web! (new!)", href: "/indieweb.html" },
         { label: "site archives",
           submenu: [
             { label: "archive 1 (original)", href: "/jacobonline-old/index.html" },
@@ -92,21 +92,26 @@
       label: "for u",
       children: [
         { label: "bookmarks", href: "/bookmarks.html" },
-        { label: "creations", href: "/mystuf.html" },
-        { label: "recipes",   href: "/myrecipes.html" },
+        { label: "projects",
+          submenu: [
+            { label: "misc creations", href: "/mystuf" },
+          ]
+        },
+        { label: "recipes (wip)",   href: "/myrecipes.html" },
       ],
     },
     {
       label: "other",
       children: [
         { label: "dont forget",    href: "/dontforget.html" },
-        { label: "an interaction", href: "/deepestfear.html" },
         { label: "shrines",
           submenu: [
             { label: "outer wilds", href: "/wilds.html" },
+            { label: "megpoid gumi", href: "/gumi.html" },
           ],
         },
-        { label: "template", href: "/template.html" },
+        { label: "404", href: "/404.html" },
+        { label: "landing", href: "/index.html" },
       ],
     },
   ];
@@ -1169,4 +1174,31 @@
   }
 
   window.injectHeader = inject;
+
+
+  //flower
+  if (Math.random() < 0.05) {
+
+    const cornerLink = document.createElement('a');
+    cornerLink.href = '/ofb/forest.html';
+
+    const cornerImg = document.createElement('img');
+
+    cornerImg.src = '/assets/orchid.gif';
+
+    Object.assign(cornerImg.style, {
+      position: 'fixed',
+      bottom: '0',
+      left: '0',
+      zIndex: '9999',
+      imageRendering: 'pixelated',
+      cursor: 'pointer',
+      transform: 'scale(1.5)',
+      transformOrigin: 'bottom left'
+    });
+
+    cornerLink.appendChild(cornerImg);
+    document.body.appendChild(cornerLink);
+                   
+  }
 })();

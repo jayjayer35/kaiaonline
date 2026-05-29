@@ -40,43 +40,29 @@
 </style>
 </head>
 <body>
-
+<script src="/header.js"></script>
 <div class="click-area" onclick="typePoem(this)"></div>
 <div id="poem-container"></div>
 
 <script>
   // Define wait time per line in milliseconds
   const poemData = [
-    { text: "It is a horrifying process to forget someone.", delay: 500 },
+    { text: "I was told that I’d figure it out eventually", delay: 800 },
+    { text: "So why, oh why, is the future still opaque?", delay: 800 },
+    { text: "Was it all just a lie that time would heal everything?", delay: 800 },
+    { text: "Tell me the truth", delay: 800 },
     { text: " ", delay: 1600 },
-    { text: "We swear we won't-", delay: 800 },
-    { text: "and we truly believe it.", delay: 800 },
+    { text: "I cry for promises of a better tomorrow", delay: 800 },
+    { text: "Don't want a resolution wrapped in sorrow", delay: 800 },
+    { text: "What’s the point of a story", delay: 800 },
+    { text: "without a happy ending?", delay: 800 },
     { text: " ", delay: 1600 },
-    { text: "But memory, like all things", delay: 800 },
-    { text: "corrodes.", delay: 800 },
+    { text: "‘Cause I know even if it didn't even matter", delay: 800 },
+    { text: "I’m satisfied to know I’ve won the battle", delay: 800 },
+    { text: "At the cost of my heart", delay: 800 },
+    { text: "I’ll believe in a future of me", delay: 800 },
     { text: " ", delay: 1600 },
-    { text: "One day you'll stumble upon a song that they loved ", delay: 800 },
-    { text: "but their voice, as they sing along- ", delay: 300 },
-    { text: "would have faded into the music.", delay: 800 },
-    { text: " ", delay: 1600 },
-    { text: "You'll swear there's something missing", delay: 800 },
-    { text: "But all you'll have as proof-", delay: 400 },
-    { text: "is a pain you can't place.", delay: 800 },
-    { text: " ", delay: 800 },
-    { text: "A feeling with no roots.", delay: 800 },
-    { text: " ", delay: 1600 },
-    { text: "Didn't their laugh have a certain tone?", delay: 800 },
-    { text: "Didn't their head feel a certain way,", delay: 300 },
-    { text: "leaning on your shoulder?", delay: 800 },
-    { text: " ", delay: 1600 },
-    { text: "You won't recall exactly,", delay: 600 },
-    { text: "but you'll know something is missing.", delay: 1200 },
-    { text: "And it will hurt in ways you didn't even know were possible.", delay: 800 },
-    { text: " ", delay: 1600 },
-    { text: "What if I told you,", delay: 600 },
-    { text: "you could get rid of this pain?", delay: 800 },
-    { text: " ", delay: 1500 },
-    { text: "Would you?", delay: 1500 }
+    { text: "Please stay strong, dear future self", delay: 1600 },
   ];
 
 async function typePoem(el) {
@@ -111,7 +97,7 @@ async function typePoem(el) {
 </script>
 
 <audio id="background-audio" autoplay loop>
-  <source src="../assets/chimes.mp3" type="audio/mp3" />
+  <source src="/assets/chimes.mp3" type="audio/mp3" />
   Your browser does not support the audio element.
 </audio>
 

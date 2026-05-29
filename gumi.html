@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>kaia online - gumi shrine</title>
+
+<style>
+
+@font-face {
+  font-family: 'MS Gothic';
+  src: local('MS Gothic');
+}
+
+:root{
+  --bg:#fff8df;
+  --lime:#9dff6a;
+  --green:#67bf4b;
+  --orange:#ff9d42;
+  --peach:#ffd8ba;
+  --cream:#fffdf4;
+  --brown:#6d4e35;
+}
+
+*{
+  box-sizing:border-box;
+  image-rendering:pixelated;
+}
+
+body{
+  margin:0;
+  overflow-x:hidden;
+  font-family:Verdana, sans-serif;
+  color:var(--brown);
+  position:relative;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+
+  background:url("assets/gumi/gumibg.jpg") top left/cover no-repeat;
+
+  filter:blur(6px);
+  transform:scale(1.05);
+
+  z-index:-1;
+}
+.page{
+  position:relative;
+  width:100%;
+  min-height:2600px;
+  padding-bottom:200px;
+}
+
+.logo{
+  position:absolute;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%) rotate(-2deg);
+  background:var(--lime);
+  border:4px solid white;
+  padding:16px 28px;
+  font-size:3rem;
+  font-weight:bold;
+  box-shadow:8px 8px 0 rgba(0,0,0,0.15);
+  z-index:50;
+}
+
+.subtitle{
+  position:absolute;
+  top:130px;
+  left:52%;
+  transform:translateX(-50%) rotate(3deg);
+  background:white;
+  border:3px dashed var(--orange);
+  padding:8px 14px;
+  font-size:0.9rem;
+  z-index:49;
+}
+
+.photo,
+.box,
+.sticker,
+.button{
+  position:absolute;
+}
+
+.photo{
+  background:white;
+  padding:8px;
+  border:3px solid white;
+  box-shadow:7px 7px 0 rgba(0,0,0,0.15);
+}
+
+.photo img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+.p1{
+  width:260px;
+  top:240px;
+  left:5%;
+  transform:rotate(-7deg);
+}
+
+.p2{
+  width:320px;
+  top:220px;
+  right:6%;
+  transform:rotate(9deg);
+}
+
+.p3{
+  width:220px;
+  top:620px;
+  left:12%;
+  transform:rotate(4deg);
+}
+
+.p4{
+  width:340px;
+  top:700px;
+  right:10%;
+  transform:rotate(-8deg);
+}
+
+.p5{
+  width:300px;
+  top:1180px;
+  left:28%;
+  transform:rotate(-4deg);
+}
+
+.p6{
+  width:250px;
+  top:1650px;
+  right:12%;
+  transform:rotate(12deg);
+}
+
+.box{
+  background:rgba(255,255,255,0.9);
+  border:4px solid var(--orange);
+  padding:18px;
+  box-shadow:8px 8px 0 rgba(0,0,0,0.1);
+}
+
+.about{
+  width:420px;
+  top:400px;
+  left:44%;
+  transform:rotate(-2deg);
+}
+
+.songs{
+  width:360px;
+  top:900px;
+  right: 33%;
+  transform:rotate(5deg);
+}
+
+.ramble{
+  width:500px;
+  top:1500px;
+  left:8%;
+  transform:rotate(-3deg);
+}
+
+.stamps{
+  width:430px;
+  top:2050px;
+  left:50%;
+  transform:translateX(-50%) rotate(2deg);
+}
+
+.box h2{
+  margin-top:0;
+  background:var(--lime);
+  display:inline-block;
+  padding:4px 10px;
+  border:2px solid white;
+}
+
+ul{
+  padding-left:18px;
+}
+
+.sticker{
+  font-size:2rem;
+  background:white;
+  border:3px solid var(--orange);
+  padding:4px 10px;
+  box-shadow:5px 5px 0 rgba(0,0,0,0.12);
+}
+
+.s1{
+  top:110px;
+  left:21%;
+  transform:rotate(-3deg);
+}
+
+.s2{
+  top:420px;
+  right:22%;
+  transform:rotate(15deg);
+}
+
+.s3{
+  top:980px;
+  left:6%;
+  transform:rotate(8deg);
+}
+
+.s4{
+  top:1420px;
+  right:30%;
+  transform:rotate(-9deg);
+}
+
+.s5{
+  top:1920px;
+  left:20%;
+  transform:rotate(14deg);
+}
+
+.button{
+  background:var(--orange);
+  color:white;
+  border:3px solid white;
+  padding:6px 12px;
+  font-size:0.85rem;
+  font-weight:bold;
+  box-shadow:5px 5px 0 rgba(0,0,0,0.1);
+}
+
+.b1{
+  top:350px;
+  left:40%;
+  transform:rotate(5deg);
+}
+
+.b2{
+  top:1320px;
+  right:13.3%;
+  transform:rotate(-8deg);
+}
+
+.b3{
+  top:980px;
+  left:70%;
+  transform:rotate(7deg);
+}
+
+.marquee{
+  position:absolute;
+  top:90px;
+  width:100%;
+  background:var(--orange);
+  color:white;
+  border-top:3px solid white;
+  border-bottom:3px solid white;
+  padding:6px 0;
+  font-weight:bold;
+}
+
+.footer-note{
+  position:absolute;
+  bottom:40px;
+  left:50%;
+  transform:translateX(-50%) rotate(-2deg);
+  background:white;
+  border:3px dashed var(--green);
+  padding:14px 22px;
+  font-size:0.9rem;
+}
+
+.stamps img{
+  max-width:100%;
+  height:auto;
+}
+
+iframe{
+  width:100%;
+  height:180px;
+  border:none;
+  margin-top:12px;
+}
+
+@media (max-width:900px){
+
+  body::before{
+    background-size:cover;
+  }
+
+  .page{
+    min-height:auto;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+  }
+
+  /* Reset all absolute positioning */
+  .logo,
+  .subtitle,
+  .photo,
+  .box,
+  .sticker,
+  .button,
+  .footer-note,
+  .marquee,
+  .MOREIMAGES{
+    position:relative;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    transform:none !important;
+    margin:0;
+  }
+
+  .logo{
+    font-size:2.2rem;
+    padding:12px 20px;
+    width:auto;
+    align-self:center;
+    transform:rotate(-2deg) !important;
+  }
+
+  .marquee{
+    width:100%;
+    margin-left:-16px;
+    margin-right:-16px;
+    width:calc(100% + 32px);
+  }
+
+  .subtitle{
+    font-size:0.85rem;
+    padding:6px 12px;
+    transform:rotate(3deg) !important;
+    width:auto;
+  }
+
+  /* Photos: two per row, scaled down */
+  .photo{
+    width:calc(50% - 8px) !important;
+    padding:5px;
+  }
+
+  /* Group photos into a grid wrapper — we use order to make them flow nicely */
+  /* Photos flow inline as a wrapping flex row */
+
+  /* Boxes full width */
+  .box{
+    width:100% !important;
+    max-width:500px;
+    padding:14px;
+  }
+
+  .box h2{
+    font-size:0.95rem;
+  }
+
+  .box p, .box ul, .box li{
+    font-size:0.88rem;
+  }
+
+  iframe{
+    height:160px;
+  }
+
+  /* Stickers: show as a small row */
+  .sticker{
+    display:inline-block;
+    width:auto !important;
+    padding:3px 7px;
+    font-size:1.4rem;
+  }
+
+  /* Buttons */
+  .button{
+    width:auto !important;
+    font-size:0.8rem;
+    padding:5px 10px;
+    transform:none !important;
+    align-self:center;
+  }
+
+  /* MOREIMAGES: show as a wrapping image gallery */
+  .MOREIMAGES{
+    width:calc(50% - 8px) !important;
+    display:inline-block;
+  }
+
+  .MOREIMAGES img{
+    width:100% !important;
+    height:auto !important;
+  }
+
+  footer.footer-note{
+    position:relative !important;
+    transform:rotate(-2deg) !important;
+    width:auto;
+    margin-top:8px;
+    margin-bottom:24px;
+  }
+
+  /* Layout order for mobile — use a flex column on .page */
+  /* We need to reorder elements sensibly */
+  .logo        { order: 1; }
+  .marquee     { order: 2; }
+  .subtitle    { order: 3; }
+
+  /* Photos scattered near the top */
+  .p1 { order: 4; }
+  .p2 { order: 5; }
+  .p3 { order: 6; }
+  .p4 { order: 7; }
+
+  /* stickers interspersed */
+  .s1 { order: 8; }
+  .s2 { order: 9; }
+
+  /* About box */
+  .about { order: 10; }
+
+  .b1 { order: 11; }
+
+  .p5 { order: 12; }
+  .s3 { order: 13; }
+
+  /* Songs box */
+  .songs { order: 14; }
+
+  .b3 { order: 15; }
+  .s4 { order: 16; }
+
+  /* Ramble box */
+  .ramble { order: 17; }
+
+  .b2 { order: 18; }
+  .p6 { order: 19; }
+  .s5 { order: 20; }
+
+  /* Stamps box */
+  .stamps { order: 21; }
+
+  /* Extra images as a little gallery */
+  .i1, .i2, .i3, .i4, .i5, .i6, .i7, .i8, .i9, .i10,
+  .i11, .i12, .i13, .i14, .i15, .i16, .i17, .i18, .i19, .i20,
+  .i21, .i22, .i23, .i24, .i25, .i26, .i27, .i28, .i29, .i30 { order: 22; }
+
+  footer.footer-note { order: 99; }
+
+  /* Make photos and extra images sit in a wrapping flex row */
+  /* We wrap them in a pseudo-grid by making the page a flex-wrap container */
+  .page{
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  /* Full-width items */
+  .logo, .marquee, .subtitle, .box, .sticker, .button, footer.footer-note {
+    flex: 0 0 100%;
+    max-width:100%;
+  }
+
+  /* Half-width items (photos & extra images) */
+  .photo, .MOREIMAGES {
+    flex: 0 0 calc(50% - 8px);
+  }
+
+  /* Stickers and buttons stay auto-width inline */
+  .sticker, .button {
+    flex: 0 0 auto;
+    width: auto !important;
+  }
+
+}
+
+.MOREIMAGES{
+  position:absolute;
+  z-index:20;
+}
+
+.MOREIMAGES img{
+  display:block;
+  /* border:4px solid white;
+  box-shadow:6px 6px 0 rgba(0,0,0,0.15); */
+  /* image-rendering:pixelated; */
+}
+
+
+.i1{ top:180px; left:70%; transform:rotate(-14deg);}
+.i2{ top:420px; left:25%; transform:rotate(8deg);}
+.i3{ top:980px; left:59%; transform:rotate(-11deg);}
+.i4{ top:1400px; left:82%; transform:rotate(13deg);}
+.i5{ top:1930px; left:4%; transform:rotate(-7deg);}
+.i6{ top:900px; left:76%; transform:rotate(4deg);}
+.i7{ top:2300px; left:74%; transform:rotate(-16deg);}
+.i8{ top:540px; left:52%; transform:rotate(6deg);}
+.i9{ top:-10px; left:50%; transform:rotate(13deg);}
+.i10{ top:-80px; left:2%; transform:rotate(-22deg);}
+
+.i11{ top:1520px; left:60%; transform:rotate(-5deg);}
+.i12{ top:1950px; left:59%; transform:rotate(18deg);}
+.i13{ top:300px; left:5%; transform:rotate(-2deg);}
+.i14{ top:2310px; left:5%; transform:rotate(3deg);}
+.i15{ top:600px; left:88%; transform:rotate(-12deg);}
+.i16{ top:2070px; left:18%; transform:rotate(7deg);}
+.i17{ top:0px; left:78%; transform:rotate(-4deg);}
+.i18{ top:1750px; left:78%; transform:rotate(0deg);}
+.i19{ top:2280px; left:55%; transform:rotate(0deg);}
+.i20{ top:780px; left:2%; transform:rotate(15deg);}
+
+.i21{ top:0px; left:0%; transform:rotate(0deg);}
+.i22{ top:0px; left:0%; transform:rotate(0deg);}
+.i23{ top:0px; left:0%; transform:rotate(0deg);}
+.i24{ top:0px; left:0%; transform:rotate(0deg);}
+.i25{ top:0px; left:0%; transform:rotate(0deg);}
+.i26{ top:0px; left:0%; transform:rotate(0deg);}
+.i27{ top:0px; left:0%; transform:rotate(0deg);}
+.i28{ top:0px; left:0%; transform:rotate(0deg);}
+.i29{ top:0px; left:0%; transform:rotate(0deg);}
+.i30{ top:0px; left:0%; transform:rotate(0deg);}
+
+</style>
+</head>
+<body>
+<script src="header.js"></script>
+<div class="page">
+    
+
+<div class="logo">GUMI!</div>
+<!-- <div class="subtitle">I FUCKING LOVE GUMI</div> -->
+
+
+<div class="photo p1">
+<img src="assets/gumi/gumi1.gif" alt="gumi">
+</div>
+
+<div class="photo p2">
+<img src="assets/gumi/gumi2.gif" alt="gumi">
+</div>
+
+<div class="photo p3">
+<img src="assets/gumi/gumi3.gif" alt="gumi">
+</div>
+
+<div class="photo p4">
+<img src="assets/gumi/gumi4.gif" alt="gumi">
+</div>
+
+<div class="photo p5">
+<img src="assets/gumi/gumi5.gif" alt="gumi">
+</div>
+
+<div class="photo p6">
+<img src="assets/gumi/gumi6.gif" alt="gumi">
+</div>
+
+<div class="box about">
+<h2>look at her shes beautiful</h2>
+<p>
+i love her, literally just look at the gumi megpoid. such a silly loid, my ever so beloved
+</p>
+</div>
+
+<div class="box songs">
+<h2>listen.</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=qXn0mnMWIcc">さよーならみなさん - siinamota (my absolute favorite of all gumi songs, plus its siinamota like COME ON MY HEART..)</a></li>
+<li><a href="https://www.youtube.com/watch?v=XVYexNFyYyA">theory - 164 (the whole damn album)</a></li>
+<li><a href="https://www.youtube.com/watch?v=cQKGUgOfD8U">echo - crusher</a></li>
+<li><a href="https://www.youtube.com/watch?v=ccxQO6cMydY&list=PLo8f1dE0cReY5SrwgcRJeJe6D_o1UtlOq">eat me</a></li>
+<li><a href="https://www.youtube.com/watch?v=qnX2CdOBcDI">donut hole - hachi</a></li>
+<li><a href="https://www.youtube.com/watch?v=NA3MJmcyPpE">water the roses - flavor foley</a></li>
+</ul>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/PkaX2ke4ttM?si=JmeYiWF5Ro1V1252" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+
+<div class="box ramble">
+<h2>dearest gumi</h2>
+<p>
+i heard 'Amanojaku' for the first time when i was watching a video on SDVX and i loved the song so much, so then 
+i was like okay what vocaloid is blessing my ears right now, i have never heard 
+her voice whats going on??? and THEN i found gumi... i was so happy instantly my fav vocal synth EVER (that says a lot cuz im day one teto fan)
+</p>
+<p>
+gumi's voicebank is also how i discovered siinamota's "alive" album. which is still one of my all time favorite vocaloid productions like ever. seriously good music, rest in peace siinamota. 
+</p>
+<p>
+    i have spent hours getting all these gumi photos crammed in here this page makes me so happy
+</p>
+</div>
+
+<div class="box stamps">
+<h2>-LOOK AT HER</h2>
+<br>
+<img src="/assets/gumi/stamp1.webp">
+
+</div>
+
+<div class="sticker s1"><img src="assets/gumi/gumi7.gif" alt="gumi"></div>
+<div class="sticker s2"><img src="assets/gumi/gumi8.gif" alt="gumi"></div>
+<div class="sticker s3"><img src="assets/gumi/gumi9.gif" alt="gumi"></div>
+<div class="sticker s4"><img src="assets/gumi/gumi10.gif" alt="gumi"></div>
+<div class="sticker s5"><img src="assets/gumi/gumi11.gif" alt="gumi"></div>
+
+<div class="button b1">i love her so much ohmygod</div>
+<div class="button b2">LISTEN NOW. LISTEN NOW.</div>
+<div class="button b3">my wife</div>
+
+
+<div class="MOREIMAGES i1" style="z-index: 99;"><img src="assets/gumi/gumi13.png"></div>
+<div class="MOREIMAGES i2" style="z-index: 99;"><img src="assets/gumi/gumi12.webp"></div>
+<div class="MOREIMAGES i3"><img src="assets/gumi/gumi14.png"></div>
+<div class="MOREIMAGES i4"><img src="assets/gumi/gumi17.gif"></div>
+<div class="MOREIMAGES i5"><img src="assets/gumi/gumi32.png"></div>
+<div class="MOREIMAGES i6"><img src="assets/gumi/gumi23.png"></div>
+<div class="MOREIMAGES i7"><img src="assets/gumi/gumi15.gif"></div>
+<div class="MOREIMAGES i8"><img src="assets/gumi/gumi24.png"></div>
+<div class="MOREIMAGES i9"><img src="assets/gumi/gumi25.png"></div>
+<div class="MOREIMAGES i10"><img src="assets/gumi/gumi28.webp" style="width:50%; height:auto;"></div>
+
+<div class="MOREIMAGES i11"><img src="assets/gumi/gumi16.png"></div>
+<div class="MOREIMAGES i12"><img src="assets/gumi/gumi26.png"></div>
+<div class="MOREIMAGES i13"><img src="assets/gumi/gumi27.png"></div>
+<div class="MOREIMAGES i14"><img src="assets/gumi/gumi29.webp"></div>
+<div class="MOREIMAGES i15"><img src="assets/gumi/gumi30.png"></div>
+<div class="MOREIMAGES i16"><img src="assets/gumi/gumi31.png"></div>
+<div class="MOREIMAGES i17"><img src="assets/gumi/gumi21.png"></div>
+<div class="MOREIMAGES i18"><img src="assets/gumi/gumi20.png"></div>
+<div class="MOREIMAGES i19"><img src="assets/gumi/gumi33.png"></div>
+<div class="MOREIMAGES i20"><img src="assets/gumi/gumi34.png" style="width:50%; height:auto;"></div>
+
+</div>
+<footer class="footer-note">page last edited on 5/29/26</footer>
+</body>
+</html>
