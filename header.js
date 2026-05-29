@@ -94,7 +94,7 @@
         { label: "bookmarks", href: "/bookmarks.html" },
         { label: "projects",
           submenu: [
-            { label: "misc creations", href: "/mystuf" },
+            { label: "misc creations", href: "/mystuf.html" },
           ]
         },
         { label: "recipes (wip)",   href: "/myrecipes.html" },
