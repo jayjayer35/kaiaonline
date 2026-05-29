@@ -64,7 +64,7 @@
         { label: "blog",     href: "/blog/index.html" },
         { label: "music (wip)", href: "/music.html" },
         { label: "my lists", href: "/lists.html" },
-        { label: "photo museum (new!)",   href: "/museum.html" },
+        { label: "photo museum",   href: "/museum.html" },
         { label: "friends",
           submenu: [
             { label: "hall of messages (wip)", href: "/msgs.html" },
@@ -78,13 +78,19 @@
       children: [
         { label: "the indie web!", href: "/indieweb.html" },
         { label: "guestbook",   href: "https://kaiasei.atabook.org/" },
+        { label: "shrines",
+          submenu: [
+            { label: "outer wilds", href: "/wilds.html" },
+            { label: "megpoid gumi", href: "/gumi.html" },
+          ],
+        },
         { label: "site archives",
           submenu: [
             { label: "archive 1 (original)", href: "/jacobonline-old/index.html" },
             { label: "archive 2 (revival)",  href: "/ofb/indexrm.html" },
             { label: "archive 3 (ship log)", href: "/ofb/indexlog.html" },
             { label: "archive 4 (dashboard)",href: "/indexold.html" },
-          { label: "old update log", href: "/ofb/updates.html" },
+        { label: "old update log", href: "/ofb/updates.html" },
           ]
         },
       ],
@@ -105,12 +111,6 @@
       label: "other",
       children: [
         { label: "dont forget",    href: "/dontforget.html" },
-        { label: "shrines",
-          submenu: [
-            { label: "outer wilds", href: "/wilds.html" },
-            { label: "megpoid gumi", href: "/gumi.html" },
-          ],
-        },
         { label: "404", href: "/404.html" },
         { label: "landing", href: "/index.html" },
       ],
