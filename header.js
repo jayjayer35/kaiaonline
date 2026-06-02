@@ -11,6 +11,8 @@
   const PLAYLIST = [
     { file: "/music/again.mp3",  name: "again, someday - kaiasei" },
     { file: "/music/moonsetter.mp3",  name: "Moonsetter - Homestuck" },
+    { file: "/music/ki.mp3",  name: "Ki - C418" },
+    { file: "/music/alpha.mp3",  name: "Alpha - C418" },
     { file: "/music/paradise.mp3",  name: "Welcome to Paradise - Emile van Krieken"   },
     { file: "/music/onceupon.mp3",  name: "Once upon a time... - Synthion"   },
     { file: "/music/aLupi.mp3",  name: "a Lupi - Synthion"   },
