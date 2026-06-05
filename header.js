@@ -3,7 +3,7 @@
 
   // ── ALERT BAR ───────────────────────────────────────────────────────────────
   // Set to null or "" to hide the alert bar entirely.
-  const ALERT_TEXT = "";
+  const ALERT_TEXT = "Apologies for slower site updates for now! I am quite tired.";
 
   // ── PLAYLIST ────────────────────────────────────────────────────────────────
   // { file: "/music/filename.mp3", name: "Display Name" }
@@ -691,13 +691,13 @@
         <span class="sb-clock" id="sb-clock">00:00</span>
         <span class="sb-date"  id="sb-date"></span>
       </div>
-      <div class="ksb-status-group">
+      <div class="ksb-status-group" title="kaia's health">
         <span class="sb-stat">
           <span class="sb-stat-label">hp</span>
           <div class="sb-pill"><div class="sb-pill-fill hp" id="sb-hp" style="width:85%"></div></div>
           <span class="sb-pill-val" id="sb-hp-val">85%</span>
         </span>
-        <span class="sb-stat">
+        <span class="sb-stat" title="kaia's social battery">
           <span class="sb-stat-label">bat</span>
           <div class="sb-pill"><div class="sb-pill-fill bat" id="sb-bat" style="width:60%"></div></div>
           <span class="sb-pill-val" id="sb-bat-val">60%</span>
@@ -1099,8 +1099,8 @@
     tickClock();
     setInterval(tickClock, 10000);
 
-    let hp  = Math.floor(Math.random() * 31) + 70;
-    let bat = Math.floor(Math.random() * 101);
+    let hp  = Math.floor(Math.random() * 26);
+    let bat = Math.floor(Math.random() * 11);
     const stateMap = { "0":"offline","1":"active!","2":"busy","3":"away~","4":"snooze","5":"trade","6":"play" };
     function nudge(v) {
       return Math.min(100, Math.max(0,
