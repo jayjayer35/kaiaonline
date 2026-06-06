@@ -3,7 +3,7 @@
 
   // ── ALERT BAR ───────────────────────────────────────────────────────────────
   // Set to null or "" to hide the alert bar entirely.
-  const ALERT_TEXT = "Apologies for slower site updates for now! I am quite tired.";
+  const ALERT_TEXT = "";
 
   // ── PLAYLIST ────────────────────────────────────────────────────────────────
   // { file: "/music/filename.mp3", name: "Display Name" }
@@ -243,6 +243,7 @@
         align-items: stretch;
         justify-content: space-between;
         min-height: 2.375rem;
+        position: relative;
       }
 
       /* ── music row ─────────────────────────────────────────────────────────── */
@@ -573,6 +574,43 @@
         #kaia-music-row   { font-size: 0.8rem; gap: 0.3rem; }
         #ksb-volume       { width: 3rem; }
       }
+
+      /* ── ticker (centred inside the main bar row) ───────────────────────────── */
+      #kaia-ticker-row {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        pointer-events: none;   /* let clicks pass through to nav/status */
+        white-space: nowrap;
+        font-size: 0.8rem;
+        font-style: italic;
+        letter-spacing: 0.04em;
+        color: var(--hdr-text);
+        opacity: 0.82;
+        max-width: 34%;         /* shrink-wrap so it never overlaps the edges */
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      #kaia-ticker-label {
+        opacity: 0.5;
+        font-style: normal;
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+        flex-shrink: 0;
+      }
+      #kaia-ticker-text {
+        overflow: hidden;
+        font-style: normal;
+        font-size: 1rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-shadow: 0 1px 0 var(--hdr-text-shadow);
+      }
+      @media (max-width: 60rem) { #kaia-ticker-row { display: none; } }
     `;
     document.head.appendChild(style);
   }
@@ -709,7 +747,16 @@
       </div>
     `;
 
+    // rotating ticker — centred absolutely inside the bar row
+    const tickerRow = document.createElement("div");
+    tickerRow.id = "kaia-ticker-row";
+    tickerRow.innerHTML = `
+      <span id="kaia-ticker-label"></span>
+      <span id="kaia-ticker-text">…</span>
+    `;
+
     barRow.appendChild(navWrap);
+    barRow.appendChild(tickerRow);
     barRow.appendChild(statWrap);
     bar.appendChild(barRow);
 
@@ -1143,6 +1190,31 @@
       .catch(() => {});
 
     startMusicRuntime();
+
+    // ── ROTATING TICKER ───────────────────────────────────────────────────────
+    // Fetches /rotating-text.json and picks one random item to show for the
+    // duration of the page load — no cycling.
+    const TICKER_SRC = "/splashes.json";
+
+    (function startTicker() {
+      const textEl = document.getElementById("kaia-ticker-text");
+      if (!textEl) return;
+
+      fetch(TICKER_SRC)
+        .then(r => r.json())
+        .then(data => {
+          const items = Array.isArray(data) ? data : (data.items || []);
+          if (!items.length) return;
+          textEl.textContent = items[Math.floor(Math.random() * items.length)];
+          syncSpacer();
+        })
+        .catch(() => {
+          // silently hide the row if the file can't be loaded
+          const row = document.getElementById("kaia-ticker-row");
+          if (row) row.style.display = "none";
+          syncSpacer();
+        });
+    })();
   }
 
   // ── SPACER ──────────────────────────────────────────────────────────────────
