@@ -367,8 +367,16 @@
     ::-webkit-scrollbar-thumb { background-color: var(--panel-border); }
     ::-webkit-scrollbar-thumb:hover { background-color: var(--panel-head); }
 
+    .two-col-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
     @media (max-width: 52rem) {
       .manifesto-layout { grid-template-columns: 1fr; }
+      .two-col-row { grid-template-columns: 1fr; }
     }
 
   </style>
@@ -383,15 +391,17 @@
 <main>
   <div class="page-wrap">
 
+    <div class="two-col-row">
+
     <div class="panel">
       <div class="panel-head">'manifesto'</div>
-      <div class="panel-body">
+      <div class="panel-body" style="max-height: 25rem; overflow-y: auto;">
         <div class="manifesto-layout">
           <div>
             <div class="manifesto-text">
               <p>
                 i am a firm believer of making things for the sake of making them. stumbling across the indie web movement back in 2022 for me was awe-inspiring, and pushed me to be more creative than i ever have been. 
-                it would be an understatment to say that this little site project of mine has made me into the creative person i am today. to show my appreciation in this, i create exactly what you see here, a site of my own. 
+                it would be an understatment to say that this little site project of mine has made me into the creative person i'd like to believe that i am today. to show my appreciation of this, i have created exactly what you see here, my little home on the internet. 
                 so while i may be late to the party in writing a manifesto, i still want to because it means a lot to <em>me</em>.
               </p>
               <div class="pull" style="text-align: center;">
@@ -418,12 +428,22 @@
 
 
     <div class="panel">
-      <div class="panel-head">webrings i'm in</div>
-      <div class="panel-body">
+      <div class="panel-head">webrings i'm in (scroll scroll!)</div>
+      <div class="panel-body" style="max-height: 25rem; overflow-y: auto;">
           <div class="manifesto-text" style="padding-bottom: 1rem;">
-            pardon the dust and bear with the broken links for the time being i just reapplied to these since they led to dead links for a while. hopefully there will be more webrings here soon! (this section of the page is still getting tweaked so mind the layout as well)
+            pardon the dust and bear with the broken links/layouts for the time being! i just brought these back, since they led to dead links for a while. hopefully there will be more webrings here soon! <br>
+            <em>(this section of the page is still getting heavily tweaked!)</em>
           </div>
         <div class="webring-grid" id="webring-grid">
+          <div class="webring-card">
+            <div class="webring-card-head">Melondland Surf Club</div>
+            <div class="webring-card-body">
+              <div class="webring-widget">
+                <object id="melonland-surf-club" data="https://melonland.net/surf-badge.svg?fill=#3584e4" type="image/svg+xml" style="width: 100px; height: 100px;"></object>
+              </div>
+            </div>
+          </div>
+
           <div class="webring-card">
             <div class="webring-card-head">Hotline Webring</div>
             <div class="webring-card-body">
@@ -497,15 +517,18 @@
       </div>
     </div>
 
+    </div> <!-- end .two-col-row -->
+
 
     <div class="panel">
       <div class="panel-head">buttons!</div>
       <div class="panel-body">
 
         <p class="manifesto-text">
-          a collection of 88×31 buttons. <br>
-          'neighbors' are sites that have put my button up! 'funsies' are buttons i like, that dont (usually) lead to another page.<br>
-          (let me know by email or on the guestbook if you've included my button on your site!! ill add you here!) br
+          <span style="text-decoration: underline;">neighbors</span> are sites that have put my button up! <br>
+          <span style="text-decoration: underline;">cool sites</span> are other peoples own pages! <br>
+          <span style="text-decoration: underline;">funsies</span> are buttons i like, that dont (usually) lead to another page.<br>
+          <em>(let me know by email or on the guestbook if you've included my button on your site!! ill add you here too!)</em>
         </p>
 
         <!-- filter tabs ADD here ffs -->
@@ -516,7 +539,7 @@
           <button class="btn-filter-tab" data-filter="fun">funsies</button>
         </div>
 
-        <div class="button-grid" id="button-grid">
+        <div class="button-grid" id="button-grid" style=" max-height: 10rem; overflow-y: auto;">
 
           <!-- dude this shit is afucking mess -->
           <div class="badge-wrap" data-label="hey this is me! feel free to hotlink on the img!" data-cat="neighbor">
@@ -527,6 +550,11 @@
           <div class="badge-wrap" data-label="Liz's place!" data-cat="neighbor">
             <a href="https://adnyx.nekoweb.org/" target="_blank" rel="noopener">
               <img src="/assets/buttons/sitelinks/adnyx_button.gif" alt="adynx's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="melonland forum!" data-cat="sites">
+            <a href="https://forum.melonland.net/" target="_blank" rel="noopener">
+              <img src="https://forum.melonland.net/images/MELONLAND-FORUM.GIF" alt="melps' button" style="image-rendering: pixelated;">
             </a>
           </div>
           <div class="badge-wrap" data-label="iDestyKK's Homepage!" data-cat="neighbor">
@@ -552,6 +580,11 @@
           <div class="badge-wrap" data-label="big gulp supreme" data-cat="sites">
             <a href="https://biggulpsupreme.neocities.org/" target="_blank" rel="noopener">
               <img src="/assets/buttons/sitelinks/biggulp.gif" alt="big gulp supreme's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="melonking's site!" data-cat="sites">
+            <a href="https://melonking.net/" target="_blank" rel="noopener">
+              <img src="https://melonking.net/images/badges/MELON-BADGE-OLD.GIF" alt="MELONKINGS AWESOME SITE" style="image-rendering: pixelated;">
             </a>
           </div>
           <div class="badge-wrap" data-label="purplehello98" data-cat="sites">
@@ -622,11 +655,6 @@
           <div class="badge-wrap" data-label="the internet is for cats! nekoweb's landing page" data-cat="sites">
             <a href="https://neocities.org/" target="_blank" rel="noopener">
               <img src="https://nekoweb.org/assets/buttons/button11.gif" alt="nekoweb's button" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="zzizful space" data-cat="sites">
-            <a href="https://zziz.nekoweb.org/" target="_blank" rel="noopener">
-              <img src="https://zziz.nekoweb.org/zzizbutton.gif" alt="zziz's button" style="image-rendering: pixelated;">
             </a>
           </div>
           <div class="badge-wrap" data-label="nomnomnami's site" data-cat="sites">
@@ -814,12 +842,36 @@
               <img src="https://kriemhilds.net/img/banner/kriemhilds.gif" alt="krimhilds' buttoon" style="image-rendering: pixelated;">
             </a>
           </div>
+          <div class="badge-wrap" data-label="sunnishinez's site, it has an amazing pvz theme! (it makes my brain happy)" data-cat="sites">
+            <a href="https://sunnishinez.neocities.org" target="_blank" rel="noopener">
+              <img src="https://sunnishinez.neocities.org/button.png" alt="sunnishinez button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="max's apartment" data-cat="sites">
+            <a href="https://maxpixels.moe/" target="_blank" rel="noopener">
+              <img src="https://max.nekoweb.org/images/button.png" alt="max's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="lazer bunny's site!" data-cat="sites">
+            <a href="https://lazer-bunny.neocities.org/" target="_blank" rel="noopener">
+              <img src="https://lazer-bunny.neocities.org/art_storage/site_buttons/Button_88x31.gif" alt="lazer bunny" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="the frutiger aero archive!" data-cat="sites">
+            <a href="https://frutigeraeroarchive.org/" target="_blank" rel="noopener">
+              <img src="https://frutigeraeroarchive.org/images/buttons/frutigeraeroarchive_button_2.png" alt="frutiget aero archive" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="Robin's Aviary" data-cat="sites">
+            <a href="https://robinsaviary.com" target="_blank" rel="noopener">
+              <img src="https://robinsaviary.com/robins-aviary.gif" alt="Robin's Aviary" style="image-rendering: pixelated;">
+            </a>
+          </div>
           <!-- <div class="badge-wrap" data-label="" data-cat="sites">
             <a href="" target="_blank" rel="noopener">
               <img src="" alt="" style="image-rendering: pixelated;">
             </a>
           </div> -->
-
         </div>
       </div>
     </div>

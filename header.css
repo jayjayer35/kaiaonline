@@ -1,0 +1,700 @@
+#kaia-header-spacer { width: 100%; }
+
+      @font-face {
+        font-family: "NDS";
+        src: url("/rework/assets/fonts/nds.ttf") format("truetype");
+        font-display: swap;
+        /* font-family: "NDS";
+        src: url("/big-shot.ttf") format("truetype");
+        font-display: swap; */
+      }
+
+      :root {
+        /* --hdr-bg:            #9eb4d1;
+        --hdr-border-top:    #c4d6e8;
+        --hdr-border-bottom: #7e8ba3;
+        --hdr-shadow-1:      #cddaea;
+        --hdr-shadow-2:      #6a7d96;
+        --hdr-text:          #fff;
+        --hdr-text-shadow:   #5a7a9a;
+        --hdr-hover-bg:      rgba(255,255,255,0.18);
+        --drop-bg:           #dce8f4;
+        --drop-border:       #9ca7c3;
+        --drop-border-top:   #c4d6e8;
+        --drop-shadow:       #7e8ba3;
+        --drop-text:         #444;
+        --drop-hover-bg:     #b6c6df;
+        --drop-hover-text:   #2a3a50;
+        --pill-bg:           rgba(0,0,0,0.15);
+        --pill-border:       rgba(0,0,0,0.2);
+        --steam-text:        #dce8f4;
+        --steam-shadow:      #4a6a8a;
+        --alert-bg:          #f5e6a0;
+        --alert-text:        #5a4a00;
+        --alert-border:      #c8a800; */
+        /* special colors! */
+        --hdr-bg:            #d19eb8;
+        --hdr-border-top:    #e8c4da;
+        --hdr-border-bottom: #a37e98;
+        --hdr-shadow-1:      #eacde1;
+        --hdr-shadow-2:      #966a88;
+        --hdr-text:          #ffffff;
+        --hdr-text-shadow:   #9a5a81;
+        --hdr-hover-bg:      rgba(255, 255, 255, 0.18);
+        --drop-bg:           #f4dcef;
+        --drop-border:       #c39cb9;
+        --drop-border-top:   #e8c4da;
+        --drop-shadow:       #a37e99;
+        --drop-text:         #444;
+        --drop-hover-bg:     #dfb6d2;
+        --drop-hover-text:   #502a40;
+        --pill-bg:           rgba(0,0,0,0.15);
+        --pill-border:       rgba(0,0,0,0.2);
+        --steam-text:        #f4dce9;
+        --steam-shadow:      #8a4a72;
+        --alert-bg:          #f5e6a0;
+        --alert-text:        #5a4a00;
+        --alert-border:      #c8a800;
+      }
+
+      body.dark-mode {
+        /* --hdr-bg:            #2a3340;
+        --hdr-border-top:    #4a5a70;
+        --hdr-border-bottom: #1a2028;
+        --hdr-shadow-1:      #3a4a60;
+        --hdr-shadow-2:      #10141a;
+        --hdr-text:          #e0e8f0;
+        --hdr-text-shadow:   #000;
+        --hdr-hover-bg:      rgba(0,0,0,0.25);
+        --drop-bg:           #1e2530;
+        --drop-border:       #151a22;
+        --drop-border-top:   #3a4a60;
+        --drop-shadow:       #0d1117;
+        --drop-text:         #a8b8cc;
+        --drop-hover-bg:     #2d3846;
+        --drop-hover-text:   #e0e8f0;
+        --pill-bg:           rgba(0,0,0,0.4);
+        --pill-border:       rgba(0,0,0,0.6);
+        --steam-text:        #6b9ac4;
+        --steam-shadow:      #000;
+        --alert-bg:          #2a2200;
+        --alert-text:        #f0d060;
+        --alert-border:      #7a6000; */
+        /* special colors! */
+        --hdr-bg:            #402a3f;
+        --hdr-border-top:    #704a70;
+        --hdr-border-bottom: #281a28;
+        --hdr-shadow-1:      #5f3a60;
+        --hdr-shadow-2:      #1a101a;
+        --hdr-text:          #f0e0ef;
+        --hdr-text-shadow:   #000;
+        --hdr-hover-bg:      rgba(0,0,0,0.25);
+        --drop-bg:           #301e2d;
+        --drop-border:       #221521;
+        --drop-border-top:   #603a5f;
+        --drop-shadow:       #170d16;
+        --drop-text:         #cca8cb;
+        --drop-hover-bg:     #462d44;
+        --drop-hover-text:   #f0e0ef;
+        --pill-bg:           rgba(0,0,0,0.4);
+        --pill-border:       rgba(0,0,0,0.6);
+        --steam-text:        #c46bbb;
+        --steam-shadow:      #000;
+        --alert-bg:          #2a2300;
+        --alert-text:        #f0e660;
+        --alert-border:      #7a7400;
+      }
+
+      /* alert bar */
+      #kaia-alert-bar {
+        width: 100%;
+        background: var(--alert-bg);
+        color: var(--alert-text);
+        border-bottom: 1px solid var(--alert-border);
+        font-family: 'NDS', monospace, sans-serif;
+        font-size: 0.9rem;
+        padding: 0.25rem 2.5rem 0.25rem 0.75rem;
+        text-align: center;
+        position: relative;
+        box-sizing: border-box;
+        transition: background 0.3s, color 0.3s;
+      }
+      #kaia-alert-close {
+        position: absolute;
+        right: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 1rem;
+        opacity: 0.6;
+        background: none;
+        border: none;
+        color: inherit;
+        font-family: inherit;
+        line-height: 1;
+        padding: 0 0.2rem;
+      }
+      #kaia-alert-close:hover { opacity: 1; }
+
+      /* main bar */
+      #kaia-single-bar {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        z-index: 9999;
+        box-sizing: border-box;
+        background: var(--hdr-bg);
+        border-top: 2px solid var(--hdr-border-top);
+        border-bottom: 3px solid var(--hdr-border-bottom);
+        box-shadow:
+          inset 0 1px 0 var(--hdr-shadow-1),
+          inset 0 -2px 0 var(--hdr-shadow-2),
+          0 4px 8px rgba(0,0,0,0.25);
+        font-family: 'NDS', monospace, sans-serif;
+        font-weight: bold;
+        transition: background 0.3s, border-color 0.3s;
+      }
+
+      #kaia-bar-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        justify-content: space-between;
+        min-height: 2.375rem;
+        position: relative;
+      }
+
+      /* ── music row ─────────────────────────────────────────────────────────── */
+      #kaia-music-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.18rem 0.75rem;
+        border-top: 1px solid rgba(255,255,255,0.12);
+        background: rgba(0,0,0,0.10);
+        flex-wrap: wrap;
+        font-size: 0.82rem;
+        color: var(--hdr-text);
+        min-height: 1.85rem;
+        box-sizing: border-box;
+      }
+      body.dark-mode #kaia-music-row { background: rgba(0,0,0,0.22); }
+
+      /* ♪ icon + song name on the left */
+      #ksb-music-left {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+      }
+      #ksb-music-note {
+        opacity: 0.55;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+        line-height: 1;
+      }
+      #ksb-song-name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        opacity: 0.92;
+        text-shadow: 0 1px 0 var(--hdr-text-shadow);
+        font-size: 0.82rem;
+        letter-spacing: 0.03em;
+        cursor: default;
+        font-style: italic;
+      }
+
+      /* ── right-side controls cluster ─────────────────────────────────────── */
+      #ksb-music-right {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        flex-shrink: 0;
+      }
+
+      /* transport pill: prev / play / next grouped together */
+      #ksb-transport {
+        display: flex;
+        align-items: stretch;
+        border: 1px solid rgba(255,255,255,0.28);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 1px 2px rgba(0,0,0,0.2);
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .ksb-music-btn {
+        background: rgba(255,255,255,0.06);
+        border: none;
+        border-right: 1px solid rgba(255,255,255,0.15);
+        color: var(--hdr-text);
+        font-family: 'NDS', monospace, sans-serif;
+        font-size: 0.72rem;
+        padding: 0.12rem 0.45rem;
+        cursor: pointer;
+        line-height: 1;
+        transition: background 0.1s;
+        user-select: none;
+        flex-shrink: 0;
+        letter-spacing: 0.02em;
+      }
+      .ksb-music-btn:last-child { border-right: none; }
+      .ksb-music-btn:hover      { background: rgba(255,255,255,0.18); }
+      .ksb-music-btn:active     { background: rgba(255,255,255,0.28); }
+      /* play button slightly wider + bolder */
+      #ksb-play { padding: 0.12rem 0.55rem; font-size: 0.8rem; }
+
+      /* repeat button — standalone pill, changes appearance when active */
+      #ksb-repeat {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.22);
+        color: var(--hdr-text);
+        font-family: 'NDS', monospace, sans-serif;
+        font-size: 0.72rem;
+        padding: 0.12rem 0.42rem;
+        cursor: pointer;
+        line-height: 1;
+        transition: background 0.1s, border-color 0.1s, color 0.1s;
+        user-select: none;
+        flex-shrink: 0;
+        letter-spacing: 0.02em;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.2);
+        opacity: 0.55;
+      }
+      #ksb-repeat:hover { opacity: 0.85; background: rgba(255,255,255,0.12); }
+      #ksb-repeat.on {
+        opacity: 1;
+        background: rgba(255,255,255,0.18);
+        border-color: rgba(255,255,255,0.55);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 0 4px rgba(255,255,255,0.15);
+      }
+
+      /* volume strip */
+      .ksb-vol-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.28rem;
+        flex-shrink: 0;
+        border: 1px solid rgba(255,255,255,0.18);
+        padding: 0.1rem 0.4rem;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+      }
+      .ksb-vol-label {
+        opacity: 0.55;
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+      }
+      #ksb-volume {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 3.5rem;
+        height: 0.3rem;
+        background: rgba(255,255,255,0.2);
+        outline: none;
+        cursor: pointer;
+        border: none;
+        border-radius: 0;
+      }
+      #ksb-volume::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 0.55rem; height: 0.8rem;
+        background: var(--hdr-text);
+        border: 1px solid rgba(0,0,0,0.25);
+        cursor: pointer;
+        border-radius: 0;
+      }
+      #ksb-volume::-moz-range-thumb {
+        width: 0.55rem; height: 0.8rem;
+        background: var(--hdr-text);
+        border: 1px solid rgba(0,0,0,0.25);
+        cursor: pointer;
+        border-radius: 0;
+        box-sizing: border-box;
+      }
+
+      /* song select dropdown */
+      #ksb-song-select-wrap {
+        position: relative;
+        flex-shrink: 0;
+      }
+      #ksb-song-select-btn {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.22);
+        color: var(--hdr-text);
+        font-family: 'NDS', monospace, sans-serif;
+        font-size: 0.72rem;
+        padding: 0.12rem 0.42rem;
+        cursor: pointer;
+        line-height: 1;
+        transition: background 0.1s, border-color 0.1s;
+        user-select: none;
+        letter-spacing: 0.03em;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.2);
+      }
+      #ksb-song-select-btn:hover,
+      #ksb-song-select-wrap.open #ksb-song-select-btn {
+        background: rgba(255,255,255,0.18);
+        border-color: rgba(255,255,255,0.5);
+      }
+      #ksb-song-list {
+        position: absolute;
+        top: calc(100% + 5px);
+        right: 0;
+        background: var(--drop-bg);
+        border: 1px solid var(--drop-border);
+        border-top: 2px solid var(--drop-border-top);
+        box-shadow: 2px 4px 0 var(--drop-shadow);
+        width: 16rem;          /* fixed width — never varies */
+        min-width: 16rem;
+        max-width: 16rem;
+        height: 14rem;         /* fixed height — always the same box */
+        max-height: 14rem;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: 400;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.15s, visibility 0.15s;
+        scrollbar-width: thin;
+        scrollbar-color: var(--drop-border) transparent;
+        box-sizing: border-box;
+      }
+      #ksb-song-select-wrap.open #ksb-song-list {
+        opacity: 1;
+        visibility: visible;
+      }
+      .ksb-song-option {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.22rem 0.65rem;
+        color: var(--drop-text);
+        font-family: 'NDS', monospace, sans-serif;
+        font-size: 0.82rem;
+        white-space: nowrap;
+        cursor: pointer;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        transition: background 0.08s, padding-left 0.08s;
+        text-shadow: none;
+        font-weight: normal;
+      }
+      .ksb-song-option:last-child { border-bottom: none; }
+      .ksb-song-option:hover {
+        background: var(--drop-hover-bg);
+        color: var(--drop-hover-text);
+        padding-left: 0.95rem;
+      }
+      .ksb-song-option.active {
+        font-weight: bold;
+        color: var(--drop-hover-text);
+        background: rgba(100,160,220,0.15);
+      }
+      .ksb-song-option.active::before {
+        content: "▶";
+        font-size: 0.55rem;
+        opacity: 0.7;
+        flex-shrink: 0;
+      }
+      body.dark-mode .ksb-song-option.active { background: rgba(100,160,220,0.1); }
+
+      /* nav */
+      .ksb-nav { display: flex; align-items: stretch; flex-wrap: wrap; }
+      .ksb-nav .ds-item { position: relative; display: inline-flex; align-items: center; }
+      .ksb-nav .ds-link {
+        display: flex; align-items: center; gap: 0.25rem;
+        padding: 0 1.125rem; height: 2.375rem;
+        color: var(--hdr-text); text-decoration: none;
+        font-size: 1.5rem; letter-spacing: 0.06em;
+        text-shadow: 0 1px 0 var(--hdr-text-shadow);
+        white-space: nowrap; cursor: pointer;
+        transition: background 0.1s; user-select: none; box-sizing: border-box;
+      }
+      .ksb-nav .ds-link:hover,
+      .ksb-nav .ds-item.open > .ds-link { background: var(--hdr-hover-bg); }
+      .ksb-nav .ds-arrow {
+        font-size: 0.5rem; opacity: 0.55; margin-top: 0.125rem;
+        transition: transform 0.15s; display: inline-block;
+      }
+      .ksb-nav .ds-item.open > .ds-link .ds-arrow { transform: rotate(180deg); }
+      .ksb-nav .ds-dropdown {
+        position: absolute; top: calc(100% + 3px); left: 50%; transform: translateX(-50%);
+        background: var(--drop-bg); border: 1px solid var(--drop-border);
+        border-top: 2px solid var(--drop-border-top);
+        box-shadow: 2px 3px 0 var(--drop-shadow), inset 0 1px 0 rgba(255,255,255,0.1);
+        min-width: 9rem; z-index: 300;
+        opacity: 0; visibility: hidden;
+        transition: opacity 0.18s ease, visibility 0.18s ease;
+        padding: 0.1rem 0;
+      }
+      .ksb-nav .ds-item.open > .ds-dropdown,
+      .ksb-nav .ds-item:hover > .ds-dropdown { opacity: 1; visibility: visible; }
+      .ksb-nav .ds-dropdown a {
+        display: block; padding: 0.2rem 0.75rem;
+        color: var(--drop-text); text-decoration: none;
+        white-space: nowrap; letter-spacing: 0.02em;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        transition: background 0.1s, padding-left 0.1s, color 0.1s;
+        font-size: 1rem; text-shadow: none; line-height: 1.5; box-sizing: border-box;
+      }
+      .ksb-nav .ds-dropdown a:last-child { border-bottom: none; }
+      .ksb-nav .ds-dropdown a:hover {
+        background: var(--drop-hover-bg); color: var(--drop-hover-text);
+        padding-left: 1rem; cursor: pointer;
+      }
+
+      /* status */
+      .ksb-status {
+        display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+        padding: 0 1rem; color: var(--hdr-text);
+        text-shadow: 0 1px 0 var(--hdr-text-shadow); font-size: 1rem;
+      }
+      .ksb-status-group { display: flex; align-items: center; gap: 0.5rem; }
+      .sb-theme-btn {
+        cursor: pointer; user-select: none; opacity: 0.8;
+        transition: opacity 0.2s, transform 0.1s; padding: 0 0.25rem;
+      }
+      .sb-theme-btn:hover { opacity: 1; transform: scale(1.1); }
+      .sb-clock { font-size: 1.25rem; letter-spacing: 0.05em; }
+      .sb-date  { opacity: 0.85; }
+      .sb-stat  { display: flex; align-items: center; gap: 0.25rem; }
+      .sb-stat-label { opacity: 0.8; }
+      .sb-pill {
+        width: 2.2rem; height: 0.4rem;
+        background: var(--pill-bg); border: 1px solid var(--pill-border); overflow: hidden;
+      }
+      .sb-pill-fill { height: 100%; transition: width 1.2s ease; }
+      .sb-pill-fill.hp  { background: #8ced8c; }
+      .sb-pill-fill.bat { background: #8cc6ed; }
+      .sb-pill-val { min-width: 1.8rem; opacity: 0.9; }
+      .sb-steam { opacity: 0.9; }
+      .sb-steam span { color: var(--steam-text); text-shadow: 0 1px 0 var(--steam-shadow); }
+      .sb-visitors { opacity: 0.85; }
+
+      /* submenus */
+      .ds-submenu-wrap { position: relative; }
+      .ds-submenu {
+        position: absolute; top: -1px; left: calc(100% + 2px);
+        background: var(--drop-bg); border: 1px solid var(--drop-border);
+        border-top: 2px solid var(--drop-border-top); min-width: 9rem;
+        opacity: 0; visibility: hidden; transition: opacity 0.18s ease;
+        box-shadow: 2px 3px 0 var(--drop-shadow), inset 0 1px 0 rgba(255,255,255,0.1);
+        z-index: 500;
+      }
+      .ds-submenu-wrap:hover > .ds-submenu { opacity: 1; visibility: visible; }
+      .ds-submenu-arrow { float: right; opacity: 0.6; }
+
+      /* responsive */
+      @media (max-width: 60rem) {
+        #kaia-single-bar { justify-content: center; }
+        .ksb-status { justify-content: center; padding-bottom: 0.25rem; }
+      }
+      @media (max-width: 37.5rem) {
+        .ksb-nav .ds-link { font-size: 1rem; padding: 0 0.625rem; height: 2rem; }
+        #kaia-bar-row     { min-height: 2rem; }
+        .ksb-status       { font-size: 0.875rem; gap: 0.5rem; }
+        .sb-clock         { font-size: 1rem; }
+        #kaia-music-row   { font-size: 0.8rem; gap: 0.3rem; }
+        #ksb-volume       { width: 3rem; }
+      }
+
+      /* ── ticker (centred inside the main bar row) ───────────────────────────── */
+      #kaia-ticker-row {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        pointer-events: none;   /* let clicks pass through to nav/status */
+        white-space: nowrap;
+        font-size: 0.8rem;
+        font-style: italic;
+        letter-spacing: 0.04em;
+        color: var(--hdr-text);
+        opacity: 0.82;
+        max-width: 34%;         /* shrink-wrap so it never overlaps the edges */
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      #kaia-ticker-label {
+        opacity: 0.5;
+        font-style: normal;
+        font-size: 1rem;
+        letter-spacing: 0.08em;
+        flex-shrink: 0;
+      }
+      #kaia-ticker-text {
+        overflow: hidden;
+        font-style: normal;
+        font-size: 1rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-shadow: 0 1px 0 var(--hdr-text-shadow);
+      }
+      @media (max-width: 60rem) { #kaia-ticker-row { display: none; } }
+      /* ── kaia popups ──────────────────────────────────────────────────────────── */
+      .kaia-popup {
+        position: fixed;
+        z-index: 8000;
+        background: var(--drop-bg);
+        border: 1px solid var(--drop-border);
+        border-top: 2px solid var(--drop-border-top);
+        box-shadow: 2px 4px 0 var(--drop-shadow), inset 0 1px 0 rgba(255,255,255,0.08);
+        font-family: 'NDS', monospace, sans-serif;
+        font-size: 1rem;
+        color: var(--drop-text);
+        max-width: 14rem;
+        min-width: 9rem;
+        box-sizing: border-box;
+        /* entrance animation */
+        animation: kaia-popup-in 0.18s ease forwards;
+      }
+      @keyframes kaia-popup-in {
+        from { opacity: 0; transform: scale(0.9); }
+        to   { opacity: 1; transform: scale(1); }
+      }
+      .kaia-popup.closing {
+        animation: kaia-popup-out 0.14s ease forwards;
+      }
+      @keyframes kaia-popup-out {
+        from { opacity: 1; transform: scale(1); }
+        to   { opacity: 0; transform: scale(0.9); }
+      }
+
+      /* header bar with close button */
+      .kaia-popup-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--hdr-bg);
+        color: var(--hdr-text);
+        padding: 0.18rem 0.4rem 0.18rem 0.55rem;
+        border-bottom: 1px solid var(--drop-border);
+        font-size: 1rem;
+        letter-spacing: 0.05em;
+        gap: 0.4rem;
+        text-shadow: 0 1px 0 var(--hdr-text-shadow);
+      }
+      .kaia-popup-title {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .kaia-popup-close {
+        background: none;
+        border: none;
+        color: var(--hdr-text);
+        font-family: inherit;
+        font-size: 1rem;
+        cursor: pointer;
+        opacity: 0.6;
+        line-height: 1;
+        padding: 0 0.1rem;
+        flex-shrink: 0;
+        transition: opacity 0.1s;
+      }
+      .kaia-popup-close:hover { opacity: 1; }
+
+      /* body content */
+      .kaia-popup-body {
+        padding: 0.45rem 0.6rem;
+        line-height: 1.45;
+        font-weight: normal;
+      }
+      .kaia-popup-body a {
+        color: var(--drop-hover-text);
+        text-decoration: underline;
+      }
+      .kaia-popup-body a:hover { opacity: 0.75; }
+
+      /* ── arrow variants ──────────────────────────────────────────────────────── */
+      /* Each arrow is a pseudo-element triangle pointing AWAY from the popup box   */
+      /* (i.e. arrow-top means the arrow sticks out of the top edge)               */
+
+      .kaia-popup[data-arrow="top"]::before,
+      .kaia-popup[data-arrow="top"]::after,
+      .kaia-popup[data-arrow="bottom"]::before,
+      .kaia-popup[data-arrow="bottom"]::after,
+      .kaia-popup[data-arrow="left"]::before,
+      .kaia-popup[data-arrow="left"]::after,
+      .kaia-popup[data-arrow="right"]::before,
+      .kaia-popup[data-arrow="right"]::after {
+        content: "";
+        position: absolute;
+        pointer-events: none;
+      }
+
+      /* TOP arrow */
+      .kaia-popup[data-arrow="top"]::after {
+        bottom: 100%;
+        left: var(--arrow-offset, 50%);
+        transform: translateX(-50%);
+        border: 8px solid transparent;
+        border-bottom-color: var(--drop-border-top);
+        margin-bottom: -1px;
+      }
+      .kaia-popup[data-arrow="top"]::before {
+        bottom: 100%;
+        left: var(--arrow-offset, 50%);
+        transform: translateX(-50%);
+        border: 7px solid transparent;
+        border-bottom-color: var(--drop-bg);
+        z-index: 1;
+      }
+
+      /* BOTTOM arrow */
+      .kaia-popup[data-arrow="bottom"]::after {
+        top: 100%;
+        left: var(--arrow-offset, 50%);
+        transform: translateX(-50%);
+        border: 8px solid transparent;
+        border-top-color: var(--drop-shadow);
+        margin-top: -1px;
+      }
+      .kaia-popup[data-arrow="bottom"]::before {
+        top: 100%;
+        left: var(--arrow-offset, 50%);
+        transform: translateX(-50%);
+        border: 7px solid transparent;
+        border-top-color: var(--drop-bg);
+        z-index: 1;
+      }
+
+      /* LEFT arrow */
+      .kaia-popup[data-arrow="left"]::after {
+        right: 100%;
+        top: var(--arrow-offset, 50%);
+        transform: translateY(-50%);
+        border: 8px solid transparent;
+        border-right-color: var(--drop-border-top);
+        margin-right: -1px;
+      }
+      .kaia-popup[data-arrow="left"]::before {
+        right: 100%;
+        top: var(--arrow-offset, 50%);
+        transform: translateY(-50%);
+        border: 7px solid transparent;
+        border-right-color: var(--drop-bg);
+        z-index: 1;
+      }
+
+      /* RIGHT arrow */
+      .kaia-popup[data-arrow="right"]::after {
+        left: 100%;
+        top: var(--arrow-offset, 50%);
+        transform: translateY(-50%);
+        border: 8px solid transparent;
+        border-left-color: var(--drop-shadow);
+        margin-left: -1px;
+      }
+      .kaia-popup[data-arrow="right"]::before {
+        left: 100%;
+        top: var(--arrow-offset, 50%);
+        transform: translateY(-50%);
+        border: 7px solid transparent;
+        border-left-color: var(--drop-bg);
+        z-index: 1;
+      }

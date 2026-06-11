@@ -3,7 +3,7 @@
 
   // ── ALERT BAR ───────────────────────────────────────────────────────────────
   // Set to null or "" to hide the alert bar entirely.
-  const ALERT_TEXT = "";
+  const ALERT_TEXT = "delatrune soon! making the header pink and purple in celebration";
 
   // ── PLAYLIST ────────────────────────────────────────────────────────────────
   // { file: "/music/filename.mp3", name: "Display Name" }
@@ -13,6 +13,9 @@
     { file: "/music/moonsetter.mp3",  name: "Moonsetter - Homestuck" },
     { file: "/music/ki.mp3",  name: "Ki - C418" },
     { file: "/music/alpha.mp3",  name: "Alpha - C418" },
+    { file: "/music/castlefunk.mp3",  name: "Castle Funk - Toby Fox" },
+    { file: "/music/castletown.mp3",  name: "My Castle Town - Toby Fox" },
+    { file: "/music/story.mp3",  name: "Before the Story - Toby Fox" },
     { file: "/music/paradise.mp3",  name: "Welcome to Paradise - Emile van Krieken"   },
     { file: "/music/onceupon.mp3",  name: "Once upon a time... - Synthion"   },
     { file: "/music/aLupi.mp3",  name: "a Lupi - Synthion"   },
@@ -64,26 +67,36 @@
       children: [
         { label: "#me (wip)",     href: "/blog/me.html" },
         { label: "blog",     href: "/blog/index.html" },
-        { label: "music (wip)", href: "/music.html" },
         { label: "my lists", href: "/lists.html" },
-        { label: "photo museum",   href: "/museum.html" },
+      ],
+      
+    },
+    {
+      label: "for u",
+      children: [
         { label: "friends",
           submenu: [
+            { label: "memory vids", href: "/memoryvids.html" },
             { label: "hall of messages (wip)", href: "/msgs.html" },
           ]
         },
+        { label: "photo museum",   href: "/museum.html" },
+        { label: "my music", href: "/mymusic.html" },
+        { label: "recipes (wip)",   href: "/myrecipes.html" },
+        { label: "web projects", href: "/mywebdev.html" },
       ],
-      
     },
     {
       label: "web",
       children: [
         { label: "the indie web!", href: "/indieweb.html" },
         { label: "guestbook",   href: "https://kaiasei.atabook.org/" },
+        { label: "bookmarks", href: "/bookmarks.html" },
         { label: "shrines",
           submenu: [
             { label: "outer wilds", href: "/wilds.html" },
             { label: "megpoid gumi", href: "/gumi.html" },
+            { label: "gaster (WIP)", href: "/gaster.html" },
           ],
         },
         { label: "site archives",
@@ -95,18 +108,7 @@
         { label: "old update log", href: "/ofb/updates.html" },
           ]
         },
-      ],
-    },
-    {
-      label: "for u",
-      children: [
-        { label: "bookmarks", href: "/bookmarks.html" },
-        { label: "projects",
-          submenu: [
-            { label: "misc creations", href: "/mystuf.html" },
-          ]
-        },
-        { label: "recipes (wip)",   href: "/myrecipes.html" },
+        { label: "stamps",   href: "stamps" },
       ],
     },
     {
@@ -125,495 +127,15 @@
 
   // ── STYLES ──────────────────────────────────────────────────────────────────
   function injectStyles() {
-    if (document.getElementById("kaia-header-styles")) return;
-    const style = document.createElement("style");
-    style.id = "kaia-header-styles";
-    style.textContent = `
-      #kaia-header-spacer { width: 100%; }
+  if (document.getElementById("kaia-header-styles")) return;
 
-      @font-face {
-        font-family: "NDS";
-        src: url("/rework/assets/fonts/nds.ttf") format("truetype");
-        font-display: swap;
-      }
+  const link = document.createElement("link");
+  link.id = "kaia-header-styles";
+  link.rel = "stylesheet";
+  link.href = "/header.css";
 
-      :root {
-        --hdr-bg:            #9eb4d1;
-        --hdr-border-top:    #c4d6e8;
-        --hdr-border-bottom: #7e8ba3;
-        --hdr-shadow-1:      #cddaea;
-        --hdr-shadow-2:      #6a7d96;
-        --hdr-text:          #fff;
-        --hdr-text-shadow:   #5a7a9a;
-        --hdr-hover-bg:      rgba(255,255,255,0.18);
-        --drop-bg:           #dce8f4;
-        --drop-border:       #9ca7c3;
-        --drop-border-top:   #c4d6e8;
-        --drop-shadow:       #7e8ba3;
-        --drop-text:         #444;
-        --drop-hover-bg:     #b6c6df;
-        --drop-hover-text:   #2a3a50;
-        --pill-bg:           rgba(0,0,0,0.15);
-        --pill-border:       rgba(0,0,0,0.2);
-        --steam-text:        #dce8f4;
-        --steam-shadow:      #4a6a8a;
-        --alert-bg:          #f5e6a0;
-        --alert-text:        #5a4a00;
-        --alert-border:      #c8a800;
-      }
-
-      body.dark-mode {
-        --hdr-bg:            #2a3340;
-        --hdr-border-top:    #4a5a70;
-        --hdr-border-bottom: #1a2028;
-        --hdr-shadow-1:      #3a4a60;
-        --hdr-shadow-2:      #10141a;
-        --hdr-text:          #e0e8f0;
-        --hdr-text-shadow:   #000;
-        --hdr-hover-bg:      rgba(0,0,0,0.25);
-        --drop-bg:           #1e2530;
-        --drop-border:       #151a22;
-        --drop-border-top:   #3a4a60;
-        --drop-shadow:       #0d1117;
-        --drop-text:         #a8b8cc;
-        --drop-hover-bg:     #2d3846;
-        --drop-hover-text:   #e0e8f0;
-        --pill-bg:           rgba(0,0,0,0.4);
-        --pill-border:       rgba(0,0,0,0.6);
-        --steam-text:        #6b9ac4;
-        --steam-shadow:      #000;
-        --alert-bg:          #2a2200;
-        --alert-text:        #f0d060;
-        --alert-border:      #7a6000;
-      }
-
-      /* alert bar */
-      #kaia-alert-bar {
-        width: 100%;
-        background: var(--alert-bg);
-        color: var(--alert-text);
-        border-bottom: 1px solid var(--alert-border);
-        font-family: 'NDS', monospace, sans-serif;
-        font-size: 0.9rem;
-        padding: 0.25rem 2.5rem 0.25rem 0.75rem;
-        text-align: center;
-        position: relative;
-        box-sizing: border-box;
-        transition: background 0.3s, color 0.3s;
-      }
-      #kaia-alert-close {
-        position: absolute;
-        right: 0.5rem;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        font-size: 1rem;
-        opacity: 0.6;
-        background: none;
-        border: none;
-        color: inherit;
-        font-family: inherit;
-        line-height: 1;
-        padding: 0 0.2rem;
-      }
-      #kaia-alert-close:hover { opacity: 1; }
-
-      /* main bar */
-      #kaia-single-bar {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%;
-        z-index: 9999;
-        box-sizing: border-box;
-        background: var(--hdr-bg);
-        border-top: 2px solid var(--hdr-border-top);
-        border-bottom: 3px solid var(--hdr-border-bottom);
-        box-shadow:
-          inset 0 1px 0 var(--hdr-shadow-1),
-          inset 0 -2px 0 var(--hdr-shadow-2),
-          0 4px 8px rgba(0,0,0,0.25);
-        font-family: 'NDS', monospace, sans-serif;
-        font-weight: bold;
-        transition: background 0.3s, border-color 0.3s;
-      }
-
-      #kaia-bar-row {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: stretch;
-        justify-content: space-between;
-        min-height: 2.375rem;
-        position: relative;
-      }
-
-      /* ── music row ─────────────────────────────────────────────────────────── */
-      #kaia-music-row {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.18rem 0.75rem;
-        border-top: 1px solid rgba(255,255,255,0.12);
-        background: rgba(0,0,0,0.10);
-        flex-wrap: wrap;
-        font-size: 0.82rem;
-        color: var(--hdr-text);
-        min-height: 1.85rem;
-        box-sizing: border-box;
-      }
-      body.dark-mode #kaia-music-row { background: rgba(0,0,0,0.22); }
-
-      /* ♪ icon + song name on the left */
-      #ksb-music-left {
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
-        flex: 1;
-        min-width: 0;
-        overflow: hidden;
-      }
-      #ksb-music-note {
-        opacity: 0.55;
-        font-size: 0.9rem;
-        flex-shrink: 0;
-        line-height: 1;
-      }
-      #ksb-song-name {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        opacity: 0.92;
-        text-shadow: 0 1px 0 var(--hdr-text-shadow);
-        font-size: 0.82rem;
-        letter-spacing: 0.03em;
-        cursor: default;
-        font-style: italic;
-      }
-
-      /* ── right-side controls cluster ─────────────────────────────────────── */
-      #ksb-music-right {
-        display: flex;
-        align-items: center;
-        gap: 0.45rem;
-        flex-shrink: 0;
-      }
-
-      /* transport pill: prev / play / next grouped together */
-      #ksb-transport {
-        display: flex;
-        align-items: stretch;
-        border: 1px solid rgba(255,255,255,0.28);
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 1px 2px rgba(0,0,0,0.2);
-        overflow: hidden;
-        flex-shrink: 0;
-      }
-      .ksb-music-btn {
-        background: rgba(255,255,255,0.06);
-        border: none;
-        border-right: 1px solid rgba(255,255,255,0.15);
-        color: var(--hdr-text);
-        font-family: 'NDS', monospace, sans-serif;
-        font-size: 0.72rem;
-        padding: 0.12rem 0.45rem;
-        cursor: pointer;
-        line-height: 1;
-        transition: background 0.1s;
-        user-select: none;
-        flex-shrink: 0;
-        letter-spacing: 0.02em;
-      }
-      .ksb-music-btn:last-child { border-right: none; }
-      .ksb-music-btn:hover      { background: rgba(255,255,255,0.18); }
-      .ksb-music-btn:active     { background: rgba(255,255,255,0.28); }
-      /* play button slightly wider + bolder */
-      #ksb-play { padding: 0.12rem 0.55rem; font-size: 0.8rem; }
-
-      /* repeat button — standalone pill, changes appearance when active */
-      #ksb-repeat {
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(255,255,255,0.22);
-        color: var(--hdr-text);
-        font-family: 'NDS', monospace, sans-serif;
-        font-size: 0.72rem;
-        padding: 0.12rem 0.42rem;
-        cursor: pointer;
-        line-height: 1;
-        transition: background 0.1s, border-color 0.1s, color 0.1s;
-        user-select: none;
-        flex-shrink: 0;
-        letter-spacing: 0.02em;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.2);
-        opacity: 0.55;
-      }
-      #ksb-repeat:hover { opacity: 0.85; background: rgba(255,255,255,0.12); }
-      #ksb-repeat.on {
-        opacity: 1;
-        background: rgba(255,255,255,0.18);
-        border-color: rgba(255,255,255,0.55);
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 0 4px rgba(255,255,255,0.15);
-      }
-
-      /* volume strip */
-      .ksb-vol-wrap {
-        display: flex;
-        align-items: center;
-        gap: 0.28rem;
-        flex-shrink: 0;
-        border: 1px solid rgba(255,255,255,0.18);
-        padding: 0.1rem 0.4rem;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-      }
-      .ksb-vol-label {
-        opacity: 0.55;
-        font-size: 0.72rem;
-        letter-spacing: 0.04em;
-      }
-      #ksb-volume {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 3.5rem;
-        height: 0.3rem;
-        background: rgba(255,255,255,0.2);
-        outline: none;
-        cursor: pointer;
-        border: none;
-        border-radius: 0;
-      }
-      #ksb-volume::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 0.55rem; height: 0.8rem;
-        background: var(--hdr-text);
-        border: 1px solid rgba(0,0,0,0.25);
-        cursor: pointer;
-        border-radius: 0;
-      }
-      #ksb-volume::-moz-range-thumb {
-        width: 0.55rem; height: 0.8rem;
-        background: var(--hdr-text);
-        border: 1px solid rgba(0,0,0,0.25);
-        cursor: pointer;
-        border-radius: 0;
-        box-sizing: border-box;
-      }
-
-      /* song select dropdown */
-      #ksb-song-select-wrap {
-        position: relative;
-        flex-shrink: 0;
-      }
-      #ksb-song-select-btn {
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(255,255,255,0.22);
-        color: var(--hdr-text);
-        font-family: 'NDS', monospace, sans-serif;
-        font-size: 0.72rem;
-        padding: 0.12rem 0.42rem;
-        cursor: pointer;
-        line-height: 1;
-        transition: background 0.1s, border-color 0.1s;
-        user-select: none;
-        letter-spacing: 0.03em;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.2);
-      }
-      #ksb-song-select-btn:hover,
-      #ksb-song-select-wrap.open #ksb-song-select-btn {
-        background: rgba(255,255,255,0.18);
-        border-color: rgba(255,255,255,0.5);
-      }
-      #ksb-song-list {
-        position: absolute;
-        top: calc(100% + 5px);
-        right: 0;
-        background: var(--drop-bg);
-        border: 1px solid var(--drop-border);
-        border-top: 2px solid var(--drop-border-top);
-        box-shadow: 2px 4px 0 var(--drop-shadow);
-        min-width: 13rem;
-        max-height: 12rem;
-        overflow-y: auto;
-        z-index: 400;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.15s, visibility 0.15s;
-        scrollbar-width: thin;
-        scrollbar-color: var(--drop-border) transparent;
-      }
-      #ksb-song-select-wrap.open #ksb-song-list {
-        opacity: 1;
-        visibility: visible;
-      }
-      .ksb-song-option {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.22rem 0.65rem;
-        color: var(--drop-text);
-        font-family: 'NDS', monospace, sans-serif;
-        font-size: 0.82rem;
-        white-space: nowrap;
-        cursor: pointer;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-        transition: background 0.08s, padding-left 0.08s;
-        text-shadow: none;
-        font-weight: normal;
-      }
-      .ksb-song-option:last-child { border-bottom: none; }
-      .ksb-song-option:hover {
-        background: var(--drop-hover-bg);
-        color: var(--drop-hover-text);
-        padding-left: 0.95rem;
-      }
-      .ksb-song-option.active {
-        font-weight: bold;
-        color: var(--drop-hover-text);
-        background: rgba(100,160,220,0.15);
-      }
-      .ksb-song-option.active::before {
-        content: "▶";
-        font-size: 0.55rem;
-        opacity: 0.7;
-        flex-shrink: 0;
-      }
-      body.dark-mode .ksb-song-option.active { background: rgba(100,160,220,0.1); }
-
-      /* nav */
-      .ksb-nav { display: flex; align-items: stretch; flex-wrap: wrap; }
-      .ksb-nav .ds-item { position: relative; display: inline-flex; align-items: center; }
-      .ksb-nav .ds-link {
-        display: flex; align-items: center; gap: 0.25rem;
-        padding: 0 1.125rem; height: 2.375rem;
-        color: var(--hdr-text); text-decoration: none;
-        font-size: 1.5rem; letter-spacing: 0.06em;
-        text-shadow: 0 1px 0 var(--hdr-text-shadow);
-        white-space: nowrap; cursor: pointer;
-        transition: background 0.1s; user-select: none; box-sizing: border-box;
-      }
-      .ksb-nav .ds-link:hover,
-      .ksb-nav .ds-item.open > .ds-link { background: var(--hdr-hover-bg); }
-      .ksb-nav .ds-arrow {
-        font-size: 0.5rem; opacity: 0.55; margin-top: 0.125rem;
-        transition: transform 0.15s; display: inline-block;
-      }
-      .ksb-nav .ds-item.open > .ds-link .ds-arrow { transform: rotate(180deg); }
-      .ksb-nav .ds-dropdown {
-        position: absolute; top: calc(100% + 3px); left: 50%; transform: translateX(-50%);
-        background: var(--drop-bg); border: 1px solid var(--drop-border);
-        border-top: 2px solid var(--drop-border-top);
-        box-shadow: 2px 3px 0 var(--drop-shadow), inset 0 1px 0 rgba(255,255,255,0.1);
-        min-width: 9rem; z-index: 300;
-        opacity: 0; visibility: hidden;
-        transition: opacity 0.18s ease, visibility 0.18s ease;
-        padding: 0.1rem 0;
-      }
-      .ksb-nav .ds-item.open > .ds-dropdown,
-      .ksb-nav .ds-item:hover > .ds-dropdown { opacity: 1; visibility: visible; }
-      .ksb-nav .ds-dropdown a {
-        display: block; padding: 0.2rem 0.75rem;
-        color: var(--drop-text); text-decoration: none;
-        white-space: nowrap; letter-spacing: 0.02em;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-        transition: background 0.1s, padding-left 0.1s, color 0.1s;
-        font-size: 1rem; text-shadow: none; line-height: 1.5; box-sizing: border-box;
-      }
-      .ksb-nav .ds-dropdown a:last-child { border-bottom: none; }
-      .ksb-nav .ds-dropdown a:hover {
-        background: var(--drop-hover-bg); color: var(--drop-hover-text);
-        padding-left: 1rem; cursor: pointer;
-      }
-
-      /* status */
-      .ksb-status {
-        display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-        padding: 0 1rem; color: var(--hdr-text);
-        text-shadow: 0 1px 0 var(--hdr-text-shadow); font-size: 1rem;
-      }
-      .ksb-status-group { display: flex; align-items: center; gap: 0.5rem; }
-      .sb-theme-btn {
-        cursor: pointer; user-select: none; opacity: 0.8;
-        transition: opacity 0.2s, transform 0.1s; padding: 0 0.25rem;
-      }
-      .sb-theme-btn:hover { opacity: 1; transform: scale(1.1); }
-      .sb-clock { font-size: 1.25rem; letter-spacing: 0.05em; }
-      .sb-date  { opacity: 0.85; }
-      .sb-stat  { display: flex; align-items: center; gap: 0.25rem; }
-      .sb-stat-label { opacity: 0.8; }
-      .sb-pill {
-        width: 2.2rem; height: 0.4rem;
-        background: var(--pill-bg); border: 1px solid var(--pill-border); overflow: hidden;
-      }
-      .sb-pill-fill { height: 100%; transition: width 1.2s ease; }
-      .sb-pill-fill.hp  { background: #8ced8c; }
-      .sb-pill-fill.bat { background: #8cc6ed; }
-      .sb-pill-val { min-width: 1.8rem; opacity: 0.9; }
-      .sb-steam { opacity: 0.9; }
-      .sb-steam span { color: var(--steam-text); text-shadow: 0 1px 0 var(--steam-shadow); }
-      .sb-visitors { opacity: 0.85; }
-
-      /* submenus */
-      .ds-submenu-wrap { position: relative; }
-      .ds-submenu {
-        position: absolute; top: -1px; left: calc(100% + 2px);
-        background: var(--drop-bg); border: 1px solid var(--drop-border);
-        border-top: 2px solid var(--drop-border-top); min-width: 9rem;
-        opacity: 0; visibility: hidden; transition: opacity 0.18s ease;
-        box-shadow: 2px 3px 0 var(--drop-shadow), inset 0 1px 0 rgba(255,255,255,0.1);
-        z-index: 500;
-      }
-      .ds-submenu-wrap:hover > .ds-submenu { opacity: 1; visibility: visible; }
-      .ds-submenu-arrow { float: right; opacity: 0.6; }
-
-      /* responsive */
-      @media (max-width: 60rem) {
-        #kaia-single-bar { justify-content: center; }
-        .ksb-status { justify-content: center; padding-bottom: 0.25rem; }
-      }
-      @media (max-width: 37.5rem) {
-        .ksb-nav .ds-link { font-size: 1rem; padding: 0 0.625rem; height: 2rem; }
-        #kaia-bar-row     { min-height: 2rem; }
-        .ksb-status       { font-size: 0.875rem; gap: 0.5rem; }
-        .sb-clock         { font-size: 1rem; }
-        #kaia-music-row   { font-size: 0.8rem; gap: 0.3rem; }
-        #ksb-volume       { width: 3rem; }
-      }
-
-      /* ── ticker (centred inside the main bar row) ───────────────────────────── */
-      #kaia-ticker-row {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        pointer-events: none;   /* let clicks pass through to nav/status */
-        white-space: nowrap;
-        font-size: 0.8rem;
-        font-style: italic;
-        letter-spacing: 0.04em;
-        color: var(--hdr-text);
-        opacity: 0.82;
-        max-width: 34%;         /* shrink-wrap so it never overlaps the edges */
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      #kaia-ticker-label {
-        opacity: 0.5;
-        font-style: normal;
-        font-size: 1rem;
-        letter-spacing: 0.08em;
-        flex-shrink: 0;
-      }
-      #kaia-ticker-text {
-        overflow: hidden;
-        font-style: normal;
-        font-size: 1rem;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        text-shadow: 0 1px 0 var(--hdr-text-shadow);
-      }
-      @media (max-width: 60rem) { #kaia-ticker-row { display: none; } }
-    `;
-    document.head.appendChild(style);
-  }
+  document.head.appendChild(link);
+}
 
   // ── BUILD HEADER DOM ────────────────────────────────────────────────────────
   function buildHeader() {
@@ -1146,8 +668,8 @@
     tickClock();
     setInterval(tickClock, 10000);
 
-    let hp  = Math.floor(Math.random() * 26);
-    let bat = Math.floor(Math.random() * 11);
+    let hp  = Math.floor(Math.random() * 71);
+    let bat = Math.floor(Math.random() * 51);
     const stateMap = { "0":"offline","1":"active!","2":"busy","3":"away~","4":"snooze","5":"trade","6":"play" };
     function nudge(v) {
       return Math.min(100, Math.max(0,
@@ -1215,6 +737,23 @@
           syncSpacer();
         });
     })();
+
+    // ── EXAMPLE POPUP ────────────────────────────────────────────────────────
+    // Shows a little tip pointing up at the music player.
+    // persist: true means it vanishes forever once closed (localStorage).
+    // Swap the id to reset it during testing, or call kaiaPopup.reset("music-tip").
+    setTimeout(() => {
+      window.kaiaPopup.show({
+        id:          "music-tip",
+        title:       "heads up!",
+        content:     "there's music on this site~ hit the dropdown in the bar above to start it. you can pick a song too!",
+        x:           Math.max(8, window.innerWidth - 260),
+        y:           80,
+        arrow:       "top",
+        arrowOffset: "95%",
+        persist:     true,
+      });
+    }, 800); // small delay so the header has fully rendered
   }
 
   // ── SPACER ──────────────────────────────────────────────────────────────────
@@ -1250,6 +789,129 @@
 
   window.injectHeader = inject;
 
+  // ── POPUP SYSTEM ─────────────────────────────────────────────────────────────
+  // Usage:
+  //   window.kaiaPopup.show({
+  //     id:      "my-popup",          // unique id — used for localStorage dismissal
+  //     title:   "hey!",              // header bar text (optional)
+  //     content: "some html or text", // body content (HTML string)
+  //     x:       200,                 // left position in px  (default: 40)
+  //     y:       300,                 // top  position in px  (default: 80)
+  //     arrow:   "top",               // "top"|"bottom"|"left"|"right"|null
+  //     arrowOffset: "50%",           // CSS value e.g. "50%", "2rem", "24px"
+  //     persist: true,                // if true, never show again once closed
+  //   });
+  //
+  //   window.kaiaPopup.reset("my-popup");  // clear the dismissed flag
+  //   window.kaiaPopup.resetAll();         // clear all dismissed flags
+
+  const POPUP_PREFIX = "kaia-popup-dismissed:";
+
+  window.kaiaPopup = {
+    // ── show ────────────────────────────────────────────────────────────────
+    show(opts = {}) {
+      const {
+        id           = "popup-" + Date.now(),
+        title        = "",
+        content      = "",
+        x            = 40,
+        y            = 80,
+        arrow        = null,   // "top"|"bottom"|"left"|"right"
+        arrowOffset  = "50%",  // CSS value for --arrow-offset
+        persist      = false,  // remember the close forever (localStorage)
+      } = opts;
+
+      // If this popup was already dismissed and persist is on, skip it
+      if (persist && localStorage.getItem(POPUP_PREFIX + id) === "1") return;
+
+      // Remove any existing instance of this popup first
+      this.close(id, true);
+
+      const el = document.createElement("div");
+      el.className  = "kaia-popup";
+      el.id         = "kaia-popup-" + id;
+      el.style.left = x + "px";
+      el.style.top  = y + "px";
+
+      if (arrow) {
+        el.dataset.arrow = arrow;
+        el.style.setProperty("--arrow-offset", arrowOffset);
+      }
+
+      // header row (always rendered so there's always a drag handle + close btn)
+      const header = document.createElement("div");
+      header.className = "kaia-popup-header kaia-popup-drag-handle";
+      header.style.cursor = "grab";
+
+      const titleEl = document.createElement("span");
+      titleEl.className   = "kaia-popup-title";
+      titleEl.textContent = title;
+
+      const closeBtn = document.createElement("button");
+      closeBtn.className   = "kaia-popup-close";
+      closeBtn.textContent = "✕";
+      closeBtn.title       = "close";
+      closeBtn.addEventListener("click", () => {
+        window.kaiaSound && window.kaiaSound.play("close");
+        if (persist) localStorage.setItem(POPUP_PREFIX + id, "1");
+        this.close(id);
+      });
+
+      header.appendChild(titleEl);
+      header.appendChild(closeBtn);
+      el.appendChild(header);
+
+      // body
+      const body = document.createElement("div");
+      body.className = "kaia-popup-body";
+      body.innerHTML = content;
+      el.appendChild(body);
+
+      document.body.appendChild(el);
+
+      // ── drag to reposition ───────────────────────────────────────────────
+      let dragging = false, ox = 0, oy = 0;
+      header.addEventListener("mousedown", (e) => {
+        if (e.button !== 0) return;
+        dragging = true;
+        ox = e.clientX - el.offsetLeft;
+        oy = e.clientY - el.offsetTop;
+        header.style.cursor = "grabbing";
+        e.preventDefault();
+      });
+      document.addEventListener("mousemove", (e) => {
+        if (!dragging) return;
+        el.style.left = (e.clientX - ox) + "px";
+        el.style.top  = (e.clientY - oy) + "px";
+      });
+      document.addEventListener("mouseup", () => {
+        if (dragging) { dragging = false; header.style.cursor = "grab"; }
+      });
+
+      return el;
+    },
+
+    // ── close ───────────────────────────────────────────────────────────────
+    // instant=true skips the CSS exit animation (used when replacing a popup)
+    close(id, instant = false) {
+      const el = document.getElementById("kaia-popup-" + id);
+      if (!el) return;
+      if (instant) { el.remove(); return; }
+      el.classList.add("closing");
+      el.addEventListener("animationend", () => el.remove(), { once: true });
+    },
+
+    // ── reset helpers ────────────────────────────────────────────────────────
+    reset(id) {
+      localStorage.removeItem(POPUP_PREFIX + id);
+    },
+    resetAll() {
+      Object.keys(localStorage)
+        .filter(k => k.startsWith(POPUP_PREFIX))
+        .forEach(k => localStorage.removeItem(k));
+    },
+  };
+
 
   //flower
   if (Math.random() < 0.05) {
@@ -1270,6 +932,32 @@
       cursor: 'pointer',
       transform: 'scale(1.5)',
       transformOrigin: 'bottom left'
+    });
+
+    cornerLink.appendChild(cornerImg);
+    document.body.appendChild(cornerLink);
+                   
+  }
+
+  //lancer
+  if (Math.random() < 0.05) {
+
+    const cornerLink = document.createElement('a');
+    cornerLink.href = 'https://deltarune.com/lancer';
+
+    const cornerImg = document.createElement('img');
+
+    cornerImg.src = '/assets/lancer.gif';
+
+    Object.assign(cornerImg.style, {
+      position: 'fixed',
+      bottom: '0',
+      right: '0',
+      zIndex: '9999',
+      imageRendering: 'pixelated',
+      cursor: 'pointer',
+      transform: 'scale(1.5)',
+      transformOrigin: 'bottom right'
     });
 
     cornerLink.appendChild(cornerImg);

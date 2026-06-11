@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaia online - webdev</title>
+
+  <style>
+    /* ── font ── */
+    @font-face {
+      font-family: "NDS";
+      src: url("rework/assets/fonts/nds.ttf") format("truetype");
+      font-display: swap;
+      -webkit-font-smoothing: none;
+    }
+
+    /* ── tokens: light ── */
+    :root {
+      --sky:           #d8eaf8;
+      --sky2:          #eef5fc;
+      --panel-bg:      #fff;
+      --panel-border:  #b6c6df;
+      --panel-shadow:  #9ca7c3;
+      --panel-head:    #b6c6df;
+      --panel-head-b:  #8a99b8;
+      --head-t-shadow: #7a93b0;
+      --head-b-s1:     #cddaea;
+      --head-b-s2:     #8a99b8;
+      --text:          #2a3a50;
+      --text-soft:     #6a7e96;
+      --link:          #3a7acf;
+      --divider:       rgba(182,198,223,0.4);
+      --bg-header:     #9eb4d1;
+      --border-header: #7e8ba3;
+    }
+
+    /* ── tokens: dark ── */
+    body.dark-mode {
+      --sky:           #1a2028;
+      --sky2:          #11151a;
+      --panel-bg:      #1e2530;
+      --panel-border:  #151a22;
+      --panel-shadow:  #0d1117;
+      --panel-head:    #2a3340;
+      --panel-head-b:  #151a22;
+      --head-t-shadow: #000;
+      --head-b-s1:     #3a4a60;
+      --head-b-s2:     #10141a;
+      --text:          #e0e8f0;
+      --text-soft:     #8a99b8;
+      --link:          #6b9ac4;
+      --divider:       rgba(255,255,255,0.05);
+      --bg-header:     #2a3340;
+      --border-header: #1a2028;
+      background-blend-mode: multiply;
+    }
+
+    /* ── reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { cursor: url("rework/assets/cur/kaiacursor.png"), auto; }
+
+    html { font-size: 1rem; min-height: 100%; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1.5rem;
+      color: var(--text);
+      line-height: 1.5;
+      background:
+        url('rework/assets/general/bkg3.gif'),
+        linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
+      background-attachment: fixed;
+      background-size: auto, 100% 100%;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* ── page layout ── */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 20rem 1fr;
+      gap: 1rem;
+      max-width: 75rem;
+      margin: 0 auto;
+      padding: 1.25rem;
+    }
+
+    /* ── sidebar ── */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: sticky;
+      top: 1.25rem;
+      align-self: start;
+    }
+
+    /* ── content area ── */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .content .tile { display: none; }
+    .content .tile.active { display: block; }
+
+    /* ── tile / panel ── */
+    .tile {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+      position: relative;
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .tile-head {
+      background: var(--panel-head);
+      border-bottom: 1px solid var(--panel-head-b);
+      padding: 0.125rem 0.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 0.15rem;
+      color: #fff;
+      text-shadow: 0 1px 0 var(--head-t-shadow);
+      box-shadow:
+        inset 0 1px 0 var(--head-b-s1),
+        inset 0 -1px 0 var(--head-b-s2);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .tile-body {
+      padding: 0.625rem;
+    }
+
+    /* ── sidebar: intro ── */
+    .sidebar-intro {
+      font-size: 1.1rem;
+      color: var(--text-soft);
+      line-height: 1.4;
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--divider);
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    /* ── sidebar: nav groups ── */
+    .nav-group { margin-bottom: 0.5rem; }
+    .nav-group:last-child { margin-bottom: 0; }
+
+    .nav-group-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      margin-bottom: 0.2rem;
+      padding-left: 0.25rem;
+      transition: color 0.3s;
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-list li a {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      padding: 0.2rem 0.4rem;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 1.15rem;
+      line-height: 1.2;
+      transition: background 0.1s, color 0.3s;
+    }
+
+    .nav-list li a:hover {
+      background: rgba(182,198,223,0.25);
+      color: var(--link);
+    }
+
+    .nav-list li a.active {
+      background: var(--panel-head);
+      color: #fff;
+    }
+
+    .nav-list li a .nav-year {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      transition: color 0.3s;
+    }
+
+    .nav-list li a.active .nav-year { color: rgba(255,255,255,0.7); }
+
+    /* ── info tile ── */
+    #info-tile { transition: opacity 0.15s ease; }
+
+    .info-body {
+      color: var(--text);
+      line-height: 1.4;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+      min-height: 4rem;
+    }
+
+    .info-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-soft);
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    .info-placeholder img { image-rendering: pixelated; max-width: 100%; }
+
+    /* ── content: shared ── */
+    .content-note {
+      font-size: 1.1rem;
+      color: var(--text-soft);
+      line-height: 1.4;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--divider);
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    .content-note a { color: var(--link); }
+
+    /* ── content: media embed ── */
+    .song-label {
+      font-size: 1rem;
+      color: var(--text-soft);
+      text-align: center;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s;
+    }
+
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 */
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    /* ── content: site archive ── */
+    .site-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .site-layout img {
+      display: block;
+      width: 100%;
+      max-height: 22rem;
+      object-fit: cover;
+      object-position: top;
+      border: 1px solid var(--panel-border);
+      transition: border-color 0.3s;
+    }
+
+    .site-layout img:hover { opacity: 0.88; }
+
+    .site-desc {
+      font-size: 1.1rem;
+      color: var(--text);
+      line-height: 1.5;
+      transition: color 0.3s;
+    }
+
+    .site-desc a { color: var(--link); }
+
+    /* ── content: map ── */
+    .map-img {
+      display: block;
+      max-width: 100%;
+      max-height: 30rem;
+      height: auto;
+      margin: 0 auto;
+      border: 1px solid var(--panel-border);
+      transition: border-color 0.3s;
+    }
+
+    /* ── footer ── */
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      margin: 0.75rem 0 1rem;
+      color: var(--text-soft);
+      transition: color 0.3s;
+    }
+
+    /* ── scrollbar ── */
+    * { scrollbar-width: thin; scrollbar-color: var(--panel-head) transparent; }
+    ::-webkit-scrollbar { width: 0.5rem; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background-color: var(--panel-border); }
+    ::-webkit-scrollbar-thumb:hover { background-color: var(--panel-head); }
+
+    /* ── mobile ── */
+    @media (max-width: 56.25rem) {
+      .split-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .site-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <script src="header.js"></script>
+
+<main>
+  <div class="split-layout">
+
+    <!-- ── sidebar ── -->
+    <aside class="sidebar">
+
+      <div class="tile">
+        <div class="tile-head">webdev projects</div>
+        <div class="tile-body">
+
+          <p class="sidebar-intro">a bunch of random crap that i have made to <em>usually</em> solve one issue that bothered me enough to warrant making my own thing for it. <br><br>there is a good chance that a lot of these things are buggy and whatnot, but feel free to check them out. they serve me well enough</p>
+
+          <nav>
+            <div class="nav-group">
+              <div class="nav-group-label">tools</div>
+              <ul class="nav-list">
+                <li><a href="#thalenrose">thalenrose map <span class="nav-year">(2025)</span></a></li>
+                <li><a href="#grid">grid thing for ttrpgs<span class="nav-year">(2025)</span></a></li>
+              </ul>
+            </div>
+          </nav>
+
+        </div>
+      </div>
+
+      <!-- info tile -->
+      <div class="tile" id="info-tile">
+        <div class="tile-head" id="info-title">info</div>
+        <div class="tile-body">
+          <div id="info-body" class="info-body">
+            <div class="info-placeholder">
+              <img src="assets/zomboid_read.gif" alt="">
+              <span>select something!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── content ── -->
+    <section class="content">
+
+      <!-- thalenrose -->
+      <div class="tile" id="thalenrose">
+        <div class="tile-head">thalenrose map</div>
+        <div class="tile-body">
+          <a href="/map.html">
+            <img class="map-img" src="assets/thalenrose_nolabel.png" alt="map of my d&d campaign">
+          </a>
+          <p class="content-note">
+            An interactive map of my D&amp;D world, built with <a href="https://leafletjs.com/">Leaflet.js</a> and designed in <a href="https://www.wonderdraft.net/">Wonderdraft</a>. Click the image to explore the full site — there's lore and party notes in there too!
+          </p>
+        </div>
+      </div>
+
+      <!-- grid -->
+      <div class="tile" id="grid">
+        <div class="tile-head">grid thing for ttrpgs</div>
+        <div class="tile-body">
+          <a href="/grid.html">
+            <img class="map-img" src="assets/gridimg.png" alt="map of my d&d campaign">
+          </a>
+          <p class="content-note">
+            
+          </p>
+        </div>
+
+    </section>
+
+  </div>
+</main>
+
+<footer><footer>coded with tears in my eyes<br>kaia © 2022 - til a project functions as intended!</footer> <br>many hours have been sunk into these its unbelieveable.</footer>
+
+<script>
+  /* ── data ── */
+  const ITEMS = {
+    thalenrose: { label: "thalenrose map",  note: "A large interactable map for my D&D campaign. I'm always adding to it, it gives my players a great sense of the world, and gives me an excuse to nerd out on the site. There's lore and party notes in there too!" },
+    voidwalker: { label: "voidwalker music", note: "Songs I wrote over a couple of months for a D&D campaign my friend hosts. Each one ties to a character or moment in the game. \"And the Stars were Forever Collecting\" is my personal favorite, it changed how I approach making music." },
+    vid4:       { label: "someone tell me", note: "a scrapbooking video that i am not the proudest of. i felt like i was too 'in my own head' while making it. lots of important things happened during the recording of this video, my life is always changing and it can be stressful at times, but if theres one thing this video taught me is that patience is extremely necessary in order to enjoy life. so while this one isn't my favorite, its just as special as all the others. and yes i HAD to use another porter robinson song, his album Nurture practically saved my life." },
+    vid3:       { label: "playing catch up", note: "My favorite of the memory-scrapbook videos. Bigger timeframe of clips, took longer to pull together. The song came to me on a whim while I was rollerblading around Miami Beach, so I just knew." },
+    vid2:       { label: "first-year!",      note: "One of the rougher ones quality-wise, I edited it during lunch between classes (yeah). But I needed to get it out. Song choice: the first track my band ever covered, because I kinda harassed them into it. LOLZ." },
+    vid1:       { label: "senior memories",  note: "The very first memory-scrapbook video. Audio's a bit quiet and the cuts aren't the cleanest, but it's one I hold closest, its literally my senior year of high school captured in one little video." },
+  };
+
+  const infoTile  = document.getElementById('info-tile');
+  const infoTitle = document.getElementById('info-title');
+  const infoBody  = document.getElementById('info-body');
+
+  /* ── show a content tile ── */
+  function show(id) {
+    /* swap active tile */
+    document.querySelectorAll('.content .tile').forEach(t => t.classList.remove('active'));
+    const tile = document.getElementById(id);
+    if (tile) tile.classList.add('active');
+
+    /* highlight nav link */
+    document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
+    const link = document.querySelector(`.nav-list a[href="#${id}"]`);
+    if (link) link.classList.add('active');
+
+    /* update info tile */
+    const data = ITEMS[id];
+    if (!data) return;
+    infoTile.style.opacity = '0';
+    setTimeout(() => {
+      infoTitle.textContent = data.label;
+      infoBody.innerHTML = `<p>${data.note}</p>`;
+      infoTile.style.opacity = '1';
+    }, 150);
+  }
+
+  /* ── nav clicks ── */
+  document.querySelectorAll('.nav-list a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      show(link.getAttribute('href').slice(1));
+    });
+  });
+
+  /* ── init: show first item ── */
+  show('thalenrose');
+</script>
+
+</body>
+</html>

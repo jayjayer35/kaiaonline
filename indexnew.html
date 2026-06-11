@@ -317,6 +317,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script src="header.js"></script>
+  <script src="lastfm.js"></script>
 
   <div class="page">
 
@@ -324,15 +325,23 @@
 
       <div class="panel" style="text-align:center;">
         <img src="rework/assets/decor/rosie1.png" class="decor corner-bl hover slow" alt="">
-        <div class="panel-head">status.cafe</div>
+        <div class="panel-head">what's on my mind</div>
         <div class="panel-body">
           <div id="statuscafe" style="background:transparent;border:none;">
             <div class="cafe-quote">
               "<span id="statuscafe-content"></span>"<br>
-              <span id="statuscafe-name" style="font-size:1rem;color:var(--text-soft);">- </span>
+              - <span id="statuscafe-name" style="font-size:1rem;color:var(--text-soft);">...</span>
             </div>
           </div>
           <script src="rework/scripts/statuscafe.js" defer></script>
+        </div>
+      </div>
+
+      <div class="panel" style="text-align:center; max-height: 7rem; overflow-y: auto;">
+        <div class="panel-head">last listened</div>
+        <div class="panel-body" id="listening" style="text-align:center;">
+          <div>
+          </div>
         </div>
       </div>
 
@@ -376,6 +385,7 @@
         <div class="panel-head">updates <span style="font-size:1rem;letter-spacing:0;">(scroll!)</span></div>
         <div class="panel-body">
           <div class="update-scroll">
+            <div class="update-entry"><div class="update-date">[5:20 PM - 6/10/26]</div>+ reorganization of pages on header, sorry if you get lost!<br>+ new tile on homepage with last.fm widget, see what i was listening to last!<br>+ new pages with my own music ive made (under 'for u')<br>+ new page for my fun little webdev projects (also under 'for u')<br>+ reformatted 'indie web' page<br>+ lancer has a 5% chance to show up in the bottom right of the page, click him if you dare<br>+ popup system because everyone loves popups!<br>+ 3 new songs added to music player! (castle funk, my castle town, before the story)<br>+ slow under the hood work to making site recoloring easier and more universal (i shouldve done this from the start, god)<br>+ temporary header recolor to pink, who else is excited for DELTARUNE!<br>+ a couple of buttons to button wall in indie web section<br>- removed old unorganized projects tab and page</div>
             <div class="update-entry"><div class="update-date">[12:51 PM - 6/6/26]</div>+ header splash texts</div>
             <div class="update-entry"><div class="update-date">[5:35 PM - 5/29/26]</div>+ migrated webring links to indie web page<br>+ old update log page now visible via site archives<br>+ minor hotfixes to broken image links and layout issues</div>
             <div class="update-entry"><div class="update-date">[12:11 PM - 5/29/26]</div>+ GUMI SHRINE COMPLETE! i love her so much<br>+ rare flower can appear that links to a secret page<br>+ little decorations</div>
@@ -564,6 +574,7 @@
         "2026-06-19":{text:"juneteenth",color:EVENT_COLORS.holiday},
         "2026-06-21":{text:"father's day",color:EVENT_COLORS.holiday},
         "2026-07-04":{text:"independence day",color:EVENT_COLORS.holiday},
+        "2026-10-31":{text:"halloween",color:EVENT_COLORS.holiday},
         "2026-11-11":{text:"veteran's day",color:EVENT_COLORS.holiday},
         "2026-12-24":{text:"christmas eve",color:EVENT_COLORS.holiday},
         "2026-12-25":{text:"christmas day",color:EVENT_COLORS.holiday},
@@ -579,6 +590,7 @@
         "2027-06-19":{text:"juneteenth",color:EVENT_COLORS.holiday},
         "2027-06-21":{text:"father's day",color:EVENT_COLORS.holiday},
         "2027-07-04":{text:"independence day",color:EVENT_COLORS.holiday},
+        "2027-10-31":{text:"halloween",color:EVENT_COLORS.holiday},
         "2027-11-11":{text:"veteran's day",color:EVENT_COLORS.holiday},
         "2027-12-24":{text:"christmas eve",color:EVENT_COLORS.holiday},
         "2027-12-25":{text:"christmas day",color:EVENT_COLORS.holiday},
@@ -589,7 +601,7 @@
         "2026-08-31":{text:"slimeVR trackers get here!",color:EVENT_COLORS.special},
 
         "2026-04-02":{text:"dead butterflies concert",color:EVENT_COLORS.concert},
-        "2026-10-31":{text:"TLT concert (god save me)",color:EVENT_COLORS.concert},
+        "2026-10-17":{text:"TLT concert (god save me)",color:EVENT_COLORS.concert},
       };
       function render(){
         gridEl.innerHTML='';

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaia online - music</title>
+
+  <style>
+    @font-face {
+      font-family: "NDS";
+      src: url("rework/assets/fonts/nds.ttf") format("truetype");
+      font-display: swap;
+      -webkit-font-smoothing: none;
+    }
+
+    /* ── tokens: light ── */
+    :root {
+      --sky:           #d8eaf8;
+      --sky2:          #eef5fc;
+      --panel-bg:      #fff;
+      --panel-border:  #b6c6df;
+      --panel-shadow:  #9ca7c3;
+      --panel-head:    #b6c6df;
+      --panel-head-b:  #8a99b8;
+      --head-t-shadow: #7a93b0;
+      --head-b-s1:     #cddaea;
+      --head-b-s2:     #8a99b8;
+      --text:          #2a3a50;
+      --text-soft:     #6a7e96;
+      --link:          #3a7acf;
+      --divider:       rgba(182,198,223,0.4);
+      --bg-header:     #9eb4d1;
+      --border-header: #7e8ba3;
+      --groove-ring:   rgba(58,122,207,0.22);
+      --art-border:    #b6c6df;
+      --art-selected:  #3a7acf;
+    }
+
+    body.dark-mode {
+      --sky:           #1a2028;
+      --sky2:          #11151a;
+      --panel-bg:      #1e2530;
+      --panel-border:  #151a22;
+      --panel-shadow:  #0d1117;
+      --panel-head:    #2a3340;
+      --panel-head-b:  #151a22;
+      --head-t-shadow: #000;
+      --head-b-s1:     #3a4a60;
+      --head-b-s2:     #10141a;
+      --text:          #e0e8f0;
+      --text-soft:     #8a99b8;
+      --link:          #6b9ac4;
+      --divider:       rgba(255,255,255,0.05);
+      --bg-header:     #2a3340;
+      --border-header: #1a2028;
+      --groove-ring:   rgba(107,154,196,0.25);
+      --art-border:    #2a3340;
+      --art-selected:  #6b9ac4;
+      background-blend-mode: multiply;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * { cursor: url("rework/assets/cur/kaiacursor.png"), auto; }
+
+    html { font-size: 1rem; min-height: 100%; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1.5rem;
+      color: var(--text);
+      line-height: 1.5;
+      background:
+        url('rework/assets/general/bkg3.gif'),
+        linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
+      background-attachment: fixed;
+      background-size: auto, 100% 100%;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* ── layout ── */
+    .page-wrap {
+      max-width: 68rem;
+      margin: 0 auto;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* ── tile / panel ── */
+    .tile {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+      position: relative;
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .tile-head {
+      background: var(--panel-head);
+      border-bottom: 1px solid var(--panel-head-b);
+      padding: 0.125rem 0.5rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 0.15rem;
+      color: #fff;
+      text-shadow: 0 1px 0 var(--head-t-shadow);
+      box-shadow:
+        inset 0 1px 0 var(--head-b-s1),
+        inset 0 -1px 0 var(--head-b-s2);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .tile-body { padding: 0.625rem; }
+
+    /* ── intro strip ── */
+    .intro-strip {
+      padding: 0.7rem 0.75rem;
+      font-size: 1.05rem;
+      color: var(--text-soft);
+      transition: color 0.3s;
+    }
+
+    /* ── main content: grid + spotlight ── */
+    .music-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* ── art grid ── */
+    .art-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+      align-content: start;
+    }
+
+    /* ── art card ── */
+    .art-card {
+      position: relative;
+      aspect-ratio: 1;
+      border: 2px solid var(--art-border);
+      overflow: hidden;
+      cursor: url("rework/assets/cur/kaiacursor.png"), pointer;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .art-card:hover { transform: translate(-1px, -1px); border-color: var(--art-selected); }
+
+    .art-card.selected {
+      border-color: var(--art-selected);
+      box-shadow: 0 0 0 3px var(--groove-ring);
+    }
+
+    /* cover art — colored placeholder if no image */
+    .art-card .cover {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      image-rendering: pixelated;
+    }
+
+    .art-card .cover-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
+
+    /* label strip at bottom of card */
+    .art-card .card-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.52);
+      color: #fff;
+      font-size: 0.72rem;
+      letter-spacing: 0.07em;
+      padding: 0.18rem 0.35rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: background 0.2s;
+    }
+
+    .art-card:hover .card-label,
+    .art-card.selected .card-label { background: rgba(0,0,0,0.7); }
+
+    /* ── spotlight panel ── */
+    .spotlight {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .spot-tile {
+      flex: 1;
+    }
+
+    .spot-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 12rem;
+      font-size: 1rem;
+      color: var(--text-soft);
+      transition: color 0.3s;
+    }
+
+    .spot-content { display: none; }
+    .spot-content.visible { display: block; }
+
+    .spot-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--text);
+      margin-bottom: 0.15rem;
+      transition: color 0.3s;
+    }
+
+    .spot-meta {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      margin-bottom: 0.55rem;
+      transition: color 0.3s;
+    }
+
+    /* 16:9 embed */
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      margin-bottom: 0.55rem;
+    }
+
+    .video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    .spot-desc {
+      font-size: 1rem;
+      color: var(--text);
+      line-height: 1.45;
+      padding-top: 0.5rem;
+      border-top: 1px dashed var(--divider);
+      transition: color 0.3s, border-color 0.3s;
+    }
+
+    /* ── custom media html ── */
+    .spot-custom { margin-bottom: 0.55rem; }
+
+    /* ── footer ── */
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      margin: 0.75rem 0 1rem;
+      color: var(--text-soft);
+      transition: color 0.3s;
+    }
+
+    /* ── scrollbar ── */
+    * { scrollbar-width: thin; scrollbar-color: var(--panel-head) transparent; }
+    ::-webkit-scrollbar { width: 0.5rem; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background-color: var(--panel-border); }
+    ::-webkit-scrollbar-thumb:hover { background-color: var(--panel-head); }
+
+    /* ── mobile ── */
+    @media (max-width: 48rem) {
+      .music-layout { grid-template-columns: 1fr; }
+      .art-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 32rem) {
+      .art-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+
+<body>
+  <script src="header.js"></script>
+
+<main>
+  <div class="page-wrap">
+
+    <!-- <div class="tile">
+      <div class="tile-head">music</div>
+      <p class="intro-strip">things i've made, covered, or scored. click an album to play it.</p>
+    </div> -->
+
+    <div class="music-layout">
+
+      <!-- album art grid -->
+      <div class="tile">
+        <div class="tile-head">music projects</div>
+        <div class="tile-body">
+          <div class="art-grid" id="art-grid">
+            <!-- populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- spotlight -->
+      <div class="spotlight">
+        <div class="tile spot-tile">
+          <div class="tile-head" id="spot-head">now playing</div>
+          <div class="tile-body">
+            <div class="spot-empty" id="spot-empty"><< select something!</div>
+            <div class="spot-content" id="spot-content">
+              <p class="spot-title" id="spot-title"></p>
+              <p class="spot-meta" id="spot-meta"></p>
+              <div id="spot-media"></div>
+              <p class="spot-desc" id="spot-desc"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<footer>kaia © 2022 - til i can write what i truly hear in my head!</footer>
+
+<script>
+  /* ── palette for placeholder covers ── */
+  const COLORS = [
+    ["#3a6186","#89253e"],
+    ["#2c3e50","#3498db"],
+    ["#1a1a2e","#e94560"],
+    ["#0f3460","#533483"],
+    ["#2d6a4f","#1b4332"],
+    ["#6a0572","#ab47bc"],
+    ["#2e4057","#048a81"],
+    ["#4a2040","#c06c84"],
+  ];
+
+  /*
+   * media field shapes:
+   *   { type: "youtube",  src: "https://www.youtube.com/embed/..." }
+   *       → 16:9 iframe
+   *
+   *   { type: "bandcamp", embed: `<iframe ...>` }
+   *       → paste the iframe code Bandcamp gives you verbatim
+   *
+   *   { type: "custom", html: `<p>whatever you want</p>` }
+   *       → raw html dropped straight in, no wrapping
+   *
+   *   omit media entirely for no embed
+   */
+  const TRACKS = [
+    {
+      id: "again",
+      title: "again, someday - kaiasei",
+      meta: "2026 - original",
+      media: {
+        type: "bandcamp",
+        embed: '<iframe style="border: 0; width: 100%; height: 120px;" src="https://bandcamp.com/EmbeddedPlayer/track=952198132/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/artwork=small/transparent=true/" seamless><a href="https://kaiasei.bandcamp.com/track/again-someday">again, someday by kaiasei</a></iframe>',
+      },
+      desc: "originally written when i was trying to cope with very intense and messy emotions. fun fact, this song now calms me down whenever i am feeling really stressed or anxious!",
+      art: "/assets/againsomeday.png",
+    },
+    {
+      id: "flame",
+      title: "Twin Flame Vol. 1 - kaiasei",
+      meta: "2026 - original",
+      media: {
+        type: "bandcamp",
+        embed: '<iframe style="border: 0; width: 500px; height: 274px;" src="https://bandcamp.com/EmbeddedPlayer/album=780893803/size=large/bgcol=ffffff/linkcol=0687f5/artwork=small/transparent=true/" seamless><a href="https://kaiasei.bandcamp.com/album/twin-flame-vol-1">Twin Flame Vol. 1 by kaiasei</a></iframe>',
+      },
+      desc: "this 'album' is ongoing! tracks can (and will) still be added to it until i feel it's complete! it is a collection music i wrote for a d&d game/story of mine!",
+      art: "/assets/twinflame.png",
+    },
+    {
+      id: "voidwalker",
+      title: "Voidwalker Vol. 1 - kaiasei",
+      meta: "2025 - original",
+      media: {
+        type: "bandcamp",
+        embed: '<iframe style="border: 0; width: 500px; height: 406px;" src="https://bandcamp.com/EmbeddedPlayer/album=4052073323/size=large/bgcol=ffffff/linkcol=0687f5/artwork=small/transparent=true/" seamless><a href="https://kaiasei.bandcamp.com/album/voidwalker-vol-1">Voidwalker - Vol. 1 by kaiasei</a></iframe>',
+      },
+      desc: "Songs I wrote over a couple of months for a D&D campaign that my friend hosts. Written at a point of rapid improvement in my skills as a musician, so there may be a \"skill gap\" in some of the songs. All good music though.",
+      art: "/assets/voidwalkerhi-res-10.png",
+    },
+  ];
+
+  /* ── build grid ── */
+  const grid = document.getElementById('art-grid');
+  const spotEmpty   = document.getElementById('spot-empty');
+  const spotContent = document.getElementById('spot-content');
+  const spotHead    = document.getElementById('spot-head');
+  const spotTitle   = document.getElementById('spot-title');
+  const spotMeta    = document.getElementById('spot-meta');
+  const spotMedia   = document.getElementById('spot-media');
+  const spotDesc    = document.getElementById('spot-desc');
+
+  function renderMedia(media) {
+    spotMedia.innerHTML = '';
+    if (!media) return;
+
+    if (media.type === 'youtube') {
+      const wrap = document.createElement('div');
+      wrap.className = 'video-wrap';
+      wrap.style.marginBottom = '0.55rem';
+      const iframe = document.createElement('iframe');
+      iframe.src = media.src;
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      iframe.allowFullscreen = true;
+      wrap.appendChild(iframe);
+      spotMedia.appendChild(wrap);
+
+    } else if (media.type === 'bandcamp') {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = media.embed;
+      const src = tmp.querySelector('iframe');
+      const iframe = document.createElement('iframe');
+      if (src) {
+        iframe.src = src.src;
+        iframe.style.cssText = src.style.cssText || 'border:0;width:100%;height:120px;';
+        if (src.getAttribute('seamless') !== null) iframe.setAttribute('seamless', '');
+      }
+      spotMedia.appendChild(iframe);
+
+    } else if (media.type === 'custom') {
+      const wrap = document.createElement('div');
+      wrap.className = 'spot-custom';
+      wrap.innerHTML = media.html;
+      spotMedia.appendChild(wrap);
+    }
+  }
+
+  function select(id) {
+    /* highlight card */
+    document.querySelectorAll('.art-card').forEach(c => c.classList.remove('selected'));
+    document.querySelector(`.art-card[data-id="${id}"]`)?.classList.add('selected');
+
+    const t = TRACKS.find(t => t.id === id);
+    if (!t) return;
+
+    /* update spotlight */
+    spotEmpty.style.display = 'none';
+    spotContent.classList.add('visible');
+    spotHead.textContent  = 'now playing';
+    spotTitle.textContent = t.title;
+    spotMeta.textContent  = t.meta;
+    renderMedia(t.media);
+    spotDesc.textContent  = t.desc;
+  }
+
+  TRACKS.forEach((t, i) => {
+    const card = document.createElement('div');
+    card.className   = 'art-card';
+    card.dataset.id  = t.id;
+
+    const [c1, c2] = COLORS[i % COLORS.length];
+
+    if (t.art) {
+      card.innerHTML = `
+        <img class="cover" src="${t.art}" alt="${t.title} cover art">
+        <span class="card-label">${t.title}</span>
+      `;
+    } else {
+      card.innerHTML = `
+        <div class="cover-placeholder" style="background: linear-gradient(135deg, ${c1}, ${c2});">
+          ${t.title}
+        </div>
+        <span class="card-label">${t.title}</span>
+      `;
+    }
+
+    card.addEventListener('click', () => select(t.id));
+    grid.appendChild(card);
+  });
+</script>
+
+</body>
+</html>
