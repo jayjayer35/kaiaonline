@@ -108,7 +108,7 @@
         { label: "old update log", href: "/ofb/updates.html" },
           ]
         },
-        { label: "stamps",   href: "stamps" },
+        { label: "stamps",   href: "stamps (WIP)" },
       ],
     },
     {
