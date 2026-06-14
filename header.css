@@ -412,11 +412,6 @@
       }
       .ksb-nav .ds-link:hover,
       .ksb-nav .ds-item.open > .ds-link { background: var(--hdr-hover-bg); }
-      .ksb-nav .ds-arrow {
-        font-size: 0.5rem; opacity: 0.55; margin-top: 0.125rem;
-        transition: transform 0.15s; display: inline-block;
-      }
-      .ksb-nav .ds-item.open > .ds-link .ds-arrow { transform: rotate(180deg); }
       .ksb-nav .ds-dropdown {
         position: absolute; top: calc(100% + 3px); left: 50%; transform: translateX(-50%);
         background: var(--drop-bg); border: 1px solid var(--drop-border);
@@ -441,6 +436,46 @@
       .ksb-nav .ds-dropdown a:hover {
         background: var(--drop-hover-bg); color: var(--drop-hover-text);
         padding-left: 1rem; cursor: pointer;
+      }
+
+      /* submenu trigger arrow */
+      .ds-sub-arrow {
+        float: right;
+        margin-left: auto;
+        opacity: 0.3;
+        font-size: 0.85rem;
+        line-height: 1;
+        transition: opacity 0.12s, transform 0.12s;
+        display: inline-block;
+        padding-left: 0.4rem;
+        vertical-align: -0.15em;
+      }
+      .ds-submenu-wrap:hover > a .ds-sub-arrow {
+        opacity: 0.65;
+        transform: translateX(2px);
+      }
+
+      /* ── entry badges (new / updated) ──────────────────────────────────────── */
+      .ds-badge {
+        float: right;
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: bold;
+        margin-left: 0.5em;
+        pointer-events: none;
+        color: inherit;
+        animation: ds-badge-flash 2.4s ease-in-out infinite;
+      }
+      @keyframes ds-badge-flash {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.3; }
+      }
+      a:has(.ds-badge) {
+        animation: ds-link-shimmer 2.4s ease-in-out infinite;
+      }
+      @keyframes ds-link-shimmer {
+        0%, 100% { filter: brightness(1); }
+        50%       { filter: brightness(1.35); }
       }
 
       /* status */
@@ -477,12 +512,19 @@
         position: absolute; top: -1px; left: calc(100% + 2px);
         background: var(--drop-bg); border: 1px solid var(--drop-border);
         border-top: 2px solid var(--drop-border-top); min-width: 9rem;
-        opacity: 0; visibility: hidden; transition: opacity 0.18s ease;
+        opacity: 0; visibility: hidden;
+        transition: opacity 0.18s ease, visibility 0.18s ease 0.05s;
         box-shadow: 2px 3px 0 var(--drop-shadow), inset 0 1px 0 rgba(255,255,255,0.1);
         z-index: 500;
       }
-      .ds-submenu-wrap:hover > .ds-submenu { opacity: 1; visibility: visible; }
-      .ds-submenu-arrow { float: right; opacity: 0.6; }
+      /* invisible bridge fills the 2px gap so the mouse doesn't leave the hover zone */
+      .ds-submenu-wrap > a::after {
+        content: "";
+        position: absolute;
+        top: 0; right: -6px;
+        width: 6px; height: 100%;
+      }
+      .ds-submenu-wrap:hover > .ds-submenu { opacity: 1; visibility: visible; transition-delay: 0s; }
 
       /* responsive */
       @media (max-width: 60rem) {
@@ -534,167 +576,3 @@
         text-shadow: 0 1px 0 var(--hdr-text-shadow);
       }
       @media (max-width: 60rem) { #kaia-ticker-row { display: none; } }
-      /* ── kaia popups ──────────────────────────────────────────────────────────── */
-      .kaia-popup {
-        position: fixed;
-        z-index: 8000;
-        background: var(--drop-bg);
-        border: 1px solid var(--drop-border);
-        border-top: 2px solid var(--drop-border-top);
-        box-shadow: 2px 4px 0 var(--drop-shadow), inset 0 1px 0 rgba(255,255,255,0.08);
-        font-family: 'NDS', monospace, sans-serif;
-        font-size: 1rem;
-        color: var(--drop-text);
-        max-width: 14rem;
-        min-width: 9rem;
-        box-sizing: border-box;
-        /* entrance animation */
-        animation: kaia-popup-in 0.18s ease forwards;
-      }
-      @keyframes kaia-popup-in {
-        from { opacity: 0; transform: scale(0.9); }
-        to   { opacity: 1; transform: scale(1); }
-      }
-      .kaia-popup.closing {
-        animation: kaia-popup-out 0.14s ease forwards;
-      }
-      @keyframes kaia-popup-out {
-        from { opacity: 1; transform: scale(1); }
-        to   { opacity: 0; transform: scale(0.9); }
-      }
-
-      /* header bar with close button */
-      .kaia-popup-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: var(--hdr-bg);
-        color: var(--hdr-text);
-        padding: 0.18rem 0.4rem 0.18rem 0.55rem;
-        border-bottom: 1px solid var(--drop-border);
-        font-size: 1rem;
-        letter-spacing: 0.05em;
-        gap: 0.4rem;
-        text-shadow: 0 1px 0 var(--hdr-text-shadow);
-      }
-      .kaia-popup-title {
-        flex: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .kaia-popup-close {
-        background: none;
-        border: none;
-        color: var(--hdr-text);
-        font-family: inherit;
-        font-size: 1rem;
-        cursor: pointer;
-        opacity: 0.6;
-        line-height: 1;
-        padding: 0 0.1rem;
-        flex-shrink: 0;
-        transition: opacity 0.1s;
-      }
-      .kaia-popup-close:hover { opacity: 1; }
-
-      /* body content */
-      .kaia-popup-body {
-        padding: 0.45rem 0.6rem;
-        line-height: 1.45;
-        font-weight: normal;
-      }
-      .kaia-popup-body a {
-        color: var(--drop-hover-text);
-        text-decoration: underline;
-      }
-      .kaia-popup-body a:hover { opacity: 0.75; }
-
-      /* ── arrow variants ──────────────────────────────────────────────────────── */
-      /* Each arrow is a pseudo-element triangle pointing AWAY from the popup box   */
-      /* (i.e. arrow-top means the arrow sticks out of the top edge)               */
-
-      .kaia-popup[data-arrow="top"]::before,
-      .kaia-popup[data-arrow="top"]::after,
-      .kaia-popup[data-arrow="bottom"]::before,
-      .kaia-popup[data-arrow="bottom"]::after,
-      .kaia-popup[data-arrow="left"]::before,
-      .kaia-popup[data-arrow="left"]::after,
-      .kaia-popup[data-arrow="right"]::before,
-      .kaia-popup[data-arrow="right"]::after {
-        content: "";
-        position: absolute;
-        pointer-events: none;
-      }
-
-      /* TOP arrow */
-      .kaia-popup[data-arrow="top"]::after {
-        bottom: 100%;
-        left: var(--arrow-offset, 50%);
-        transform: translateX(-50%);
-        border: 8px solid transparent;
-        border-bottom-color: var(--drop-border-top);
-        margin-bottom: -1px;
-      }
-      .kaia-popup[data-arrow="top"]::before {
-        bottom: 100%;
-        left: var(--arrow-offset, 50%);
-        transform: translateX(-50%);
-        border: 7px solid transparent;
-        border-bottom-color: var(--drop-bg);
-        z-index: 1;
-      }
-
-      /* BOTTOM arrow */
-      .kaia-popup[data-arrow="bottom"]::after {
-        top: 100%;
-        left: var(--arrow-offset, 50%);
-        transform: translateX(-50%);
-        border: 8px solid transparent;
-        border-top-color: var(--drop-shadow);
-        margin-top: -1px;
-      }
-      .kaia-popup[data-arrow="bottom"]::before {
-        top: 100%;
-        left: var(--arrow-offset, 50%);
-        transform: translateX(-50%);
-        border: 7px solid transparent;
-        border-top-color: var(--drop-bg);
-        z-index: 1;
-      }
-
-      /* LEFT arrow */
-      .kaia-popup[data-arrow="left"]::after {
-        right: 100%;
-        top: var(--arrow-offset, 50%);
-        transform: translateY(-50%);
-        border: 8px solid transparent;
-        border-right-color: var(--drop-border-top);
-        margin-right: -1px;
-      }
-      .kaia-popup[data-arrow="left"]::before {
-        right: 100%;
-        top: var(--arrow-offset, 50%);
-        transform: translateY(-50%);
-        border: 7px solid transparent;
-        border-right-color: var(--drop-bg);
-        z-index: 1;
-      }
-
-      /* RIGHT arrow */
-      .kaia-popup[data-arrow="right"]::after {
-        left: 100%;
-        top: var(--arrow-offset, 50%);
-        transform: translateY(-50%);
-        border: 8px solid transparent;
-        border-left-color: var(--drop-shadow);
-        margin-left: -1px;
-      }
-      .kaia-popup[data-arrow="right"]::before {
-        left: 100%;
-        top: var(--arrow-offset, 50%);
-        transform: translateY(-50%);
-        border: 7px solid transparent;
-        border-left-color: var(--drop-bg);
-        z-index: 1;
-      }

@@ -3,7 +3,7 @@
 
   // ── ALERT BAR ───────────────────────────────────────────────────────────────
   // Set to null or "" to hide the alert bar entirely.
-  const ALERT_TEXT = "delatrune soon! making the header pink and purple in celebration";
+  const ALERT_TEXT = "";
 
   // ── PLAYLIST ────────────────────────────────────────────────────────────────
   // { file: "/music/filename.mp3", name: "Display Name" }
@@ -74,14 +74,14 @@
     {
       label: "for u",
       children: [
-        { label: "friends",
+        { label: "friends", badge: "new",
           submenu: [
-            { label: "memory vids", href: "/memoryvids.html" },
+            { label: "memory vids", href: "/memoryvids.html", badge: "new"},
             { label: "hall of messages (wip)", href: "/msgs.html" },
           ]
         },
         { label: "photo museum",   href: "/museum.html" },
-        { label: "my music", href: "/mymusic.html" },
+        { label: "my music", href: "/mymusic.html", badge: "updated" },
         { label: "recipes (wip)",   href: "/myrecipes.html" },
         { label: "web projects", href: "/mywebdev.html" },
       ],
@@ -90,7 +90,7 @@
       label: "web",
       children: [
         { label: "the indie web!", href: "/indieweb.html" },
-        { label: "guestbook",   href: "https://kaiasei.atabook.org/" },
+        { label: "guestbook",   href: "/guestbook.html" },
         { label: "bookmarks", href: "/bookmarks.html" },
         { label: "shrines",
           submenu: [
@@ -185,11 +185,7 @@
       } else {
         const trigger = document.createElement("span");
         trigger.className = "ds-link";
-        trigger.textContent = item.label + " ";
-        const arrow = document.createElement("span");
-        arrow.className = "ds-arrow";
-        arrow.textContent = "▼";
-        trigger.appendChild(arrow);
+        trigger.textContent = item.label;
         wrap.appendChild(trigger);
 
         const menu = document.createElement("div");
@@ -201,7 +197,17 @@
             wrapSub.className = "ds-submenu-wrap";
             const subTrigger = document.createElement("a");
             subTrigger.href = "#";
-            subTrigger.innerHTML = child.label + '<span class="ds-submenu-arrow">&gt;</span>';
+            subTrigger.textContent = child.label.replace(/ *>$/, "");
+            if (child.badge) {
+              const b = document.createElement("span");
+              b.className = "ds-badge ds-badge--" + child.badge;
+              b.textContent = "!";
+              subTrigger.appendChild(b);
+            }
+            const subArrow = document.createElement("span");
+            subArrow.className = "ds-sub-arrow";
+            subArrow.textContent = "›";
+            subTrigger.appendChild(subArrow);
             wrapSub.appendChild(subTrigger);
             const subMenu = document.createElement("div");
             subMenu.className = "ds-submenu";
@@ -209,6 +215,12 @@
               const subA = document.createElement("a");
               subA.href = sub.href;
               subA.textContent = sub.label;
+              if (sub.badge) {
+                const b = document.createElement("span");
+                b.className = "ds-badge ds-badge--" + sub.badge;
+                b.textContent = "!";
+                subA.appendChild(b);
+              }
               subA.addEventListener("click",      () => window.kaiaSound.play("click"));
               subA.addEventListener("mouseenter", () => window.kaiaSound.play("hover"));
               subMenu.appendChild(subA);
@@ -219,6 +231,12 @@
             const a = document.createElement("a");
             a.href = child.href;
             a.textContent = child.label;
+            if (child.badge) {
+              const b = document.createElement("span");
+              b.className = "ds-badge ds-badge--" + child.badge;
+              b.textContent = "!";
+              a.appendChild(b);
+            }
             a.addEventListener("click",      () => window.kaiaSound.play("click"));
             a.addEventListener("mouseenter", () => window.kaiaSound.play("hover"));
             menu.appendChild(a);
@@ -737,23 +755,6 @@
           syncSpacer();
         });
     })();
-
-    // ── EXAMPLE POPUP ────────────────────────────────────────────────────────
-    // Shows a little tip pointing up at the music player.
-    // persist: true means it vanishes forever once closed (localStorage).
-    // Swap the id to reset it during testing, or call kaiaPopup.reset("music-tip").
-    setTimeout(() => {
-      window.kaiaPopup.show({
-        id:          "music-tip",
-        title:       "heads up!",
-        content:     "there's music on this site~ hit the dropdown in the bar above to start it. you can pick a song too!",
-        x:           Math.max(8, window.innerWidth - 260),
-        y:           80,
-        arrow:       "top",
-        arrowOffset: "95%",
-        persist:     true,
-      });
-    }, 800); // small delay so the header has fully rendered
   }
 
   // ── SPACER ──────────────────────────────────────────────────────────────────
@@ -788,130 +789,6 @@
   }
 
   window.injectHeader = inject;
-
-  // ── POPUP SYSTEM ─────────────────────────────────────────────────────────────
-  // Usage:
-  //   window.kaiaPopup.show({
-  //     id:      "my-popup",          // unique id — used for localStorage dismissal
-  //     title:   "hey!",              // header bar text (optional)
-  //     content: "some html or text", // body content (HTML string)
-  //     x:       200,                 // left position in px  (default: 40)
-  //     y:       300,                 // top  position in px  (default: 80)
-  //     arrow:   "top",               // "top"|"bottom"|"left"|"right"|null
-  //     arrowOffset: "50%",           // CSS value e.g. "50%", "2rem", "24px"
-  //     persist: true,                // if true, never show again once closed
-  //   });
-  //
-  //   window.kaiaPopup.reset("my-popup");  // clear the dismissed flag
-  //   window.kaiaPopup.resetAll();         // clear all dismissed flags
-
-  const POPUP_PREFIX = "kaia-popup-dismissed:";
-
-  window.kaiaPopup = {
-    // ── show ────────────────────────────────────────────────────────────────
-    show(opts = {}) {
-      const {
-        id           = "popup-" + Date.now(),
-        title        = "",
-        content      = "",
-        x            = 40,
-        y            = 80,
-        arrow        = null,   // "top"|"bottom"|"left"|"right"
-        arrowOffset  = "50%",  // CSS value for --arrow-offset
-        persist      = false,  // remember the close forever (localStorage)
-      } = opts;
-
-      // If this popup was already dismissed and persist is on, skip it
-      if (persist && localStorage.getItem(POPUP_PREFIX + id) === "1") return;
-
-      // Remove any existing instance of this popup first
-      this.close(id, true);
-
-      const el = document.createElement("div");
-      el.className  = "kaia-popup";
-      el.id         = "kaia-popup-" + id;
-      el.style.left = x + "px";
-      el.style.top  = y + "px";
-
-      if (arrow) {
-        el.dataset.arrow = arrow;
-        el.style.setProperty("--arrow-offset", arrowOffset);
-      }
-
-      // header row (always rendered so there's always a drag handle + close btn)
-      const header = document.createElement("div");
-      header.className = "kaia-popup-header kaia-popup-drag-handle";
-      header.style.cursor = "grab";
-
-      const titleEl = document.createElement("span");
-      titleEl.className   = "kaia-popup-title";
-      titleEl.textContent = title;
-
-      const closeBtn = document.createElement("button");
-      closeBtn.className   = "kaia-popup-close";
-      closeBtn.textContent = "✕";
-      closeBtn.title       = "close";
-      closeBtn.addEventListener("click", () => {
-        window.kaiaSound && window.kaiaSound.play("close");
-        if (persist) localStorage.setItem(POPUP_PREFIX + id, "1");
-        this.close(id);
-      });
-
-      header.appendChild(titleEl);
-      header.appendChild(closeBtn);
-      el.appendChild(header);
-
-      // body
-      const body = document.createElement("div");
-      body.className = "kaia-popup-body";
-      body.innerHTML = content;
-      el.appendChild(body);
-
-      document.body.appendChild(el);
-
-      // ── drag to reposition ───────────────────────────────────────────────
-      let dragging = false, ox = 0, oy = 0;
-      header.addEventListener("mousedown", (e) => {
-        if (e.button !== 0) return;
-        dragging = true;
-        ox = e.clientX - el.offsetLeft;
-        oy = e.clientY - el.offsetTop;
-        header.style.cursor = "grabbing";
-        e.preventDefault();
-      });
-      document.addEventListener("mousemove", (e) => {
-        if (!dragging) return;
-        el.style.left = (e.clientX - ox) + "px";
-        el.style.top  = (e.clientY - oy) + "px";
-      });
-      document.addEventListener("mouseup", () => {
-        if (dragging) { dragging = false; header.style.cursor = "grab"; }
-      });
-
-      return el;
-    },
-
-    // ── close ───────────────────────────────────────────────────────────────
-    // instant=true skips the CSS exit animation (used when replacing a popup)
-    close(id, instant = false) {
-      const el = document.getElementById("kaia-popup-" + id);
-      if (!el) return;
-      if (instant) { el.remove(); return; }
-      el.classList.add("closing");
-      el.addEventListener("animationend", () => el.remove(), { once: true });
-    },
-
-    // ── reset helpers ────────────────────────────────────────────────────────
-    reset(id) {
-      localStorage.removeItem(POPUP_PREFIX + id);
-    },
-    resetAll() {
-      Object.keys(localStorage)
-        .filter(k => k.startsWith(POPUP_PREFIX))
-        .forEach(k => localStorage.removeItem(k));
-    },
-  };
-
 
   //flower
   if (Math.random() < 0.05) {
