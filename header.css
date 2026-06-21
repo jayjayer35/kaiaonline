@@ -10,7 +10,7 @@
       }
 
       :root {
-        /* --hdr-bg:            #9eb4d1;
+        --hdr-bg:            #9eb4d1;
         --hdr-border-top:    #c4d6e8;
         --hdr-border-bottom: #7e8ba3;
         --hdr-shadow-1:      #cddaea;
@@ -31,9 +31,9 @@
         --steam-shadow:      #4a6a8a;
         --alert-bg:          #f5e6a0;
         --alert-text:        #5a4a00;
-        --alert-border:      #c8a800; */
+        --alert-border:      #c8a800;
         /* special colors! */
-        --hdr-bg:            #d19eb8;
+        /*--hdr-bg:            #d19eb8;
         --hdr-border-top:    #e8c4da;
         --hdr-border-bottom: #a37e98;
         --hdr-shadow-1:      #eacde1;
@@ -54,11 +54,11 @@
         --steam-shadow:      #8a4a72;
         --alert-bg:          #f5e6a0;
         --alert-text:        #5a4a00;
-        --alert-border:      #c8a800;
+        --alert-border:      #c8a800;*/
       }
 
       body.dark-mode {
-        /* --hdr-bg:            #2a3340;
+        --hdr-bg:            #2a3340;
         --hdr-border-top:    #4a5a70;
         --hdr-border-bottom: #1a2028;
         --hdr-shadow-1:      #3a4a60;
@@ -79,9 +79,9 @@
         --steam-shadow:      #000;
         --alert-bg:          #2a2200;
         --alert-text:        #f0d060;
-        --alert-border:      #7a6000; */
+        --alert-border:      #7a6000;
         /* special colors! */
-        --hdr-bg:            #402a3f;
+        /*--hdr-bg:            #402a3f;
         --hdr-border-top:    #704a70;
         --hdr-border-bottom: #281a28;
         --hdr-shadow-1:      #5f3a60;
@@ -102,7 +102,7 @@
         --steam-shadow:      #000;
         --alert-bg:          #2a2300;
         --alert-text:        #f0e660;
-        --alert-border:      #7a7400;
+        --alert-border:      #7a7400;*/
       }
 
       /* alert bar */

@@ -74,14 +74,14 @@
     {
       label: "for u",
       children: [
-        { label: "friends", badge: "new",
+        { label: "friends", badge: "",
           submenu: [
-            { label: "memory vids", href: "/memoryvids.html", badge: "new"},
+            { label: "memory vids", href: "/memoryvids.html", badge: ""},
             { label: "hall of messages (wip)", href: "/msgs.html" },
           ]
         },
         { label: "photo museum",   href: "/museum.html" },
-        { label: "my music", href: "/mymusic.html", badge: "updated" },
+        { label: "my music", href: "/mymusic.html", badge: "" },
         { label: "recipes (wip)",   href: "/myrecipes.html" },
         { label: "web projects", href: "/mywebdev.html" },
       ],
