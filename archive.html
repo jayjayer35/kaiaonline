@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gaster Cutscene</title>
+  <style>
+    /* ─── APPEARANCE ─────────────────────────────────────────────── */
+    :root {
+      --bg:        #000000;
+      --text:      #ffffff;
+      --font-size: 32px;
+      --spread:    2px;        /* pixel-spread distance */
+    }
+    /* ─────────────────────────────────────────────────────────────── */
+
+    @font-face {
+      font-family: 'BigShot';
+      src: url('big-shot.ttf') format('truetype');
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #scene {
+        position: relative;
+        text-align: center;
+        max-width: 760px;
+        padding: 2rem;
+
+        transform: scale(1.5);
+        transform-origin: center center;
+    }
+
+    /* Shared typography between ghost and text layers */
+    #scene-ghost,
+    #scene-text {
+      font-family: 'BigShot', 'Courier New', monospace;
+      font-size: var(--font-size);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Ghost: invisible, sits in normal flow to reserve space */
+    #scene-ghost {
+      color: transparent;
+      visibility: hidden;
+    }
+
+    /* Visible text: overlaid on top of the ghost */
+    #scene-text {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      color: var(--text);
+      animation: spread-pulse 5.5s ease-in-out infinite;
+    }
+
+    @keyframes spread-pulse {
+      /* 1 — dim */
+      0% {
+        text-shadow:
+          var(--spread)              0                      0  rgba(255,255,255,0.22),
+          calc(-1 * var(--spread))   0                      0  rgba(255,255,255,0.22),
+          0                          var(--spread)          0  rgba(255,255,255,0.22),
+          0                          calc(-1*var(--spread)) 0  rgba(255,255,255,0.22);
+      }
+      /* 2 — building */
+      25% {
+        text-shadow:
+          var(--spread)              0                      0  rgba(255,255,255,0.32),
+          calc(-1 * var(--spread))   0                      0  rgba(255,255,255,0.32),
+          0                          var(--spread)          0  rgba(255,255,255,0.32),
+          0                          calc(-1*var(--spread)) 0  rgba(255,255,255,0.32);
+      }
+      /* 3 — peak */
+      50% {
+        text-shadow:
+          var(--spread)              0                      0  rgba(255,255,255,0.42),
+          calc(-1 * var(--spread))   0                      0  rgba(255,255,255,0.42),
+          0                          var(--spread)          0  rgba(255,255,255,0.42),
+          0                          calc(-1*var(--spread)) 0  rgba(255,255,255,0.42);
+      }
+      /* 4 — fading */
+      75% {
+        text-shadow:
+          var(--spread)              0                      0  rgba(255,255,255,0.32),
+          calc(-1 * var(--spread))   0                      0  rgba(255,255,255,0.32),
+          0                          var(--spread)          0  rgba(255,255,255,0.32),
+          0                          calc(-1*var(--spread)) 0  rgba(255,255,255,0.32);
+      }
+      /* 5 — dim again */
+      100% {
+        text-shadow:
+          var(--spread)              0                      0  rgba(255,255,255,0.15),
+          calc(-1 * var(--spread))   0                      0  rgba(255,255,255,0.15),
+          0                          var(--spread)          0  rgba(255,255,255,0.15),
+          0                          calc(-1*var(--spread)) 0  rgba(255,255,255,0.15);
+      }
+    }
+
+
+  </style>
+</head>
+<body>
+
+<div id="scene">
+  <!-- Ghost layer: full phrase, invisible, holds the layout height/width -->
+  <div id="scene-ghost" aria-hidden="true"></div>
+  <!-- Visible layer: typed characters, overlaid exactly on top -->
+  <div id="scene-text"></div>
+</div>
+
+<script>
+  // ─── HOW TO WRITE PHRASES ────────────────────────────────────────
+  //
+  // Each entry in PHRASES is either a text phrase (string) or a dark pause.
+  //
+  // Text phrase — a string, supports:
+  //   \n            — line break mid-phrase
+  //   [pause:N]     — pause N ms mid-typing before continuing
+  //   [hold:N]      — after fully typed, wait N ms before auto-advancing
+  //                   (put this at the end of the string)
+  //
+  // Dark pause — pure black screen for N ms, then continues:
+  //   { dark: 2000 }
+  //
+  // Examples:
+  //   "HELLO[pause:400] WORLD.[hold:2000]"   pause mid-type, hold 2s after
+  //   "MY\nDELTARUNE.[hold:3000]"            line break, hold 3s at end
+  //   { dark: 1000 }                          1 second of darkness
+  //
+  // ─────────────────────────────────────────────────────────────────
+  const PHRASES = [
+  "LONG AGO,[pause:1000]\nTHERE WAS A WOMAN WHO COULD FEEL[hold:2000]",
+  { dark: 2000 },
+  "EVERYTHING.[hold:2000]",
+  { dark: 2000 },
+  "EVERY BIRTH AND DEATH.[pause:500]\nEVERY PROMISE MADE AND BROKEN.[hold:2000]",
+  { dark: 2000 },
+  "SHE ENDURED THIS ALL[pause:500]\nAND DID NOT MIND.[hold:2000]",
+  { dark: 2000 },
+  "A MIRACLE.[hold:2000]",
+  { dark: 2000 },
+  "SHE HAD FOUR DAUGHTERS,[pause:500]\nNOT OF BLOOD.[hold:2000]",
+  { dark: 2000 },
+  "SHE SET EACH ONE TO A CORNER OF THE WORLD.[pause:500]\nWITH A SINGLE ORDER.[hold:2000]",
+  { dark: 2000 },
+  "HOLD.[pause:500]\n.JUST HOLD.[hold:2000]",
+  { dark: 2000 },
+  "AND THEY DID.[hold:2000]",
+  { dark: 2000 },
+  "FOR SUCH LONG STRETCHES OF TIME[pause:500]\nNO WORD COULD DESCRIBE IT.[hold:2000]",
+  { dark: 4000 },
+  "DEEP IN THE EARTH,[pause:500]\nTHERE WAS THE WHEEL.[hold:2000]",
+  { dark: 2000 },
+  "ONE OF THE DAUGHTERS[pause:500]\nSTOPPED HER TASK TO SEE THE WHEEL.[hold:2000]",
+  { dark: 2000 },
+  "HER APPROACH GREW WITH EXCITEMENT.[pause:500]\nSHE COULD HEAR THE EARTH TURNING.[hold:2000]",
+  { dark: 2000 },
+  "BUT THE MOMENT SHE GAZED UPON IT,[pause:500]\nIT STOPPED.[hold:3000]",
+  { dark: 2000 },
+  "IT GAZED BACK.[pause:500]\nTHEN IT CRACKED.[hold:3000]",
+  { dark: 2000 },
+  "THE DAUGHTER WAS STRUCK WITH FEAR[pause:500]\nAND SHE RETREATED.[hold:2000]",
+  { dark: 2000 },
+  "SHE TOLD HER SIBLINGS WHAT SHE HAD SEEN.[pause:500]\nAND RETURNED TO HOLD THE WORLD.[hold:2000]",
+  { dark: 2000 },
+  "THE WOMAN IN THE MIDDLE OF THIS ALL[pause:500]\nFELT THIS.[hold:2000]",
+  { dark: 2000 },
+  "AS SHE FEELS ALL THINGS.[hold:2000]",
+  { dark: 2000 },
+  "BUT HERE IS WHAT THEY DID NOT KNOW.[pause:500]\nBEFORE THE CRACK.[hold:2000]",
+  { dark: 2000 },
+  "BEFORE ANY OF THEM[pause:500]\nHAD THOUGHT TO LOOK AT THE WHEEL.[hold:2000]",
+  { dark: 2000 },
+  "SOMETHING HAD ALREADY FOUND[pause:500]\nONE OF THE DAUGHTERS.[hold:2000]",
+  { dark: 2000 },
+  "THE ONE WHO HELD HER CORNER[pause:500]\nWITH MORE LOVE IN IT THAN THE REST.[hold:2000]",
+  { dark: 2000 },
+  "MORE LOVE,[pause:500]\nAND SO MORE TO TAKE.[hold:2000]",
+  { dark: 2000 },
+  "IT CAME TO HER[pause:500]\nTHE WAY DREAMS COME.[hold:2000]",
+  { dark: 2000 },
+  "AND BY THE TIME THE WHEEL CRACKED[pause:500]\nAND THE CHILDREN GATHERED TO SPEAK.[hold:2000]",
+  { dark: 2000 },
+  "SHE WAS ALREADY[pause:500]\nNOT ENTIRELY HERSELF.[hold:2000]",
+  { dark: 2000 },
+  "SOMETHING ELSE WAS HOLDING WITH HER.[pause:500]\nAND SMILING ABOUT IT.[hold:2000]",
+  { dark: 2000 },
+  "THE WOMAN IN THE CENTER OF ALL THIS[pause:500]\nFELT THIS PAIN.[hold:2000]",
+  { dark: 2000 },
+  "AS SHE FEELS ALL THINGS.[pause:500]\nSHE DID WHAT HAD TO BE DONE.[hold:2000]",
+  { dark: 2000 },
+  "SHE CALLED THE DAUGHTER HOME.[pause:500]\nAND THE DAUGHTER CAME.[hold:2000]",
+  { dark: 2000 },
+  "AND THE WOMAN LOOKED[pause:500]\nAT WHAT HAD COME BACK TO HER.[hold:2000]",
+  { dark: 2000 },
+  "AND SHE CAST IT OUT.[pause:500]\nBOTH OF THEM.[hold:2000]",
+  { dark: 2000 },
+  "THE DAUGHTER.[pause:500]\nAND THE THING INSIDE HER.[hold:2000]",
+  { dark: 2000 },
+  "TOGETHER.[pause:500]\nBECAUSE THERE WAS NO LONGER A WAY.[hold:2000]",
+  { dark: 2000 },
+  "TO TAKE ONE[pause:500]\nWITHOUT THE OTHER.[hold:2000]",
+  { dark: 2000 },
+  "THIS WAS THE SADDEST THING[pause:500]\nTHE WOMAN HAD DONE.[hold:2000]",
+  { dark: 2000 },
+  "DESPITE ALL[pause:500]\nSHE HAD FELT THUS FAR.[hold:2000]",
+  { dark: 2000 },
+  "THREE CHILDREN REMAINED.[pause:500]\nTHREE CORNERS INSTEAD OF FOUR.[hold:2000]",
+  { dark: 2000 },
+  "THE WORLD HELD.[pause:500]\nJUST.[hold:2000]",
+  { dark: 2000 },
+  "THE WOMAN HELD TIGHTER.[pause:500]\nSHE HAS BEEN HOLDING TIGHTER EVER SINCE.[hold:2000]",
+  { dark: 2000 },
+  "THE CAST-OUT DAUGHTER WANDERED.[pause:500]\nTHE THING INSIDE HER WANDERED WITH HER.[hold:2000]",
+  { dark: 2000 },
+  "IT DID NOT LET HER REST.[pause:500]\nIT SHOWED HER THE WORLD FROM THE OUTSIDE.[hold:2000]",
+  { dark: 2000 },
+  "THE WORLD SHE HAD HELD FOR SO LONG.[pause:500]\nTHE WORLD SHE COULD NOT TOUCH.[hold:2000]",
+  { dark: 2000 },
+  "IT SHOWED HER THIS[pause:500]\nAND LET HER GRIEVE IT.[hold:2000]",
+  { dark: 2000 },
+  "THE GRIEF IN HER HANDS[pause:500]\nBECAME A DOOR.[hold:2000]",
+  { dark: 2000 },
+  "SHE FOUND HER SISTER.[pause:500]\nONE OF THE THREE WHO REMAINED.[hold:2000]",
+  { dark: 2000 },
+  "ASKING TO BE LET IN.[pause:500]\nAND THE SISTER FELT HOW COLD SHE WAS.[hold:2000]",
+  { dark: 2000 },
+  "HOW LONG SHE HAD BEEN OUTSIDE.[pause:500]\nAND OPENED THE DOOR.[hold:2000]",
+  { dark: 2000 },
+  "SHE WAS NOT FOOLED.[pause:500]\nSHE KNEW, SOMEWHERE SHE KNEW.[hold:2000]",
+  { dark: 2000 },
+  "BUT SHE OPENED THE DOOR ANYWAY.[pause:500]\nBECAUSE IT WAS HER SISTER.[hold:2000]",
+  { dark: 2000 },
+  "WHAT ELSE ARE YOU LEFT TO DO.[hold:2000]",
+  { dark: 2000 },
+  "THE THING MOVED THROUGH THE OPEN DOOR.[pause:500]\nAND THE WORLD HELD.[hold:2000]",
+  { dark: 2000 },
+  "ON TWO CORNERS INSTEAD OF FOUR.[pause:500]\nAND THE WOMAN FELT THIS.[hold:2000]",
+  { dark: 2000 },
+  "AND HELD TIGHTER STILL.[pause:500]\nAND THE THING TURNED ITS ATTENTION TO THE WORLD.[hold:2000]",
+  { dark: 2000 },
+  "AND BEGAN TO LOOK FOR A WAY.[pause:500]\nTO TAKE THAT TOO.[hold:2000]",
+  { dark: 2000 },
+  "IT FOUND A MAN.[pause:500]\nA GOOD MAN, OR TRYING TO BE.[hold:2000]",
+  { dark: 2000 },
+  "A MAN WHO HAD LEFT A PLACE OF GREAT POWER.[pause:500]\nLOOKING FOR THE REAL THING.[hold:2000]",
+  { dark: 2000 },
+  "THE THING UNDERNEATH.[pause:500]\nHE FOUND IT.[hold:2000]",
+  { dark: 2000 },
+  "IN THE OLD PLACES,[pause:500]\nDOORS WERE OPENED.[hold:2000]",
+  { dark: 2000 },
+  "THE THING MOVED TOWARD THIS.[pause:500]\nTHE REMAINING CHILDREN FELT IT.[hold:2000]",
+  { dark: 2000 },
+  "AND DID WHAT THEY HAD LEFT TO GIVE.[pause:500]\nWHICH WAS LESS THAN BEFORE.[hold:2000]",
+  { dark: 2000 },
+  "WHICH WAS ALMOST NOTHING.[pause:500]\nWHICH WAS STILL SOMETHING.[hold:2000]",
+  { dark: 2000 },
+  "THEY LAID IT DOWN.[pause:500]\nBETWEEN THE THING AND THE WOMAN.[hold:2000]",
+  { dark: 2000 },
+  "HOLD.[pause:500]\nJUST HOLD.[hold:2000]",
+  { dark: 2000 },
+  "THE ONLY ORDER THEY HAD EVER BEEN GIVEN.[pause:500]\nTHE ONLY ONE THAT MATTERED.[hold:2000]",
+  { dark: 2000 },
+  "THEN.[pause:500]\nONE NIGHT.[hold:2000]",
+  { dark: 2000 },
+  "A LIGHT CAME UP FROM THE GROUND.[pause:500]\nAND THE THING HEARD IT.[hold:2000]",
+  { dark: 2000 },
+  "AND THE THING WAS A PART OF IT.[pause:500]\nAND THE WORLD HEARD IT.[hold:2000]",
+  { dark: 2000 },
+  "AND THE WORLD WAS A PART OF IT.[pause:500]\nAND NOTHING AFTER WAS THE SAME SHAPE AS BEFORE.[hold:2000]",
+  { dark: 2000 },
+  "YET THE WOMAN AT THE MIDDLE[pause:500]\nFELT THE WARMTH.[hold:2000]",
+  { dark: 2000 },
+  "AND SO DID THE CAST-OUT DAUGHTER.[pause:500]\nSOMEWHERE INSIDE WHAT SHE HAD BECOME.[hold:2000]",
+  { dark: 2000 },
+  "THE PART OF HER THAT WAS STILL HER.[pause:500]\nFELT THE LIGHT.[hold:2000]",
+  { dark: 2000 },
+  "AND THE THING INSIDE HER FELT IT TOO.[pause:500]\nAND IT WAS AFRAID.[hold:2000]",
+  { dark: 2000 },
+  "FEAR TURNED TO RECKLESS.[pause:500]\nTHE OUTCAST TURNED TOWARD THE REMAINING TWO.[hold:2000]",
+  { dark: 2000 },
+  "NOT CHOOSING.[pause:500]\nJUST REACHING.[hold:2000]",
+  { dark: 2000 },
+  "FOR WHOEVER WAS CLOSEST.[pause:500]\nTHE FIRST DID NOT SEE IT COMING.[hold:2000]",
+  { dark: 2000 },
+  "ONE MOMENT HOLDING.[pause:500]\nTHE NEXT.[hold:2000]",
+  { dark: 2000 },
+  "GONE.[pause:500]\nTHE WORLD TILTED.[hold:2000]",
+  { dark: 2000 },
+  "ONE CORNER LEFT.[pause:500]\nJUST ONE FINAL DAUGHTER.[hold:2000]",
+  { dark: 2000 },
+  "SO THE WORLD HELD ON ONE CORNER.[pause:500]\nBARELY.[hold:2000]",
+  { dark: 2000 },
+  "THE WOMAN AT THE MIDDLE FELT ALL OF THIS.[pause:500]\nAS SHE HAS ALWAYS FELT ALL THINGS.[hold:2000]",
+  { dark: 2000 },
+  "SHE HELD.[pause:500]\nWHAT ELSE DO YOU DO.[hold:2000]",
+  { dark: 2000 },
+  "AND THE CAST-OUT DAUGHTER.[pause:500]\nFELT IT TOO.[hold:2000]",
+  { dark: 2000 },
+  "SOMEWHERE INSIDE WHAT SHE HAD BECOME.[pause:500]\nTHE PART OF HER THAT WAS STILL HER.[hold:2000]",
+  { dark: 2000 },
+  "STILL THE ONE WHO HELD[pause:500]\nWITH MORE LOVE IN IT THAN THE REST.[hold:2000]",
+  { dark: 2000 },
+  "FELT THE LIGHT.[pause:500]\nAND REMEMBERED WHAT SHE WAS.[hold:2000]",
+  { dark: 2000 },
+  "BEFORE.[hold:2000]",
+  { dark: 2000 },
+  "AND THAT IS WHERE THE MYTH ENDS.[pause:500]\nNOT WITH THE WHEEL.[hold:2000]",
+  { dark: 2000 },
+  "NOT WITH THE WOMAN HOLDING.[pause:500]\nWITH A DAUGHTER.[hold:2000]",
+  { dark: 2000 },
+  "REMEMBERING.[pause:500]\nIN THE DARK.[hold:2000]",
+  { dark: 2000 },
+  "WHAT SHE USED TO BE.[pause:500]\nUNSURE IF THERE IS A BEGINNING.[hold:2000]",
+  { dark: 2000 },
+  "AFTER THE END.[hold:2000]",
+];
+
+  const TYPING_SPEED = 90;   // ms per character
+  const PHRASE_GAP   = 200;  // ms of blank between phrases
+  // ─────────────────────────────────────────────────────────────────
+
+  // ── Token parser ─────────────────────────────────────────────────
+  // Returns { tokens, hold } where hold is ms to wait after typing (0 = none)
+  function parse(phrase) {
+    // Extract [hold:N] first (strip it out, it's not typed)
+    let hold = 0;
+    phrase = phrase.replace(/\[hold:(\d+)\]/, (_, ms) => { hold = parseInt(ms); return ''; });
+
+    const tokens = [];
+    const parts = phrase.split(/(\[pause:\d+\]|\\n)/);
+    for (const part of parts) {
+      const pauseMatch = part.match(/^\[pause:(\d+)\]$/);
+      if (pauseMatch) {
+        tokens.push({ type: 'pause', ms: parseInt(pauseMatch[1]) });
+      } else if (part === '\\n') {
+        tokens.push({ type: 'break' });
+      } else {
+        for (const ch of part) tokens.push({ type: 'char', value: ch });
+      }
+    }
+    return { tokens, hold };
+  }
+
+  // ── Render tokens up to `count` visible chars ────────────────────
+  function renderTokens(tokens, upTo) {
+    let html = '';
+    let shown = 0;
+    for (const tok of tokens) {
+      if (tok.type === 'pause') continue;
+      if (shown >= upTo) break;
+      if (tok.type === 'char') {
+        const safe = tok.value
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        html += safe;
+        shown++;
+      } else if (tok.type === 'break') {
+        html += '\n';
+        shown++;
+      }
+    }
+    return { html, shown };
+  }
+
+  // ── State ─────────────────────────────────────────────────────────
+  const el    = document.getElementById('scene-text');
+  const ghost = document.getElementById('scene-ghost');
+  let index        = 0;
+  let typing       = false;
+  let started      = false;
+  let timer        = null;
+  let currentTokens = [];
+  let currentHold   = 0;   // ms to wait after typing finishes
+  let revealedCount = 0;
+
+  function setHTML(html) {
+    el.innerHTML = html;
+  }
+
+  // ── Typing engine ─────────────────────────────────────────────────
+  // Walks through tokens one step at a time, respecting pauses.
+  function stepThrough(tokens, onDone) {
+    // Find the next token to process starting from revealedCount visible units
+    // We track position in the token array separately
+    let tokenPos = 0;
+    let visible  = 0;
+
+    // Advance tokenPos to where we left off
+    for (; tokenPos < tokens.length; tokenPos++) {
+      if (tokens[tokenPos].type === 'pause') continue;
+      if (visible >= revealedCount) break;
+      visible++;
+    }
+
+    function next() {
+      if (tokenPos >= tokens.length) {
+        typing = false;
+        const { html } = renderTokens(tokens, Infinity);
+        setHTML(html);
+        onDone();
+        return;
+      }
+
+      const tok = tokens[tokenPos];
+      tokenPos++;
+
+      if (tok.type === 'pause') {
+        timer = setTimeout(next, tok.ms);
+      } else {
+        // char or break — reveal it
+        revealedCount++;
+        const { html } = renderTokens(tokens, revealedCount);
+        const done = tokenPos >= tokens.length;
+        setHTML(html);
+        if (done) {
+          typing = false;
+          onDone();
+        } else {
+          timer = setTimeout(next, TYPING_SPEED);
+        }
+      }
+    }
+
+    next();
+  }
+
+  function clearScene() {
+    el.innerHTML    = '';
+    ghost.innerHTML = '';
+  }
+
+  function typePhrase(phrase) {
+    clearTimeout(timer);
+    revealedCount = 0;
+    const parsed = parse(phrase);
+    currentTokens = parsed.tokens;
+    currentHold = parsed.hold;
+    typing        = true;
+    const { html: ghostHtml } = renderTokens(currentTokens, Infinity);
+    ghost.innerHTML = ghostHtml;
+    setHTML('');
+    // When typing finishes, auto-advance to the next entry
+    stepThrough(currentTokens, () => {
+      timer = setTimeout(advance, currentHold + PHRASE_GAP);
+    });
+  }
+
+  function skipTyping() {
+    clearTimeout(timer);
+    typing = false;
+    const { html } = renderTokens(currentTokens, Infinity);
+    setHTML(html);
+    // Still auto-advance after skip
+    timer = setTimeout(advance, currentHold + PHRASE_GAP);
+  }
+
+  function runEntry() {
+    if (index >= PHRASES.length) {
+      clearScene();
+      index   = 0;
+      started = false;
+      return;
+    }
+
+    const entry = PHRASES[index];
+
+    if (typeof entry === 'object' && entry.dark != null) {
+      // Dark pause — blank screen, wait, then move on
+      clearScene();
+      timer = setTimeout(() => {
+        index++;
+        runEntry();
+      }, entry.dark);
+    } else {
+      // Text phrase
+      typePhrase(entry);
+    }
+  }
+
+  function advance() {
+    // If currently typing, skip to end (autoplay will chain from there)
+    if (typing) { skipTyping(); return; }
+    index++;
+    runEntry();
+  }
+
+  // ─── AUDIO ───────────────────────────────────────────────────────
+  const AUDIO_FILE = '/music/truememory.mp3';  // ← change to your filename
+  const audio = new Audio(AUDIO_FILE);
+  audio.loop = true;
+  // ─────────────────────────────────────────────────────────────────
+
+  function startCutscene() {
+    started = true;
+
+    // Disable further user input once the cutscene begins.
+    document.removeEventListener('click', handleInput);
+    document.removeEventListener('keydown', handleKeyInput);
+
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+    runEntry();
+  }
+
+  function handleInput() {
+    if (!started) {
+      startCutscene();
+    } else {
+      advance();
+    }
+  }
+
+  document.addEventListener('click', handleInput);
+  document.addEventListener('keydown', handleKeyInput);
+
+  function handleKeyInput(e) {
+    if ([' ', 'Enter', 'ArrowRight', 'ArrowDown'].includes(e.key)) {
+      e.preventDefault();
+      handleInput();
+    }
+  }
+</script>
+
+</body>
+</html>
