@@ -225,15 +225,17 @@
 
   <div id="leftControls">
     <div id="tagMenu">
+      <label><input type="checkbox" value="bed" checked> Flame Ignition Beds</label>
       <label><input type="checkbox" value="city" checked> Cities</label>
       <label><input type="checkbox" value="camp" checked> Camps</label>
       <label><input type="checkbox" value="landmark" checked> Landmarks</label>
       <label><input type="checkbox" value="ruins" checked> Ruins</label>
       <label><input type="checkbox" value="other" checked> Other</label>
+      <label><input type="checkbox" value="party" checked> Party</label>
     </div>
 
     <div id="mapSwitchWrapper">
-      <span class="switchLabel">Map Labels</span>
+      <span class="switchLabel">Rennel's Copy</span>
       <div id="mapSwitch" class="switch" role="button" aria-pressed="false"></div>
     </div>
   </div>
@@ -248,7 +250,7 @@ const mapWidth = 7680;
 const mapHeight = 4320;
 
 const baseMapURL = "assets/thalenrose_nolabel.png";
-const labelMapURL = "assets/thalenrose_label.png";
+const labelMapURL = "assets/THALENTHALEN.png";
 
 /* --- REFERENCE stuff --- */
 const references = {
@@ -607,11 +609,67 @@ map.on("click", () => sidebar.classList.remove("open"));
 /* --- LOCATIONS --- */
 const locations = [
         {
-        name: "The Party (underground)", x:676, y:1352,
+        name: "The Party (underground)", x:3750, y:2278,
         color:"#D0396B", size:6, tags:["party"],
         text:`### **Last session end point**
 
 *You are here!*
+`
+        },{
+        name: "The Bed of Defiance", x:3750, y:2278,
+        color:"#A88585", size:10, tags:["bed"],
+        text:`### **Ignition Bed**
+*A sacrificial bed to ignite your flame and proceed to the Aether.*
+
+*A task the Ancient flames failed to follow through with to restore power to the Archwitch.*
+`
+        },{
+        name: "The Bed of Resonance", x:2160, y:4180,
+        color:"#A88585", size:10, tags:["bed"],
+        text:`### **Ignition Bed**
+*A sacrificial bed to ignite your flame and proceed to the Aether.*
+
+*A task the Ancient flames failed to follow through with to restore power to the Archwitch.*
+`
+        },{
+        name: "The Bed of Instinct", x:5916, y:3772,
+        color:"#A88585", size:10, tags:["bed"],
+        text:`### **Ignition Bed**
+*A sacrificial bed to ignite your flame and proceed to the Aether.*
+
+*A task the Ancient flames failed to follow through with to restore power to the Archwitch.*
+`
+        },{
+        name: "The Bed of Persistence", x:1424, y:2280,
+        color:"#A88585", size:10, tags:["bed"],
+        text:`### **Ignition Bed**
+*A sacrificial bed to ignite your flame and proceed to the Aether.*
+
+*A task the Ancient flames failed to follow through with to restore power to the Archwitch.*
+`
+        },{
+        name: "The Bed of Faith", x:7176, y:1896,
+        color:"#A88585", size:10, tags:["bed"],
+        text:`### **Ignition Bed**
+*A sacrificial bed to ignite your flame and proceed to the Aether.*
+
+*A task the Ancient flames failed to follow through with to restore power to the Archwitch.*
+`
+        },{
+        name: "The Bed of Revelation", x:1772, y:757,
+        color:"#A88585", size:10, tags:["bed"],
+        text:`### **Ignition Bed**
+*A sacrificial bed to ignite your flame and proceed to the Aether.*
+
+*A task the Ancient flames failed to follow through with to restore power to the Archwitch.*
+`
+        },{
+        name: "The Bed of Balance", x:4036, y:2964,
+        color:"#A88585", size:10, tags:["bed"],
+        text:`### **Ignition Bed**
+*A sacrificial bed to ignite your flame and proceed to the Aether.*
+
+*A task the Ancient flames failed to follow through with to restore power to the Archwitch.*
 `
         },{
         name: "Aradisia", x:3297, y:2378,
