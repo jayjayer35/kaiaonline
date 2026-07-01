@@ -2,803 +2,738 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>grid thing for ttrpgs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Combat Grid</title>
 
 <style>
-    @font-face {
-      font-family: 'Big Shot';
-      src: url('../assets/big-shot.ttf') format('truetype');
-    }
-  
-    body {
-    margin: 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.658)), url("../assets/galaxybkgndblue.jpg") repeat center center;
-    color: #eee;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: 'Big Shot', cursive, sans-serif;
+@font-face {
+  font-family: 'Big Shot';
+  src: url('../assets/big-shot.ttf') format('truetype');
 }
 
+* { box-sizing: border-box; }
 
-  #grid-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    overflow: auto;
-    font-family: 'Big Shot', cursive, sans-serif;
-    padding-top: .5rem;
-    padding-bottom: .5rem;
-  }
+body {
+  margin: 0;
+  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.658)),
+              url("../assets/galaxybkgndblue.jpg") repeat center center;
+  color: #eee;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Big Shot', cursive, sans-serif;
+  min-height: 100vh;
+}
 
-  #grid {
-    position: relative;
-    background-color: #333333c7;
-    border: 5px solid #999999d0;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.363);
-    width: 1400px;
-    height: 700px;
-    user-select: none;
-    transform-origin: center center;
-    transition: border 0.2s, box-shadow 0.2s;
-    --grid-line-color: rgba(255,255,255,0.2);
-  }
-  /* Overlay for uploaded grid backgrounds */
-  #grid.grid-bg-dark::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.35);
-    pointer-events: none;
-    z-index: 1;
-  }
+h1 {
+  font-size: 3rem;
+  padding: 0;
+  margin: 0.4em 0 0.1em;
+}
 
-  #grid::before {
-    content: '';
-    position: absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    pointer-events:none;
-    background-image:
-      repeating-linear-gradient(to right, var(--grid-line-color, rgba(255,255,255,0.2)) 0 3px, transparent 1px 70px),
-      repeating-linear-gradient(to bottom, var(--grid-line-color, rgba(255,255,255,0.2)) 0 3px, transparent 1px 70px);
-  }
+/* ---- TOOLBAR ---- */
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 6px;
+}
 
-  .token {
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    background: #555;
-    color: #fff;
-    border-radius: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-    font-size: 12px;
-    cursor: grab;
-    border: 0px solid #8f8f8f;
-    z-index: 10;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 2rem;
-  }
+.toolbar-divider {
+  width: 1px;
+  height: 28px;
+  background: #ffffff33;
+  margin: 0 2px;
+}
 
-  .wall {
-    position: absolute;
-    background: #aaa;
-    height: 8px;
-    transform-origin: top left;
-    z-index: 5;
-  }
+button {
+  background: #555;
+  color: #eee;
+  border: none;
+  padding: 7px 13px;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.15s, transform 0.1s;
+  font-size: 1em;
+  font-family: 'Big Shot', cursive, sans-serif;
+}
+button:hover { background: #777; transform: scale(1.08); }
+button:active { transform: scale(1.0); }
+button.active.line    { background: #336; }
+button.active.erase   { background: #a33; }
+button.active.measure { background: #774400; }
+button.active.select  { background: #446644; }
+button.danger { background: #7a2222; }
+button.danger:hover { background: #a33; }
+button:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
 
-  #toolbar {
-    margin-top: 10px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    font-size: 16px; 
-  }
+label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9em;
+}
 
-  button {
-    background: #555;
-    color: #eee;
-    border: 4px;
-    border-color: #fff;
-    padding: 8px 14px; 
-    cursor: pointer;
-    border-radius: 0px;
-    transition: background 0.2s, transform 0.2s;
-    font-size: 1em; 
-    font-family: 'Big Shot', cursive, sans-serif;
-  }
+input[type=number], input[type=text] {
+  width: 56px;
+  padding: 4px 5px;
+  border-radius: 3px;
+  border: 1px solid #999;
+  background: #333;
+  color: #eee;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+input[type=text] { width: 100px; }
+select {
+  padding: 4px 6px;
+  border-radius: 3px;
+  border: 1px solid #999;
+  background: #333;
+  color: #eee;
+  font-family: 'Big Shot', cursive, sans-serif;
+  font-size: 0.9em;
+}
 
-  button:hover { background: #777; transform: scale(1.1); }
-  button.active.line { background: #339; transform: scale(1.1); }
-  button.active.erase { background: #a33; transform: scale(1.1); }
+/* Settings collapsible bar */
+#settings-bar {
+  display: none;
+  margin-top: 6px;
+  background: #22222299;
+  border: 1px solid #555;
+  padding: 8px 12px;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+#settings-bar.open { display: flex; }
+.settings-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  border: 1px solid #ffffff22;
+  background: #ffffff08;
+}
+.settings-group-label {
+  font-size: 0.7em;
+  color: #aaa;
+  border-right: 1px solid #555;
+  padding-right: 8px;
+  margin-right: 2px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
 
-  input[type=number] {
-    width: 60px;
-    padding: 3px;
-    border-radius: 4px;
-    border: 1px solid #999;
-    background: #333;
-    color: #eee;
-  }
+/* ---- GRID AREA ---- */
+#grid-container {
+  margin-top: 10px;
+  overflow: auto;
+  width: 100vw;
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 8px 0;
+}
 
-  #command-box {
+#grid-scaler {
+  /* This element is sized by JS to match the scaled grid, so scrollbars work */
+  position: relative;
+  flex-shrink: 0;
+}
+
+#grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #333333c7;
+  border: 5px solid #999999d0;
+  box-shadow: 0 0 5px rgba(255,255,255,0.36);
+  width: 1400px;
+  height: 700px;
+  user-select: none;
+  transform-origin: top left;
+  transition: border 0.2s, box-shadow 0.2s;
+  --grid-line-color: rgba(255,255,255,0.2);
+  --sq: 70px;
+  --zoom: 1;
+}
+
+#grid.grid-bg-dark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  pointer-events: none;
+  z-index: 1;
+}
+
+#grid::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(to right, var(--grid-line-color) 0 2px, transparent 2px var(--sq)),
+    repeating-linear-gradient(to bottom, var(--grid-line-color) 0 2px, transparent 2px var(--sq));
+}
+
+/* ---- TOKENS ---- */
+.token {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  background: #555;
+  color: #fff;
+  border-radius: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  cursor: grab;
+  border: 2px solid #8f8f8fcc;
+  z-index: 10;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 2rem;
+  transition: filter 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+/* clip-path tokens lose border — use drop-shadow outline instead */
+.token.shaped {
+  border: none;
+  filter: drop-shadow(0 0 2px rgba(180,180,180,0.55));
+}
+.token.selected {
+  border-color: #ffe066;
+  box-shadow: 0 0 0 2px #ffe06699;
+}
+.token.shaped.selected {
+  border: none;
+  box-shadow: none;
+  filter: drop-shadow(0 0 3px #ffe066) drop-shadow(0 0 5px #ffe06688);
+}
+.token .token-name {
+  position: absolute;
+  bottom: -24px;
+  left: 50%;
+  /* counter-scale by the inverse of the grid zoom so the label
+     stays a constant on-screen size regardless of zoom level */
+  transform: translateX(-50%) scale(calc(1 / var(--zoom, 1)));
+  transform-origin: top center;
+  /* fixed px size so it never scales with the token */
+  font-size: 13px;
+  line-height: 1;
+  color: #ffffff !important;
+  background: #000000bb;
+  padding: 2px 7px;
+  white-space: nowrap;
+  pointer-events: none;
+  font-family: 'Big Shot', cursive, sans-serif;
+  letter-spacing: 0.5px;
+}
+.token .hp-badge {
+  position: absolute;
+  top: -10px;
+  left: calc(100% + 12px);
+  background: #111;
+  border: 1px solid #ffe066;
+  color: #ffe066;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 4px 7px;
+  font-family: 'Courier New', monospace;
+  pointer-events: none;
+  white-space: nowrap;
+  display: none;
+  /* counter-scale so it stays a constant on-screen size, like the name tag */
+  transform: scale(calc(1 / var(--zoom, 1)));
+  transform-origin: top left;
+}
+.token .effect-badge {
+  position: absolute;
+  top: -10px;
+  right: calc(100% + 12px);
+  background: #111;
+  border: 1px solid #7ec8ff;
+  color: #7ec8ff;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 4px 7px;
+  font-family: 'Courier New', monospace;
+  pointer-events: none;
+  white-space: pre-line;
+  text-align: right;
+  max-width: 160px;
+  display: none;
+  /* counter-scale so it stays a constant on-screen size, like the name tag */
+  transform: scale(calc(1 / var(--zoom, 1)));
+  transform-origin: top right;
+}
+.token.selected .hp-badge,
+.token.selected .effect-badge {
+  display: block;
+}
+.token .turn-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  border: 3px solid #4fff8a;
+  box-shadow: 0 0 10px #4fff8aaa;
+  pointer-events: none;
+  animation: gpulse 1.4s ease-in-out infinite;
+}
+@keyframes gpulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+/* ---- WALLS ---- */
+.wall {
+  position: absolute;
+  background: #aaa;
+  height: 8px;
+  transform-origin: top left;
+  z-index: 5;
+}
+
+/* ---- MEASURE ---- */
+.measure-line {
+  position: absolute;
+  height: 3px;
+  background: repeating-linear-gradient(90deg,#ffe066 0 7px,transparent 7px 14px);
+  transform-origin: top left;
+  z-index: 200;
+  pointer-events: none;
+}
+.measure-label {
+  position: absolute;
+  background: #111c;
+  color: #ffe066;
+  border: 1px solid #ffe066;
+  padding: 2px 7px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.82rem;
+  z-index: 201;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ---- DRAW TOOL ---- */
+.freehand-path {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* ---- COLOR SWATCHES (token editor) ---- */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 22px);
+  gap: 4px;
+  margin-top: 6px;
+}
+.swatch {
+  width: 22px; height: 22px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.1s, border-color 0.1s;
+}
+.swatch:hover { transform: scale(1.18); border-color: #fff; }
+.swatch.selected-swatch { border-color: #ffe066; }
+.swatch.picker-swatch {
+  background: linear-gradient(135deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);
+  border-color: #888;
+  font-size: 0; /* hide any text */
+}
+
+button.active.draw-erase { background: #553333; }
+#draw-color-row {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
+}
+#draw-color-row.visible { display: flex; }
+.draw-swatch {
+  width: 20px; height: 20px;
+  border-radius: 2px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+.draw-swatch:hover { border-color: #fff; }
+.draw-swatch.selected-swatch { border-color: #ffe066; }
+.draw-size-label { font-size: 0.8em; color: #aaa; }
+#draw-size { width: 42px; }
+.select-box {
   position: fixed;
-  width: 400px;
+  border: 1.5px dashed #4fff8a;
+  background: #4fff8a18;
+  z-index: 150;
+  pointer-events: none;
+}
+
+/* ---- FLOATING PANELS ---- */
+.panel {
+  position: fixed;
   background: #222;
   color: #eee;
-  border: 4px solid #ffffff;
-  border-radius: 0px;
-  top: 50%;
-  left: 50%;
-  box-shadow: 0 0 15px rgba(0,0,0,0.61);
-  z-index: 50;
+  border: 4px solid #fff;
+  z-index: 500;
   cursor: default;
   user-select: none;
-  padding-bottom: 20px;
 }
-
-#command-header {
+.panel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: #444;
-  font-size: 1.5rem;
-  padding-left: 1rem;
+  font-size: 1.3rem;
+  padding: 6px 10px;
   border-bottom: 1px solid #666;
   cursor: move;
 }
-
-#command-header button {
+.panel-header button {
   background: transparent;
   border: none;
   color: #eee;
   font-size: 14px;
   cursor: pointer;
+  padding: 2px 8px;
+  transform: none !important;
 }
+.panel-header button:hover { background: #555; }
+.panel-body { padding: 12px; }
 
-#command-box ul {
-  list-style-type: none; 
-  padding-left: 20px;    
-}
+/* Help */
+#command-box { width: 420px; top: 50%; left: 50%; max-height: 80vh; overflow-y: auto; }
+#command-box ul { list-style: none; padding-left: 10px; }
+#command-box ul li { padding: 2px 0 3px; position: relative; padding-left: 1rem; line-height: 1.4; font-size: 0.92rem; }
+#command-box ul li::before { content: "–"; position: absolute; left: 0; }
+#command-box h3 { margin: 10px 0 4px; font-size: 1rem; color: #ffe066; }
+kbd { background: #333; border: 1px solid #888; padding: 1px 5px; border-radius: 2px; font-family: 'Courier New', monospace; font-size: 0.8em; }
 
-#command-box ul li::before {
-  content: "-";          
-  margin-right: 6px;      
-}
-#command-box li {
-   padding-left: 1rem; 
-   padding-right: 1.2rem;
-}
-#token-box {
-  position: fixed;
-  width: 250px;
-  background: #222;
-  color: #eee;
-  border: 4px solid #ffffff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.61);
-  top: 50%;
-  left: 50%;
-  
-  z-index: 60;
-  cursor: default;
-  user-select: none;
-  padding-bottom: 10px;
-}
+/* Token editor */
+#token-box { width: 260px; top: 50%; left: 50%; }
+#token-box .panel-body label { display: block; margin-bottom: 8px; font-size: 0.88rem; }
+#token-box .panel-body input[type=text],
+#token-box .panel-body select { width: 100%; }
+#token-box .panel-body input[type=color] { width: 100%; height: 28px; border: none; background: none; padding: 0; cursor: pointer; }
+.preset-swatches { display: flex; gap: 5px; margin-top: 4px; flex-wrap: wrap; }
+.swatch { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid #ffffff44; }
+.swatch:hover { transform: scale(1.2); }
+#stat-row { display: flex; gap: 8px; }
+#stat-row label { flex: 1; }
+#stat-row input[type=number] { width: 100%; }
 
-#token-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #444;
-  font-size: 1.5rem;
-  padding-left: 1rem;
-  border-bottom: 1px solid #666;
-  cursor: move;
-}
-
-#token-header button {
-  background: transparent;
-  border: none;
-  color: #eee;
-  font-size: 14px;
-  cursor: pointer;
-}
-
+/* ---- LEFT PANEL: Token list ---- */
 #token-list {
   position: fixed;
-  left: 1rem;
-  top: 5rem;
+  left: 0.8rem;
+  top: 7rem;
   width: 10rem;
-  max-height: 80vh;
+}
+#token-list .panel-body {
+  max-height: 52vh;
   overflow-y: auto;
-  background: #444;
-  border: 4px solid #acacaca6;
-  padding: 10px;
-  padding-top: 20px;
-  z-index: 100;
+  padding: 8px;
   font-family: 'Big Shot';
-  color: #eeeeeea1;
-  user-select: none;
-  cursor: grab;
+  color: #ddd;
 }
-
-#token-list div.entry {
+#token-list-entries div.entry {
   padding: 4px 6px;
-  margin-bottom: 2px;
-  background: rgba(100, 100, 100, 0.411);
+  margin-bottom: 3px;
+  background: rgba(100,100,100,0.4);
   cursor: grab;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
-
-#token-list div.entry.dragging {
-  opacity: 0.5;
-}
-
-#token-list div.entry.placeholder {
-  background: rgba(200,200,200,0.3);
-  height: 30px; /* same approximate height as an entry */
-  margin-bottom: 2px;
-  border: 2px dashed #ccc;
-}
+#token-list-entries div.entry .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+#token-list-entries div.entry.dragging { opacity: 0.4; }
 #token-list div.placeholder {
-  height: 30px; /* match normal entry height */
-  margin-bottom: 2px;
-  padding: 4px 6px; /* match normal entry padding */
-  border: 2px dashed #cccccc6c;
-  background: rgba(200, 200, 200, 0.2);
-  border-radius: 0px;
-  box-sizing: border-box;
+  height: 26px;
+  margin-bottom: 3px;
+  border: 2px dashed #888;
+  background: rgba(200,200,200,0.1);
 }
 
-</style>
+/* ---- RIGHT PANEL: Initiative ---- */
+#initiative-panel {
+  position: fixed;
+  right: 0.8rem;
+  top: 7rem;
+  width: 12rem;
+}
+#initiative-panel .panel-body {
+  max-height: 56vh;
+  overflow-y: auto;
+  padding: 8px;
+}
+#init-controls { display: flex; gap: 4px; margin-bottom: 7px; }
+#init-controls button { flex: 1; font-size: 0.78rem; padding: 5px 3px; }
+.init-entry {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 5px;
+  margin-bottom: 4px;
+  background: rgba(100,100,100,0.35);
+  font-size: 0.8rem;
+}
+.init-entry.current { background: #2d4a35; border-left: 3px solid #4fff8a; }
+/* hide spinners on initiative score */
+.init-entry input[type=number] { width: 34px; font-size: 0.78rem; padding: 2px 3px; }
+.init-entry input[type=number]::-webkit-outer-spin-button,
+.init-entry input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.init-entry input[type=number] { -moz-appearance: textfield; }
+.init-entry button { padding: 1px 5px; font-size: 0.72rem; }
 
+/* ---- BODY BG BLUR via pseudo ---- */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: inherit;
+  filter: blur(4px);
+  transform: scale(1.04); /* prevent blur edge fringing */
+  z-index: -1;
+}
+body { background-attachment: fixed; }
+
+/* ---- ZOOM + TOAST ---- */
+#zoom-display {
+  font-family: 'Courier New', monospace;
+  font-size: 0.88em;
+  color: #bbb;
+  min-width: 40px;
+  text-align: center;
+}
+#toast {
+  position: fixed;
+  bottom: 1.2rem;
+  right: 1.2rem;
+  background: #1a1a1a;
+  border: 2px solid #4fff8a;
+  color: #4fff8a;
+  padding: 7px 15px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+#toast.show { opacity: 1; transform: translateY(0); }
+
+footer {
+  padding: 1rem 1rem 1.5rem;
+  text-align: center;
+  font-size: 0.72rem;
+  color: #ffffff66;
+  font-family: 'Courier New', monospace;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: #555; }
+::-webkit-scrollbar-track { background: transparent; }
+</style>
 </head>
 <body>
-  <h1 style="font-size: 3rem; padding: 0em;">Combat Grid</h1>
-  <div id="token-list">
-    <strong>Tokens<br>&nbsp;</strong>
+
+<h1>Combat Grid</h1>
+
+<!-- left panel -->
+<div id="token-list" class="panel">
+  <div class="panel-header" id="token-list-header">
+    <span style="color:#ffe066;">Tokens</span>
+    <button id="close-token-list" title="Hide">✕</button>
+  </div>
+  <div class="panel-body">
     <div id="token-list-entries"></div>
   </div>
-  <div id="toolbar">
-    <button id="add-token">Token</button>
-    <button id="line-tool">Line Tool</button>
-    <button id="erase-tool">Eraser</button>
-    <button id="toggle-grid">Toggle Grid Lines</button>
-    <button id="clear">Clear All</button>
-    <button id="show-commands">Help!</button>
-  </div>
-  <div id="toolbar">
-    <label>Columns: <input type="number" id="cols" value="20" min="1"></label>
-    <label>Rows: <input type="number" id="rows" value="10" min="1"></label>
-    <button id="resize-grid">Resize Grid</button>
-  </div>
-  <div id="toolbar">
-    <label>Grid Size: <input type="number" id="grid-scale" value="70" min="10"></label>
-    <button id="scale-grid">Apply Scale</button>
-  </div>
-  <div id="toolbar">
-    <label style="cursor:pointer;">
-      Upload Background:
-      <input type="file" id="background-upload" accept="image/*" style="display:inline-block;">
-    </label>
-    <button id="reset-background">Reset Background</button>
-  </div>
-  <div id="toolbar">
-    <label style="cursor:pointer;">
-      Upload Grid Background:
-      <input type="file" id="grid-background-upload" accept="image/*" style="display:inline-block;">
-    </label>
-    <button id="reset-grid-background">Reset Grid Background</button>
-  </div>
+</div>
 
-  <div id="command-box" style="display: none;">
-    <div id="command-header">
-        <span>Help</span>
-        <button id="close-command" style="font-family: 'Big Shot', cursive, sans-serif;">X</button>
+<!-- right panel -->
+<div id="initiative-panel" class="panel">
+  <div class="panel-header" id="initiative-header">
+    <span style="color:#4fff8a;">Initiative</span>
+    <button id="close-initiative" title="Hide">✕</button>
+  </div>
+  <div class="panel-body">
+    <div id="init-controls">
+      <button id="init-add">+</button>
+      <button id="init-sort">Sort</button>
+      <button id="init-next">Next ▶</button>
     </div>
-    <h3 style="padding-left: .8rem;">Functionality</h3>
+    <div id="initiative-entries"></div>
+  </div>
+</div>
+
+<!-- TOOLBAR ROW 1: primary tools -->
+<div class="toolbar">
+  <button id="select-tool">Select</button>
+  <button id="add-token">+ Token</button>
+  <button id="line-tool">Wall</button>
+  <button id="draw-tool">Draw</button>
+  <div id="draw-color-row">
+    <button id="draw-erase-btn" title="Erase drawings">Erase</button>
+    <div id="draw-swatches"></div>
+    <span class="draw-size-label">px</span>
+    <input type="number" id="draw-size" value="4" min="1" max="40">
+    <input type="color" id="draw-color-picker" value="#ffffff" style="width:24px;height:24px;border:none;background:none;padding:0;cursor:pointer;" title="Custom color">
+  </div>
+  <div class="toolbar-divider"></div>
+  <button id="measure-tool">Ruler</button>
+  <button id="erase-tool">Eraser</button>
+  <div class="toolbar-divider"></div>
+  <button id="undo-btn" disabled>Undo</button>
+  <button id="redo-btn" disabled>Redo</button>
+  <button id="delete-selected">Delete</button>
+  <div class="toolbar-divider"></div>
+  <button id="toggle-grid">Toggle Grid</button>
+  <button id="settings-toggle">Settings</button>
+  <div class="toolbar-divider"></div>
+  <button id="toggle-token-list">Tokens</button>
+  <button id="toggle-initiative">Initiative</button>
+  <div class="toolbar-divider"></div>
+  <button id="show-commands">Help</button>
+  <button id="clear" class="danger">Clear All</button>
+</div>
+
+<!-- TOOLBAR ROW 2: zoom -->
+<div class="toolbar" style="margin-top:4px;">
+  <button id="zoom-out">−</button>
+  <span id="zoom-display">100%</span>
+  <button id="zoom-in">+</button>
+  <button id="zoom-reset">Fit</button>
+  <div class="toolbar-divider"></div>
+  <span style="font-size:0.8em;color:#aaa;">Hold <kbd style="background:#444;border:1px solid #888;padding:0 4px;font-family:monospace;">Space</kbd> + drag to pan</span>
+</div>
+
+<!-- SETTINGS PANEL (collapsible) -->
+<div id="settings-bar">
+  <div class="settings-group">
+    <span class="settings-group-label">Grid</span>
+    <label>Cols <input type="number" id="cols" value="20" min="1" max="100"></label>
+    <label>Rows <input type="number" id="rows" value="10" min="1" max="100"></label>
+    <button id="resize-grid">Apply</button>
+  </div>
+  <div class="settings-group">
+    <span class="settings-group-label">Page BG</span>
+    <label style="cursor:pointer;">Upload <input type="file" id="background-upload" accept="image/*"></label>
+    <button id="reset-background">↺ Reset</button>
+  </div>
+  <div class="settings-group">
+    <span class="settings-group-label">Map BG</span>
+    <label style="cursor:pointer;">Upload <input type="file" id="grid-background-upload" accept="image/*"></label>
+    <button id="reset-grid-background">↺ Reset</button>
+  </div>
+  <div class="settings-group">
+    <span class="settings-group-label">Scene</span>
+    <button id="save-scene">SAVE</button>
+    <button id="load-scene">LOAD</button>
+    <button id="export-scene">Export</button>
+    <label style="cursor:pointer;">Import <input type="file" id="import-scene" accept="application/json"></label>
+  </div>
+</div>
+
+<!-- HELP PANEL -->
+<div id="command-box" class="panel" style="display:none;">
+  <div class="panel-header">
+    <span>Help &amp; Shortcuts</span>
+    <button id="close-command">X</button>
+  </div>
+  <div class="panel-body">
+    <h3>Tools</h3>
     <ul>
-      <li><span style="color: chartreuse;">Tokens</span> can be made using the token button, they're used to represent anything really.</li>
-      <li><span style="color: chartreuse;">CTRL + L-Click</span> will allow you to modify that specific token.<br></li>
-      <li>The <span style="color: chartreuse;">Tokens menu</span> on the left will allow you to change the 'height' of a token relative to others.<br></li>
-      <li><span style="color: rgb(119, 137, 240);">Lines</span> can be created with the line tool, use them as walls prob.</li>
-      <li><span style="color: #a33;">Erasing</span> via the eraser tool will allow you to remove tokens and lines.</li>
-      <li>Grid lines can be toggled with the 'toggle grid lines' button, go figure.</li>
-      <li>You can change the background of the page, or the grid if you so please as well. Uses a file on your pc.</li>
-      
+      <li><b>Select</b> <kbd>V</kbd> - click tokens to select, <kbd>Shift</kbd>+click for multi-select, drag on empty space to box-select, drag to move.</li>
+      <li><b>Token</b> <kbd>T</kbd> - opens token creator. <kbd>Ctrl</kbd>+click a token on the map to edit it.</li>
+      <li><b>Wall</b> <kbd>L</kbd> - click and drag to draw a wall/line on the grid.</li>
+      <li><b>Ruler</b> <kbd>M</kbd> - drag to measure distance in squares and feet (5ft/sq).</li>
+      <li><b>Eraser</b> <kbd>E</kbd> - click or drag over tokens/walls to remove them.</li>
+      <li><kbd>Delete</kbd> removes selected tokens. <kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd> to undo/redo.</li>
     </ul>
-    <h3 style="padding-left: .8rem;">Info</h3>
+    <h3>View</h3>
     <ul>
-      <li>Default scale is 70.</li>
-      <li>Default columns & rows are 20 & 10 respectively.</li>
-      <li>This site was made in a day and probably very very buggy.</li>
-      <li>Made by <a href="https://kaia.starscene.com" style="text-decoration: none; color: gold; display: inline-block; transition: transform 0.2s, color 0.2s;" onmouseover="this.style.color='orange'; this.style.transform='scale(1.2)';" onmouseout="this.style.color='gold'; this.style.transform='scale(1)';">Kaia</a> for their friends when playing DND.</li>
-      <li>Yes, I used the UNDERTALE/DELTARUNE font, I like it, and it is easy to read.</li>
+      <li>Zoom with +/− or <kbd>Ctrl + Scroll</kbd> over the map.</li>
+      <li>Hold <kbd>Space</kbd> and drag to pan around the map.</li>
+    </ul>
+    <h3>Initiative</h3>
+    <ul>
+      <li>Add rows with +, fill in name and score, then Sort by initiative.</li>
+      <li>Next ▶ cycles turns — any token with a matching name glows green.</li>
+    </ul>
+    <h3>Tokens</h3>
+    <ul>
+      <li>The token list on the left lets you reorder layer depth by dragging entries.</li>
+      <li>Tokens can carry HP/Max HP badges shown on the map.</li>
+    </ul>
+    <h3>Saving</h3>
+    <ul>
+      <li>Save/Load stores in your browser. Export/Import as a JSON file to back up or share scenes.</li>
+    </ul>
+    <h3>Info</h3>
+    <ul>
+      <li>Default 70px/square, 20×10 grid.</li>
+      <li>Made by <a href="https://kaia.starscene.com" style="color:gold;text-decoration:none;"
+          onmouseover="this.style.color='orange';this.style.transform='scale(1.1)'"
+          onmouseout="this.style.color='gold';this.style.transform=''">Kaia</a> for DND friends. Yes, i used the UTDR font, i like it lol</li>
     </ul>
   </div>
+</div>
 
-  <div id="token-box" style="display: none;">
-    <div id="token-header">
-      <span>Token</span>
-      <button id="close-token" style="font-family: 'Big Shot', cursive, sans-serif;">X</button>
+<!-- TOKEN EDITOR -->
+<div id="token-box" class="panel" style="display:none;">
+  <div class="panel-header">
+    <span id="token-box-title">New Token</span>
+    <button id="close-token">X</button>
+  </div>
+  <div class="panel-body">
+    <label>Name <input type="text" id="token-label" placeholder="name of token"></label>
+    <label>Size (sq) <input type="number" id="token-size" value="1" min="0.25" max="20" step="0.25" style="width:60px;"></label>
+    <label>Shape <select id="token-shape">
+      <option value="circle" selected>Circle</option>
+      <option value="square">Square</option>
+      <option value="diamond">Diamond</option>
+      <option value="triangle">Triangle</option>
+      <option value="star">Star</option>
+    </select></label>
+    <div style="margin-bottom:8px;">
+      <div style="font-size:0.88rem;margin-bottom:4px;">Color</div>
+      <div class="color-grid" id="color-grid"></div>
+      <input type="color" id="token-color" value="#555555" style="display:none;">
     </div>
-    <div style="padding: 10px;">
-      <label>Name:<input type="text" id="token-label" style="width: 96%; margin-bottom: 10px;"></label>
-      <label>Size:<br><select id="token-size" style="width: 100%; margin-bottom: 10px;">
-        <option value="Tiny">Tiny (¼ square)</option>
-        <option value="Small">Small (1 square)</option>
-        <option value="Medium" selected>Medium (also 1 square..)</option>
-        <option value="Large">Large (2×2)</option>
-        <option value="Huge">Huge (3×3)</option>
-        <option value="Colossal">Huger (5×5)</option>
-        <option value="Titanic">Even Huger (6×6)</option>
-        <option value="Cosmic">Hugerer (7×7)</option>
-        <option value="Astral">Stupid Large (8×8)</option>
-      </select></label>
-      <label>Shape:<br>
-        <select id="token-shape" style="width: 100%; margin-bottom: 10px;">
-          <option value="circle" selected>Circle</option>
-          <option value="square">Square</option>
-        </select>
-      </label>
-      <label>Color:<br>
-        <input type="color" id="token-color" value="#555555" style="width: 100%; margin-bottom: 6px;">
-      </label>
-      <label>Opacity:<br>
-        <input type="range" id="token-alpha" min="0" max="100" value="100" style="width: 100%; margin-bottom: 10px;">
-      </label>
-      <div style="margin-top: 15px; text-align: right;">
-        <button id="create-token">Add</button>
-        <button id="cancel-token">Cancel</button>
-      </div>
+    <label>Opacity <input type="range" id="token-alpha" min="0" max="100" value="100"></label>
+    <div id="stat-row">
+      <label>HP <input type="number" id="token-hp" placeholder="–"></label>
+      <label>Max <input type="number" id="token-hpmax" placeholder="–"></label>
+    </div>
+    <label>Effects <input type="text" id="token-effects" placeholder="seperate by comma!"></label>
+    <div style="margin-top:12px;text-align:right;">
+      <button id="create-token">Save</button>
+      <button id="cancel-token">Cancel</button>
     </div>
   </div>
+</div>
 
-  <div>
-    <div id="grid-container">
-        <div id="grid"></div>
-    </div>
+<!-- GRID -->
+<div id="grid-container">
+  <div id="grid-scaler">
+    <div id="grid"></div>
   </div>
-  <footer style="padding-bottom: 1%; padding-top: 1%; text-align: center;">
-    Please be nice, my code is horrendous.<br> This site has many, many bugs.
-  </footer>
+</div>
 
-<script>
-const grid = document.getElementById('grid');
-const addTokenBtn = document.getElementById('add-token');
-const lineToolBtn = document.getElementById('line-tool');
-const eraseToolBtn = document.getElementById('erase-tool');
-const clearBtn = document.getElementById('clear');
-const resizeBtn = document.getElementById('resize-grid');
-const colsInput = document.getElementById('cols');
-const rowsInput = document.getElementById('rows');
-const scaleInput = document.getElementById('grid-scale');
-const scaleBtn = document.getElementById('scale-grid');
-const toggleGridBtn = document.getElementById('toggle-grid');
+<footer>
+  horizon was here
+</footer>
 
-const showCommandsBtn = document.getElementById('show-commands');
-const commandBox = document.getElementById('command-box');
-const closeCommandBtn = document.getElementById('close-command');
-
-const tokenBox = document.getElementById('token-box');
-const tokenLabelInput = document.getElementById('token-label');
-const tokenSizeInput = document.getElementById('token-size');
-const tokenShapeInput = document.getElementById('token-shape');
-const tokenColor = document.getElementById('token-color');
-const tokenAlpha = document.getElementById('token-alpha');
-const closeTokenBtn = document.getElementById('close-token');
-const cancelTokenBtn = document.getElementById('cancel-token');
-const createTokenBtn = document.getElementById('create-token');
-
-const backgroundUpload = document.getElementById('background-upload');
-const resetBackgroundBtn = document.getElementById('reset-background');
-const gridBackgroundUpload = document.getElementById('grid-background-upload');
-const resetGridBackgroundBtn = document.getElementById('reset-grid-background');
-
-const tokenListPanel = document.getElementById('token-list');
-
-let squareSize = 70;
-let currentMode = null;
-let dragToken = null;
-let offsetX = 0;
-let offsetY = 0;
-let gridLinesVisible = true;
-let scaleFactor = 1;
-let undoStack = [];
-let editingToken = null;
-let isErasing = false;
-let lineStart = null;
-let tempLine = null;
-
-// ---------- COLOR UTILITIES ----------
-function hexToRgb(hex) {
-  hex = hex.replace(/^#/, '');
-  if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
-  const num = parseInt(hex, 16);
-  return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
-}
-
-function getInvertedGrayscaleColor(r, g, b) {
-  const gray = 0.299 * r + 0.587 * g + 0.114 * b;
-  const inverted = 255 - gray;
-  return `rgb(${inverted}, ${inverted}, ${inverted})`;
-}
-
-// ---------- TOKEN LIST ----------
-const tokenListEntries = document.getElementById('token-list-entries');
-let placeholder = document.createElement('div');
-placeholder.className = 'placeholder';
-let draggingEntry = null;
-
-function addTokenToList(token) {
-  const entry = document.createElement('div');
-  entry.classList.add('entry');
-  entry.textContent = token.textContent;
-  entry.dataset.tokenId = token.dataset.tokenId;
-  entry.style.background = token.style.background;
-  entry.style.color = token.style.color;
-  entry.draggable = true;
-  tokenListEntries.insertBefore(entry, tokenListEntries.firstChild);
-
-  entry.addEventListener('dragstart', e => {
-    draggingEntry = entry;
-    entry.classList.add('dragging');
-    tokenListEntries.appendChild(placeholder);
-  });
-
-  entry.addEventListener('dragend', () => {
-    entry.classList.remove('dragging');
-    placeholder.remove();
-    draggingEntry = null;
-  });
-}
-
-tokenListEntries.addEventListener('dragover', e => {
-  e.preventDefault();
-  const after = getDragAfterElement(tokenListEntries, e.clientY);
-  if (!after) tokenListEntries.appendChild(placeholder);
-  else tokenListEntries.insertBefore(placeholder, after);
-});
-
-tokenListEntries.addEventListener('drop', () => {
-  if (draggingEntry) {
-    tokenListEntries.insertBefore(draggingEntry, placeholder);
-    placeholder.remove();
-    const order = [...tokenListEntries.querySelectorAll('.entry')];
-    order.forEach((el, i) => {
-      const t = document.querySelector(`.token[data-token-id="${el.dataset.tokenId}"]`);
-      if (t) t.style.zIndex = 10 + order.length - i;
-    });
-    draggingEntry.classList.remove('dragging');
-    draggingEntry = null;
-  }
-});
-
-function getDragAfterElement(container, y) {
-  const els = [...container.querySelectorAll('.entry:not(.dragging)')];
-  return els.reduce((closest, child) => {
-    const box = child.getBoundingClientRect();
-    const offset = y - box.top - box.height / 2;
-    if (offset < 0 && offset > closest.offset) return { offset, element: child };
-    else return closest;
-  }, { offset: -Infinity }).element;
-}
-
-// ---------- TOOL BUTTONS ----------
-function setActiveButton(button) {
-  lineToolBtn.classList.remove('active', 'line');
-  eraseToolBtn.classList.remove('active', 'erase');
-  grid.style.borderColor = '#999';
-  grid.style.boxShadow = '0 0 5px rgba(255,255,255,0.5)';
-  if (button === lineToolBtn) {
-    lineToolBtn.classList.add('active', 'line');
-    grid.style.borderColor = '#339';
-    grid.style.boxShadow = '0 0 10px rgba(51,153,255,0.7)';
-  }
-  if (button === eraseToolBtn) {
-    eraseToolBtn.classList.add('active', 'erase');
-    grid.style.borderColor = '#a33';
-    grid.style.boxShadow = '0 0 10px rgba(255,51,51,0.7)';
-  }
-}
-
-lineToolBtn.addEventListener('click', () => {
-  currentMode = currentMode === 'line' ? null : 'line';
-  setActiveButton(currentMode === 'line' ? lineToolBtn : null);
-});
-eraseToolBtn.addEventListener('click', () => {
-  currentMode = currentMode === 'erase' ? null : 'erase';
-  setActiveButton(currentMode === 'erase' ? eraseToolBtn : null);
-});
-
-// ---------- ERASE ----------
-function eraseAt(pageX, pageY) {
-  const elements = document.elementsFromPoint(pageX, pageY);
-  elements.forEach(el => {
-    if (el.classList.contains('wall') || el.classList.contains('token')) {
-      undoStack.push({ type: el.classList.contains('wall') ? 'line' : 'token', element: el });
-      if (el.classList.contains('token')) {
-        const entry = document.querySelector(`#token-list-entries div[data-token-id="${el.dataset.tokenId}"]`);
-        if (entry) entry.remove();
-      }
-      el.remove();
-    }
-  });
-}
-
-// ---------- GRID INTERACTIONS ----------
-grid.addEventListener('mousedown', e => {
-  const rect = grid.getBoundingClientRect();
-  const mouseX = (e.clientX - rect.left) / scaleFactor;
-  const mouseY = (e.clientY - rect.top) / scaleFactor;
-  if (currentMode === 'line') {
-    lineStart = { x: mouseX, y: mouseY };
-    tempLine = document.createElement('div');
-    tempLine.classList.add('wall');
-    tempLine.style.left = lineStart.x + 'px';
-    tempLine.style.top = lineStart.y + 'px';
-    tempLine.style.width = '0px';
-    grid.appendChild(tempLine);
-  } else if (currentMode === 'erase') {
-    isErasing = true;
-    eraseAt(e.clientX, e.clientY);
-  }
-});
-
-document.addEventListener('mousemove', e => {
-  if (dragToken) {
-    const rect = grid.getBoundingClientRect();
-    const mouseX = (e.clientX - rect.left) / scaleFactor;
-    const mouseY = (e.clientY - rect.top) / scaleFactor;
-    dragToken.style.left = (mouseX - offsetX) + 'px';
-    dragToken.style.top = (mouseY - offsetY) + 'px';
-  }
-  if (isErasing) eraseAt(e.clientX, e.clientY);
-  if (lineStart && tempLine) {
-    const rect = grid.getBoundingClientRect();
-    const mouseX = (e.clientX - rect.left) / scaleFactor;
-    const mouseY = (e.clientY - rect.top) / scaleFactor;
-    const dx = mouseX - lineStart.x;
-    const dy = mouseY - lineStart.y;
-    const length = Math.sqrt(dx * dx + dy * dy);
-    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-    tempLine.style.width = length + 'px';
-    tempLine.style.transform = `rotate(${angle}deg)`;
-  }
-});
-document.addEventListener('mouseup', () => {
-  dragToken = null;
-  isErasing = false;
-  if (lineStart && tempLine) {
-    undoStack.push({ type: 'line', element: tempLine });
-    lineStart = null;
-    tempLine = null;
-  }
-});
-
-// ---------- UNDO ----------
-document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-    e.preventDefault();
-    const last = undoStack.pop();
-    if (last && last.element && last.element.parentNode) last.element.remove();
-  }
-});
-
-// ---------- CLEAR ----------
-clearBtn.addEventListener('click', () => {
-  document.querySelectorAll('.token,.wall').forEach(el => el.remove());
-  tokenListPanel.querySelectorAll('div[data-token-id]').forEach(el => el.remove());
-  undoStack = [];
-});
-
-// ---------- COMMAND BOX ----------
-showCommandsBtn.addEventListener('click', () => commandBox.style.display = 'block');
-closeCommandBtn.addEventListener('click', () => commandBox.style.display = 'none');
-
-// ---------- DRAGGABLE WINDOWS ----------
-function makeDraggable(header, box) {
-  header.style.cursor = 'grab';
-  header.addEventListener('mousedown', e => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    const rect = box.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left;
-    const offsetY = e.clientY - rect.top;
-    function onMove(e) {
-      box.style.left = e.clientX - offsetX + 'px';
-      box.style.top = e.clientY - offsetY + 'px';
-    }
-    function onUp() {
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-    }
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onUp);
-  });
-  box.style.position = 'absolute';
-  if (!box.style.left) box.style.left = (window.innerWidth - box.offsetWidth) / 2 + 'px';
-  if (!box.style.top) box.style.top = (window.innerHeight - box.offsetHeight) / 2 + 'px';
-}
-makeDraggable(document.getElementById('command-header'), commandBox);
-makeDraggable(document.getElementById('token-header'), tokenBox);
-
-// ---------- TOKEN MODAL ----------
-let tokenIdCounter = 0;
-addTokenBtn.addEventListener('click', () => {
-  editingToken = null;
-  tokenLabelInput.value = '';
-  tokenSizeInput.value = 'Medium';
-  tokenBox.style.display = 'block';
-});
-closeTokenBtn.addEventListener('click', () => tokenBox.style.display = 'none');
-cancelTokenBtn.addEventListener('click', () => tokenBox.style.display = 'none');
-
-function openTokenModal(token) {
-  editingToken = token;
-  tokenLabelInput.value = token.textContent;
-  const sizeMapReverse = {
-    35: 'Tiny', 70: 'Small', 140: 'Large', 210: 'Huge', 280: 'Gargantuan',
-    350: 'Colossal', 420: 'Titanic', 490: 'Cosmic', 560: 'Astral'
-  };
-  const width = parseFloat(token.style.width);
-  tokenSizeInput.value = sizeMapReverse[width] || 'Medium';
-  tokenShapeInput.value = token.style.borderRadius === '0px' ? 'square' : 'circle';
-  const rgba = token.style.background.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-  if (rgba) {
-    tokenColor.value = '#' + ((1 << 24) + (parseInt(rgba[1]) << 16) + (parseInt(rgba[2]) << 8) + parseInt(rgba[3])).toString(16).slice(1);
-    tokenAlpha.value = rgba[4] ? parseFloat(rgba[4]) * 100 : 100;
-  }
-  tokenBox.style.display = 'block';
-}
-
-// Live color/opacity preview
-[tokenColor, tokenAlpha].forEach(input => {
-  input.addEventListener('input', () => {
-    if (editingToken) {
-      const c = hexToRgb(tokenColor.value);
-      const a = tokenAlpha.value / 100;
-      editingToken.style.background = `rgba(${c.r},${c.g},${c.b},${a})`;
-      editingToken.style.color = getInvertedGrayscaleColor(c.r, c.g, c.b);
-    }
-  });
-});
-
-createTokenBtn.addEventListener('click', () => {
-  const label = tokenLabelInput.value.trim() || '';
-  const sizeMap = {
-    Tiny: 35, Small: 70, Medium: 70, Large: 140, Huge: 210, Gargantuan: 280,
-    Colossal: 350, Titanic: 420, Cosmic: 490, Astral: 560
-  };
-  const size = sizeMap[tokenSizeInput.value] || 70;
-  const shape = tokenShapeInput.value;
-  const color = hexToRgb(tokenColor.value);
-  const alpha = tokenAlpha.value / 100;
-
-  if (editingToken) {
-    editingToken.textContent = label;
-    editingToken.style.width = size + 'px';
-    editingToken.style.height = size + 'px';
-    editingToken.style.background = `rgba(${color.r},${color.g},${color.b},${alpha})`;
-    editingToken.style.borderRadius = shape === 'circle' ? Math.floor(size / 2) + 'px' : '0px';
-    editingToken.style.fontSize = Math.floor(size / 5) + 'px';
-    const entry = tokenListPanel.querySelector(`[data-token-id="${editingToken.dataset.tokenId}"]`);
-    if (entry) {
-      entry.textContent = label;
-      entry.style.background = editingToken.style.background;
-    }
-    editingToken = null;
-  } else {
-    const token = document.createElement('div');
-    token.className = 'token';
-    token.dataset.tokenId = 'token' + (tokenIdCounter++);
-    token.textContent = label;
-    token.style.width = size + 'px';
-    token.style.height = size + 'px';
-    token.style.background = `rgba(${color.r},${color.g},${color.b},${alpha})`;
-    token.style.borderRadius = shape === 'circle' ? Math.floor(size / 2) + 'px' : '0px';
-    token.style.fontSize = Math.floor(size / 5) + 'px';
-    token.style.left = (grid.offsetWidth / 2 - size / 2) + 'px';
-    token.style.top = (grid.offsetHeight / 2 - size / 2) + 'px';
-    token.style.zIndex = 10 + tokenIdCounter;
-    token.style.color = getInvertedGrayscaleColor(color.r, color.g, color.b);
-
-    token.addEventListener('mousedown', e => {
-      if (e.button !== 0) return;
-      const rect = grid.getBoundingClientRect();
-      const mouseX = (e.clientX - rect.left) / scaleFactor;
-      const mouseY = (e.clientY - rect.top) / scaleFactor;
-      dragToken = token;
-      offsetX = mouseX - parseFloat(token.style.left);
-      offsetY = mouseY - parseFloat(token.style.top);
-    });
-
-    token.addEventListener('click', e => {
-      if (e.ctrlKey) {
-        e.preventDefault();
-        openTokenModal(token);
-      }
-    });
-
-    grid.appendChild(token);
-    undoStack.push({ type: 'token', element: token });
-    addTokenToList(token);
-  }
-
-  tokenBox.style.display = 'none';
-});
-
-// ---------- GRID SCALE ----------
-scaleBtn.addEventListener('click', () => {
-  const newScale = parseFloat(scaleInput.value);
-  if (isNaN(newScale) || newScale <= 0) return;
-  scaleFactor = newScale / 70;
-  grid.style.transform = `scale(${scaleFactor})`;
-});
-
-// ---------- TOGGLE GRID ----------
-toggleGridBtn.addEventListener('click', () => {
-  gridLinesVisible = !gridLinesVisible;
-  grid.style.setProperty('--grid-line-color', gridLinesVisible ? 'rgba(255,255,255,0.2)' : 'transparent');
-});
-
-// ---------- GRID RESIZE ----------
-function updateGridBackground(cols, rows, squareSize = 70) {
-  grid.style.width = (cols * squareSize) + 'px';
-  grid.style.height = (rows * squareSize) + 'px';
-}
-
-resizeBtn.addEventListener('click', () => {
-  const cols = parseInt(colsInput.value) || 20;
-  const rows = parseInt(rowsInput.value) || 10;
-  updateGridBackground(cols, rows);
-});
-
-// ---------- BACKGROUND UPLOAD ----------
-backgroundUpload.addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.658)), url(${ev.target.result})`;
-    document.body.style.backgroundSize = 'cover';
-    document.body.style.backgroundRepeat = 'no-repeat';
-    document.body.style.backgroundPosition = 'center center';
-  };
-  reader.readAsDataURL(file);
-});
-
-resetBackgroundBtn.addEventListener('click', () => {
-  document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.658)), url("../assets/galaxybkgndblue.jpg")`;
-});
-
-// ---------- GRID BACKGROUND UPLOAD ----------
-gridBackgroundUpload.addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    grid.style.backgroundImage = `url(${ev.target.result})`;
-    grid.style.backgroundSize = 'cover';
-    grid.style.backgroundRepeat = 'no-repeat';
-    grid.style.backgroundPosition = 'center center';
-    grid.classList.add('grid-bg-dark');
-  };
-  reader.readAsDataURL(file);
-});
-
-resetGridBackgroundBtn.addEventListener('click', () => {
-  grid.style.backgroundImage = '';
-  grid.classList.remove('grid-bg-dark');
-});
-</script>
-
-
+<script src="grid.js"></script>
 </body>
 </html>
