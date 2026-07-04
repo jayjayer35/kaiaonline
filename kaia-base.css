@@ -16,11 +16,11 @@
 
 /* ── design tokens: light mode ────────────────────────── */
 :root {
-  /* background gradient */
+  /* backgr */
   --sky:           #d8eaf8;
   --sky2:          #eef5fc;
 
-  /* panel / tile chrome */
+  /* panels */
   --panel-bg:      #fff;
   --panel-border:  #b6c6df;
   --panel-shadow:  #9ca7c3;
@@ -32,7 +32,7 @@
   --head-b-shadow1: #cddaea;
   --head-b-shadow2: #8a99b8;
 
-  /* aliases used by some pages / header.js */
+  /* aliases used by some pages & header */
   --head-b-s1: var(--head-b-shadow1);
   --head-b-s2: var(--head-b-shadow2);
 
@@ -46,11 +46,11 @@
   --divider:       rgba(182, 198, 223, 0.4);
   --today-bg:      rgba(100, 160, 220, 0.18);
 
-  /* header bar (consumed by header.js) */
+  /* header bar */
   --bg-header:     #9eb4d1;
   --border-header: #7e8ba3;
 
-  /* tag colours — default neutral */
+  /* tag colours */
   --tag-bg:     #d6e0f0;
   --tag-border: #8a99b8;
 

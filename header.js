@@ -16,6 +16,7 @@
     { file: "/music/castlefunk.mp3",  name: "Castle Funk - Toby Fox" },
     { file: "/music/castletown.mp3",  name: "My Castle Town - Toby Fox" },
     { file: "/music/story.mp3",  name: "Before the Story - Toby Fox" },
+    { file: "/music/scarfor.mp3",  name: "Scarlet Forest (Credits Version) - Toby Fox & Trevor Alan Gomes" },
     { file: "/music/paradise.mp3",  name: "Welcome to Paradise - Emile van Krieken"   },
     { file: "/music/onceupon.mp3",  name: "Once upon a time... - Synthion"   },
     { file: "/music/aLupi.mp3",  name: "a Lupi - Synthion"   },
@@ -80,7 +81,7 @@
             { label: "hall of messages (wip)", href: "/msgs.html" },
           ]
         },
-        { label: "photo museum",   href: "/museum.html" },
+        { label: "scrapbook",   href: "/museum.html" },
         { label: "my music", href: "/mymusic.html", badge: "" },
         { label: "recipes (wip)",   href: "/myrecipes.html" },
         { label: "web projects", href: "/mywebdev.html" },
@@ -840,5 +841,59 @@
     cornerLink.appendChild(cornerImg);
     document.body.appendChild(cornerLink);
                    
+  }
+
+// flowery
+  if (Math.random() < 0.05) {
+
+      const cornerImg = document.createElement('img');
+      cornerImg.src = '/assets/floweryidle.gif';
+
+      Object.assign(cornerImg.style, {
+          position: 'fixed',
+          bottom: '0',
+          right: '0',
+          zIndex: '9999',
+          imageRendering: 'pixelated',
+          cursor: 'pointer',
+          transform: 'scale(1.5)',
+          transformOrigin: 'bottom right'
+      });
+
+      const sounds = [
+          '/assets/flowery_voice/1.wav',
+          '/assets/flowery_voice/2.wav',
+          '/assets/flowery_voice/3.wav',
+          '/assets/flowery_voice/4.wav',
+          '/assets/flowery_voice/5.wav',
+          '/assets/flowery_voice/6.wav',
+          '/assets/flowery_voice/7.wav',
+          '/assets/flowery_voice/8.wav',
+          '/assets/flowery_voice/9.wav',
+          '/assets/flowery_voice/10.wav',
+          '/assets/flowery_voice/11.wav',
+          '/assets/flowery_voice/14.wav',
+          '/assets/flowery_voice/15.wav',
+          '/assets/flowery_voice/16.wav',
+          '/assets/flowery_voice/17.wav',
+          '/assets/flowery_voice/18.wav',
+      ];
+
+      const audio = new Audio();
+      audio.volume = 0.5; // Half volume
+
+      cornerImg.addEventListener('click', () => {
+          // Stop whatever is currently playing
+          audio.pause();
+          audio.currentTime = 0;
+
+          // Pick a new sound
+          audio.src = sounds[Math.floor(Math.random() * sounds.length)];
+
+          // Play it
+          audio.play();
+      });
+
+      document.body.appendChild(cornerImg);
   }
 })();

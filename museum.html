@@ -4,87 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>photo museum</title>
+  <link rel="stylesheet" href="/kaia-base.css">
   <style>
+    body { font-size: 1.5rem; }
 
-    /* ── font ── */
-    @font-face {
-      font-family: "NDS";
-      src: url("rework/assets/fonts/nds.ttf") format("truetype");
-      font-display: swap;
-      -webkit-font-smoothing: none;
-    }
-
-    /* ── tokens: light ── */
+    /* ── homey accent tokens ──
+       these have fallbacks baked in so the page works even before
+       they exist in kaia-base.css — move them there later if you
+       want them centrally themeable / different per light-dark. */
     :root {
-      --sky:           #d8eaf8;
-      --sky2:          #eef5fc;
-      --panel-bg:      #fff;
-      --panel-border:  #b6c6df;
-      --panel-shadow:  #9ca7c3;
-      --panel-head:    #b6c6df;
-      --panel-head-b:  #8a99b8;
-      --head-t-shadow: #7a93b0;
-      --head-b-s1:     #cddaea;
-      --head-b-s2:     #8a99b8;
-      --text:          #2a3a50;
-      --text-soft:     #6a7e96;
-      --link:          #3a7acf;
-      --divider:       rgba(182,198,223,0.4);
-      --bg-header:     #9eb4d1;
-      --border-header: #7e8ba3;
-      /* museum-specific */
-      --wall:          #dce8f4;
-      --plaque-bg:     #f4f0e8;
-      --plaque-border: #c8b89a;
-      --plaque-text:   #3a2e20;
-      --plaque-soft:   #7a6a52;
-      --mat:           #e8e0d0;
-    }
-
-    /* ── tokens: dark ── */
-    body.dark-mode {
-      --sky:           #1a2028;
-      --sky2:          #11151a;
-      --panel-bg:      #1e2530;
-      --panel-border:  #151a22;
-      --panel-shadow:  #0d1117;
-      --panel-head:    #2a3340;
-      --panel-head-b:  #151a22;
-      --head-t-shadow: #000;
-      --head-b-s1:     #3a4a60;
-      --head-b-s2:     #10141a;
-      --text:          #e0e8f0;
-      --text-soft:     #8a99b8;
-      --link:          #6b9ac4;
-      --divider:       rgba(255,255,255,0.05);
-      --bg-header:     #2a3340;
-      --border-header: #1a2028;
-      /* museum-specific dark */
-      --wall:          #141a20;
-      --plaque-bg:     #1e1a14;
-      --plaque-border: #3a2e1a;
-      --plaque-text:   #d0c4a8;
-      --plaque-soft:   #8a7a60;
-      --mat:           #28221a;
-      background-blend-mode: multiply;
-    }
-
-    /* ── reset ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    * { cursor: url("rework/assets/cur/kaiacursor.png"), auto; }
-    html { min-height: 100%; }
-
-    body {
-      font-family: 'NDS', monospace, sans-serif;
-      font-size: 1.5rem;
-      color: var(--text);
-      line-height: 1.5;
-      background:
-        url('rework/assets/general/bkg3.gif'),
-        linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
-      background-attachment: fixed;
-      background-size: auto, 100% 100%;
-      transition: background-color 0.3s, color 0.3s;
+      --tape-1: #f0c9c4;
+      --tape-2: #cfe6c6;
+      --tape-3: #f4e2a1;
+      --tape-4: #c6dcf0;
+      --polaroid-paper: #fdfbf3;
+      --polaroid-ink: #3a3226;
+      --polaroid-ink-soft: #8a8070;
+      --pin-metal: #b9b3a6;
     }
 
     /* ── page shell ── */
@@ -97,38 +33,12 @@
       padding: 1.25rem;
     }
 
-    /* ── panel primitive ── */
-    .panel {
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      box-shadow: 2px 2px 0 var(--panel-shadow);
-      position: relative;
-      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
-    }
-
     .panel-head {
-      background: var(--panel-head);
-      border-bottom: 1px solid var(--panel-head-b);
-      padding: 0.125rem 0.5rem;
       font-size: 1.5rem;
-      font-weight: bold;
       text-align: center;
-      letter-spacing: 0.15rem;
-      color: #fff;
-      text-shadow: 0 1px 0 var(--head-t-shadow);
-      box-shadow:
-        inset 0 1px 0 var(--head-b-s1),
-        inset 0 -1px 0 var(--head-b-s2);
-      transition: background 0.3s, border-color 0.3s;
     }
 
-    .panel-body {
-      padding: 0.625rem;
-    }
-
-    /* ───────────────────────────────
-       SIDEBAR
-    ─────────────────────────────── */
+    /* ── sidebar ── */
     .sidebar {
       display: flex;
       flex-direction: column;
@@ -138,7 +48,6 @@
       align-self: start;
     }
 
-    /* intro blurb */
     .museum-intro {
       font-size: 1.1rem;
       color: var(--text-soft);
@@ -146,30 +55,36 @@
       transition: color 0.3s;
     }
 
-    /* room list */
     .room-list {
       list-style: none;
       padding: 0;
       margin: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.1rem;
+      gap: 0.15rem;
     }
 
     .room-list li a {
       display: flex;
       align-items: baseline;
       gap: 0.5rem;
-      padding: 0.25rem 0.5rem;
+      padding: 0.3rem 0.5rem;
       text-decoration: none;
       color: var(--text);
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       line-height: 1.2;
-      transition: background 0.1s, color 0.1s;
+      transition: background 0.15s, color 0.15s;
     }
 
-    .room-list li a:hover     { background: rgba(182,198,223,0.25); color: var(--link); }
-    .room-list li a.active    { background: var(--panel-head); color: #fff; }
+    .room-icon { font-size: 1rem; opacity: 0.85; }
+
+    .room-list li a:hover  { background: rgba(182,198,223,0.25); color: var(--link); }
+    .room-list li a.active {
+      border-radius: 0;
+      background: color-mix(in srgb, var(--panel-head) 35%, transparent);
+      color: var(--link);
+      font-weight: bold;
+    }
 
     .room-count {
       font-size: 0.85rem;
@@ -178,9 +93,8 @@
       transition: color 0.3s;
     }
 
-    .room-list li a.active .room-count { color: rgba(255,255,255,0.65); }
+    .room-list li a.active .room-count { color: var(--text-soft); }
 
-    /* stats tile */
     .stat-row {
       display: flex;
       justify-content: space-between;
@@ -192,21 +106,17 @@
     }
 
     .stat-row:last-child { border-bottom: none; }
-
     .stat-label { color: var(--text-soft); transition: color 0.3s; }
     .stat-val   { color: var(--text);      transition: color 0.3s; }
 
-    /* ───────────────────────────────
-       MAIN GALLERY AREA
-    ─────────────────────────────── */
+    /* ── gallery ── */
     .gallery-area {
       display: flex;
       flex-direction: column;
       gap: 1rem;
     }
 
-    /* room section header */
-    .room-section { display: none; }
+    .room-section        { display: none; }
     .room-section.active { display: block; }
 
     .room-banner {
@@ -219,9 +129,9 @@
     }
 
     .room-banner-title {
-      font-size: 1.75rem;
+      font-size: 1.6rem;
       font-weight: bold;
-      letter-spacing: 0.2rem;
+      letter-spacing: 0.15rem;
       color: var(--text);
       transition: color 0.3s;
     }
@@ -233,53 +143,54 @@
       transition: color 0.3s;
     }
 
-    /* photo grid */
+    /* ── photo grid ── */
     .photo-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr));
+      gap: 2rem 1.5rem;
+      margin-top: 1.5rem;
+      padding: 0.5rem;
     }
 
-    /* ───────────────────────────────
-       EXHIBIT FRAME (the core unit)
-    ─────────────────────────────── */
+    /* ── exhibit → polaroid on a corkboard wall ── */
     .exhibit {
       display: flex;
       flex-direction: column;
       cursor: pointer;
+      transform: rotate(var(--rot, 0deg));
       transition: transform 0.2s ease;
     }
 
-    .exhibit:hover { transform: translateY(-3px); }
+    .exhibit:hover {
+      transform: rotate(var(--rot, 0deg)) translateY(-4px) scale(1.015);
+    }
 
-    /* outer frame */
-    .frame {
-      background: var(--panel-bg);
-      border: 3px solid var(--panel-border);
-      box-shadow:
-        4px 4px 0 var(--panel-shadow),
-        inset 0 0 0 1px rgba(255,255,255,0.4);
-      padding: 0.5rem;
+    .polaroid {
       position: relative;
-      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .exhibit:hover .frame {
-      border-color: var(--panel-head);
-      box-shadow:
-        4px 4px 0 var(--panel-head-b),
-        inset 0 0 0 1px rgba(255,255,255,0.4);
-    }
-
-    /* mat inside the frame */
-    .mat {
-      background: var(--mat);
+      background: var(--polaroid-paper);
       border: 1px solid var(--panel-border);
-      padding: 0.375rem;
-      transition: background 0.3s, border-color 0.3s;
+      box-shadow: 3px 5px 10px rgba(0,0,0,0.22);
+      padding: 0.55rem 0.55rem 0;
+      transition: box-shadow 0.2s;
     }
 
-    /* the photo itself */
+    .exhibit:hover .polaroid {
+      box-shadow: 4px 7px 14px rgba(0,0,0,0.28);
+    }
+
+    /* washi tape, stuck on a little crooked */
+    .tape {
+      position: absolute;
+      top: -0.65rem;
+      left: 50%;
+      width: 3.4rem;
+      height: 1.15rem;
+      background: var(--tape-color, var(--tape-1));
+      opacity: 0.8;
+      transform: translateX(-50%) rotate(-5deg);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+    }
+
     .exhibit-photo {
       display: block;
       width: 100%;
@@ -289,9 +200,8 @@
       transition: opacity 0.2s;
     }
 
-    .exhibit:hover .exhibit-photo { opacity: 0.92; }
+    .exhibit:hover .exhibit-photo { opacity: 0.94; }
 
-    /* placeholder for empty slots */
     .exhibit-placeholder {
       width: 100%;
       aspect-ratio: 4 / 3;
@@ -311,41 +221,31 @@
       letter-spacing: 0.1em;
     }
 
-    /* museum plaque below the frame */
-    .plaque {
-      background: var(--plaque-bg);
-      border: 1px solid var(--plaque-border);
-      border-top: none;
-      padding: 0.4rem 0.625rem 0.5rem;
-      box-shadow: 2px 2px 0 var(--panel-shadow);
-      transition: background 0.3s, border-color 0.3s;
+    /* caption written right on the polaroid's white strip */
+    .polaroid-caption {
+      padding: 0.5rem 0.2rem 0.7rem;
     }
 
-    .plaque-title {
-      font-size: 1.2rem;
+    .polaroid-title {
+      font-size: 1.1rem;
       font-weight: bold;
-      letter-spacing: 0.08em;
-      color: var(--plaque-text);
+      color: var(--polaroid-ink);
       line-height: 1.2;
-      transition: color 0.3s;
     }
 
-    .plaque-meta {
-      font-size: 0.9rem;
-      color: var(--plaque-soft);
-      margin-top: 0.1rem;
+    .polaroid-meta {
+      font-size: 0.85rem;
+      color: var(--polaroid-ink-soft);
+      margin-top: 0.15rem;
       line-height: 1.2;
-      transition: color 0.3s;
     }
 
-    /* ───────────────────────────────
-       LIGHTBOX
-    ─────────────────────────────── */
+    /* ── lightbox ── */
     #lightbox {
       position: fixed;
       inset: 0;
       z-index: 10000;
-      background: rgba(10, 14, 20, 0.88);
+      background: rgba(32, 24, 18, 0.87);
       display: none;
       align-items: center;
       justify-content: center;
@@ -364,7 +264,6 @@
       cursor: default;
     }
 
-    /* prev / next arrows */
     .lb-arrow {
       background: none;
       border: 1px solid rgba(255,255,255,0.2);
@@ -384,7 +283,6 @@
       border-color: rgba(255,255,255,0.5);
     }
 
-    /* photo + plaque */
     .lb-frame-wrap {
       flex: 1;
       min-width: 0;
@@ -392,74 +290,62 @@
       flex-direction: column;
     }
 
-    .lb-frame {
-      background: var(--panel-bg);
-      border: 4px solid var(--panel-border);
-      box-shadow: 6px 6px 0 var(--panel-shadow);
-      padding: 0.625rem;
+    /* big polaroid version for the lightbox */
+    .lb-polaroid {
+      position: relative;
+      background: var(--polaroid-paper);
+      border: 1px solid var(--panel-border);
+      box-shadow: 6px 8px 0 rgba(0,0,0,0.25);
+      padding: 0.75rem 0.75rem 0;
+      transform: rotate(-1.2deg);
     }
 
-    .lb-mat {
-      background: var(--mat);
-      border: 1px solid var(--panel-border);
-      padding: 0.5rem;
+    .lb-polaroid .tape {
+      width: 4.5rem;
+      height: 1.4rem;
+      top: -0.75rem;
     }
 
     #lb-img {
       display: block;
       max-width: 100%;
-      max-height: 70vh;
+      max-height: 65vh;
       width: 100%;
       object-fit: contain;
     }
 
-    .lb-plaque {
-      background: var(--plaque-bg);
-      border: 1px solid var(--plaque-border);
-      border-top: none;
-      padding: 0.5rem 0.75rem 0.625rem;
-      box-shadow: 6px 6px 0 var(--panel-shadow);
-      transition: background 0.3s, border-color 0.3s;
+    .lb-caption {
+      padding: 0.6rem 0.3rem 0.75rem;
     }
 
     #lb-title {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: bold;
-      letter-spacing: 0.1em;
-      color: var(--plaque-text);
-      transition: color 0.3s;
+      color: var(--polaroid-ink);
     }
 
     #lb-meta {
-      font-size: 1rem;
-      color: var(--plaque-soft);
-      margin-top: 0.15rem;
-      transition: color 0.3s;
+      font-size: 0.95rem;
+      color: var(--polaroid-ink-soft);
+      margin-top: 0.1rem;
     }
 
     #lb-desc {
-      font-size: 1.1rem;
-      color: var(--plaque-text);
-      margin-top: 0.4rem;
+      font-size: 1.05rem;
+      color: var(--polaroid-ink);
+      margin-top: 0.5rem;
       line-height: 1.5;
-      transition: color 0.3s;
       -webkit-font-smoothing: none;
-      -moz-osx-font-smoothing: grayscale;
-      font-smooth: never;
       text-rendering: optimizeSpeed;
-
-      image-rendering: pixelated;
     }
 
     .lb-counter {
-      font-size: 0.9rem;
-      color: var(--plaque-soft);
-      margin-top: 0.35rem;
+      font-size: 0.85rem;
+      color: var(--polaroid-ink-soft);
+      margin-top: 0.5rem;
       text-align: right;
-      transition: color 0.3s;
     }
 
-    /* close button */
     #lb-close {
       position: fixed;
       top: 0.875rem;
@@ -477,28 +363,13 @@
 
     #lb-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
 
-    /* ── footer ── */
-    footer {
-      text-align: center;
-      font-size: 0.85rem;
-      margin: 0.75rem 0 1rem;
-      color: var(--text-soft);
-      transition: color 0.3s;
-    }
-
-    /* ── scrollbar ── */
-    * { scrollbar-width: thin; scrollbar-color: var(--panel-head) transparent; }
-    ::-webkit-scrollbar { width: 0.5rem; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background-color: var(--panel-border); }
-    ::-webkit-scrollbar-thumb:hover { background-color: var(--panel-head); }
-
     /* ── mobile ── */
     @media (max-width: 56rem) {
       .museum-shell { grid-template-columns: 1fr; }
       .sidebar { position: static; }
       .lb-inner { flex-direction: column; }
       .lb-arrow { align-self: auto; }
+      .lb-polaroid { transform: none; }
     }
   </style>
 </head>
@@ -509,7 +380,6 @@
 <main>
   <div class="museum-shell">
 
-    <!-- ── sidebar ── -->
     <aside class="sidebar">
 
       <div class="panel">
@@ -548,7 +418,6 @@
 
     </aside>
 
-    <!-- ── gallery ── -->
     <section class="gallery-area" id="gallery-area">
       <!-- js injects here -->
     </section>
@@ -564,16 +433,15 @@
   <div class="lb-inner">
     <button class="lb-arrow" id="lb-prev" aria-label="Previous photo">◄</button>
     <div class="lb-frame-wrap">
-      <div class="lb-frame">
-        <div class="lb-mat">
-          <img id="lb-img" src="" alt="">
+      <div class="lb-polaroid">
+        <div class="tape" style="background: var(--tape-3);"></div>
+        <img id="lb-img" src="" alt="">
+        <div class="lb-caption">
+          <div id="lb-title"></div>
+          <div id="lb-meta"></div>
+          <div id="lb-desc"></div>
+          <div class="lb-counter" id="lb-counter"></div>
         </div>
-      </div>
-      <div class="lb-plaque">
-        <div id="lb-title"></div>
-        <div id="lb-meta"></div>
-        <div id="lb-desc"></div>
-        <div class="lb-counter" id="lb-counter"></div>
       </div>
     </div>
     <button class="lb-arrow" id="lb-next" aria-label="Next photo">►</button>
@@ -582,62 +450,59 @@
 
 <script>
 /* ═══════════════════════════════════════════════
-   PHOTO DATA
-   ─ To add a photo: add an object to the right room's `photos` array.
-   ─ To add a room: add a new object to ROOMS.
-   ─ src:   path to your photo file
-   ─ title: name shown on the plaque
-   ─ meta:  small line (date, location, etc.)
-   ─ desc:  optional longer note
+   PHOTO DATA — edit this to add rooms / photos
 ═══════════════════════════════════════════════ */
 const ROOMS = [
   {
     id: "actual photography",
-    label: "actual photography",
-    desc: "photos that i took that im fond of",
+    label: "disorganized photos",
+    desc: "photos i wish to save but havent a spot to put them... so they go here!",
     photos: [
-      { src: "assets/museum/irl/DSC00650.JPG", title: "equanimity", meta: "04-02-2026 · Miami, FL", desc: "saw a dude at a hardcore/emo show, reading a book between sets. looked really cool. i couldnt get a stable photo amidst the chaos, but i still really like this photo"},
-      { src: "assets/museum/irl/DSC00609.JPG", title: "shadowed", meta: "02-09-2026 · Big Cypress National Preserve, FL", desc: "a photo i took of the moon through a telescope when i was celebrating my birthday with a friend."},
-      { src: "assets/museum/irl/unnamed3.jpg", title: "******", meta: "??-??-2026 · Sunset, FL", desc: "some graffiti i saw while walking along some train tracks when i was feeling particularly terrible. my camera died just after i took this photo funny enough, glad i got it though. typically i dont like hearing, saying, or reading this word, but here it felt like more 'home-y'. theres also a little peace sign in the o. <br><br> im such a #faggot"},
-      { src: "assets/museum/irl/unnamed.jpg", title: "GUARDIAN", meta: "??-??-2025 · Miami Beach, FL", desc: "a photo i took of myself just before skating, i was really feeling myself here okay... also i named it as a reference to DELTARUNE lol (cause the guardian fight has a big star of light on its face..)"},
-      { src: "assets/museum/irl/DSC_0264.JPG", title: "probably the best photo ive taken like ever", meta: "??-??-???? · San Juan, PR", desc: "a photo i took while on vacation in puerto rico. i dont know why i like this photo, but its very pleasing to look at"},
-      { src: "assets/museum/irl/unnamed2.jpg", title: "sunscape", meta: "??-??-2025 · Puerto Rico", desc: "a photo i took while on vacation in puerto rico, a beautiful view"},
-      
+      { src: "assets/museum/irl/DSC00650.JPG",  title: "equanimity",                         meta: "04-02-2026 · Miami, FL",                      desc: "saw a dude at a hardcore/emo show, reading a book between sets. looked really cool. i couldnt get a stable photo amidst the chaos, but i still really like this photo" },
+      { src: "assets/museum/irl/eroticstevenbrandon.jpg", title: "sexual tension", meta: "??-??-???? · a random parking lot", desc: "dude this is one of the best photos ive take ever" },
+      { src: "assets/museum/irl/DSC00609.JPG",  title: "shadowed",                            meta: "02-09-2026 · Big Cypress National Preserve, FL", desc: "a photo i took of the moon through a telescope when i was celebrating my birthday with a friend." },
+      { src: "assets/museum/irl/unnamed3.jpg",  title: "******",                              meta: "??-??-2026 · Sunset, FL",                      desc: "some graffiti i saw while walking along some train tracks when i was feeling particularly terrible. my camera died just after i took this photo funny enough, glad i got it though. typically i dont like hearing, saying, or reading this word, but here it felt like more 'home-y'. theres also a little peace sign in the o. <br><br> im such a #faggot" },
+      { src: "assets/museum/irl/unnamed.jpg",   title: "GUARDIAN",                            meta: "??-??-2025 · Miami Beach, FL",                  desc: "a photo i took of myself just before skating, i was really feeling myself here okay... also i named it as a reference to DELTARUNE lol (cause the guardian fight has a big star of light on its face..)" },
+      { src: "assets/museum/irl/DSC_0264.JPG",  title: "probably the best photo ive taken like ever", meta: "??-??-???? · San Juan, PR",            desc: "a photo i took while on vacation in puerto rico. i dont know why i like this photo, but its very pleasing to look at" },
+      { src: "assets/museum/irl/unnamed2.jpg",  title: "sunscape",                            meta: "??-??-2025 · Puerto Rico",                      desc: "a photo i took while on vacation in puerto rico, a beautiful view" },
     ],
   },
-  {
+  /* merged this shit with main photos{ 
     id: "friends",
     label: "friends",
     desc: "photos usually taken by my friends, or containing my friends",
     photos: [
       { src: "assets/museum/irl/eroticstevenbrandon.jpg", title: "sexual tension", meta: "??-??-???? · a random parking lot", desc: "dude this is one of the best photos ive take ever" },
     ],
-  },
+  },*/
   {
     id: "vrc",
-    label: "vrc",
+    label: "vrchat",
     desc: "screenies and photos of shenanigans and people i meet in vrchat",
     photos: [
-      { src: "assets/museum/VRC/VRC_2026-05-30.png", title: "ghost", meta: "05-30-2026 · VR Chat", desc: "Squnk, Sixer, and SourReigen (and me!) Just hung out and chatted with them for the night, obligatory photo to remember it :3"},
-      { src: "assets/museum/VRC/VRC_2026-05-28.png", title: "unexpected acceptance", meta: "05-28-2026 · VR Chat (The Black Cat)", desc: "two freaks that i met that pressed me to speak from the get go. did i? no lmao, but the more i stayed and listened, the more they felt like they wanted to include me, and they were accepting of my voice (and even said it was good?!?) regardless, a fun experience! Also, one of them went to the SAME MIDDLE SCHOOL THAT I DID!? crazy coincedence on vrchat of all places. <br><br> From left to right: Director Bright, Me, DeathIce" },
-      { src: "assets/museum/VRC/VRC_2026-05-26.png", title: "'you should put us on your site!'", meta: "05-26-2026 · VR Chat (Fruitiger Aero World)", desc: "a couple people i came across in vrc as i lurked, and they saw my website link and got curious. they loved it and asked to be featured on the site! they kinda inspired this entire page to be constructed. thank you guys as a thanks you will forever be immortalized as the first photo of the vrc section<br><br>From left to right FishoNChips, Romeida, Me, Zynel, Squnk"},
-      ],
+      { src: "assets/museum/VRC/VRC_2026-07-03.png", title: "purgatory", meta: "07-03-2026 · VR Chat", desc: "This photo was a great one... ME, Squnk, and Joseph (The girl in middle, Mew mew, and Kris) hopped into a deltarune Green room world, and then proceeded to get lost for 2 hours in an infinite maze. Later, Skiggy (ralsei) showed up and then i respawned out of the maze, found him, and then led him right back to hell where we were. After more exploring we happened to come across someone named Tiki (Mettaton) and then we just wandered and chatted. It went form like 2AM to like 5:30AM in this maze with nothing but us and it was really a fun time, despite us not finding the secret in the maze we heard about. I enjoyed spending time with them a lot as the maze mentally broke us down each bit by bit. Super enjoyable awesome friend bonding time :)"},       
+      { src: "assets/museum/VRC/VRC_2026-05-30.png", title: "ghost",                    meta: "05-30-2026 · VR Chat",                      desc: "Squnk, Sixer, and SourReigen (and me!) Just hung out and chatted with them for the night, obligatory photo to remember it :3" },
+      { src: "assets/museum/VRC/VRC_2026-05-28.png", title: "unexpected acceptance",    meta: "05-28-2026 · VR Chat (The Black Cat)",       desc: "two freaks that i met that pressed me to speak from the get go. did i? no lmao, but the more i stayed and listened, the more they felt like they wanted to include me, and they were accepting of my voice (and even said it was good?!?) regardless, a fun experience! Also, one of them went to the SAME MIDDLE SCHOOL THAT I DID!? crazy coincedence on vrchat of all places. <br><br> From left to right: Director Bright, Me, DeathIce" },
+      { src: "assets/museum/VRC/VRC_2026-05-26.png", title: "'you should put us on your site!'", meta: "05-26-2026 · VR Chat (Fruitiger Aero World)", desc: "a couple people i came across in vrc as i lurked, and they saw my website link and got curious. they loved it and asked to be featured on the site! they kinda inspired this entire page to be constructed. thank you guys as a thanks you will forever be immortalized as the first photo of the vrc section<br><br>From left to right FishoNChips, Romeida, Me, Zynel, Squnk" },
+    ],
   },
   {
     id: "supercon26",
     label: "supercon 2026",
-    desc: "anything related to supercon!",
+    desc: "the first time i cosplayed at a con!",
     photos: [
-      { src: "assets/museum/supercon2026/cosplay8.jpg", title: "strider time tables!", meta: "05-16-2026 · my home", desc: "the (almost) final look of them! in this photo theyre not actually glued all together, becuase i need to figure out how to fasten them to my hands for the con! so ill glue them soon, but this is what theyll look like when they're finished. (ill be taking another photo anyway). but for now, i must start work on the knight of time hood cape/cloak (my mother will helps with this because i dont entirely know how to use a sewing machine, or take measurements, or how to work with fabric at all.) " },
-      { src: "assets/museum/supercon2026/cosplay7.jpg", title: "final coats of paint", meta: "05-16-2026 · my home", desc: "heres the \"upper\" side of the gear base, i dont need to paint all of it here, because i will be gluing the mid section there. i also tested some reds on it because that section didn't matter, lol. speaking of gluing, in the back you can see that i have glued the records onto the circle mid sections, weighing them down with my music theory textbook and my old ipad, real classy right"},
+      { src: "assets/museum/supercon2026/cosplay8.jpg", title: "strider time tables!",    meta: "05-16-2026 · my home", desc: "the (almost) final look of them! in this photo theyre not actually glued all together, becuase i need to figure out how to fasten them to my hands for the con! so ill glue them soon, but this is what theyll look like when they're finished. (ill be taking another photo anyway). but for now, i must start work on the knight of time hood cape/cloak (my mother will helps with this because i dont entirely know how to use a sewing machine, or take measurements, or how to work with fabric at all.) " },
+      { src: "assets/museum/supercon2026/cosplay7.jpg", title: "final coats of paint",    meta: "05-16-2026 · my home", desc: "heres the \"upper\" side of the gear base, i dont need to paint all of it here, because i will be gluing the mid section there. i also tested some reds on it because that section didn't matter, lol. speaking of gluing, in the back you can see that i have glued the records onto the circle mid sections, weighing them down with my music theory textbook and my old ipad, real classy right" },
       { src: "assets/museum/supercon2026/cosplay6.jpg", title: "first few coats of paint", meta: "05-16-2026 · my home", desc: "in this photo you're looking at the bottom of the time tables. i first painted the whole thing with like 2-3 layers of primer/gesso, cause this foam board can be kinda porous. i would've preferred to spraypaint it on all these stages, but that would literally dissolve the foam, so manually doing it was the only option. oh also the non-gear segment i only painted the rim of white. since something will be glued on top and bottom. (using wood glue, which takes a million fucking years to set ohmygod)" },
-      { src: "assets/museum/supercon2026/cosplay4.jpg", title: "foam rough cut 2", meta: "05-23-2026 · my home", desc: "a better view of the cut panels. after this, i smoothed them out with a knife and sanded them down to be as smooth as i could get them. there is definitely a better way to do this, but this is how i did it." },
-      { src: "assets/museum/supercon2026/cosplay5.jpg", title: "foam rough cut", meta: "05-16-2026 · my home", desc: "i didn't get a photo of the costruction/insulation foam board that i used, but its  1 & 1/2 inches thick (which seemed pretty thick at the time, but in the end it worked out.)" },
-      { src: "assets/museum/supercon2026/cosplay3.jpg", title: "time shirt!", meta: "05-18-2026 · my home", desc: "i got the fabric for the knight of time cape/cloak! and also the shirt... its kinda comfy :3 i ordered the shirt with the decal, and i just have a long sleeve red shirt, which will do for this. i need to get the red sweatpants though!" },
-      { src: "assets/museum/supercon2026/cosplay2.jpg", title: "stencil prep!", meta: "05-16-2026 · my home", desc: "i got some construction board to cut a stencil for the time tables. intially, i was gonna make the prop out of this, but it is too difficult to cut, and too thin in my opinion. i also bought some cheap records from a nearby record store for like a buck each, painted over the label with white acrylic paint, and sanded the other side for gluing later on. wear a mask if you do this!" },
+      { src: "assets/museum/supercon2026/cosplay4.jpg", title: "foam rough cut 2",         meta: "05-23-2026 · my home", desc: "a better view of the cut panels. after this, i smoothed them out with a knife and sanded them down to be as smooth as i could get them. there is definitely a better way to do this, but this is how i did it." },
+      { src: "assets/museum/supercon2026/cosplay5.jpg", title: "foam rough cut",           meta: "05-16-2026 · my home", desc: "i didn't get a photo of the costruction/insulation foam board that i used, but its  1 & 1/2 inches thick (which seemed pretty thick at the time, but in the end it worked out.)" },
+      { src: "assets/museum/supercon2026/cosplay3.jpg", title: "time shirt!",              meta: "05-18-2026 · my home", desc: "i got the fabric for the knight of time cape/cloak! and also the shirt... its kinda comfy :3 i ordered the shirt with the decal, and i just have a long sleeve red shirt, which will do for this. i need to get the red sweatpants though!" },
+      { src: "assets/museum/supercon2026/cosplay2.jpg", title: "stencil prep!",            meta: "05-16-2026 · my home", desc: "i got some construction board to cut a stencil for the time tables. intially, i was gonna make the prop out of this, but it is too difficult to cut, and too thin in my opinion. i also bought some cheap records from a nearby record store for like a buck each, painted over the label with white acrylic paint, and sanded the other side for gluing later on. wear a mask if you do this!" },
     ],
   },
 ];
+
+const TAPE_COLORS = ["var(--tape-1)", "var(--tape-2)", "var(--tape-3)", "var(--tape-4)"];
 
 /* ═══════════════════════════════════════════════
    RENDER
@@ -653,14 +518,13 @@ ROOMS.forEach(r => totalPhotos += r.photos.length);
 statTotal.textContent = totalPhotos;
 statRooms.textContent = ROOMS.length;
 
-/* build sidebar room links + gallery sections */
 ROOMS.forEach((room, ri) => {
   /* sidebar link */
   const li = document.createElement("li");
   const a  = document.createElement("a");
   a.href = "#";
   a.dataset.room = room.id;
-  a.innerHTML = `${room.label}<span class="room-count">${room.photos.length}</span>`;
+  a.innerHTML = `<span class="room-icon">${room.icon || ""}</span>${room.label}<span class="room-count">${room.photos.length}</span>`;
   li.appendChild(a);
   roomList.appendChild(li);
 
@@ -669,13 +533,11 @@ ROOMS.forEach((room, ri) => {
   section.className = "room-section";
   section.id = `room-${room.id}`;
 
-  /* banner */
   const banner = document.createElement("div");
   banner.className = "room-banner";
   banner.innerHTML = `<div class="room-banner-title">${room.label}</div><div class="room-banner-desc">${room.desc}</div>`;
   section.appendChild(banner);
 
-  /* grid */
   const grid = document.createElement("div");
   grid.className = "photo-grid";
 
@@ -685,32 +547,37 @@ ROOMS.forEach((room, ri) => {
     exhibit.dataset.room = ri;
     exhibit.dataset.idx  = pi;
 
-    const frame = document.createElement("div");
-    frame.className = "frame";
-    const mat = document.createElement("div");
-    mat.className = "mat";
+    /* gentle deterministic wobble so it doesn't look laser-aligned */
+    const rot = (((pi * 53 + ri * 29) % 9) - 4) * 0.9;
+    exhibit.style.setProperty("--rot", `${rot}deg`);
+
+    const polaroid = document.createElement("div");
+    polaroid.className = "polaroid";
+
+    const tape = document.createElement("div");
+    tape.className = "tape";
+    tape.style.setProperty("--tape-color", TAPE_COLORS[(ri + pi) % TAPE_COLORS.length]);
+    polaroid.appendChild(tape);
 
     if (photo.src) {
       const img = document.createElement("img");
       img.className = "exhibit-photo";
       img.src = photo.src;
       img.alt = photo.title;
-      mat.appendChild(img);
+      polaroid.appendChild(img);
     } else {
       const ph = document.createElement("div");
       ph.className = "exhibit-placeholder";
       ph.textContent = "[ photo ]";
-      mat.appendChild(ph);
+      polaroid.appendChild(ph);
     }
 
-    frame.appendChild(mat);
+    const caption = document.createElement("div");
+    caption.className = "polaroid-caption";
+    caption.innerHTML = `<div class="polaroid-title">${photo.title}</div><div class="polaroid-meta">${photo.meta}</div>`;
+    polaroid.appendChild(caption);
 
-    const plaque = document.createElement("div");
-    plaque.className = "plaque";
-    plaque.innerHTML = `<div class="plaque-title">${photo.title}</div><div class="plaque-meta">${photo.meta}</div>`;
-
-    exhibit.appendChild(frame);
-    exhibit.appendChild(plaque);
+    exhibit.appendChild(polaroid);
     exhibit.addEventListener("click", () => openLightbox(ri, pi));
     grid.appendChild(exhibit);
   });
@@ -723,13 +590,10 @@ ROOMS.forEach((room, ri) => {
 function showRoom(id) {
   document.querySelectorAll(".room-section").forEach(s => s.classList.remove("active"));
   document.querySelectorAll(".room-list a").forEach(a => a.classList.remove("active"));
-
   const section = document.getElementById(`room-${id}`);
   if (section) section.classList.add("active");
-
   const link = document.querySelector(`.room-list a[data-room="${id}"]`);
   if (link) link.classList.add("active");
-
   const room = ROOMS.find(r => r.id === id);
   if (room) statViewing.textContent = room.label;
 }
@@ -741,7 +605,6 @@ roomList.addEventListener("click", e => {
   showRoom(a.dataset.room);
 });
 
-/* show first room on load */
 showRoom(ROOMS[0].id);
 
 /* ═══════════════════════════════════════════════
@@ -754,7 +617,7 @@ const lbMeta   = document.getElementById("lb-meta");
 const lbDesc   = document.getElementById("lb-desc");
 const lbCnt    = document.getElementById("lb-counter");
 
-let lbRoomIdx = 0;
+let lbRoomIdx  = 0;
 let lbPhotoIdx = 0;
 
 function openLightbox(roomIdx, photoIdx) {
@@ -773,15 +636,11 @@ function closeLightbox() {
 function renderLightbox() {
   const room  = ROOMS[lbRoomIdx];
   const photo = room.photos[lbPhotoIdx];
-
-  lbImg.src        = photo.src || "";
-  lbImg.alt        = photo.title;
-
+  lbImg.src           = photo.src || "";
+  lbImg.alt           = photo.title;
   lbTitle.textContent = photo.title;
   lbMeta.textContent  = photo.meta;
-
-  /* lbDesc.textContent  = photo.desc || ""; not rendering br properly */
-  lbDesc.innerHTML = photo.desc || "";
+  lbDesc.innerHTML    = photo.desc || "";
   lbCnt.textContent   = `${lbPhotoIdx + 1} / ${room.photos.length}`;
 }
 
@@ -794,16 +653,12 @@ function lbStep(dir) {
 document.getElementById("lb-close").addEventListener("click", closeLightbox);
 document.getElementById("lb-prev").addEventListener("click", () => lbStep(-1));
 document.getElementById("lb-next").addEventListener("click", () => lbStep(1));
-
-/* close on backdrop click */
 lightbox.addEventListener("click", e => { if (e.target === lightbox) closeLightbox(); });
-
-/* keyboard nav */
 document.addEventListener("keydown", e => {
   if (!lightbox.classList.contains("open")) return;
-  if (e.key === "Escape")      closeLightbox();
-  if (e.key === "ArrowLeft")   lbStep(-1);
-  if (e.key === "ArrowRight")  lbStep(1);
+  if (e.key === "Escape")     closeLightbox();
+  if (e.key === "ArrowLeft")  lbStep(-1);
+  if (e.key === "ArrowRight") lbStep(1);
 });
 </script>
 
