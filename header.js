@@ -16,6 +16,7 @@
     { file: "/music/castlefunk.mp3",  name: "Castle Funk - Toby Fox" },
     { file: "/music/castletown.mp3",  name: "My Castle Town - Toby Fox" },
     { file: "/music/story.mp3",  name: "Before the Story - Toby Fox" },
+    { file: "/music/scarlet.mp3",  name: "Scarlet Forest - Toby Fox & Trevor Alan Gomes" },
     { file: "/music/scarfor.mp3",  name: "Field of Hopes and Dreams (Credits Version) - Toby Fox & Trevor Alan Gomes" },
     { file: "/music/paradise.mp3",  name: "Welcome to Paradise - Emile van Krieken"   },
     { file: "/music/onceupon.mp3",  name: "Once upon a time... - Synthion"   },
