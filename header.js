@@ -16,7 +16,7 @@
     { file: "/music/castlefunk.mp3",  name: "Castle Funk - Toby Fox" },
     { file: "/music/castletown.mp3",  name: "My Castle Town - Toby Fox" },
     { file: "/music/story.mp3",  name: "Before the Story - Toby Fox" },
-    { file: "/music/scarfor.mp3",  name: "Scarlet Forest (Credits Version) - Toby Fox & Trevor Alan Gomes" },
+    { file: "/music/scarfor.mp3",  name: "Field of Hopes and Dreams (Credits Version) - Toby Fox & Trevor Alan Gomes" },
     { file: "/music/paradise.mp3",  name: "Welcome to Paradise - Emile van Krieken"   },
     { file: "/music/onceupon.mp3",  name: "Once upon a time... - Synthion"   },
     { file: "/music/aLupi.mp3",  name: "a Lupi - Synthion"   },
@@ -66,9 +66,9 @@
     {
       label: "kaia",
       children: [
-        { label: "#me (wip)",     href: "/blog/me.html" },
-        { label: "blog",     href: "/blog/index.html" },
-        { label: "my lists", href: "/lists.html" },
+        { label: "the webmistress",     href: "/me.html" },
+        { label: "the blog",     href: "/blog/index.html" },
+        { label: "dream log", href: "/dreamdiary.html" },
       ],
       
     },
@@ -81,7 +81,7 @@
             { label: "hall of messages (wip)", href: "/msgs.html" },
           ]
         },
-        { label: "scrapbook",   href: "/museum.html" },
+        { label: "scrapbook",   href: "/scrapbook.html" },
         { label: "my music", href: "/mymusic.html", badge: "" },
         { label: "recipes (wip)",   href: "/myrecipes.html" },
         { label: "web projects", href: "/mywebdev.html" },

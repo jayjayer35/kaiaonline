@@ -4,120 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>kaia online - bookmarks & resources</title>
+  <link rel="stylesheet" href="/kaia-base.css">
+  <link rel="stylesheet" href="/header.css">
   <style>
-    /* ── font ── */
-    @font-face {
-      font-family: "NDS";
-      src: url("rework/assets/fonts/nds.ttf") format("truetype");
-      font-display: swap;
-      -webkit-font-smoothing: none;
-    }
+    body { font-size: 1.5rem; line-height: 1; }
 
-    /* ── tokens (Light Mode) ── */
-    :root {
-      --sky:          #d8eaf8;
-      --sky2:         #eef5fc;
-
-      --panel-bg:     #fff;
-      --panel-border: #b6c6df;
-      --panel-shadow: #9ca7c3;
-      --panel-head:   #b6c6df;
-      --panel-head-b: #8a99b8;
-
-      --head-t-shadow:  #7a93b0;
-      --head-b-shadow1: #cddaea;
-      --head-b-shadow2: #8a99b8;
-
-      --text:         #2a3a50;
-      --text-soft:    #6a7e96;
-      --link:         #3a7acf;
-
-      --update-line:  rgba(182,198,223,0.4);
-      --today-bg:     rgba(100,160,220,0.18);
-
-      /* kept for header.js */
-      --bg-header:     #9eb4d1;
-      --border-header: #7e8ba3;
-
-      /* bookmarks-specific aliases mapped to the new token set */
-      --bg-tile:           var(--panel-bg);
-      --border-tile:       var(--panel-border);
-      --header-shadow:     var(--panel-shadow);
-      --tile-header-bg:    var(--panel-head);
-      --tile-header-border:var(--panel-head-b);
-      --text-color:        var(--text);
-      --ink-light:         var(--text-soft);
-      --soft-blue:  #dfe9f8;
-      --pale-blue:  #eef5ff;
-      --soft-pink:  #ffeef7;
-      --soft-yellow:#eed8ff;
-
-      --font-base: 1rem;
-      --line-height: 1;
-      --custom-font-scale: 1.5;
-    }
-
-    /* ── tokens (Dark Mode Overrides) ── */
-    body.dark-mode {
-      --sky:          #1a2028;
-      --sky2:         #11151a;
-
-      --panel-bg:     #1e2530;
-      --panel-border: #151a22;
-      --panel-shadow: #0d1117;
-      --panel-head:   #2a3340;
-      --panel-head-b: #151a22;
-
-      --head-t-shadow:  #000;
-      --head-b-shadow1: #3a4a60;
-      --head-b-shadow2: #10141a;
-
-      --text:         #e0e8f0;
-      --text-soft:    #8a99b8;
-      --link:         #6b9ac4;
-
-      --update-line:  rgba(255,255,255,0.05);
-      --today-bg:     rgba(255,255,255,0.1);
-
-      --bg-header:     #2a3340;
-      --border-header: #1a2028;
-
-      /* dark overrides for bookmarks-specific colours */
-      --soft-blue:  #1e2d40;
-      --pale-blue:  #1a2535;
-      --soft-pink:  #2d1e2a;
-      --soft-yellow:#2a1e35;
-
-      background-blend-mode: multiply;
-    }
-
-    /* ── reset ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    * { cursor: url("rework/assets/cur/kaiacursor.png"), auto; }
-
-    html { font-size: var(--font-base); min-height: 100%; }
-
-    body {
-      margin: 0;
-      font-family: 'NDS', monospace, sans-serif;
-      font-size: calc(1rem * var(--custom-font-scale));
-      color: var(--text);
-      line-height: var(--line-height);
-      background:
-        url('rework/assets/general/bkg3.gif'),
-        linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
-      background-attachment: fixed;
-      background-size: auto, 100% 100%;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 80%;
-      margin: 0.75rem 0 1rem;
-      color: var(--text-soft);
-      transition: color 0.3s;
-    }
+    /* ── page layout ── */
     .wrapper {
       display: flex;
       max-width: 75rem;
@@ -134,70 +26,28 @@
       width: 100%;
     }
 
-    .tile {
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      box-shadow: 2px 2px 0 var(--panel-shadow);
-      position: relative;
-      transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
-    }
-
     .tile h2 {
-      background: var(--panel-head);
-      border-bottom: 1px solid var(--panel-head-b);
-      padding: 0.125rem 0.5rem;
-      margin: 0;
       font-size: 1.5rem;
-      font-weight: bold;
       letter-spacing: 0.2rem;
       text-align: center;
-      color: #fff;
-      text-shadow: 0 1px 0 var(--head-t-shadow);
-      box-shadow:
-        inset 0 1px 0 var(--head-b-shadow1),
-        inset 0 -1px 0 var(--head-b-shadow2);
-      transition: background 0.3s, border-color 0.3s;
+      margin: 0;
     }
 
-    .decor {
-      position: absolute;
-      width: 2.5rem;
-      pointer-events: none;
-      user-select: none;
-    }
+    /* ── bookmarks shell ── */
+    .bookmarks-page { width: min(68rem, 100%); }
 
-    .corner-top-right {
-      top: -0.4rem;
-      right: -0.4rem;
-    }
-
-    /* bookmarks */
-
-    .bookmarks-page {
-      width: min(68rem, 100%);
-    }
-
-    .bookmark-window {
-      padding: 0;
-      overflow: visible;
-    }
+    .bookmark-window { padding: 0; overflow: visible; }
 
     .bookmark-inner {
-      overflow: visible;
-
       display: grid;
       grid-template-columns: 13rem minmax(0, 1fr);
       min-height: 34rem;
-
-      /* background:
-        linear-gradient(90deg, rgba(182,198,223,.45) 0 0.1rem, transparent 0.1rem 100%),
-        linear-gradient(0deg, rgba(182,198,223,.25) 0 0.1rem, transparent 0.1rem 100%),
-        var(--panel-bg); */
-
+      overflow: visible;
       background-size: 1.25rem 1.25rem;
       transition: background 0.3s;
     }
 
+    /* ── sidebar rail ── */
     .bookmark-rail {
       border-right: 0.15rem solid var(--panel-border);
       background: var(--panel-bg);
@@ -223,15 +73,10 @@
       color: var(--text);
       background: var(--panel-bg);
       border: 0.12rem solid var(--panel-border);
-      border-radius: 0;
       padding: 0.35rem 0.55rem;
       box-shadow: 0.12rem 0.12rem 0 var(--panel-shadow);
       cursor: pointer;
-      transition:
-        transform .16s ease,
-        background-color .16s ease,
-        box-shadow .16s ease,
-        color 0.3s;
+      transition: transform .16s ease, background-color .16s ease, box-shadow .16s ease, color 0.3s;
     }
 
     .rail-button:hover,
@@ -242,9 +87,8 @@
       box-shadow: 0.18rem 0.18rem 0 var(--panel-shadow);
     }
 
-    .bookmark-content {
-      padding: 1rem;
-    }
+    /* ── content area ── */
+    .bookmark-content { padding: 1rem; }
 
     .bookmark-heading {
       display: flex;
@@ -275,7 +119,6 @@
       flex: 0 0 auto;
       background: var(--soft-yellow);
       border: 0.12rem solid var(--panel-head-b);
-      border-radius: 0;
       padding: 0.35rem 0.5rem;
       font-size: 1.1rem;
       color: var(--text);
@@ -283,6 +126,7 @@
       transition: background 0.3s, color 0.3s, border-color 0.3s;
     }
 
+    /* ── link lanes ── */
     .link-lanes {
       display: flex;
       flex-direction: column;
@@ -295,20 +139,17 @@
       align-items: stretch;
       border: 0.14rem solid var(--panel-border);
       background: var(--panel-bg);
-      border-radius: 0;
       overflow: visible;
       box-shadow: 0.14rem 0.14rem 0 var(--panel-shadow);
-      transition:
-        transform .18s ease,
-        box-shadow .18s ease,
-        background 0.3s,
-        border-color 0.3s;
+      transition: transform .18s ease, box-shadow .18s ease, background 0.3s, border-color 0.3s;
     }
 
     .lane:hover {
       transform: translateX(0.2rem);
       box-shadow: 0.15rem 0.15rem 0 var(--panel-shadow);
     }
+
+    .lane.hidden { display: none; }
 
     .lane-label {
       display: flex;
@@ -332,64 +173,45 @@
       overflow: visible;
     }
 
+    /* ── site link chips ── */
     .site-link {
       position: relative;
       color: var(--text);
       text-decoration: none;
       background: var(--soft-blue);
       border: 0.1rem solid transparent;
-      border-radius: 0;
       padding: 0.28rem 0.55rem 0.22rem;
       font-size: 1.15rem;
       line-height: 0.9;
-      transition:
-        transform .16s ease,
-        background-color .16s ease,
-        border-color .16s ease,
-        color 0.3s;
-    }
-
-    .site-link::after {
-      content: attr(data-note);
-
-      position: absolute;
-      left: 50%;
-      bottom: calc(100% + 0.45rem);
-
-      transform: translateX(-50%) translateY(0.15rem);
-
-      width: max-content;
-      max-width: 13rem;
-
-      background: var(--panel-bg);
-      color: var(--text);
-
-      border: 0.12rem solid var(--panel-border);
-      border-radius: 0;
-
-      padding: 0.3rem 0.45rem;
-
-      font-size: 0.95rem;
-      line-height: 0.9;
-
-      box-shadow: 0.12rem 0.12rem 0 var(--panel-shadow);
-
-      opacity: 0;
-      pointer-events: none;
-
-      z-index: 50;
-
-      transition:
-        opacity .16s ease,
-        transform .16s ease;
+      transition: transform .16s ease, background-color .16s ease, border-color .16s ease, color 0.3s;
     }
 
     .site-link:hover {
       transform: translateY(-0.15rem);
       background: var(--soft-pink);
       border-color: var(--panel-border);
+    }
 
-      border-radius: 0;
+    /* tooltip */
+    .site-link::after {
+      content: attr(data-note);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 0.45rem);
+      transform: translateX(-50%) translateY(0.15rem);
+      width: max-content;
+      max-width: 13rem;
+      background: var(--panel-bg);
+      color: var(--text);
+      border: 0.12rem solid var(--panel-border);
+      padding: 0.3rem 0.45rem;
+      font-size: 0.95rem;
+      line-height: 0.9;
+      box-shadow: 0.12rem 0.12rem 0 var(--panel-shadow);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 50;
+      transition: opacity .16s ease, transform .16s ease;
     }
 
     .site-link:hover::after {
@@ -397,10 +219,7 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    .lane.hidden {
-      display: none;
-    }
-
+    /* ── bottom bar ── */
     .bookmark-bottom {
       display: flex;
       justify-content: space-between;
@@ -415,16 +234,13 @@
     .bookmark-bottom span {
       background: var(--panel-bg);
       border: 0.1rem solid var(--panel-border);
-      border-radius: 0;
       padding: 0.35rem 0.45rem;
       transition: background 0.3s, border-color 0.3s;
     }
 
+    /* ── mobile ── */
     @media (max-width: 50rem) {
-      .bookmark-inner {
-        grid-template-columns: 1fr;
-      }
-
+      .bookmark-inner { grid-template-columns: 1fr; }
       .bookmark-rail {
         border-right: none;
         border-bottom: 0.15rem solid var(--panel-border);
@@ -432,56 +248,19 @@
         flex-wrap: wrap;
         justify-content: center;
       }
-
-      .rail-note {
-        width: 100%;
-      }
-
-      .rail-button {
-        text-align: center;
-      }
-
-      .lane {
-        grid-template-columns: 1fr;
-      }
-
-      .lane-label {
-        border-right: none;
-        border-bottom: 0.14rem solid var(--panel-border);
-      }
+      .rail-note { width: 100%; }
+      .rail-button { text-align: center; }
+      .lane { grid-template-columns: 1fr; }
+      .lane-label { border-right: none; border-bottom: 0.14rem solid var(--panel-border); }
     }
 
     @media (max-width: 37.5rem) {
-      header {
-        font-size: 0.9rem;
-        padding: 0.5rem 0;
-      }
-
-      .wrapper {
-        padding: 0.625rem;
-      }
-
-      .bookmark-content {
-        padding: 0.65rem;
-      }
-
-      .bookmark-heading {
-        flex-direction: column;
-      }
-
-      .bookmark-heading strong {
-        font-size: 1.45rem;
-      }
-
-      .bookmark-heading p,
-      .site-link,
-      .rail-button {
-        font-size: 1rem;
-      }
-
-      .bookmark-bottom {
-        flex-direction: column;
-      }
+      .wrapper { padding: 0.625rem; }
+      .bookmark-content { padding: 0.65rem; }
+      .bookmark-heading { flex-direction: column; }
+      .bookmark-heading strong { font-size: 1.45rem; }
+      .bookmark-heading p, .site-link, .rail-button { font-size: 1rem; }
+      .bookmark-bottom { flex-direction: column; }
     }
   </style>
 </head>
@@ -492,16 +271,13 @@
     <div class="column bookmarks-page">
 
       <div class="tile bookmark-window">
-        <img src="https://files.catbox.moe/zxflf7.png"
-        class="decor corner-top-right" alt="">
-
+        <img src="https://files.catbox.moe/zxflf7.png" class="decor corner-top-right" alt="">
         <h2>bookmarks</h2>
 
         <div class="bookmark-inner">
 
           <aside class="bookmark-rail">
             <p class="rail-note"></p>
-
             <button class="rail-button active" data-filter="all">~ all</button>
             <button class="rail-button" data-filter="tools">tools</button>
             <button class="rail-button" data-filter="web">web</button>
@@ -523,7 +299,6 @@
                   these will open in a new tab.
                 </p>
               </div>
-
               <div class="counter">
                 <span id="visible-count">...</span> links
               </div>
@@ -533,333 +308,129 @@
 
               <div class="lane" data-category="tools">
                 <div class="lane-label">tools</div>
-
                 <div class="lane-links">
-                  <a class="site-link"
-                  href="https://learn-anything.xyz/"
-                  target="_blank"
-                  data-note="a great resource to find out how to begin or learn something new">learn anything xyz</a>
-                  <a class="site-link"
-                  href="https://fmhy.net/"
-                  target="_blank"
-                  data-note="a large library of useful resources, you didnt get this from me!">free media heck yeah</a>
-
-                  <a class="site-link"
-                  href="https://dicecloud.com/"
-                  target="_blank"
-                  data-note="a very useful and modular character building site for D&D">dicecloud</a>
-
-                  <a class="site-link"
-                  href="https://www.strawberrymusicplayer.org/"
-                  target="_blank"
-                  data-note="my music player of choice">strawberry music player!</a>
-
-                  <a class="site-link"
-                  href="https://musicpresence.app/"
-                  target="_blank"
-                  data-note="a really nice way of displaying what you are listening to, for discord presence. (especially good if you use linux, cause their discord client SUCKS!)">musicpresence.app</a>
-
-                  <a class="site-link"
-                  href="https://kaomoji.you/en/"
-                  target="_blank"
-                  data-note="my go to kaomoji site">kaomoji</a>
-
-                  <a class="site-link"
-                  href="https://www.remove.bg/upload"
-                  target="_blank"
-                  data-note="tool for removing backgrounds on photos.">remove bg</a>
-
-                  <a class="site-link"
-                  href="https://vert.sh/"
-                  target="_blank"
-                  data-note="all purpose online file converter. images, audio, docs, and vids. entirely local">vert.sh</a>
-
-                  <a class="site-link"
-                  href="https://temporarymail.com/"
-                  target="_blank"
-                  data-note="disposable email addresses!! very useful for not destroying your inbox">temporarymail</a>
-
-                  <a class="site-link"
-                  href="https://lospec.com/pixel-art-scaler/"
-                  target="_blank"
-                  data-note="a useful too for scaling up pixel art to bigger image sizes without compromising the pixel perfect look">pixel art scaler</a>
+                  <a class="site-link" href="https://learn-anything.xyz/" target="_blank" data-note="a great resource to find out how to begin or learn something new">learn anything xyz</a>
+                  <a class="site-link" href="https://fmhy.net/" target="_blank" data-note="a large library of useful resources, you didnt get this from me!">free media heck yeah</a>
+                  <a class="site-link" href="https://dicecloud.com/" target="_blank" data-note="a very useful and modular character building site for D&D">dicecloud</a>
+                  <a class="site-link" href="https://www.strawberrymusicplayer.org/" target="_blank" data-note="my music player of choice">strawberry music player!</a>
+                  <a class="site-link" href="https://musicpresence.app/" target="_blank" data-note="a really nice way of displaying what you are listening to, for discord presence. (especially good if you use linux, cause their discord client SUCKS!)">musicpresence.app</a>
+                  <a class="site-link" href="https://kaomoji.you/en/" target="_blank" data-note="my go to kaomoji site">kaomoji</a>
+                  <a class="site-link" href="https://www.remove.bg/upload" target="_blank" data-note="tool for removing backgrounds on photos.">remove bg</a>
+                  <a class="site-link" href="https://vert.sh/" target="_blank" data-note="all purpose online file converter. images, audio, docs, and vids. entirely local">vert.sh</a>
+                  <a class="site-link" href="https://temporarymail.com/" target="_blank" data-note="disposable email addresses!! very useful for not destroying your inbox">temporarymail</a>
+                  <a class="site-link" href="https://lospec.com/pixel-art-scaler/" target="_blank" data-note="a useful too for scaling up pixel art to bigger image sizes without compromising the pixel perfect look">pixel art scaler</a>
                 </div>
               </div>
 
               <div class="lane" data-category="web">
                 <div class="lane-label">web</div>
-
                 <div class="lane-links">
-                  <a class="site-link"
-                  href="https://neocities.org/"
-                  target="_blank"
-                  data-note="personal websites everywhere!">neocities</a>
-
-                  <a class="site-link"
-                  href="https://neocities.org/"
-                  target="_blank"
-                  data-note="extremely useful documentation for CSS, HTML and JS.">mozilla documentation</a>
-
-                  <a class="site-link"
-                  href="https://status.cafe/"
-                  target="_blank"
-                  data-note="site for posting status whenever you feel like! its how i use the one on my main page">status.cafe</a>
-
-                  <a class="site-link"
-                  href="https://piclog.blue/index.php"
-                  target="_blank"
-                  data-note="like status.cafe, but with images!">piclog</a>
-
-                  <a class="site-link"
-                  href="https://www.imood.com/"
-                  target="_blank"
-                  data-note="allows you to switch a mood display, and embed on your site">imood</a>
-
-                  <a class="site-link"
-                  href="https://idbuttons.neocities.org/database/"
-                  target="_blank"
-                  data-note="cute collectable buttons to display on your site, to describe you!">identity buttons</a>
-
-                  <a class="site-link"
-                  href="https://docs.google.com/spreadsheets/d/1Q6LqU2nnnU60ARfc4NPdPbpCMIMl6WSDP_NWomr5OB4/edit?gid=1004256205#gid=1004256205"
-                  target="_blank"
-                  data-note="more identity buttons">identity buttons (spreadsheet)</a>
-
-                  <a class="site-link"
-                  href="https://wiby.org/"
-                  target="_blank"
-                  data-note="old and niche website finder">wiby</a>
-
-                  <a class="site-link"
-                  href="https://capstasher.neocities.org/88x31collection-page1"
-                  target="_blank"
-                  data-note="so many 88x31 buttons...">the largest 88x31 button collection</a>
+                  <a class="site-link" href="https://neocities.org/" target="_blank" data-note="personal websites everywhere!">neocities</a>
+                  <a class="site-link" href="https://neocities.org/" target="_blank" data-note="extremely useful documentation for CSS, HTML and JS.">mozilla documentation</a>
+                  <a class="site-link" href="https://status.cafe/" target="_blank" data-note="site for posting status whenever you feel like! its how i use the one on my main page">status.cafe</a>
+                  <a class="site-link" href="https://piclog.blue/index.php" target="_blank" data-note="like status.cafe, but with images!">piclog</a>
+                  <a class="site-link" href="https://www.imood.com/" target="_blank" data-note="allows you to switch a mood display, and embed on your site">imood</a>
+                  <a class="site-link" href="https://idbuttons.neocities.org/database/" target="_blank" data-note="cute collectable buttons to display on your site, to describe you!">identity buttons</a>
+                  <a class="site-link" href="https://docs.google.com/spreadsheets/d/1Q6LqU2nnnU60ARfc4NPdPbpCMIMl6WSDP_NWomr5OB4/edit?gid=1004256205#gid=1004256205" target="_blank" data-note="more identity buttons">identity buttons (spreadsheet)</a>
+                  <a class="site-link" href="https://wiby.org/" target="_blank" data-note="old and niche website finder">wiby</a>
+                  <a class="site-link" href="https://capstasher.neocities.org/88x31collection-page1" target="_blank" data-note="so many 88x31 buttons...">the largest 88x31 button collection</a>
                 </div>
               </div>
 
               <div class="lane" data-category="inspo">
                 <div class="lane-label">inspo</div>
-
                 <div class="lane-links">
-                  <a class="site-link"
-                  href="https://libraryofbabel.info/"
-                  target="_blank"
-                  data-note="a site i often use to figure out names for things">the library of babel</a>
+                  <a class="site-link" href="https://libraryofbabel.info/" target="_blank" data-note="a site i often use to figure out names for things">the library of babel</a>
                 </div>
               </div>
 
               <div class="lane" data-category="fun">
                 <div class="lane-label">fun</div>
-
                 <div class="lane-links">
-                  <a class="site-link"
-                  href="https://wplace.live/"
-                  target="_blank"
-                  data-note="a global version or r/place, set on the map of the world!">wplace.live</a>
-
-                  <a class="site-link"
-                  href="https://thankshrew.itch.io/skaian-survey"
-                  target="_blank"
-                  data-note="find your homestuck classpect!">skaian survey</a>
-
-                  <a class="site-link"
-                  href="https://radio.garden/"
-                  target="_blank"
-                  data-note="radio from around the world">radio garden</a>
-
-                  <a class="site-link"
-                  href="https://spinningrat.online/"
-                  target="_blank"
-                  data-note="spinning rats...">spinningrat.online</a>
-
-                  <a class="site-link"
-                  href="https://theuselessweb.com/"
-                  target="_blank"
-                  data-note="a random website!">the useless web</a>
-
-                  <a class="site-link"
-                  href="http://derpg.xyz/index.php"
-                  target="_blank"
-                  data-note="an interesting puzzle.">DERPG</a>
-
-                  <a class="site-link"
-                  href="https://neal.fun/deep-sea/"
-                  target="_blank"
-                  data-note="what lies at the bottom of the ocean??">The Deep Sea</a>
-
-                  <a class="site-link"
-                  href="https://theendpoem.com/"
-                  target="_blank"
-                  data-note="The End Poem by Julian Gough">The End Poem</a>
-
-                  <a class="site-link"
-                  href="https://wigglypaint.net/"
-                  target="_blank"
-                  data-note="draw with wiggly lines!">wigglypaint</a>
-
-                  <a class="site-link"
-                  href="https://porterrobinsle.com/"
-                  target="_blank"
-                  data-note="guess the porter song! (im such a nerd...)">porter robinsle</a>
-
-                  <a class="site-link"
-                  href="https://rotatingsandwiches.com/"
-                  target="_blank"
-                  data-note="oh look, its just a lot of rotating sandwiches">rotating sandwiches</a>
-
-                  <a class="site-link"
-                  href="https://cmds.media/moonbase-alpha-tts"
-                  target="_blank"
-                  data-note="a vocal synth generator that is similar to the moonbase alpha tts!">moonbase alpha TTS</a>
-                  
+                  <a class="site-link" href="https://wplace.live/" target="_blank" data-note="a global version or r/place, set on the map of the world!">wplace.live</a>
+                  <a class="site-link" href="https://thankshrew.itch.io/skaian-survey" target="_blank" data-note="find your homestuck classpect!">skaian survey</a>
+                  <a class="site-link" href="https://radio.garden/" target="_blank" data-note="radio from around the world">radio garden</a>
+                  <a class="site-link" href="https://spinningrat.online/" target="_blank" data-note="spinning rats...">spinningrat.online</a>
+                  <a class="site-link" href="https://theuselessweb.com/" target="_blank" data-note="a random website!">the useless web</a>
+                  <a class="site-link" href="http://derpg.xyz/index.php" target="_blank" data-note="an interesting puzzle.">DERPG</a>
+                  <a class="site-link" href="https://neal.fun/deep-sea/" target="_blank" data-note="what lies at the bottom of the ocean??">The Deep Sea</a>
+                  <a class="site-link" href="https://theendpoem.com/" target="_blank" data-note="The End Poem by Julian Gough">The End Poem</a>
+                  <a class="site-link" href="https://wigglypaint.net/" target="_blank" data-note="draw with wiggly lines!">wigglypaint</a>
+                  <a class="site-link" href="https://porterrobinsle.com/" target="_blank" data-note="guess the porter song! (im such a nerd...)">porter robinsle</a>
+                  <a class="site-link" href="https://rotatingsandwiches.com/" target="_blank" data-note="oh look, its just a lot of rotating sandwiches">rotating sandwiches</a>
+                  <a class="site-link" href="https://cmds.media/moonbase-alpha-tts" target="_blank" data-note="a vocal synth generator that is similar to the moonbase alpha tts!">moonbase alpha TTS</a>
                 </div>
               </div>
 
               <div class="lane" data-category="games">
                 <div class="lane-label">games</div>
-
                 <div class="lane-links">
-                  <a class="site-link"
-                  href="https://tetr.io/"
-                  target="_blank"
-                  data-note="my online tetris of choice, fun to play against people">TETR.IO</a>
-
-                  <a class="site-link"
-                  href="https://osu.ppy.sh/"
-                  target="_blank"
-                  data-note="one of my fav rhythm games~">osu!</a>
-
-                  <a class="site-link"
-                  href="https://oniichan.wtf/"
-                  target="_blank"
-                  data-note="resources for getting into and playing SDVX, for free">Oniichan.wtf</a>
-
-                  <a class="site-link"
-                  href="https://arcader.org/game/"
-                  target="_blank"
-                  data-note="html5 pac-man that i always played in high school to kill time">pac-man</a>
-
-                  <a class="site-link"
-                  href="https://prismlauncher.org/"
-                  target="_blank"
-                  data-note="my minecraft launcher of choice. you still need an account to use it!">prism launcher</a>
-
-                  <a class="site-link"
-                  href="https://jcw87.github.io/c2-sans-fight/"
-                  target="_blank"
-                  data-note="fight sans!">bad time simulator</a>
-                  
+                  <a class="site-link" href="https://tetr.io/" target="_blank" data-note="my online tetris of choice, fun to play against people">TETR.IO</a>
+                  <a class="site-link" href="https://osu.ppy.sh/" target="_blank" data-note="one of my fav rhythm games~">osu!</a>
+                  <a class="site-link" href="https://oniichan.wtf/" target="_blank" data-note="resources for getting into and playing SDVX, for free">Oniichan.wtf</a>
+                  <a class="site-link" href="https://arcader.org/game/" target="_blank" data-note="html5 pac-man that i always played in high school to kill time">pac-man</a>
+                  <a class="site-link" href="https://prismlauncher.org/" target="_blank" data-note="my minecraft launcher of choice. you still need an account to use it!">prism launcher</a>
+                  <a class="site-link" href="https://jcw87.github.io/c2-sans-fight/" target="_blank" data-note="fight sans!">bad time simulator</a>
                 </div>
               </div>
 
               <div class="lane" data-category="wikis">
                 <div class="lane-label">wikis</div>
-
                 <div class="lane-links">
-
-                  <a class="site-link"
-                  href="https://www.allaboutbirds.org/guide/"
-                  target="_blank"
-                  data-note="resource for bird nerds to find out what they're looking at! or what they wish to find :3 (this includes me)">Cornell Bird Guide</a>
-
-                  <a class="site-link"
-                  href="https://www.quotev.com/JadeiteBrushes/journal/2361506/Aspects-and-Classes-Explained-Homestuck"
-                  target="_blank"
-                  data-note="...homestuck classpects explained">classpects explained</a>
-
-                  <a class="site-link"
-                  href="https://switch.hacks.guide/"
-                  target="_blank"
-                  data-note="docs i used to mod my gen 1 switch">switch hacking</a>
-
-                  <a class="site-link"
-                  href="https://3ds.hacks.guide/"
-                  target="_blank"
-                  data-note="if you have one... GO HACK UR 3DS NOW!">3ds hacking</a>
+                  <a class="site-link" href="https://www.allaboutbirds.org/guide/" target="_blank" data-note="resource for bird nerds to find out what they're looking at! or what they wish to find :3 (this includes me)">Cornell Bird Guide</a>
+                  <a class="site-link" href="https://www.quotev.com/JadeiteBrushes/journal/2361506/Aspects-and-Classes-Explained-Homestuck" target="_blank" data-note="...homestuck classpects explained">classpects explained</a>
+                  <a class="site-link" href="https://switch.hacks.guide/" target="_blank" data-note="docs i used to mod my gen 1 switch">switch hacking</a>
+                  <a class="site-link" href="https://3ds.hacks.guide/" target="_blank" data-note="if you have one... GO HACK UR 3DS NOW!">3ds hacking</a>
                 </div>
               </div>
 
               <div class="lane" data-category="misc">
                 <div class="lane-label">misc</div>
-
                 <div class="lane-links">
-
-                  <a class="site-link"
-                  href="https://adrianmiller99.github.io/tfg-anvil-calculator/src/index.html"
-                  target="_blank"
-                  data-note="anvil calculator for the minecraft modpack terrafirmagreg">tfg anvil calculator</a>
-
-                  <a class="site-link"
-                  href="https://pzfans.com/en/B42/"
-                  target="_blank"
-                  data-note="full map for build 42 on project zomboid">b42 zomboid map</a>
-
-                  <a class="site-link"
-                  href="https://jonathangaynor.github.io/"
-                  target="_blank"
-                  data-note="a irl buddy's website! mine is better muahahaha. temporarily here until it gets more developed (or until i get asked to move it)">jonny's webstie</a>
-
-                  <a class="site-link"
-                  href="https://living-the-grid.com/"
-                  target="_blank"
-                  data-note="tomodachi life living the dream pixel art editor!, helps for converting images into easy to follow pixel art">living the grid</a>
-
-                  <a class="site-link"
-                  href="about:blank"
-                  target="_blank"
-                  data-note="a testing version of my page where i put to use some ideas to see how they would work. (CURRENTLY BROKEN)">kaia online BETA</a>
-                  
+                  <a class="site-link" href="https://adrianmiller99.github.io/tfg-anvil-calculator/src/index.html" target="_blank" data-note="anvil calculator for the minecraft modpack terrafirmagreg">tfg anvil calculator</a>
+                  <a class="site-link" href="https://pzfans.com/en/B42/" target="_blank" data-note="full map for build 42 on project zomboid">b42 zomboid map</a>
+                  <a class="site-link" href="https://jonathangaynor.github.io/" target="_blank" data-note="a irl buddy's website! mine is better muahahaha. temporarily here until it gets more developed (or until i get asked to move it)">jonny's webstie</a>
+                  <a class="site-link" href="https://living-the-grid.com/" target="_blank" data-note="tomodachi life living the dream pixel art editor!, helps for converting images into easy to follow pixel art">living the grid</a>
+                  <a class="site-link" href="about:blank" target="_blank" data-note="a testing version of my page where i put to use some ideas to see how they would work. (CURRENTLY BROKEN)">kaia online BETA</a>
                 </div>
               </div>
 
             </div>
-
-            <div class="bookmark-bottom">
-              <span>be sure to come back soon!</span>
-            </div>
-
           </section>
         </div>
       </div>
+
     </div>
   </div>
 </main>
+
 <footer>coded by a cryptid in my basement <br>kaia © 2022 - til the end of the universe!</footer>
 
 <script>
-  const buttons = document.querySelectorAll('.rail-button');
-  const lanes = document.querySelectorAll('.lane');
+  const buttons      = document.querySelectorAll('.rail-button');
+  const lanes        = document.querySelectorAll('.lane');
   const visibleCount = document.getElementById('visible-count');
 
   function updateCount() {
     const visibleLinks = [...lanes]
-      .filter((lane) => !lane.classList.contains('hidden'))
-      .reduce((total, lane) =>
-        total + lane.querySelectorAll('.site-link').length, 0);
-
+      .filter(lane => !lane.classList.contains('hidden'))
+      .reduce((total, lane) => total + lane.querySelectorAll('.site-link').length, 0);
     visibleCount.textContent = visibleLinks;
   }
 
-  buttons.forEach((button) => {
+  buttons.forEach(button => {
     button.addEventListener('click', () => {
       const selected = button.dataset.filter;
-
-      buttons.forEach((item) =>
-        item.classList.remove('active'));
-
+      buttons.forEach(item => item.classList.remove('active'));
       button.classList.add('active');
-
-      lanes.forEach((lane) => {
-        const show =
-          selected === 'all' ||
-          lane.dataset.category === selected;
-
-        lane.classList.toggle('hidden', !show);
+      lanes.forEach(lane => {
+        lane.classList.toggle('hidden', selected !== 'all' && lane.dataset.category !== selected);
       });
-
       updateCount();
     });
   });
+
+  updateCount();
 </script>
 
 </body>
