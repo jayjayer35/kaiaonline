@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>egg</title>
+<style>
+html, body {
+margin: 0;
+padding: 0;
+width: 100%;
+height: 100%;
+background: #000;
+overflow: hidden;
+  }
+
+.stage {
+width: 100vw;
+height: 100vh;
+display: flex;
+align-items: center;
+justify-content: center;
+  }
+
+.gif-wrap {
+position: relative;
+transform: scale(2);
+display: block;
+line-height: 0;
+cursor: pointer;
+  }
+
+.gif-wrap img,
+.gif-wrap canvas {
+display: block;
+image-rendering: pixelated;
+  }
+
+.gif-wrap canvas {
+position: absolute;
+top: 0;
+left: 0;
+  }
+
+.play-overlay {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.2);
+color: #fff;
+font-family: sans-serif;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+z-index: 10;
+transition: opacity 0.4s ease;
+  }
+
+.play-overlay.hidden {
+opacity: 0;
+pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="play-overlay" id="playOverlay"></div>
+
+<div class="stage">
+  <div class="gif-wrap" id="gifWrap">
+    <img id="photoGif" src="assets/tree.gif" alt="">
+    <canvas id="freezeFrame"></canvas>
+  </div>
+</div>
+
+<audio id="bgAudio" loop></audio>
+
+<script>
+const overlay = document.getElementById('playOverlay');
+const audio = document.getElementById('bgAudio');
+const track = Math.random() < 0.5 ? 'music/man.ogg' : 'music/man2.ogg';
+audio.src = track;
+audio.volume = 0.25;
+overlay.addEventListener('click', () => {
+audio.play();
+overlay.classList.add('hidden');
+  }, { once: true });
+
+const gifImg = document.getElementById('photoGif');
+const gifWrap = document.getElementById('gifWrap');
+const canvas = document.getElementById('freezeFrame');
+const ctx = canvas.getContext('2d');
+let frozen = true;
+
+function captureFrame() {
+  canvas.width = gifImg.naturalWidth;
+  canvas.height = gifImg.naturalHeight;
+  ctx.drawImage(gifImg, 0, 0);
+  canvas.style.display = 'block';
+}
+
+if (gifImg.complete) {
+  captureFrame();
+} else {
+  gifImg.addEventListener('load', captureFrame, { once: true });
+}
+
+gifWrap.addEventListener('click', () => {
+  if (frozen) {
+    canvas.style.display = 'none';
+  } else {
+    captureFrame();
+  }
+  frozen = !frozen;
+});
+</script>
+
+</body>
+</html>

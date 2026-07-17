@@ -116,7 +116,7 @@
     {
       label: "other",
       children: [
-        { label: "dont forget",    href: "/dontforget.html" },
+        { label: "egg",    href: "/egg.html" },
         { label: "404", href: "/404.html" },
         { label: "landing", href: "/index.html" },
       ],
