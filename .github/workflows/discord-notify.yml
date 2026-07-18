@@ -13,6 +13,7 @@ jobs:
       - name: Send Discord webhook embed via curl
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          WEBHOOK_URL_2: ${{ secrets.DISCORD_WEBHOOK_URL_2 }}
           COMMIT_AUTHOR: ${{ github.actor }}
           COMMIT_HASH: ${{ github.sha }}
           COMMIT_MSG: ${{ github.event.head_commit.message }}
@@ -31,4 +32,8 @@ jobs:
           }
           EOF
           )
-          curl -H "Content-Type: application/json" -X POST -d "$json" "$WEBHOOK_URL"
+          for url in "$WEBHOOK_URL" "$WEBHOOK_URL_2"; do
+            if [ -n "$url" ]; then
+              curl -H "Content-Type: application/json" -X POST -d "$json" "$url"
+            fi
+          done
