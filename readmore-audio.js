@@ -1,12 +1,4 @@
-// readmore-audio.js
-// gives <details class="readmore"> entries an optional "play a song once when opened" feature.
-// most readmores do nothing special. to make one play a song, just add a data-song attribute:
-//   <details class="readmore" data-song="../assets/music/mysong.mp3">
-// the song plays through once and stops (no looping). opening a different one
-// with a song will stop whatever was already playing.
-//
-// volume: defaults to DEFAULT_VOLUME below (0.0 to 1.0). override per-post with data-volume:
-//   <details class="readmore" data-song="../assets/music/mysong.mp3" data-volume="0.3">
+
 
 (function () {
     const DEFAULT_VOLUME = 0.1;

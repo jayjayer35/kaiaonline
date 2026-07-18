@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>? ? ?</title> 
+  <style>
+    /* ─── APPEARANCE ─────────────────────────────────────────────── */
+    :root {
+      --bg:        #000000;
+      --text:      #ffffff;
+      --font-size: 32px;
+      --spread:    2px;        /* pixel-spread distance */
+    }
+    /* ─────────────────────────────────────────────────────────────── */
+
+    @font-face {
+      font-family: 'BigShot';
+      src: url('big-shot.ttf') format('truetype');
+    } 
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    #scene {
+        position: relative;
+        text-align: center;
+        max-width: 760px;
+        padding: 2rem;
+
+        transform: scale(1.5);
+        transform-origin: center center;
+    }
+
+    /* Shared typography between ghost and text layers */
+    #scene-ghost,
+    #scene-text {
+      font-family: 'BigShot', 'Courier New', monospace;
+      font-size: var(--font-size);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Ghost: invisible, sits in normal flow to reserve space */
+    #scene-ghost {
+      color: transparent;
+      visibility: hidden;
+    }
+
+    /* Visible text: overlaid on top of the ghost */
+    #scene-text {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      color: var(--text);
+      animation: spread-pulse 5.5s ease-in-out infinite;
+    }
+
+    @keyframes spread-pulse {
+      /* 1 — dim */
+      0% {
+        text-shadow:
+          var(--spread)              0                      0  rgba(255,255,255,0.22),
+          calc(-1 * var(--spread))   0                      0  rgba(255,255,255,0.22),
+          0                          var(--spread)          0  rgba(255,255,255,0.22),
+          0                          calc(-1*var(--spread)) 0  rgba(255,255,255,0.22);
+      }
+      /* 2 — building */
+      25% {
+        text-shadow:
+          var(--spread)              0                      0  rgba(255,255,255,0.32),
+          calc(-1 * var(--spread))   0                      0  rgba(255,255,255,0.32),
+          0                          var(--spread)          0  rgba(255,255,255,0.32),
+          0                          calc(-1*var(--spread)) 0  rgba(255,255,255,0.32);
+      }
+      /* 3 — peak */
+      50% {
+        text-shadow:
+          var(--spread)              0                      0  rgba(255,255,255,0.42),
+          calc(-1 * var(--spread))   0                      0  rgba(255,255,255,0.42),
+          0                          var(--spread)          0  rgba(255,255,255,0.42),
+          0                          calc(-1*var(--spread)) 0  rgba(255,255,255,0.42);
+      }
+      /* 4 — fading */
+      75% {
+        text-shadow:
+          var(--spread)              0                      0  rgba(255,255,255,0.32),
+          calc(-1 * var(--spread))   0                      0  rgba(255,255,255,0.32),
+          0                          var(--spread)          0  rgba(255,255,255,0.32),
+          0                          calc(-1*var(--spread)) 0  rgba(255,255,255,0.32);
+      }
+      /* 5 — dim again */
+      100% {
+        text-shadow:
+          var(--spread)              0                      0  rgba(255,255,255,0.15),
+          calc(-1 * var(--spread))   0                      0  rgba(255,255,255,0.15),
+          0                          var(--spread)          0  rgba(255,255,255,0.15),
+          0                          calc(-1*var(--spread)) 0  rgba(255,255,255,0.15);
+      }
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <!-- VERY, VERY, INTERESTING.  -->
+<div id="scene">
+  <div id="scene-ghost" aria-hidden="true"></div>
+  <div id="scene-text"></div>
+</div>
+
+<script>
+  const PHRASES = [
+  "SO UH,[pause:1000]\nTHIS IS STILL[hold:2000]",
+  { dark: 2000 },
+  "A WORK IN[pause:1000]\nPROGRESS.[hold:2000]",
+  { dark: 2000 },
+  "LMAO[pause:8000]\nTHERE'S NOTHING ELSE HERE[hold:4000]",
+  { dark: 1800 },
+
+];
+
+  const TYPING_SPEED = 120;   // ms per character
+  const PHRASE_GAP   = 200;  // ms of blank between phrases
+  function parse(phrase) {
+    let hold = 0;
+    phrase = phrase.replace(/\[hold:(\d+)\]/, (_, ms) => { hold = parseInt(ms); return ''; });
+
+    const tokens = [];
+    const parts = phrase.split(/(\[pause:\d+\]|\\n)/);
+    for (const part of parts) {
+      const pauseMatch = part.match(/^\[pause:(\d+)\]$/);
+      if (pauseMatch) {
+        tokens.push({ type: 'pause', ms: parseInt(pauseMatch[1]) });
+      } else if (part === '\\n') {
+        tokens.push({ type: 'break' });
+      } else {
+        for (const ch of part) tokens.push({ type: 'char', value: ch });
+      }
+    }
+    return { tokens, hold };
+  }
+
+  function renderTokens(tokens, upTo) {
+    let html = '';
+    let shown = 0;
+    for (const tok of tokens) {
+      if (tok.type === 'pause') continue;
+      if (shown >= upTo) break;
+      if (tok.type === 'char') {
+        const safe = tok.value
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        html += safe;
+        shown++;
+      } else if (tok.type === 'break') {
+        html += '\n';
+        shown++;
+      }
+    }
+    return { html, shown };
+  }
+
+  // ── State ─────────────────────────────────────────────────────────
+  const el    = document.getElementById('scene-text');
+  const ghost = document.getElementById('scene-ghost');
+  let index        = 0;
+  let typing       = false;
+  let started      = false;
+  let timer        = null;
+  let currentTokens = [];
+  let currentHold   = 0;   
+  let revealedCount = 0;
+
+  function setHTML(html) {
+    el.innerHTML = html;
+  }
+
+  function stepThrough(tokens, onDone) {
+    let tokenPos = 0;
+    let visible  = 0;
+
+    for (; tokenPos < tokens.length; tokenPos++) {
+      if (tokens[tokenPos].type === 'pause') continue;
+      if (visible >= revealedCount) break;
+      visible++;
+    }
+
+    function next() {
+      if (tokenPos >= tokens.length) {
+        typing = false;
+        const { html } = renderTokens(tokens, Infinity);
+        setHTML(html);
+        onDone();
+        return;
+      }
+
+      const tok = tokens[tokenPos];
+      tokenPos++;
+
+      if (tok.type === 'pause') {
+        timer = setTimeout(next, tok.ms);
+      } else {
+        revealedCount++;
+        const { html } = renderTokens(tokens, revealedCount);
+        const done = tokenPos >= tokens.length;
+        setHTML(html);
+        if (done) {
+          typing = false;
+          onDone();
+        } else {
+          timer = setTimeout(next, TYPING_SPEED);
+        }
+      }
+    }
+
+    next();
+  }
+
+  function clearScene() {
+    el.innerHTML    = '';
+    ghost.innerHTML = '';
+  }
+
+  function typePhrase(phrase) {
+    clearTimeout(timer);
+    revealedCount = 0;
+    const parsed = parse(phrase);
+    currentTokens = parsed.tokens;
+    currentHold = parsed.hold;
+    typing        = true;
+    const { html: ghostHtml } = renderTokens(currentTokens, Infinity);
+    ghost.innerHTML = ghostHtml;
+    setHTML('');
+    stepThrough(currentTokens, () => {
+      timer = setTimeout(advance, currentHold + PHRASE_GAP);
+    });
+  }
+
+  function skipTyping() {
+    clearTimeout(timer);
+    typing = false;
+    const { html } = renderTokens(currentTokens, Infinity);
+    setHTML(html);
+    timer = setTimeout(advance, currentHold + PHRASE_GAP);
+  }
+
+  function runEntry() {
+    if (index >= PHRASES.length) {
+      clearScene();
+      index   = 0;
+      started = false;
+      return;
+    }
+
+    const entry = PHRASES[index];
+
+    if (typeof entry === 'object' && entry.dark != null) {
+      clearScene();
+      timer = setTimeout(() => {
+        index++;
+        runEntry();
+      }, entry.dark);
+    } else {
+      typePhrase(entry);
+    }
+  }
+
+  function advance() {
+    if (typing) { skipTyping(); return; }
+    index++;
+    runEntry();
+  }
+
+  const AUDIO_FILE = '/music/neverending_night.mp3';  
+  const audio = new Audio(AUDIO_FILE);
+  audio.loop = true;
+  audio.volume = 0.5;
+
+  function startCutscene() {
+    started = true;
+
+    document.removeEventListener('click', handleInput);
+    document.removeEventListener('keydown', handleKeyInput);
+
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+    runEntry();
+  }
+
+  function handleInput() {
+    if (!started) {
+      startCutscene();
+    } else {
+      advance();
+    }
+  }
+
+  document.addEventListener('click', handleInput);
+  document.addEventListener('keydown', handleKeyInput);
+
+  function handleKeyInput(e) {
+    if ([' ', 'Enter', 'ArrowRight', 'ArrowDown'].includes(e.key)) {
+      e.preventDefault();
+      handleInput();
+    }
+  }
+</script>
+
+</body>
+</html>

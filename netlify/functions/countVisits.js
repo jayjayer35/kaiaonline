@@ -1,6 +1,7 @@
 const BIN_URL = 'https://api.jsonbin.io/v3/b/689937f9ae596e708fc718f9'; //your bin URL you IDIOT
 const BIN_API_KEY = '$2a$10$UzWzekC9pYB.ho/FqEH7oOGidp3/9ZBv4JcsLsTFj00vfuAVbVfSy'; //JSON bin API key
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL; //Netlify env vars
+const DISCORD_WEBHOOK_URL_2 = process.env.DISCORD_WEBHOOK_URL_2; //second Discord webhook (optional)
 const IPINFO_TOKEN = process.env.IPINFO_TOKEN;
 
 // Random messages
@@ -69,7 +70,7 @@ exports.handler = async (event) => {
       ? `${location.city}, ${location.region}, ${location.country}`
       : 'Unknown location';
 
-    // Skip Ashburn VA bots
+    // Ashburn VA bots
     if (
       location &&
       location.city.toLowerCase() === 'ashburn' &&
@@ -130,31 +131,37 @@ exports.handler = async (event) => {
       });
     }
 
-    // Send Discord webhook only if incremented
+    // Send Discord webhook(s) only if incremented
     if (incremented) {
       const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
-      await fetch(DISCORD_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          embeds: [
-            {
-              title: getRandomMessage(),
-              description: `Visitor #**${record.count}**.`,
-              color: 0xffb6c1,
-              fields: [
-                { name: "From:", value: locationText, inline: true },
-                /* { name: "IP Address", value: visitorIP, inline: true } */
-              ],
-              image: { url: randomGif },
-              timestamp: new Date().toISOString()
-            }
-          ]
-        })
+      const payload = JSON.stringify({
+        embeds: [
+          {
+            title: getRandomMessage(),
+            description: `Visitor #**${record.count}**.`,
+            color: 0xffb6c1,
+            fields: [
+              { name: "From:", value: locationText, inline: true },
+            ],
+            image: { url: randomGif },
+            timestamp: new Date().toISOString()
+          }
+        ]
       });
+
+      const webhookUrls = [DISCORD_WEBHOOK_URL, DISCORD_WEBHOOK_URL_2].filter(Boolean);
+
+      await Promise.allSettled(
+        webhookUrls.map(url =>
+          fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: payload
+          })
+        )
+      );
     }
 
-    // Return total count to frontend
     return {
       statusCode: 200,
       headers: {

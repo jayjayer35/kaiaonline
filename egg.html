@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>egg</title>
+<title>* (Behind the tree.).</title>
 <style>
 html, body {
 margin: 0;
@@ -35,11 +35,6 @@ display: block;
 image-rendering: pixelated;
   }
 
-.gif-wrap canvas {
-position: absolute;
-top: 0;
-left: 0;
-  }
 
 .play-overlay {
 position: fixed;
@@ -47,13 +42,17 @@ inset: 0;
 background: rgba(0,0,0,0.2);
 color: #fff;
 font-family: sans-serif;
-display: flex;
+display: none;
 align-items: center;
 justify-content: center;
 cursor: pointer;
 z-index: 10;
 transition: opacity 0.4s ease;
   }
+
+.play-overlay.show {
+    display: flex;
+}
 
 .play-overlay.hidden {
 opacity: 0;
@@ -68,7 +67,6 @@ pointer-events: none;
 <div class="stage">
   <div class="gif-wrap" id="gifWrap">
     <img id="photoGif" src="assets/tree.gif" alt="">
-    <canvas id="freezeFrame"></canvas>
   </div>
 </div>
 
@@ -78,12 +76,18 @@ pointer-events: none;
 const overlay = document.getElementById('playOverlay');
 const audio = document.getElementById('bgAudio');
 const track = Math.random() < 0.5 ? 'music/man.ogg' : 'music/man2.ogg';
+
 audio.src = track;
 audio.volume = 0.25;
-overlay.addEventListener('click', () => {
-audio.play();
-overlay.classList.add('hidden');
+
+audio.play().then(() => {
+  overlay.classList.add('hidden');
+}).catch(() => {
+  overlay.addEventListener('click', () => {
+    audio.play();
+    overlay.classList.add('hidden');
   }, { once: true });
+});
 
 const gifImg = document.getElementById('photoGif');
 const gifWrap = document.getElementById('gifWrap');

@@ -7,12 +7,17 @@
   <link rel="stylesheet" href="/kaia-base.css">
   <link rel="stylesheet" href="/header.css">
   <style>
-    body { font-size: 1.5rem; }
+    body {
+      font-size: 1.5rem;
+      background-image: url('assets/bg4.png');
+      background-repeat: repeat;
+    }
 
-    /* ── homey accent tokens ──
-       these have fallbacks baked in so the page works even before
-       they exist in kaia-base.css — move them there later if you
-       want them centrally themeable / different per light-dark. */
+    body.dark-mode {
+      background-color: #11151a;
+      background-blend-mode: multiply;
+    }
+
     :root {
       --tape-1: #f0c9c4;
       --tape-2: #cfe6c6;
@@ -24,7 +29,17 @@
       --pin-metal: #b9b3a6;
     }
 
-    /* ── page shell ── */
+    body.dark-mode {
+      --tape-1: #6b3d3d;
+      --tape-2: #3d5a42;
+      --tape-3: #6b5a2a;
+      --tape-4: #2f4a63;
+      --polaroid-paper: #2b271f;
+      --polaroid-ink: #e8ddc8;
+      --polaroid-ink-soft: #a89a7c;
+      --pin-metal: #6b6558;
+    }
+
     .museum-shell {
       display: grid;
       grid-template-columns: 17rem 1fr;
@@ -39,7 +54,55 @@
       text-align: center;
     }
 
-    /* ── sidebar ── */
+    .museum-shell .panel {
+      position: relative;
+      background: var(--polaroid-paper);
+      border: 1px solid var(--panel-border);
+      border-radius: 0;
+      box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
+      padding: 1.1rem 1rem 1rem;
+      transform: rotate(var(--panel-rot, -1deg));
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .museum-shell .panel:hover {
+      transform: rotate(var(--panel-rot, -1deg)) translateY(-2px);
+      box-shadow: 4px 7px 13px rgba(0,0,0,0.25);
+    }
+
+    .museum-shell .sidebar > .panel:nth-of-type(1) { --panel-rot: -1.1deg; }
+    .museum-shell .sidebar > .panel:nth-of-type(2) { --panel-rot:  0.8deg; }
+    .museum-shell .sidebar > .panel:nth-of-type(3) { --panel-rot: -0.6deg; }
+
+    .museum-shell .panel::before {
+      content: "";
+      position: absolute;
+      top: -0.5rem;
+      left: 50%;
+      width: 0.8rem;
+      height: 0.8rem;
+      margin-left: -0.4rem;
+      border-radius: 50%;
+      background: radial-gradient(circle at 32% 30%, #fff 0%, var(--pin-metal) 45%, #7d7669 100%);
+      box-shadow: 0 2px 3px rgba(0,0,0,0.35);
+    }
+
+    .museum-shell .panel-head {
+      background: none;
+      border: none;
+      box-shadow: none;
+      border-bottom: 1px dashed var(--panel-border);
+      color: var(--polaroid-ink);
+      font-weight: bold;
+      letter-spacing: 0.08rem;
+      padding: 0 0 0.5rem;
+      margin: 0 0 0.6rem;
+    }
+
+    .museum-shell .panel-body {
+      padding: 0;
+    }
+
     .sidebar {
       display: flex;
       flex-direction: column;
@@ -65,7 +128,6 @@
       gap: 0.7rem;
     }
 
-    /* each room link is a tiny polaroid card, taped up like the photos */
     .room-list li { padding-top: 0.55rem; }
 
     .room-list li a {
@@ -129,24 +191,26 @@
     .stat-label { color: var(--text-soft); transition: color 0.3s; }
     .stat-val   { color: var(--text);      transition: color 0.3s; }
 
-    /* ── gallery ── */
     .gallery-area {
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      overflow-y: auto;
+      padding-top: 1rem;
+      padding-right: 0.25rem;
     }
 
     .room-section        { display: none; }
     .room-section.active { display: block; }
 
-    /* the room banner is a polaroid too — a plain white card taped up */
     .room-banner {
-      position: relative;
+      position: sticky;
+      top: 0;
+      z-index: 5;
       background: var(--polaroid-paper);
       border: 1px solid var(--panel-border);
       box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
       padding: 0.9rem 1.1rem 0.7rem;
-      margin-top: 1rem;
     }
 
     .room-banner .tape {
@@ -168,7 +232,6 @@
       margin-top: 0.1rem;
     }
 
-    /* ── photo grid ── */
     .photo-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr));
@@ -177,7 +240,6 @@
       padding: 0.5rem;
     }
 
-    /* ── exhibit → polaroid on a corkboard wall ── */
     .exhibit {
       display: flex;
       flex-direction: column;
@@ -203,7 +265,6 @@
       box-shadow: 4px 7px 14px rgba(0,0,0,0.28);
     }
 
-    /* washi tape, stuck on a little crooked */
     .tape {
       position: absolute;
       top: -0.65rem;
@@ -246,7 +307,6 @@
       letter-spacing: 0.1em;
     }
 
-    /* caption written right on the polaroid's white strip */
     .polaroid-caption {
       padding: 0.5rem 0.2rem 0.7rem;
     }
@@ -265,7 +325,6 @@
       line-height: 1.2;
     }
 
-    /* ── lightbox ── */
     #lightbox {
       position: fixed;
       inset: 0;
@@ -290,22 +349,36 @@
     }
 
     .lb-arrow {
-      background: none;
-      border: 1px solid rgba(255,255,255,0.2);
-      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.85);
       font-family: 'NDS', monospace, sans-serif;
-      font-size: 2rem;
-      padding: 0.5rem 0.75rem;
+      font-size: 1.5rem;
+      width: 3.1rem;
+      height: 3.1rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
       cursor: pointer;
       align-self: center;
       flex-shrink: 0;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
     }
 
     .lb-arrow:hover {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.18);
       color: #fff;
-      border-color: rgba(255,255,255,0.5);
+      border-color: rgba(255,255,255,0.6);
+      transform: scale(1.08);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    .lb-arrow:active {
+      transform: scale(0.94);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.35);
     }
 
     .lb-frame-wrap {
@@ -315,14 +388,14 @@
       flex-direction: column;
     }
 
-    /* big polaroid version for the lightbox */
     .lb-polaroid {
       position: relative;
       background: var(--polaroid-paper);
       border: 1px solid var(--panel-border);
       box-shadow: 6px 8px 0 rgba(0,0,0,0.25);
       padding: 0.75rem 0.75rem 0;
-      transform: rotate(-1.2deg);
+      --lb-rot: -1.2deg;
+      transform: rotate(var(--lb-rot));
     }
 
     .lb-polaroid .tape {
@@ -388,10 +461,10 @@
 
     #lb-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
 
-    /* ── mobile ── */
     @media (max-width: 56rem) {
       .museum-shell { grid-template-columns: 1fr; }
       .sidebar { position: static; }
+      .gallery-area { max-height: none; overflow-y: visible; }
       .lb-inner { flex-direction: column; }
       .lb-arrow { align-self: auto; }
       .lb-polaroid { transform: none; }
@@ -418,7 +491,6 @@
         <div class="panel-head">rooms</div>
         <div class="panel-body" style="padding: 0.375rem 0;">
           <ul class="room-list" id="room-list">
-            <!-- filled by JS -->
           </ul>
         </div>
       </div>
@@ -454,9 +526,9 @@
 
 <!-- lightbox -->
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
-  <button id="lb-close" aria-label="Close">[ x ]</button>
+  <button id="lb-close" aria-label="Close"></button>
   <div class="lb-inner">
-    <button class="lb-arrow" id="lb-prev" aria-label="Previous photo">◄</button>
+    <button class="lb-arrow" id="lb-prev" aria-label="Previous photo"><-</button>
     <div class="lb-frame-wrap">
       <div class="lb-polaroid">
         <div class="tape" style="background: var(--tape-3);"></div>
@@ -469,14 +541,11 @@
         </div>
       </div>
     </div>
-    <button class="lb-arrow" id="lb-next" aria-label="Next photo">►</button>
+    <button class="lb-arrow" id="lb-next" aria-label="Next photo">-></button>
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════
-   PHOTO DATA — edit this to add rooms / photos
-═══════════════════════════════════════════════ */
 const ROOMS = [
   {
     id: "actual photography",
@@ -505,10 +574,12 @@ const ROOMS = [
     label: "vrchat",
     desc: "screenies and photos of shenanigans and people i meet in vrchat",
     photos: [
-      { src: "assets/museum/VRC/VRC_2026-07-03.png", title: "purgatory", meta: "07-03-2026 · VR Chat", desc: "This photo was a great one... ME, Squnk, and Joseph (The girl in middle, Mew mew, and Kris) hopped into a deltarune Green room world, and then proceeded to get lost for 2 hours in an infinite maze. Later, Skiggy (ralsei) showed up and then i respawned out of the maze, found him, and then led him right back to hell where we were. After more exploring we happened to come across someone named Tiki (Mettaton) and then we just wandered and chatted. It went form like 2AM to like 5:30AM in this maze with nothing but us and it was really a fun time, despite us not finding the secret in the maze we heard about. I enjoyed spending time with them a lot as the maze mentally broke us down each bit by bit. Super enjoyable awesome friend bonding time :)"},       
+      { src: "assets/museum/VRC/VRC_2026-07-17.png", title: "real talk", meta: "07-17-2026 · Respite", desc: "Me (Noelle), Squnk, Skiggy, Tiki, and Thatoneguy chatting it up around a fire, just talking about life. Initially we were at the green room, again, but there was like 65 people there and it got overwhelming and laggy so i dropped a portal to my home world and we sat around and kinda just talked into the night. We went for like 3-4 hours talking and joking, and it was really nice. Helped cheer me up a good bit as well <3"},
+      { src: "assets/museum/VRC/VRChat_2026-07-03.png", title: "pluey fnf", meta: "07-03-2026 · VR Chat", desc: "Joseph absolutely hitting that shit on the DJ set as mike the cat (pluey)"},
+      { src: "assets/museum/VRC/VRC_2026-07-03.png", title: "purgatory", meta: "07-03-2026 · Tenna's Green Room (Maze)", desc: "This photo was a great one... ME, Squnk, and Joseph (The girl in middle, Mew mew, and Kris) hopped into a deltarune Green room world, and then proceeded to get lost for 2 hours in an infinite maze. Later, Skiggy (ralsei) showed up and then i respawned out of the maze, found him, and then led him right back to hell where we were. After more exploring we happened to come across someone named Tiki (Mettaton) and then we just wandered and chatted. It went form like 2AM to like 5:30AM in this maze with nothing but us and it was really a fun time, despite us not finding the secret in the maze we heard about. I enjoyed spending time with them a lot as the maze mentally broke us down each bit by bit. Super enjoyable awesome friend bonding time :)"},         
       { src: "assets/museum/VRC/VRC_2026-05-30.png", title: "ghost",                    meta: "05-30-2026 · VR Chat",                      desc: "Squnk, Sixer, and SourReigen (and me!) Just hung out and chatted with them for the night, obligatory photo to remember it :3" },
-      { src: "assets/museum/VRC/VRC_2026-05-28.png", title: "unexpected acceptance",    meta: "05-28-2026 · VR Chat (The Black Cat)",       desc: "two freaks that i met that pressed me to speak from the get go. did i? no lmao, but the more i stayed and listened, the more they felt like they wanted to include me, and they were accepting of my voice (and even said it was good?!?) regardless, a fun experience! Also, one of them went to the SAME MIDDLE SCHOOL THAT I DID!? crazy coincedence on vrchat of all places. <br><br> From left to right: Director Bright, Me, DeathIce" },
-      { src: "assets/museum/VRC/VRC_2026-05-26.png", title: "'you should put us on your site!'", meta: "05-26-2026 · VR Chat (Fruitiger Aero World)", desc: "a couple people i came across in vrc as i lurked, and they saw my website link and got curious. they loved it and asked to be featured on the site! they kinda inspired this entire page to be constructed. thank you guys as a thanks you will forever be immortalized as the first photo of the vrc section<br><br>From left to right FishoNChips, Romeida, Me, Zynel, Squnk" },
+      { src: "assets/museum/VRC/VRC_2026-05-28.png", title: "unexpected acceptance",    meta: "05-28-2026 · The Black Cat",       desc: "two freaks that i met that pressed me to speak from the get go. did i? no lmao, but the more i stayed and listened, the more they felt like they wanted to include me, and they were accepting of my voice (and even said it was good?!?) regardless, a fun experience! Also, one of them went to the SAME MIDDLE SCHOOL THAT I DID!? crazy coincedence on vrchat of all places. <br><br> From left to right: Director Bright, Me, DeathIce" },
+      { src: "assets/museum/VRC/VRC_2026-05-26.png", title: "'you should put us on your site!'", meta: "05-26-2026 · Fruitiger Aero World", desc: "a couple people i came across in vrc as i lurked, and they saw my website link and got curious. they loved it and asked to be featured on the site! they kinda inspired this entire page to be constructed. thank you guys as a thanks you will forever be immortalized as the first photo of the vrc section<br><br>From left to right FishoNChips, Romeida, Me, Zynel, Squnk" },
     ],
   },
   {
@@ -516,6 +587,31 @@ const ROOMS = [
     label: "supercon 2026",
     desc: "the first time i cosplayed at a con!",
     photos: [
+      { src: "assets/museum/supercon2026/cosplay33.jpg", title: "supercon 2026",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "last photo at the con. all of us posing for the photo. it was a fun time! see you next year supercon!" },
+      { src: "assets/museum/supercon2026/cosplay32.jpg", title: "PLUEY!!",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "pluey!!! this cosplay was really cool and unexpected to see!" },
+      { src: "assets/museum/supercon2026/cosplay31.jpg", title: "bigtop burger + friends :D",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "this is another great photo of the day. we saw two bigtop burger cosplayers and all my friends had gathered for this photo. if you haven't watched bigtop burger on youtube, you should! the episodes are short, but theyre funny, well animated, and cool :D. ty brandon for PUTTING ME ON!!" },
+      { src: "assets/museum/supercon2026/cosplay30.jpg", title: "PIRATE GASTER!!!!",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "okay so here was the gaster.... I had heard rumors thru the day that there was a pirate gaster SOMEWHERE in the con, and then after like an hour of searching for him, we gave up and kinda went on with our day. nearing the end, we went to the floor to do one last round for the booths and artists, and then while looking at a booth, i turn to my left and THE PIRATE GASTER WAS RIGHT THERE I WAS SO HAPPY!!!!!! needless to say, this is a top photo of con day." },
+      { src: "assets/museum/supercon2026/cosplay29.jpg", title: "burger break (again)",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "there's leilani sucked into her phone (also waiting for her food), bro it was SO hot outside. we were all tired" },
+      { src: "assets/museum/supercon2026/cosplay28.jpg", title: "burger break",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "there's kris with his milkshake :3" },
+      { src: "assets/museum/supercon2026/cosplay27.jpg", title: "* brandon joins the party!",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "after some waiting, brandon finally made it to the con! it was awesome to have him here too! and as quickly has he joined, we left the con (with him) to grab some burgers because we were starving and not trying to spend like 40 bucks on mediocre con food, so we stopped at shake shack! " },
+      { src: "assets/museum/supercon2026/cosplay26.jpg", title: "earth to hearth!",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "outer wilds cosplay!!! dudeee this one made me so happy to see. me and leilani had lost kris somewhere and while planning to meet up somewhere, i bumped into the hearthian, they were so chill" },
+      { src: "assets/museum/supercon2026/cosplay25.jpg", title: "flowery, yellow, orange, and... berdly",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "some really cool deltarune cosplays, both the orange and yellow were really cool to see! and kris' berdly is there beautifully." },
+      { src: "assets/museum/supercon2026/cosplay24.jpg", title: "john (and another dave!)",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "MORE HOMESTUCK!!!!!!" },
+      { src: "assets/museum/supercon2026/cosplay23.jpg", title: "jade harley!",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "i saw a jade harley! the only homestuck jade that i saw... one of the coolest characters!" },
+      { src: "assets/museum/supercon2026/cosplay22.jpg", title: "con break time #1",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "our legs hurt! were had been walking all day up to this point, so we were sitting down for a while near artists alley." },
+      { src: "assets/museum/supercon2026/cosplay21.jpg", title: "the whole damn dark world",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "DUDE these guys' cosplays were amazing, they got all the fucking deltarune characters this was crazy. they were awesome. but i see no gaster... yet..." },
+      { src: "assets/museum/supercon2026/cosplay20.jpg", title: "berdly and dante",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "a photo i took of kris with dante from devil may cry. i really like this photo, lol" },
+      { src: "assets/museum/supercon2026/cosplay19.jpg", title: "big group photo",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "a bunch of people posing up for an awesome photo! we all kinda started talking about the con and interests and stuff, it was a great time and i asked someone to take a photo of us. deltarune, homestuck, and jojo's" },
+      { src: "assets/museum/supercon2026/cosplay18.jpg", title: "flowery!!",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "first photo i took at the con! it was also the first flowery cosplay i saw there, so you know i just had to take a photo." },
+      { src: "assets/museum/supercon2026/cosplay17.jpg", title: "my berdly",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "look at my gorgeous berdly! even though it looks so last minute, it adds to it tenfold. " },
+      { src: "assets/museum/supercon2026/cosplay16.jpg", title: "my karkat",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "look at my beautiful (completely on her own volition) karkat! she did great, davekat is #real" },
+      { src: "assets/museum/supercon2026/cosplay15.jpg", title: "con time!",    meta: "07-11-2026 · Miami Beach Convention Center", desc: "we made it to the con! we were waiting on the floor waiting for it to open... i was so happy to cosplay" },
+      { src: "assets/museum/supercon2026/cosplay14.jpg", title: "homes smell ya later!",    meta: "07-10-2026 · my home", desc: "making a quick prop for karkat! we had to make the homes smell ya later sickle... even though it was last minute, it looked really well done, youll see it in photos prob" },
+      { src: "assets/museum/supercon2026/cosplay13.jpg", title: "berdly beak",    meta: "07-10-2026 · my home", desc: "kris was cosplayed berdly, so we had to make him a stupid funny beak, we WANTED to paint him blue, but he drew the line there.. smh" },
+      { src: "assets/museum/supercon2026/cosplay12.jpg", title: "horns on wig!",    meta: "07-10-2026 · my home", desc: "leilani brought her wig! so we hot glued the horns onto it, it looks good!" },
+      { src: "assets/museum/supercon2026/cosplay11.jpg", title: "fishing line for the time tables",    meta: "07-08-2026 · my home", desc: "figured out how i wanted to fasten the time tables to my hands. i eventually added a little padding to help with the pain of fishing line digging in my skin" },
+      { src: "assets/museum/supercon2026/cosplay10.jpg", title: "karkat horns complete!",    meta: "07-08-2026 · my home", desc: "i finger-painted them to get a nice gradient." },
+      { src: "assets/museum/supercon2026/cosplay9.jpg", title: "karkat horns",    meta: "07-08-2026 · my home", desc: "made some karkat horns out of the same foam i used for my dave prop. used wood glue to stack them then i cut and sanded them. i just primed them here too! its for my friend leilani, shes cosplaying karkat for my dave :3" },
       { src: "assets/museum/supercon2026/cosplay8.jpg", title: "strider time tables!",    meta: "05-16-2026 · my home", desc: "the (almost) final look of them! in this photo theyre not actually glued all together, becuase i need to figure out how to fasten them to my hands for the con! so ill glue them soon, but this is what theyll look like when they're finished. (ill be taking another photo anyway). but for now, i must start work on the knight of time hood cape/cloak (my mother will helps with this because i dont entirely know how to use a sewing machine, or take measurements, or how to work with fabric at all.) " },
       { src: "assets/museum/supercon2026/cosplay7.jpg", title: "final coats of paint",    meta: "05-16-2026 · my home", desc: "heres the \"upper\" side of the gear base, i dont need to paint all of it here, because i will be gluing the mid section there. i also tested some reds on it because that section didn't matter, lol. speaking of gluing, in the back you can see that i have glued the records onto the circle mid sections, weighing them down with my music theory textbook and my old ipad, real classy right" },
       { src: "assets/museum/supercon2026/cosplay6.jpg", title: "first few coats of paint", meta: "05-16-2026 · my home", desc: "in this photo you're looking at the bottom of the time tables. i first painted the whole thing with like 2-3 layers of primer/gesso, cause this foam board can be kinda porous. i would've preferred to spraypaint it on all these stages, but that would literally dissolve the foam, so manually doing it was the only option. oh also the non-gear segment i only painted the rim of white. since something will be glued on top and bottom. (using wood glue, which takes a million fucking years to set ohmygod)" },
@@ -632,6 +728,29 @@ roomList.addEventListener("click", e => {
 });
 
 showRoom(ROOMS[0].id);
+
+/* ── keep the photo area capped to the sidebar's height ──
+   (measured, not hardcoded, since the sidebar's height depends
+   on room count / description length) so it scrolls internally
+   instead of running on past where "exhibit info" ends */
+function syncGalleryHeight() {
+  const gallery = document.getElementById("gallery-area");
+  if (!gallery) return;
+  if (window.matchMedia("(max-width: 56rem)").matches) {
+    gallery.style.maxHeight = "";
+    return;
+  }
+  const sidebar = document.querySelector(".sidebar");
+  if (!sidebar) return;
+  const EXTRA_HEIGHT_PX = 96; /* a little breathing room past the sidebar's height */
+  gallery.style.maxHeight = (sidebar.getBoundingClientRect().height + EXTRA_HEIGHT_PX) + "px";
+}
+
+syncGalleryHeight();
+window.addEventListener("resize", syncGalleryHeight);
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(syncGalleryHeight);
+}
 
 /* ═══════════════════════════════════════════════
    LIGHTBOX

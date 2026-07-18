@@ -1,13 +1,8 @@
 (function () {
   "use strict";
 
-  // ── ALERT BAR ───────────────────────────────────────────────────────────────
-  // Set to null or "" to hide the alert bar entirely.
   const ALERT_TEXT = "";
 
-  // ── PLAYLIST ────────────────────────────────────────────────────────────────
-  // { file: "/music/filename.mp3", name: "Display Name" }
-  // Shuffle is on by default. A song-select dropdown lists all tracks.
   const PLAYLIST = [
     { file: "/music/again.mp3",  name: "again, someday - kaiasei" },
     { file: "/music/moonsetter.mp3",  name: "Moonsetter - Homestuck" },
@@ -70,20 +65,20 @@
         { label: "the webmistress",     href: "/me.html" },
         { label: "the blog",     href: "/blog/index.html" },
         { label: "dream log", href: "/dreamdiary.html" },
-      ],
-      
-    },
-    {
-      label: "for u",
-      children: [
         { label: "friends", badge: "",
           submenu: [
             { label: "memory vids", href: "/memoryvids.html", badge: ""},
             { label: "hall of messages (wip)", href: "/msgs.html" },
           ]
         },
+      ],
+      
+    },
+    {
+      label: "for u",
+      children: [
         { label: "scrapbook",   href: "/scrapbook.html" },
-        { label: "my music", href: "/mymusic.html", badge: "" },
+        { label: "music", href: "/mymusic.html", badge: "" },
         { label: "recipes (wip)",   href: "/myrecipes.html" },
         { label: "web projects", href: "/mywebdev.html" },
       ],
@@ -110,13 +105,12 @@
         { label: "old update log", href: "/ofb/updates.html" },
           ]
         },
-        { label: "stamps",   href: "stamps (WIP)" },
+        { label: "stamps (WIP)",   href: "stamps.html" },
       ],
     },
     {
       label: "other",
       children: [
-        { label: "egg",    href: "/egg.html" },
         { label: "404", href: "/404.html" },
         { label: "landing", href: "/index.html" },
       ],
@@ -138,6 +132,18 @@
 
   document.head.appendChild(link);
 }
+
+  // egg room nav chance
+  const EGG_CHANCE = 0.01;
+  const EGG_HREF   = "/egg.html";
+  function maybeRedirectToEgg(e) {
+    const dest = e.currentTarget.getAttribute("href");
+    if (dest === EGG_HREF) return; 
+    if (Math.random() < EGG_CHANCE) {
+      e.preventDefault();
+      window.location.href = EGG_HREF;
+    }
+  }
 
   // ── BUILD HEADER DOM ────────────────────────────────────────────────────────
   function buildHeader() {
@@ -182,6 +188,7 @@
         a.className = "ds-link";
         a.textContent = item.label;
         a.addEventListener("click",      () => window.kaiaSound.play("click"));
+        a.addEventListener("click",      maybeRedirectToEgg);
         a.addEventListener("mouseenter", () => window.kaiaSound.play("hover"));
         wrap.appendChild(a);
       } else {
@@ -224,6 +231,7 @@
                 subA.appendChild(b);
               }
               subA.addEventListener("click",      () => window.kaiaSound.play("click"));
+              subA.addEventListener("click",      maybeRedirectToEgg);
               subA.addEventListener("mouseenter", () => window.kaiaSound.play("hover"));
               subMenu.appendChild(subA);
             });
@@ -240,6 +248,7 @@
               a.appendChild(b);
             }
             a.addEventListener("click",      () => window.kaiaSound.play("click"));
+            a.addEventListener("click",      maybeRedirectToEgg);
             a.addEventListener("mouseenter", () => window.kaiaSound.play("hover"));
             menu.appendChild(a);
           }
@@ -892,6 +901,43 @@
           audio.src = sounds[Math.floor(Math.random() * sounds.length)];
 
           // Play it
+          audio.play();
+      });
+
+      document.body.appendChild(cornerImg);
+  }
+
+
+// flowery
+  if (Math.random() < 0.5) {
+
+      const cornerImg = document.createElement('img');
+      cornerImg.src = '/assets/YAM.png';
+
+      Object.assign(cornerImg.style, {
+          position: 'fixed',
+          bottom: '0',
+          right: '0',
+          zIndex: '9999',
+          imageRendering: 'pixelated',
+          cursor: 'pointer',
+          transform: 'scale(.125)',
+          transformOrigin: 'bottom right'
+      });
+
+      const sounds = [
+          '/assets/sneeze.wav',
+      ];
+
+      const audio = new Audio();
+      audio.volume = 0.25; // Half volume
+
+      cornerImg.addEventListener('click', () => {
+          audio.pause();
+          audio.currentTime = 0;
+
+          audio.src = sounds[Math.floor(Math.random() * sounds.length)];
+
           audio.play();
       });
 
