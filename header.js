@@ -909,7 +909,7 @@
 
 
 // flowery
-  if (Math.random() < 0.5) {
+  if (Math.random() < 0.05) {
 
       const cornerImg = document.createElement('img');
       cornerImg.src = '/assets/YAM.png';
