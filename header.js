@@ -1,16 +1,18 @@
 (function () {
   "use strict";
 
-  const ALERT_TEXT = "";
+  const ALERT_TEXT = "Hiatus over! More site updates are finally in the works.";
 
   const PLAYLIST = [
     { file: "/music/again.mp3",  name: "again, someday - kaiasei" },
     { file: "/music/moonsetter.mp3",  name: "Moonsetter - Homestuck" },
     { file: "/music/ki.mp3",  name: "Ki - C418" },
     { file: "/music/alpha.mp3",  name: "Alpha - C418" },
+    { file: "/music/runningsky.mp3",  name: "Running Sky - Toby Fox" },
     { file: "/music/castlefunk.mp3",  name: "Castle Funk - Toby Fox" },
     { file: "/music/castletown.mp3",  name: "My Castle Town - Toby Fox" },
     { file: "/music/story.mp3",  name: "Before the Story - Toby Fox" },
+    { file: "/music/walking.mp3",  name: "Walking Home - Toby Fox" },
     { file: "/music/scarlet.mp3",  name: "Scarlet Forest - Toby Fox & Trevor Alan Gomes" },
     { file: "/music/scarfor.mp3",  name: "Field of Hopes and Dreams (Credits Version) - Toby Fox & Trevor Alan Gomes" },
     { file: "/music/paradise.mp3",  name: "Welcome to Paradise - Emile van Krieken"   },
@@ -62,9 +64,8 @@
     {
       label: "kaia",
       children: [
-        { label: "the webmistress",     href: "/me.html" },
+        { label: "the webmistress",     href: "/kaia.html" },
         { label: "the blog",     href: "/blog/index.html" },
-        { label: "dream log", href: "/dreamdiary.html" },
         { label: "friends", badge: "",
           submenu: [
             { label: "memory vids", href: "/memoryvids.html", badge: ""},

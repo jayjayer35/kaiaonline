@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>shitty story - vigil of embers</title>
+
+<link rel="stylesheet" href="/kaia-base.css">
+<link rel="stylesheet" href="/header.css">
+
+<style>
+
+  :root {
+    --story-bg-image: url('/assets/bakgrnd.jpg');
+  }
+
+  body {
+    background:
+      linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),
+      var(--story-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+  body.dark-mode {
+    background:
+      linear-gradient(rgba(8, 10, 14, 0.6), rgba(8, 10, 14, 0.6)),
+      var(--story-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+
+  .story-wrap {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 5rem;
+  }
+
+  /* --- story / chapter heading --- */
+  .story-head {
+    text-align: center;
+    margin-bottom: 2.25rem;
+  }
+  .story-kicker {
+    font-family: 'NDS', monospace, sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    color: var(--text-soft);
+  }
+  .chapter-heading {
+    font-family: 'NDS', monospace, sans-serif;
+    font-size: 1.9rem;
+    font-weight: normal;
+    color: var(--text);
+    margin: 0.35rem 0 0.5rem;
+  }
+  .chapter-sub {
+    font-family: 'NDS', monospace, sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1rem;
+    color: var(--text-soft);
+  }
+  .story-divider {
+    border: none;
+    border-top: 1px solid var(--panel-border);
+    width: 4rem;
+    margin: 1.5rem auto 0;
+  }
+
+  /* --- the reading surface itself --- */
+  .story-page {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.025);
+    padding: 2.5rem clamp(1.25rem, 6vw, 3.5rem);
+    transition: background 0.3s, border-color 0.3s;
+  }
+
+  .story-text {
+    font-family: 'NDS', monospace, sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--text);
+  }
+  .story-text p {
+    margin-bottom: 1.15rem;
+  }
+  .story-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* --- chapter nav --- */
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--divider);
+    font-family: 'NDS', monospace, sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.05rem;
+  }
+  .chapter-nav a {
+    color: var(--link);
+    text-decoration: none;
+  }
+  .chapter-nav a:hover {
+    text-decoration: underline;
+  }
+  .chapter-nav .disabled {
+    color: var(--text-soft);
+    opacity: 0.5;
+  }
+  .chapter-nav .index-link {
+    text-align: center;
+    color: var(--text-soft);
+  }
+
+  .music-toggle {
+    position: fixed;
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    background: var(--panel-head);
+    border: 1px solid var(--panel-head-b);
+    box-shadow: 1px 1px 0 var(--panel-shadow);
+    color: #fff;
+    font-family: 'NDS', monospace, sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s, border-color 0.3s;
+    z-index: 100;
+  }
+  .music-toggle.is-playing {
+    filter: brightness(1.1);
+  }
+
+  @media (max-width: 30rem) {
+    .story-page { padding: 1.75rem 1.25rem; }
+    .chapter-heading { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<script src="/header.js"></script>
+
+<main class="story-wrap">
+
+  <div class="story-head">
+    <h1 class="chapter-heading"></h1>
+    <div class="chapter-sub"></div>
+  </div>
+
+  <article class="story-page">
+    <div class="story-text">
+      <p>
+        The sun was two hands from the horizon, and the gates of Aradisia had yet to close for sundown. The relatively small city was finalizing preperations 
+        for the quick ceremony before the festivities started around the center of town.
+      </p>
+      <p>
+        Lavarand jolts up from bed, it's quite late now, isn't it? He looks around, checking for wounds. "Maybe it was a bad dream... but it felt too... real?" Lavarand says to himself. 
+      </p>
+      <p>
+        
+      </p>
+      <p>
+        
+      </p>
+    </div>
+  </article>
+
+  <div class="chapter-nav">
+   <a href="/flames/chapter0.html">&laquo; prev</a>
+    <a href="/flames/chapter2.html">next &raquo;</a>
+  </div>
+
+</main>
+
+<audio id="chapter-audio" loop preload="auto"></audio>
+<button id="music-toggle" class="music-toggle" aria-label="Toggle background music">&#9834;</button>
+
+<script>
+  const CHAPTER_SONG   = "/flames/songs/.mp3"; // this chapter's track
+  const SONG_VOLUME    = 0.2;                       
+  const AUTOPLAY       = true;                      
+
+  (function () {
+    const audio = document.getElementById('chapter-audio');
+    const toggleBtn = document.getElementById('music-toggle');
+
+    audio.src = CHAPTER_SONG;
+    audio.volume = SONG_VOLUME;
+
+    let playing = false;
+
+    function setPlayingState(isPlaying) {
+      playing = isPlaying;
+      toggleBtn.classList.toggle('is-playing', isPlaying);
+    }
+
+    function tryPlay() {
+      audio.play()
+        .then(() => setPlayingState(true))
+        .catch(() => setPlayingState(false));
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      if (playing) {
+        audio.pause();
+        setPlayingState(false);
+      } else {
+        tryPlay();
+      }
+    });
+
+    if (AUTOPLAY) {
+      tryPlay();
+      const resumeOnInteraction = () => {
+        if (!playing) tryPlay();
+        document.removeEventListener('click', resumeOnInteraction);
+      };
+      document.addEventListener('click', resumeOnInteraction, { once: true });
+    }
+  })();
+</script>
+
+</body>
+</html>

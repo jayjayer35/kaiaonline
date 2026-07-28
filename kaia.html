@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaia online - me me me !!!!</title>
+  <link rel="stylesheet" href="rework/assets/css/kaia-base.css">
+  <link rel="stylesheet" href="/kaia-base.css">
+  <link rel="stylesheet" href="/header.css">
+  <script src="header.js" defer></script>
+  <style>
+
+    html { scroll-behavior: smooth; font-size: 112.5%; }
+
+    .page {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: 18rem minmax(0, 1fr);
+      align-items: start;
+      gap: 1.25rem;
+    }
+
+    .panel-body { padding: 0.625rem; }
+    .decor { width: 2rem; image-rendering: pixelated; }
+
+    /* ── sidebar ── */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: sticky;
+      top: 1rem;
+    }
+
+    /* ── main column ── */
+    .main-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* ── two-up row for shorter panels on wide screens ── */
+    .panel-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    @media (max-width: 58rem) {
+      .page { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .panel-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── profile photo ── */
+    .profile-photo {
+      width: 8rem;
+      height: 8rem;
+      background: var(--soft-blue);
+      border: 1px solid var(--panel-border);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      text-align: center;
+      overflow: hidden;
+    }
+    .profile-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ── identity row ── */
+    .id-row { margin-top: 0.85rem; display: flex; align-items: baseline; gap: 0.4rem; }
+    .id-name { font-weight: bold; font-size: 1.15rem; }
+    .id-age  { color: var(--text-soft); font-size: 0.9rem; }
+
+
+    .about-text p { margin-bottom: 0.4rem; }
+    .about-text p:last-child { margin-bottom: 0; }
+    .about-text a { color: var(--link); }
+
+    /* ── fact list ── */
+    .fact-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+      gap: 0.4rem 1rem;
+    }
+    .fact-list .fact-row { display: flex; justify-content: space-between; gap: 0.5rem; }
+    .fact-list .fact-label { color: var(--text-soft); }
+    .fact-list .fact-value { text-align: right; }
+
+    /* ── currently ── */
+    .simple-list { display: flex; flex-direction: column; gap: 0.45rem; }
+    .currently-row { display: flex; align-items: center; gap: 0.5rem; }
+    .currently-icon { width: 1.1rem; height: 1.1rem; flex-shrink: 0; object-fit: contain; image-rendering: pixelated; }
+    .currently-label { color: var(--text-soft); flex-shrink: 0; }
+    .currently-value { font-weight: bold; }
+
+    /* ── hobbies list ── */
+    .hobby-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+    .hobby-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.05rem 0;
+      line-height: 1.3;
+    }
+    .hobby-list .heart { color: #c96b9e; flex-shrink: 0; font-weight: bold; }
+    body.dark-mode .hobby-list .heart { color: #e08cc0; }
+
+    /* ── favorites groups + galleries ── */
+    .fav-group { margin-bottom: 1rem; }
+    .fav-group:last-child { margin-bottom: 0; }
+    .fav-group-label {
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      color: var(--text-soft);
+      border-bottom: 1px solid var(--divider);
+      padding-bottom: 0.25rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .fav-gallery {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+      gap: 0.6rem;
+    }
+
+    .fav-card {
+      border: 1px solid var(--panel-border);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+      background: var(--pale-blue);
+      padding: 0.4rem;
+      text-align: center;
+    }
+    .fav-card .cover-placeholder {
+      width: 100%;
+      aspect-ratio: 6 / 9;
+      background: var(--soft-blue);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-size: 0.65rem;
+      color: var(--text-soft);
+    }
+    .fav-card .cover-placeholder img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .fav-card .fav-title { font-size: 0.8rem; font-weight: bold; }
+
+
+    .fav-card .cover-placeholder-music {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: var(--soft-blue);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-size: 0.65rem;
+      color: var(--text-soft);
+    }
+    .fav-card .cover-placeholder-music img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ── random fact ── */
+    #fact-output { min-height: 1.4em; color: var(--text-soft); margin-bottom: 0.6rem; }
+
+    /* ── identity button images (86x15) ── */
+    .id-badges { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.7rem; text-align: center; }
+    .id-badges img { width: 86px; height: 15px; image-rendering: pixelated; display: block; text-align: center;}
+
+    /* ── dream log (embedded flip-through) ── */
+    .dl-toc { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
+    .dl-toc label { font-size: 0.8rem; color: var(--text-soft); white-space: nowrap; }
+    .dl-toc select {
+      flex: 1 1 auto;
+      min-width: 0;
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 0.85rem;
+      padding: 0.3rem 0.4rem;
+      background: var(--panel-bg);
+      color: var(--text);
+      border: 1px solid var(--panel-border);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+    }
+
+    .dream-page {
+      border: 1px solid var(--panel-border);
+      box-shadow: 2px 2px 0 var(--panel-shadow);
+      position: relative;
+    }
+    .dream-page .panel-head { display: flex; align-items: baseline; gap: 0.5rem; justify-content: space-between; }
+    .dream-page .dp-date { font-size: 0.75rem; opacity: 0.9; white-space: nowrap; }
+    .dream-page .dp-title { flex: 1 1 auto; }
+    .dream-page .dp-moon { font-size: 0.9rem; }
+
+    .dream-page .panel-body {
+      position: relative;
+      padding: 0.6rem 0.7rem;
+      min-height: 7rem;
+    }
+    .dream-page .dp-text {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      opacity: 0;
+      animation: dl-page-in 0.25s ease forwards;
+    }
+    @keyframes dl-page-in {
+      from { opacity: 0; transform: translateY(3px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .dream-page .dp-text { animation: none; opacity: 1; }
+    }
+
+    .dl-flip { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-top: 0.6rem; }
+    .dl-flip .dl-count { font-size: 0.8rem; color: var(--text-soft); white-space: nowrap; }
+
+    .dl-btn {
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      border-radius: 2px;
+      background: var(--panel-bg);
+      color: var(--text);
+      border: 1.5px solid var(--text);
+      padding: 0.4rem 0.8rem;
+    }
+    .dl-btn:hover:not(:disabled) { cursor: pointer; background: var(--text); color: var(--panel-bg); }
+    .dl-btn:disabled { opacity: 0.35; }
+
+    footer { font-size: 1rem; padding: 0.75rem 0 1.5rem; }
+
+    @media (max-width: 30rem) {
+      .page { padding: 0.5rem; gap: 0.75rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="sidebar">
+
+    <div class="panel" id="intro">
+      <div class="panel-head">hi, i'm kaia! (◕‿◕✿)</div>
+      <div class="panel-body">
+
+        <div class="profile-photo" id="profile-photo"><img src="assets/meposter.jpg" alt=""></div>
+
+        <div class="id-row">
+          <span class="id-name">kaia</span>
+          <span class="id-age">- 22</span>
+        </div>
+
+        <div class="about-text">
+          <p>this page is all mine!!!! i will indulge in myself here</p>
+        </div>
+
+          <div class="id-badges" id="identity-badges"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="currently">
+      <div class="panel-head">currently</div>
+      <div class="panel-body">
+        <div class="simple-list" id="currently-list"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="hobbies">
+      <div class="panel-head">hobbies</div>
+      <div class="panel-body">
+        <ul class="hobby-list" id="hobbies-row"></ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="main-col">
+
+    <div class="panel-row">
+      <div class="panel" id="facts">
+        <div class="panel-head">facts</div>
+        <div class="panel-body">
+          <div class="fact-list" id="facts-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" id="fact-btn-panel">
+        <div class="panel-head">random bullshit go</div>
+        <div class="panel-body">
+          <p id="fact-output"></p>
+          <button id="fact-btn" class="dl-btn" type="button">this is a WIP button...</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" id="favorites">
+      <div class="panel-head">favorites</div>
+      <div class="panel-body">
+
+        <div class="fav-group">
+          <div class="fav-group-label">games</div>
+          <ul class="fav-gallery" id="fav-gallery-games"></ul>
+        </div>
+
+        <!-- <div class="fav-group">
+          <div class="fav-group-label">shows</div>
+          <ul class="fav-gallery" id="fav-gallery-shows"></ul>
+        </div> -->
+
+        <div class="fav-group">
+          <div class="fav-group-label">music</div>
+          <ul class="fav-gallery" id="fav-gallery-music"></ul>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="panel" id="dreams">
+      <div class="panel-head">dream log</div>
+      <div class="panel-body">
+        <p style="color:var(--text-soft); font-size:0.85rem; margin-bottom:0.6rem;">i write down my dreams sometimes</p>
+
+        <div class="dl-toc">
+          <label for="dl-jump">jump to</label>
+          <select id="dl-jump"></select>
+        </div>
+
+        <div id="dl-page-slot"></div>
+
+        <div class="dl-flip">
+          <button id="dl-prev" class="dl-btn" type="button">&larr; prev</button>
+          <span class="dl-count" id="dl-count"></span>
+          <button id="dl-next" class="dl-btn" type="button">next &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>coded by my two left hands, get inspired! <br>kaia © 2022 - til idk!</footer>
+
+<script>
+
+  const identityBadges = [
+    { src: "/assets/idbuttons/She_Her_Star_Light.png", alt: "" },
+    { src: "/assets/idbuttons/Trans.png", alt: "" },
+    { src: "/assets/idbuttons/Bird.png", alt: "" },
+    { src: "/assets/idbuttons/LH.png", alt: "" },
+    { src: "/assets/idbuttons/Aquarius.png", alt: "" },
+    { src: "/assets/idbuttons/Witch.png", alt: "" },
+    { src: "/assets/idbuttons/Student.png", alt: "" },
+    { src: "/assets/idbuttons/Musician.png", alt: "" },
+    { src: "/assets/idbuttons/Pianist.png", alt: "" },
+    { src: "/assets/idbuttons/Cleric.png", alt: "" },
+    { src: "/assets/idbuttons/PC.png", alt: "" },
+    { src: "/assets/idbuttons/void.png", alt: "" },
+    { src: "/assets/idbuttons/derse.png", alt: "" },
+  ];
+
+  const factsData = [
+    { label: "birthday", value: "02/03" },
+    { label: "fav color(s)", value: "lavender & mint" },
+    { label: "plan for this page", value: "its  a WIP trust" },
+  ];
+
+  const currentlyData = [
+    { icon: "/assets/icon_music.gif", label: "listening to:", value: "Deltarune Chapter 5" },
+    { icon: "/assets/icon_reading.gif", label: "reading:", value: "Witch Hat Atelier" },
+    { icon: "/assets/icon_playing.gif", label: "playing:", value: "Minecraft & TF2" },
+    { icon: "/assets/icon_watching.gif", label: "watching:", value: "you..." },
+  ];
+
+  const hobbiesData = [
+    "rollerblading", 
+    "baking", 
+    "card games", 
+    "making music", 
+    "doodling", 
+    "photography", 
+    "gaming", 
+    "video editing", 
+  ];
+
+  const gamesData = [
+    { title: "Outer Wilds", cover: "/assets/covers/wilds.gif" },
+    { title: "DELTARUNE", cover: "/assets/covers/deltarune.webp" },
+    { title: "UNDERTALE", cover: "/assets/covers/undertale.png" },
+    { title: "Minecraft", cover: "/assets/covers/minecraft.webp" },
+    { title: "Team Fortress 2", cover: "/assets/covers/tf2.png" },
+    { title: "The Binding of Isaac", cover: "/assets/covers/repentance.jpg" },
+    { title: "ULTRAKILL", cover: "/assets/covers/ultrakill.png" },
+  ];
+
+  const showsData = [
+    { title: "show", cover: "covers/shows/a.jpg" },
+  ];
+
+  const musicData = [
+    { title: "artist / album", cover: "covers/music/a.jpg" },
+  ];
+
+  const funFacts = [
+    "this is a work in progress why did you click",
+    "this is a work in progress why did you click",
+  ];
+
+  document.getElementById('identity-badges').innerHTML = identityBadges
+    .map(b => `<img src="${b.src}" alt="${b.alt}" title="${b.alt}">`).join('');
+
+  document.getElementById('facts-list').innerHTML = factsData.map(f => `
+    <div class="fact-row"><span class="fact-label">${f.label}</span><span class="fact-value">${f.value}</span></div>
+  `).join('');
+
+  document.getElementById('currently-list').innerHTML = currentlyData.map(c => `
+    <div class="currently-row">
+      <img class="currently-icon" src="${c.icon}" alt="">
+      <span class="currently-label">${c.label}</span>
+      <span class="currently-value">${c.value}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('hobbies-row').innerHTML = hobbiesData.map(h => `
+    <li><span class="heart">&gt;</span>${h}</li>
+  `).join('');
+
+  function renderGallery(id, data) {
+    document.getElementById(id).innerHTML = data.map(d => `
+      <li class="fav-card">
+        <div class="cover-placeholder"><img src="${d.cover}" alt="" onerror="this.parentElement.textContent='cover'"></div>
+        <div class="fav-title">${d.title}</div>
+      </li>
+    `).join('');
+  }
+  renderGallery('fav-gallery-games', gamesData);
+  renderGallery('fav-gallery-shows', showsData);
+  renderGallery('fav-gallery-music', musicData);
+
+  document.getElementById('fact-btn').addEventListener('click', () => {
+    document.getElementById('fact-output').textContent =
+      funFacts[Math.floor(Math.random() * funFacts.length)];
+  });
+</script>
+
+<script>
+  const slot    = document.getElementById('dl-page-slot');
+  const jumpEl  = document.getElementById('dl-jump');
+  const prevBtn = document.getElementById('dl-prev');
+  const nextBtn = document.getElementById('dl-next');
+  const countEl = document.getElementById('dl-count');
+
+  let dreams = [];
+  let dlIndex = 0;
+
+  function formatDate(d) {
+    return new Date(d + 'T00:00:00')
+      .toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+      .toUpperCase();
+  }
+
+  function renderDream() {
+    if (!dreams.length) return;
+    const dream = dreams[dlIndex];
+
+    const page = document.createElement('div');
+    page.className = 'dream-page';
+    page.innerHTML = `
+      <div class="panel-head">
+        <span class="dp-date">${formatDate(dream.date)}</span>
+        <span class="dp-title">${dream.title}</span>
+        <span class="dp-moon">${dream.moon || ''}</span>
+      </div>
+      <div class="panel-body">
+        <p class="dp-text">${dream.text}</p>
+      </div>
+    `;
+    slot.replaceChildren(page);
+
+    jumpEl.value = String(dlIndex);
+    countEl.textContent = `${dlIndex + 1} of ${dreams.length}`;
+    prevBtn.disabled = dlIndex === 0;
+    nextBtn.disabled = dlIndex === dreams.length - 1;
+  }
+
+  function goToDream(i) {
+    dlIndex = Math.max(0, Math.min(dreams.length - 1, i));
+    renderDream();
+  }
+
+  prevBtn.addEventListener('click', () => goToDream(dlIndex - 1));
+  nextBtn.addEventListener('click', () => goToDream(dlIndex + 1));
+  jumpEl.addEventListener('change', (e) => goToDream(Number(e.target.value)));
+
+  fetch('dreams.json')
+    .then(res => {
+      if (!res.ok) throw new Error('could not load dreams.json');
+      return res.json();
+    })
+    .then(data => {
+      dreams = [...data].sort((a, b) => b.date.localeCompare(a.date));
+
+      if (!dreams.length) {
+        slot.innerHTML = `
+          <div class="dream-page">
+            <div class="panel-head"><span class="dp-title">no entries yet</span></div>
+            <div class="panel-body"><p>add to dreams.json </p></div>
+          </div>`;
+        document.querySelector('.dl-flip').style.display = 'none';
+        jumpEl.style.display = 'none';
+        return;
+      }
+
+      jumpEl.innerHTML = dreams
+        .map((d, i) => `<option value="${i}">${formatDate(d.date)} - ${d.title}</option>`)
+        .join('');
+
+      renderDream();
+    })
+    .catch(err => {
+      slot.innerHTML = `
+        <div class="dream-page">
+          <div class="panel-head"><span class="dp-title">couldn't load dreams.json</span></div>
+          <div class="panel-body"><p>${err.message}. make sure dreams.json is uploaded in the same folder as this page.</p></div>
+        </div>`;
+      document.querySelector('.dl-flip').style.display = 'none';
+      jumpEl.style.display = 'none';
+    });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') goToDream(dlIndex - 1);
+    if (e.key === 'ArrowRight') goToDream(dlIndex + 1);
+  });
+</script>
+
+</body>
+</html>

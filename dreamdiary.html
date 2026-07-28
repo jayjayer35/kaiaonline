@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dream log — kaia online</title>
+
+<link rel="stylesheet" href="kaia-base.css">
+<link rel="stylesheet" href="header.css">
+<script src="header.js" defer></script>
+
+<style>
+  /* ── dream log: flip-through notebook ─────────────────
+     Entries live in dreams.json, fetched at load. One page
+     shown at a time — prev/next + a jump-to select act as
+     the table of contents. Built on kaia-base primitives
+     (.tile / .panel-head / .panel-body) — same hard 2px
+     shadows, square corners as the rest of the site.
+     ─────────────────────────────────────────────────────── */
+
+  main.dreamlog {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .dl-intro {
+    margin-bottom: 1.5rem;
+  }
+  .dl-intro .panel-body p {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+  }
+
+  /* ── contents / jump-to bar ── */
+  .dl-toc {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .dl-toc label {
+    font-size: 0.8rem;
+    color: var(--text-soft);
+    white-space: nowrap;
+  }
+  .dl-toc select {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-family: 'NDS', monospace, sans-serif;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.4rem;
+    background: var(--panel-bg);
+    color: var(--text);
+    border: 1px solid var(--panel-border);
+    box-shadow: 2px 2px 0 var(--panel-shadow);
+  }
+
+  /* ── the page itself ── */
+  .dream-page .panel-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    justify-content: space-between;
+  }
+  .dream-page .panel-head .dp-date {
+    font-size: 0.75rem;
+    opacity: 0.9;
+    white-space: nowrap;
+  }
+  .dream-page .panel-head .dp-title {
+    flex: 1 1 auto;
+  }
+  .dream-page .panel-head .dp-moon {
+    font-size: 0.9rem;
+  }
+
+  .dream-page .panel-body {
+    position: relative;
+    padding-left: 2rem;
+    min-height: 8rem;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 1.35rem,
+      var(--divider) 1.35rem,
+      var(--divider) calc(1.35rem + 1px)
+    );
+    background-position: 0 0.1rem;
+  }
+  .dream-page .panel-body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 1.35rem;
+    width: 1px;
+    background: rgba(190, 90, 90, 0.35);
+  }
+  .dream-page .dp-text {
+    font-size: 0.95rem;
+    line-height: 1.35rem;
+    opacity: 0;
+    animation: dl-page-in 0.25s ease forwards;
+  }
+  @keyframes dl-page-in {
+    from { opacity: 0; transform: translateY(3px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dream-page .dp-text { animation: none; opacity: 1; }
+  }
+
+  /* punch holes on the left edge */
+  .dream-page.tile {
+    margin-left: 0.75rem;
+  }
+  .dream-page.tile::before {
+    content: "";
+    position: absolute;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    left: -0.75rem;
+    width: 0.4rem;
+    background-image: radial-gradient(circle, var(--sky2) 0.11rem, transparent 0.12rem);
+    background-size: 0.4rem 0.9rem;
+    background-repeat: repeat-y;
+    opacity: 0.9;
+  }
+
+  /* ── prev / next controls ── */
+  .dl-flip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  .dl-flip button {
+    font-family: 'NDS', monospace, sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    background: var(--panel-head);
+    color: #fff;
+    text-shadow: 0 1px 0 var(--head-t-shadow);
+    border: 1px solid var(--panel-head-b);
+    box-shadow:
+      2px 2px 0 var(--panel-shadow),
+      inset 0 1px 0 var(--head-b-shadow1),
+      inset 0 -1px 0 var(--head-b-shadow2);
+    padding: 0.4rem 0.8rem;
+  }
+  .dl-flip button:hover:not(:disabled) {
+    cursor: pointer;
+    filter: brightness(1.05);
+  }
+  .dl-flip button:disabled {
+    opacity: 0.4;
+  }
+  .dl-flip .dl-count {
+    font-size: 0.8rem;
+    color: var(--text-soft);
+    white-space: nowrap;
+  }
+
+  .dl-empty .panel-body p,
+  .dl-error .panel-body p {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- header.js injects the site header here -->
+
+<main class="dreamlog">
+
+  <section class="dl-intro tile">
+    <h2>dream log</h2>
+    <div class="panel-body">
+      <p>whatever the night hands me, before it dissolves.</p>
+    </div>
+  </section>
+
+  <div class="dl-toc">
+    <label for="dl-jump">jump to</label>
+    <select id="dl-jump"></select>
+  </div>
+
+  <div id="dl-page-slot"></div>
+
+  <div class="dl-flip">
+    <button id="dl-prev" type="button">&larr; prev</button>
+    <span class="dl-count" id="dl-count"></span>
+    <button id="dl-next" type="button">next &rarr;</button>
+  </div>
+
+</main>
+
+<footer>kaia online — dream log</footer>
+
+<script>
+  /* Entries are loaded from dreams.json (same folder as this file).
+     Each entry: { date: "YYYY-MM-DD", title, moon, text } */
+
+  const slot   = document.getElementById('dl-page-slot');
+  const jumpEl = document.getElementById('dl-jump');
+  const prevBtn = document.getElementById('dl-prev');
+  const nextBtn = document.getElementById('dl-next');
+  const countEl = document.getElementById('dl-count');
+
+  let dreams = [];
+  let index = 0;
+
+  function formatDate(d) {
+    return new Date(d + 'T00:00:00')
+      .toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+      .toUpperCase();
+  }
+
+  function render() {
+    if (!dreams.length) return;
+    const dream = dreams[index];
+
+    const page = document.createElement('section');
+    page.className = 'dream-page tile';
+    page.innerHTML = `
+      <h2 class="panel-head">
+        <span class="dp-date">${formatDate(dream.date)}</span>
+        <span class="dp-title">${dream.title}</span>
+        <span class="dp-moon">${dream.moon || '🌙'}</span>
+      </h2>
+      <div class="panel-body">
+        <p class="dp-text">${dream.text}</p>
+      </div>
+    `;
+    slot.replaceChildren(page);
+
+    jumpEl.value = String(index);
+    countEl.textContent = `${index + 1} of ${dreams.length}`;
+    prevBtn.disabled = index === 0;
+    nextBtn.disabled = index === dreams.length - 1;
+  }
+
+  function goTo(i) {
+    index = Math.max(0, Math.min(dreams.length - 1, i));
+    render();
+  }
+
+  prevBtn.addEventListener('click', () => goTo(index - 1));
+  nextBtn.addEventListener('click', () => goTo(index + 1));
+  jumpEl.addEventListener('change', (e) => goTo(Number(e.target.value)));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') goTo(index - 1);
+    if (e.key === 'ArrowRight') goTo(index + 1);
+  });
+
+  fetch('dreams.json')
+    .then(res => {
+      if (!res.ok) throw new Error('could not load dreams.json');
+      return res.json();
+    })
+    .then(data => {
+      // newest first
+      dreams = [...data].sort((a, b) => b.date.localeCompare(a.date));
+
+      if (!dreams.length) {
+        slot.innerHTML = `
+          <section class="dream-page tile dl-empty">
+            <h2 class="panel-head"><span class="dp-title">no entries yet</span></h2>
+            <div class="panel-body"><p>add some to dreams.json to see them here.</p></div>
+          </section>`;
+        document.querySelector('.dl-flip').style.display = 'none';
+        jumpEl.style.display = 'none';
+        return;
+      }
+
+      jumpEl.innerHTML = dreams
+        .map((d, i) => `<option value="${i}">${formatDate(d.date)} — ${d.title}</option>`)
+        .join('');
+
+      render();
+    })
+    .catch(err => {
+      slot.innerHTML = `
+        <section class="dream-page tile dl-error">
+          <h2 class="panel-head"><span class="dp-title">couldn't load dreams.json</span></h2>
+          <div class="panel-body"><p>${err.message}. make sure dreams.json is uploaded in the same folder as this page.</p></div>
+        </section>`;
+      document.querySelector('.dl-flip').style.display = 'none';
+      jumpEl.style.display = 'none';
+    });
+</script>
+
+</body>
+</html>
