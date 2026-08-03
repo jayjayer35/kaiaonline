@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const ALERT_TEXT = "Hiatus over! More site updates are finally in the works.";
+  const ALERT_TEXT = "";
 
   const PLAYLIST = [
     { file: "/music/again.mp3",  name: "again, someday - kaiasei" },
