@@ -108,7 +108,7 @@
       </p>
 
       <div class="enter-wrap">
-        <a href="indexnew.html" class="pseudo-button"><span style="color: #0d1117;">let me in!</span></a> <a href="https://www.dictionary.com/browse/weakling" class="pseudo-button"><span style="color: #0d1117;">flee!</span></a>
+        <a href="forever-blue.html" class="pseudo-button" id="enter-link"><span style="color: #0d1117;">let me in!</span></a> <a href="https://www.dictionary.com/browse/weakling" class="pseudo-button"><span style="color: #0d1117;">flee!</span></a>
       </div>
 
       <a href="https://www.mabsland.com/Adoption.html"><img src="http://www.mabsland.com/Pandas/Censor_14c.gif" alt="web rated 14!"></a>
@@ -138,6 +138,29 @@
       localStorage.setItem('kaia-theme',
         document.body.classList.contains('dark-mode') ? 'dark' : 'light');
       syncIcon();
+    });
+
+    /* ── enter: request fullscreen, then navigate ── */
+    const enterLink = document.getElementById('enter-link');
+
+    function requestFS() {
+      const el = document.documentElement;
+      if (el.requestFullscreen) return el.requestFullscreen();
+      if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+      if (el.mozRequestFullScreen) return el.mozRequestFullScreen();
+      if (el.msRequestFullscreen) return el.msRequestFullscreen();
+      return Promise.resolve();
+    }
+
+    enterLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      const dest = this.getAttribute('href');
+
+      Promise.resolve(requestFS())
+        .catch(() => { /* user gesture missing, or blocked — ignore, still navigate */ })
+        .finally(() => {
+          window.location.href = dest;
+        });
     });
   </script>
 

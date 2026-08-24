@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>skies forever blue</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+  }
+
+  #video-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  #video-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  #enter-fallback {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #enter-fallback.active {
+    display: flex;
+  }
+
+  #enter-fallback button {
+    font-family: monospace, sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    background: #222;
+    border: 1px solid #555;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+  }
+
+  #enter-fallback button:hover {
+    background: #333;
+  }
+</style>
+</head>
+<body>
+
+  <div id="video-wrap"></div>
+
+  <script>
+    const VIDEO_ID = 'njgcjGojRKk';
+    const videoWrap = document.getElementById('video-wrap');
+    const fallback = document.getElementById('enter-fallback');
+    const enterBtn = document.getElementById('enter-btn');
+
+    function buildIframe() {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0`;
+      iframe.title = 'YouTube video player';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+      iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      iframe.setAttribute('allowfullscreen', '');
+      videoWrap.innerHTML = '';
+      videoWrap.appendChild(iframe);
+    }
+
+    function requestFS() {
+      const el = document.documentElement;
+      if (el.requestFullscreen) return el.requestFullscreen();
+      if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+      if (el.mozRequestFullScreen) return el.mozRequestFullScreen();
+      if (el.msRequestFullscreen) return el.msRequestFullscreen();
+      return Promise.reject(new Error('Fullscreen API unsupported'));
+    }
+    buildIframe();
+    requestFS().catch(() => {
+      fallback.classList.add('active');
+    });
+
+    enterBtn.addEventListener('click', () => {
+      requestFS().catch(() => {});
+      buildIframe();
+      fallback.classList.remove('active');
+    });
+  </script>
+
+</body>
+</html>
