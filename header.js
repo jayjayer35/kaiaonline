@@ -122,6 +122,14 @@
   const savedTheme = localStorage.getItem("kaia-theme");
   if (savedTheme === "dark") document.body.classList.add("dark-mode");
 
+  // ── SITE COLOR THEME ────────────────────────────────────────────────────────
+  // Set to "fall" to switch the whole site to the pastel/deep-orange palette
+  // (defined as body.theme-fall / body.dark-mode.theme-fall overrides in
+  // header.css and kaia-base.css). Set to "default" to go back to blue.
+  const SITE_THEME = "fall";
+  //const SITE_THEME = "default";
+  if (SITE_THEME === "fall") document.body.classList.add("theme-fall");
+
   // ── STYLES ──────────────────────────────────────────────────────────────────
   function injectStyles() {
   if (document.getElementById("kaia-header-styles")) return;
@@ -943,5 +951,86 @@
       });
 
       document.body.appendChild(cornerImg);
+  }
+
+  // ── FALLING LEAVES (fall decoration) ────────────────────────────────────────
+  const LEAVES_ENABLED  = true;
+  const LEAF_MAX_COUNT  = 30;
+  const LEAF_IMG_SRC    = "/assets/leaf.png";
+
+  if (LEAVES_ENABLED && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    (function initLeaves() {
+      const canvas = document.createElement("canvas");
+      canvas.id = "kaia-leaf-canvas";
+      document.body.appendChild(canvas);
+
+      const ctx = canvas.getContext("2d");
+      const leafImg = new Image();
+      leafImg.src = LEAF_IMG_SRC;
+
+      let imgReady = false;
+      leafImg.addEventListener("load", () => { imgReady = true; });
+
+      let w = 0, h = 0;
+      function resize() {
+        w = canvas.width  = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      function rand(min, max) { return Math.random() * (max - min) + min; }
+
+      // initial=true spreads leaves across the whole viewport height so the
+      // screen isn't empty on load; recycled leaves always re-enter from above.
+      function makeLeaf(initial) {
+        const size = rand(19, 39);
+        return {
+          x:         rand(0, w),
+          y:         initial ? rand(-h, h) : -size - rand(0, h * 0.3),
+          size,
+          speedY:    rand(18, 42),     // px/sec
+          swayAmp:   rand(20, 60),     // px
+          swaySpeed: rand(0.4, 1.1),   // rad/sec
+          swayPhase: rand(0, Math.PI * 2),
+          rotation:  rand(0, Math.PI * 2),
+          rotSpeed:  rand(-0.6, 0.6),  // rad/sec
+          opacity:   rand(0.25, 0.65),
+        };
+      }
+
+      const leaves = [];
+      for (let i = 0; i < LEAF_MAX_COUNT; i++) leaves.push(makeLeaf(true));
+
+      let lastT = performance.now();
+      function tick(t) {
+        const dt = Math.min((t - lastT) / 1000, 0.05); // clamp for tab-away jumps
+        lastT = t;
+
+        ctx.clearRect(0, 0, w, h);
+
+        if (imgReady) {
+          for (const leaf of leaves) {
+            leaf.y         += leaf.speedY * dt;
+            leaf.swayPhase += leaf.swaySpeed * dt;
+            leaf.rotation  += leaf.rotSpeed * dt;
+
+            if (leaf.y - leaf.size > h) Object.assign(leaf, makeLeaf(false));
+
+            const drawX = leaf.x + Math.sin(leaf.swayPhase) * leaf.swayAmp;
+
+            ctx.save();
+            ctx.globalAlpha = leaf.opacity;
+            ctx.translate(drawX, leaf.y);
+            ctx.rotate(leaf.rotation);
+            ctx.drawImage(leafImg, -leaf.size / 2, -leaf.size / 2, leaf.size, leaf.size);
+            ctx.restore();
+          }
+        }
+
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
   }
 })();

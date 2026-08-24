@@ -1,10 +1,6 @@
 /* ── font ── */
-@font-face {
-  font-family: "NDS";
-  src: url('../rework/assets/fonts/nds.ttf') format("truetype");
-  font-display: swap;
-  -webkit-font-smoothing: none;
-}
+/* NDS font-face now comes from kaia-base.css — kept here only if it
+   differs per-page, which it doesn't, so it's been removed. */
 @font-face {
   font-family: Nunito;
   src: url('../rework/assets/fonts/nds.ttf');
@@ -20,79 +16,22 @@
   font-weight: bold;
 }
 
-/* ── tokens (Light Mode) ── */
-:root {
-  --sky:          #d8eaf8;
-  --sky2:         #eef5fc;
+/* ── color tokens ── */
+/* All theme tokens (:root, body.dark-mode, body.theme-fall,
+   body.dark-mode.theme-fall) now live in kaia-base.css, including this
+   page's --button-* and --selected-* additions. Edit them there so the
+   blog stays in sync with the rest of the site automatically. */
 
-  --panel-bg:     #fff;
-  --panel-border: #b6c6df;
-  --panel-shadow: #9ca7c3;
-  --panel-head:   #b6c6df;
-  --panel-head-b: #8a99b8;
-
-  --head-t-shadow:  #7a93b0;
-  --head-b-shadow1: #cddaea;
-  --head-b-shadow2: #8a99b8;
-
-  --text:         #2a3a50;
-  --text-soft:    #6a7e96;
-  --link:         #3a7acf;
-
-  --update-line:  rgba(182,198,223,0.4);
-  --today-bg:     rgba(100,160,220,0.18);
-
-  /* kept for header.js */
-  --bg-header:     #9eb4d1;
-  --border-header: #7e8ba3;
-
-  /* tag button colors */
-  --button-bg:          #dce8f4;
-  --button-bg-hover:    rgba(182,198,223,0.6);
-  --button-bg-selected: #5a8fc4;
-  --button-text:        #2a3a50;
-  --button-border:      #8a99b8;
-
-  /* selection */
-  --selected-bg:   #bde0ff;
-  --selected-text: #2a3a50;
+/* kaia-base.css's global reset zeroes margin/padding on every element.
+   This page has always relied on the browser's natural spacing for
+   paragraphs, headings, and lists throughout every post, so restore it
+   here — anything more specific below (e.g. .post h2, #profile p)
+   still overrides this as before. */
+p, h1, h2, h3, h4, h5, h6, ul, ol, dl, dd, blockquote, figure {
+  margin: revert;
 }
-
-/* ── tokens (Dark Mode Overrides) ── */
-body.dark-mode {
-  --sky:          #1a2028;
-  --sky2:         #11151a;
-
-  --panel-bg:     #1e2530;
-  --panel-border: #151a22;
-  --panel-shadow: #0d1117;
-  --panel-head:   #2a3340;
-  --panel-head-b: #151a22;
-
-  --head-t-shadow:  #000;
-  --head-b-shadow1: #3a4a60;
-  --head-b-shadow2: #10141a;
-
-  --text:         #e0e8f0;
-  --text-soft:    #8a99b8;
-  --link:         #6b9ac4;
-
-  --update-line:  rgba(255,255,255,0.05);
-  --today-bg:     rgba(255,255,255,0.1);
-
-  --bg-header:     #2a3340;
-  --border-header: #1a2028;
-
-  --button-bg:          #2a3340;
-  --button-bg-hover:    #3a4a60;
-  --button-bg-selected: #3a6a9a;
-  --button-text:        #e0e8f0;
-  --button-border:      #151a22;
-
-  --selected-bg:   #2a3a50;
-  --selected-text: #e0e8f0;
-
-  background-blend-mode: multiply;
+ul, ol {
+  padding: revert;
 }
 
 /* ── reset ── */

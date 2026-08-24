@@ -69,6 +69,16 @@
   --pale-blue:     #eef5ff;
   --soft-pink:     #ffeef7;
   --soft-yellow:   #eed8ff;
+
+  /* interactive buttons / selection (used by blog) */
+  --button-bg:          #dce8f4;
+  --button-bg-hover:    rgba(182, 198, 223, 0.6);
+  --button-bg-selected: #5a8fc4;
+  --button-text:        #2a3a50;
+  --button-border:      #8a99b8;
+
+  --selected-bg:   #bde0ff;
+  --selected-text: #2a3a50;
 }
 
 
@@ -116,8 +126,106 @@ body.dark-mode {
   --soft-pink:     #2d1e2a;
   --soft-yellow:   #2a1e35;
 
+  /* interactive buttons / selection (used by blog) */
+  --button-bg:          #2a3340;
+  --button-bg-hover:    #3a4a60;
+  --button-bg-selected: #3a6a9a;
+  --button-text:        #e0e8f0;
+  --button-border:      #151a22;
+
+  --selected-bg:   #2a3a50;
+  --selected-text: #e0e8f0;
+
   /* blend the background gif into the dark gradient */
   background-blend-mode: multiply;
+}
+
+
+/* ── design tokens: fall theme (toggle via SITE_THEME in header.js) ──── */
+body.theme-fall {
+  --sky:           #fbe3c6;
+  --sky2:          #fdf2e4;
+
+  --panel-border:  #e0c19c;
+  --panel-shadow:  #c9a274;
+  --panel-head:    #e8b988;
+  --panel-head-b:  #cf9a5e;
+
+  --head-t-shadow:  #b17c3f;
+  --head-b-shadow1: #f5dcb8;
+  --head-b-shadow2: #cf9a5e;
+
+  --text:          #4a3420;
+  --text-soft:     #8a6f52;
+  --link:          #c96a2c;
+
+  --update-line:   rgba(216, 160, 100, 0.4);
+  --divider:       rgba(216, 160, 100, 0.4);
+  --today-bg:      rgba(230, 150, 80, 0.18);
+
+  --bg-header:     #e8b988;
+  --border-header: #cf9a5e;
+
+  --tag-bg:     #f5ddc0;
+  --tag-border: #cf9a5e;
+
+  --pull-bg:       #fdf2e4;
+  --pull-border:   #e0c19c;
+
+  /* interactive buttons / selection (used by blog) */
+  --button-bg:          #f5ddc0;
+  --button-bg-hover:    rgba(216, 160, 100, 0.6);
+  --button-bg-selected: #d4863f;
+  --button-text:        #4a3420;
+  --button-border:      #cf9a5e;
+
+  --selected-bg:   #f5c98a;
+  --selected-text: #4a3420;
+}
+
+body.dark-mode.theme-fall {
+  --sky:           #2a1a0d;
+  --sky2:          #1a100a;
+
+  --panel-bg:      #2e1d10;
+  --panel-border:  #1a1008;
+  --panel-shadow:  #100a05;
+  --panel-head:    #4a2f18;
+  --panel-head-b:  #1a1008;
+
+  --head-t-shadow:  #000;
+  --head-b-shadow1: #6b4525;
+  --head-b-shadow2: #100a05;
+
+  --text:          #f0dcc0;
+  --text-soft:     #c9a877;
+  --link:          #e8944a;
+
+  --bg-header:     #3a2415;
+  --border-header: #1a1008;
+
+  --tag-bg:     #3a2815;
+  --tag-border: #1a1008;
+
+  --pull-bg:       #241608;
+  --pull-border:   #4a2f18;
+
+  /* explicit — without these, body.theme-fall's light rgba values would
+     win the cascade tie against body.dark-mode's, since both selectors
+     have equal specificity and theme-fall is declared later in the file */
+  --update-line:   rgba(255, 255, 255, 0.05);
+  --divider:       rgba(255, 255, 255, 0.05);
+  --today-bg:      rgba(255, 255, 255, 0.1);
+
+  /* interactive buttons / selection (used by blog) */
+  --button-bg:          #3a2815;
+  --button-bg-hover:    #6b4525;
+  --button-bg-selected: #b5652c;
+  --button-text:        #f0dcc0;
+  --button-border:      #1a1008;
+
+  --selected-bg:   #5a3a1f;
+  --selected-text: #f0dcc0;
 }
 
 

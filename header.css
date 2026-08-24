@@ -105,6 +105,42 @@
         --alert-border:      #7a7400;*/
       }
 
+      /* ── fall theme (toggle via SITE_THEME in header.js) ─────────────────── */
+      body.theme-fall {
+        --hdr-bg:            #e8b988;
+        --hdr-border-top:    #f5dcb8;
+        --hdr-border-bottom: #cf9a5e;
+        --hdr-shadow-1:      #f5dcb8;
+        --hdr-shadow-2:      #b17c3f;
+        --hdr-text-shadow:   #8a5a2a;
+        --drop-bg:           #fbe8d2;
+        --drop-border:       #cf9a5e;
+        --drop-border-top:   #f5dcb8;
+        --drop-shadow:       #b17c3f;
+        --drop-text:         #4a3420;
+        --drop-hover-bg:     #e8b988;
+        --drop-hover-text:   #3a2410;
+        --steam-text:        #fbe8d2;
+        --steam-shadow:      #8a5a2a;
+      }
+
+      body.dark-mode.theme-fall {
+        --hdr-bg:            #3a2415;
+        --hdr-border-top:    #6b4525;
+        --hdr-border-bottom: #1a1008;
+        --hdr-shadow-1:      #55371f;
+        --hdr-shadow-2:      #100a05;
+        --hdr-text:          #f0dcc0;
+        --drop-bg:           #241608;
+        --drop-border:       #1a1008;
+        --drop-border-top:   #55371f;
+        --drop-shadow:       #0d0805;
+        --drop-text:         #ccab85;
+        --drop-hover-bg:     #3d2814;
+        --drop-hover-text:   #f0dcc0;
+        --steam-text:        #d9995f;
+      }
+
       /* alert bar */
       #kaia-alert-bar {
         width: 100%;
@@ -528,7 +564,7 @@
 
       /* responsive */
       @media (max-width: 60rem) {
-        #kaia-single-bar { justify-content: center; }
+        .ksb-nav { width: 100%; justify-content: center; }
         .ksb-status { justify-content: center; padding-bottom: 0.25rem; }
       }
       @media (max-width: 37.5rem) {
@@ -576,3 +612,13 @@
         text-shadow: 0 1px 0 var(--hdr-text-shadow);
       }
       @media (max-width: 60rem) { #kaia-ticker-row { display: none; } }
+
+      /* ── falling leaves (fall decoration) ────────────────────────────────── */
+      #kaia-leaf-canvas {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 5;
+      }
