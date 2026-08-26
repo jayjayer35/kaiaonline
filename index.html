@@ -12,10 +12,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;      /* ensures true vertical centering */
+  min-height: 100vh;     
   padding: 1.5rem;
   position: relative;
-  background: none;       /* override kaia-base's tiled bkg3.gif */
+  background: none;      
   overflow-x: hidden;
 }
 
@@ -45,7 +45,7 @@ body::before {
       letter-spacing: 0.3rem;
     }
 
-    /* ── rosie gif ── */
+   
     .rosie {
       width: 9rem;
       height: 9rem;
@@ -154,14 +154,12 @@ body::before {
   </div>
 
   <script>
-    /* ── dark mode: read saved pref ── */
     (function () {
       if (localStorage.getItem('kaia-theme') === 'dark') {
         document.body.classList.add('dark-mode');
       }
     })();
 
-    /* ── dark mode: toggle ── */
     const btn = document.getElementById('theme-btn');
 
     function syncIcon() {
@@ -177,7 +175,6 @@ body::before {
       syncIcon();
     });
 
-    /* ── enter: request fullscreen, then navigate ── */
     const enterLink = document.getElementById('enter-link');
 
     function requestFS() {
@@ -194,7 +191,7 @@ body::before {
       const dest = this.getAttribute('href');
 
       Promise.resolve(requestFS())
-        .catch(() => { /* user gesture missing, or blocked — ignore, still navigate */ })
+        .catch(() => {  })
         .finally(() => {
           window.location.href = dest;
         });
