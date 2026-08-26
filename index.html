@@ -150,7 +150,7 @@ body::before {
         Bye bye o/ <br>
         :)<br>
 
-        <em>This page has been set to be removed after a month. - (8/26/2026)<br><br></em>
+        <em>This page has been set to be removed after a month. <br> Final unique visitor count: 1570. <br>(8/26/2026)</em>
       </p>
 
 
@@ -196,7 +196,6 @@ body::before {
       syncIcon();
     });
 
-    /* ── music: try autoplay, fall back to a click-to-play button ── */
     const bgm = document.getElementById('bgm');
     const musicBtn = document.getElementById('music-btn');
     bgm.volume = 0.2;
@@ -207,7 +206,6 @@ body::before {
     }
 
     bgm.play().catch(() => {
-      // autoplay blocked without a prior user gesture — offer manual play
       showMusicBtn();
     });
 
