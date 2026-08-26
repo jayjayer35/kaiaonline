@@ -3,18 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kaia online | welcome!</title>
+  <title>kaia online | it's been fun!</title>
 
   <link rel="stylesheet" href="/kaia-base.css">
 
-  <style>
-    body {
-      font-size: 1.5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1.5rem;
-    }
+  <style>body {
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;      /* ensures true vertical centering */
+  padding: 1.5rem;
+  position: relative;
+  background: none;       /* override kaia-base's tiled bkg3.gif */
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  background-image: url('/assets/chapter5_sunset.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px);
+  z-index: -1;
+}
 
     .panel {
       max-width: 36rem;
@@ -88,15 +105,35 @@
   <button class="theme-toggle" id="theme-btn" title="Toggle dark mode">[ ☾ ]</button>
 
   <div class="panel">
-    <div class="panel-head">hold on!</div>
+    <div class="panel-head">wait what?</div>
     <div class="panel-body">
 
-      <img
+      <!--<img
         src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia1.tenor.com%2Fimages%2Fefbdbe63a4c6cfc1d0a65659711640f8%2Ftenor.gif%3Fitemid%3D17582159&f=1&nofb=1&ipt=50618fb39702affe8bdde6a55d6535ab5b0ecaf6888ab34991fda8cf5172b273"
         alt="rosie from animal crossing shaking maracas"
-        class="rosie">
+        class="rosie"> -->
 
       <p class="welcome-text">
+        Hello! This website is currently being shut down!
+      
+        If you have ended up on this page via a webring, or anywhere else I have posted my links, you may remove me from said list. Or just keep me if u have attachment issues to buttons, but that isn't recommended. <br><br>
+        
+        
+        I've been advised to focus on this project less, and while I do not want to entirely say goodbye to it, I think taking the page down will help kill any sort 
+        of drive that would bring me back here.<br><br>
+
+        I look forward to something new (or the same) in the future! but in all honesty, there is no word when that will be.<br><br>
+
+        To the few buddies I have made through this project, you made it very fun and encouraging :)<br><br>
+
+        Bye bye o/ <br>
+        :)<br>
+
+        <em>This page has been set to be removed after a month. - (8/26/2026)<br><br></em>
+      </p>
+
+
+      <!-- <p class="welcome-text">
         hi, welcome to my cute pile of garbage on the internet. <br>
         the page you're about to enter is a <span style="text-decoration: underline;">personal</span> site.
         <br><br>
@@ -105,13 +142,13 @@
         <br><br>
         the site is meant to be viewed in its light mode variant, but i have added a toggle in the <span style="text-decoration: underline;">top right</span> of this screen, and somewhere on the header when you load in.
         <br><br>lastly, <span style="text-decoration: underline;">if you have trouble reading</span> <span style="font-size: 50%;">small text</span> <span style="text-decoration: underline;">i recommend zooming the site to 120%!</span>, it may help you in some places.
-      </p>
+      </p> -->
 
-      <div class="enter-wrap">
+       <!-- <div class="enter-wrap">
         <a href="forever-blue.html" class="pseudo-button" id="enter-link"><span style="color: #0d1117;">let me in!</span></a> <a href="https://www.dictionary.com/browse/weakling" class="pseudo-button"><span style="color: #0d1117;">flee!</span></a>
-      </div>
+      </div> -->
 
-      <a href="https://www.mabsland.com/Adoption.html"><img src="http://www.mabsland.com/Pandas/Censor_14c.gif" alt="web rated 14!"></a>
+       <!-- <a href="https://www.mabsland.com/Adoption.html"><img src="http://www.mabsland.com/Pandas/Censor_14c.gif" alt="web rated 14!"></a>-->
 
     </div>
   </div>
