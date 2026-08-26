@@ -97,12 +97,33 @@ body::before {
     }
 
     .theme-toggle:hover { color: var(--text); }
+
+    .music-toggle {
+      position: fixed;
+      top: 0.75rem;
+      right: 3.25rem;
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1.25rem;
+      color: var(--text-soft);
+      background: none;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: color 0.3s, opacity 0.3s;
+      z-index: 10;
+      display: none;
+    }
+
+    .music-toggle.show { display: inline-block; }
+    .music-toggle:hover { color: var(--text); }
   </style>
 </head>
 
 <body>
 
   <button class="theme-toggle" id="theme-btn" title="Toggle dark mode">[ ☾ ]</button>
+  <button class="music-toggle" id="music-btn" title="Play music">[ ♪ ]</button>
+  <audio id="bgm" src="/music/scarlet.mp3" preload="auto"></audio>
 
   <div class="panel">
     <div class="panel-head">wait what?</div>
@@ -173,6 +194,31 @@ body::before {
       localStorage.setItem('kaia-theme',
         document.body.classList.contains('dark-mode') ? 'dark' : 'light');
       syncIcon();
+    });
+
+    /* ── music: try autoplay, fall back to a click-to-play button ── */
+    const bgm = document.getElementById('bgm');
+    const musicBtn = document.getElementById('music-btn');
+    bgm.volume = 0.2;
+
+    function showMusicBtn() {
+      musicBtn.classList.add('show');
+      musicBtn.textContent = '[ ♪ play ]';
+    }
+
+    bgm.play().catch(() => {
+      // autoplay blocked without a prior user gesture — offer manual play
+      showMusicBtn();
+    });
+
+    musicBtn.addEventListener('click', () => {
+      if (bgm.paused) {
+        bgm.play();
+        musicBtn.textContent = '[ ♪ ]';
+      } else {
+        bgm.pause();
+        musicBtn.textContent = '[ ♪ play ]';
+      }
     });
 
     const enterLink = document.getElementById('enter-link');
