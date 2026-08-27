@@ -140,6 +140,7 @@ body::before {
   <button class="theme-toggle" id="theme-btn" title="Toggle dark mode">[ ☾ ]</button>
   <button class="music-toggle" id="music-btn" title="Play music">[ ♪ ]</button>
   <audio id="bgm" src="/music/scarfor.mp3" preload="auto"></audio>
+  <audio id="splat-sfx" src="/assets/splat.mp3" preload="auto"></audio>
 
   <div class="panel">
     <div class="panel-head">wait what?</div>
@@ -161,7 +162,7 @@ body::before {
 
         Bye bye!<br><br>
 
-        <img src="/assets/Kris_battle_act.gif" style="image-rendering: pixelated;" alt=""><br>
+        <img src="/assets/Kris_battle_act.gif" id="goodbye-gif" style="image-rendering: pixelated; cursor: pointer;" alt=""><br>
 
         <em>This page has been set to be removed after a month. <br> Final unique visitor count: 1570. <br>(8/26/2026)</em>
       </p>
@@ -201,6 +202,48 @@ body::before {
   </div>
 
   <script>
+    const GOODBYE_GIFS = [
+      'kris.gif',
+      'flowery.gif',
+      'seth.gif',
+      'lancer.gif',
+      'noelle.gif',
+      'susie.gif',
+      'ralsei.gif',
+      'jevil.gif',
+      'spammy.gif',
+      'gerson.gif',
+      'tenna.webp',
+      'pink.gif',
+      'berdly.gif',
+      'knight.gif',
+      'tasque.gif',
+    ];
+
+    const goodbyeGifEl = document.getElementById('goodbye-gif');
+    const splatSfx = document.getElementById('splat-sfx');
+    splatSfx.volume = 0.02;
+    let currentGif = null;
+
+    function pickGoodbyeGif() {
+      let pick;
+      do {
+        pick = GOODBYE_GIFS[Math.floor(Math.random() * GOODBYE_GIFS.length)];
+      } while (pick === currentGif && GOODBYE_GIFS.length > 1);
+      currentGif = pick;
+      if (pick) {
+        goodbyeGifEl.src = '/assets/goodbye/' + pick;
+      }
+    }
+
+    pickGoodbyeGif();
+
+    goodbyeGifEl.addEventListener('click', () => {
+      pickGoodbyeGif();
+      splatSfx.currentTime = 0;
+      splatSfx.play().catch(() => {});
+    });
+
     (function () {
       if (localStorage.getItem('kaia-theme') === 'dark') {
         document.body.classList.add('dark-mode');
