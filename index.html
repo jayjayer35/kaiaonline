@@ -34,7 +34,7 @@ body::before {
 }
 
     .panel {
-      max-width: 36rem;
+      max-width: 56rem;
       width: 100%;
       text-align: center;
     }
@@ -69,7 +69,23 @@ body::before {
       transition: color 0.3s;
     }
 
+    .why-text {
+      display: none;
+    }
+
+    .why-text.show {
+      display: block;
+    }
+
+    .main-text.hide {
+      display: none;
+    }
+
     .enter-wrap {
+      margin: 0.75rem 0 0.875rem;
+    }
+
+    .why-wrap {
       margin: 0.75rem 0 0.875rem;
     }
 
@@ -134,6 +150,7 @@ body::before {
         alt="rosie from animal crossing shaking maracas"
         class="rosie"> -->
 
+<<<<<<< HEAD
       <p class="welcome-text">
         Hello! This website is currently being shut down!
       
@@ -155,27 +172,52 @@ body::before {
 
         Bye bye, and until then, say safe out there :) <br>
         :)<br>
+=======
+      <p class="welcome-text main-text" id="main-text">
+        Hello!.. This website is currently being shut down. If you have ended up on this page via a webring, or anywhere else I have posted my links, you may 
+        remove me from said list. Or just keep me if u have attachment issues to buttons, but that isn't recommended. <br><br>
+
+        I've been advised to focus on this project less, and while I don't want to entirely say goodbye to it, I think taking the page down will help 
+        kill any sort of drive that would bring me back here. <br><br>
+
+        To the few buddies I have made through this project, you made it very fun and encouraging while it was going :) <br><br>
+
+        Bye bye, and until then, say safe out there. <br><br>
+>>>>>>> e9f4d78 (VS.3.4 - final rewording)
 
         <em>This page has been set to be removed after a month. <br> Final unique visitor count: 1570. <br>(8/26/2026)</em>
       </p>
 
+      <p class="welcome-text why-text" id="why-text">
+        Well, if you want the longer version... <br><br>
 
-      <!-- <p class="welcome-text">
-        hi, welcome to my cute pile of garbage on the internet. <br>
-        the page you're about to enter is a <span style="text-decoration: underline;">personal</span> site.
-        <br><br>
-        this site makes use of sound, javascript, and the occasional iframes.
-        it was designed on 1920×1080 in firefox, but most things should play nice on different devices and resolutions
-        <br><br>
-        the site is meant to be viewed in its light mode variant, but i have added a toggle in the <span style="text-decoration: underline;">top right</span> of this screen, and somewhere on the header when you load in.
-        <br><br>lastly, <span style="text-decoration: underline;">if you have trouble reading</span> <span style="font-size: 50%;">small text</span> <span style="text-decoration: underline;">i recommend zooming the site to 120%!</span>, it may help you in some places.
-      </p> -->
+        You may have read some of my blog posts in the recent past, and you would know that my mind is... not exactly in the best place. Personally, I felt that this 
+        page has grown into an echo chamber of my own mental issues rather than a passion project.<br><br>
 
-       <!-- <div class="enter-wrap">
-        <a href="forever-blue.html" class="pseudo-button" id="enter-link"><span style="color: #0d1117;">let me in!</span></a> <a href="https://www.dictionary.com/browse/weakling" class="pseudo-button"><span style="color: #0d1117;">flee!</span></a>
-      </div> -->
+        At some point along the development of this, it was no longer an outlet of creativity for me. I kept turning to it for processing emotions that 
+        I couldn't really figure out where else to place, other than <a href="https://x.com/seikaia4u">twitter</a> (gross). <br><br>
+        
+        Now, this outcome wasn't really fair to me, or the site, was it? Every page, whether 
+        intentional or not, felt like it was being designed with nothing but negative emotions because I trained myself to turn to the site when I felt that way. 
+        This felt limiting in what I would let myself do in terms of self-expression, and the product would always be something that could never be interesting 
+        to anyone, or myself. It was not healthy. <br><br>
 
-       <!-- <a href="https://www.mabsland.com/Adoption.html"><img src="http://www.mabsland.com/Pandas/Censor_14c.gif" alt="web rated 14!"></a>-->
+        Thankfully, I don't regret any of what I had created here! Genuinely, some of my favorite little creative projects lie in and around the site, and I am 
+        exremely proud of myself for this entire project over the course of 4+ years I have worked on it. But now... I need some distance to remember why I liked 
+        doing ANY of this in the first place, y'know..? Instead of unwillingly dragging its corpse with me, and getting it tangled up with everything else 
+        going on. <br><br>
+
+        So, that leaves us here. You, reading my frozen words on a webpage, and me, doing better (hopefully). I look forward to creating something new in the 
+        future... though, I cannot say when that will be, in all honesty. Moving on from this is important, everything attached to it, names, photos, music, there's 
+        stuff here from times of my life that I am not the proudest of, including now. So I hope I can return to this when I'm better. I hope that something beautful can 
+        blossom from the corpse of a webpage dead by my own hand. I hope this can be relatively soon, but only time will tell! <br><br>
+
+        Baia, kaia! o/
+      </p>
+
+      <div class="why-wrap">
+        <a href="#" class="pseudo-button" id="why-link"><span style="color: #0d1117;">why?</span></a>
+      </div>
 
     </div>
   </div>
@@ -225,6 +267,17 @@ body::before {
       }
     });
 
+    const whyLink = document.getElementById('why-link');
+    const mainText = document.getElementById('main-text');
+    const whyText = document.getElementById('why-text');
+
+    whyLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      const showingWhy = whyText.classList.toggle('show');
+      mainText.classList.toggle('hide', showingWhy);
+      this.querySelector('span').textContent = showingWhy ? 'back' : 'why?';
+    });
+
     const enterLink = document.getElementById('enter-link');
 
     function requestFS() {
@@ -236,16 +289,18 @@ body::before {
       return Promise.resolve();
     }
 
-    enterLink.addEventListener('click', function (e) {
-      e.preventDefault();
-      const dest = this.getAttribute('href');
+    if (enterLink) {
+      enterLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        const dest = this.getAttribute('href');
 
-      Promise.resolve(requestFS())
-        .catch(() => {  })
-        .finally(() => {
-          window.location.href = dest;
-        });
-    });
+        Promise.resolve(requestFS())
+          .catch(() => {  })
+          .finally(() => {
+            window.location.href = dest;
+          });
+      });
+    }
   </script>
 
 </body>
