@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>* (The girl on the cliff.).</title>
 <style>
 
@@ -30,8 +29,6 @@
 
   body {
     cursor: default;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
   }
 
   #game {
@@ -44,9 +41,6 @@
     transform-origin: top left;
     image-rendering: pixelated;
     overflow: hidden;
-    will-change: transform;
-    contain: layout style paint;
-    touch-action: none;
   }
 
   .scene-layer {
@@ -59,7 +53,6 @@
     image-rendering: pixelated;
     opacity: 0;
     transition: opacity 1.2s ease;
-    will-change: opacity;
   }
 
   #textbox {
@@ -101,6 +94,12 @@
 
 <script>
 
+  // On mobile, skip the letter-by-letter typewriter animation and just
+  // show each page's full text right away.
+  const IS_MOBILE = window.matchMedia('(pointer: coarse)').matches
+    || navigator.maxTouchPoints > 0
+    || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
   const game = document.getElementById('game');
   const NATIVE_W = 640;
   const NATIVE_H = 480;
@@ -112,16 +111,7 @@
     game.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
   }
 
-  let resizeScheduled = false;
-  function scheduleResize() {
-    if (resizeScheduled) return;
-    resizeScheduled = true;
-    requestAnimationFrame(() => {
-      resizeScheduled = false;
-      resize();
-    });
-  }
-  window.addEventListener('resize', scheduleResize);
+  window.addEventListener('resize', resize);
   resize();
 
   // ---- dialogue system ----
@@ -221,30 +211,17 @@
     textboxEl.style.opacity = '1';
   }
 
-  // Warm the HTTP cache for each unique gif, one at a time, during idle
-  // time -- we deliberately do NOT call img.decode() here. Forcing every
-  // animated gif to fully decode up front (as the old code did) blocks
-  // the main thread hard on mobile. Letting the browser decode lazily
-  // when each image actually gets assigned to a visible <img> is far
-  // cheaper and is the main fix for the jank on scene changes.
   const preloadedSrcs = new Set();
-  const uniqueImageSrcs = [...new Set(IMAGES.filter(Boolean))];
-  let preloadIdx = 0;
-  function preloadNext() {
-    if (preloadIdx >= uniqueImageSrcs.length) return;
-    const src = uniqueImageSrcs[preloadIdx++];
-    if (!preloadedSrcs.has(src)) {
+  IMAGES.forEach((src) => {
+    if (src && !preloadedSrcs.has(src)) {
       preloadedSrcs.add(src);
       const img = new Image();
       img.src = src;
+      if (img.decode) {
+        img.decode().catch(() => {}); 
+      }
     }
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(preloadNext, { timeout: 500 });
-    } else {
-      setTimeout(preloadNext, 150);
-    }
-  }
-  preloadNext();
+  });
   function setSceneImage(src) {
     if (!src || src === currentImageSrc) return;
     const isFirstImage = currentImageSrc === '';
@@ -276,16 +253,6 @@
       void incomingEl.offsetHeight; // 
       incomingEl.style.transition = '';
       outgoingEl.style.transition = '';
-
-      // Stop the now-hidden layer's gif from continuing to animate/decode
-      // in the background. Animated gifs keep running even at opacity:0
-      // unless we drop the src, and having two decoding at once is a big
-      // chunk of the mobile jank.
-      setTimeout(() => {
-        if (outgoingEl.style.opacity === '0') {
-          outgoingEl.removeAttribute('src');
-        }
-      }, 1300);
     }
 
     activeLayer = incomingLayer;
@@ -414,34 +381,21 @@
     return tokens;
   }
 
-  // Append-only text rendering. The old version rebuilt the ENTIRE
-  // revealed string into a fresh innerHTML string on every single
-  // character (a full string-escape + DOM parse + reflow each time),
-  // which gets quadratically slower the further into a dialogue page
-  // you are. This was likely the single biggest source of the typing
-  // stutter. Now we just append the one new character (or one new
-  // <span> when the color changes), so each keystroke is O(1).
-  let currentRunColor;
-  let currentRunEl;
-
-  function resetRender() {
-    textEl.innerHTML = '';
-    currentRunColor = undefined;
-    currentRunEl = null;
+  function escapeHtml(ch) {
+    if (ch === '<') return '&lt;';
+    if (ch === '>') return '&gt;';
+    if (ch === '&') return '&amp;';
+    if (ch === '"') return '&quot;';
+    return ch;
   }
 
-  function appendChar(t) {
-    if (t.color !== currentRunColor) {
-      currentRunColor = t.color;
-      if (t.color) {
-        currentRunEl = document.createElement('span');
-        currentRunEl.style.color = t.color;
-        textEl.appendChild(currentRunEl);
-      } else {
-        currentRunEl = null;
-      }
+  function renderRevealed(revealed) {
+    let html = '';
+    for (const t of revealed) {
+      const safe = escapeHtml(t.ch);
+      html += t.color ? `<span style="color:${t.color}">${safe}</span>` : safe;
     }
-    (currentRunEl || textEl).appendChild(document.createTextNode(t.ch));
+    textEl.innerHTML = html;
   }
 
   let pageIndex = 0;
@@ -458,13 +412,17 @@
     tokenIndex = 0;
     revealed = [];
     typing = true;
-    resetRender();
+    textEl.innerHTML = '';
     clearTimeout(typeTimer);
 
     showTextbox();
     setSceneImage(IMAGES[pageIndex]);
 
-    typeStep();
+    if (IS_MOBILE) {
+      finishTyping();
+    } else {
+      typeStep();
+    }
   }
 
   function typeStep() {
@@ -494,7 +452,7 @@
     }
 
     revealed.push(token);
-    appendChar(token);
+    renderRevealed(revealed);
     if (!/\s/.test(token.ch)) {
       playTypeSound();
     }
@@ -508,17 +466,14 @@
 
   function finishTyping() {
     clearTimeout(typeTimer);
-    for (let i = tokenIndex; i < currentTokens.length; i++) {
-      const t = currentTokens[i];
-      if (t.type === 'char') {
-        revealed.push(t);
-        appendChar(t);
-      } else if (t.type === 'music') {
-        playMusic(t.src);
-      } else if (t.type === 'hide') {
-        hideTextbox();
-      }
+    revealed = currentTokens.filter((t) => t.type === 'char');
+    renderRevealed(revealed);
+    if (currentTokens.some((t) => t.type === 'hide')) {
+      hideTextbox();
     }
+    currentTokens
+      .filter((t) => t.type === 'music')
+      .forEach((t) => playMusic(t.src));
     tokenIndex = currentTokens.length;
     typing = false;
   }
