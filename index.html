@@ -309,6 +309,28 @@
 
     activeMusicLayer = nextLayer;
   }
+
+  // background ambience: one track, looping, on from the start -- separate
+  // from the cued [music:] system above. EDIT ME to point at your file
+  // and set how loud it plays.
+  const AMBIENCE_SRC = '/assets/ambience.mp3';
+  const AMBIENCE_VOLUME = 0.08;
+  const ambience = new Audio(AMBIENCE_SRC);
+  ambience.loop = true;
+  ambience.volume = AMBIENCE_VOLUME;
+
+  let ambienceStarted = false;
+  function startAmbience() {
+    if (ambienceStarted) return;
+    ambienceStarted = true;
+    ambience.play().catch((err) => console.warn('ambience playback blocked:', err));
+  }
+
+  // try right away -- works if the browser already allows it (e.g. the
+  // site has enough "media engagement" history). if that's blocked by
+  // autoplay policy, the keydown/touchend listeners below retry it on
+  // the first real interaction, same as the type-blip/music pattern.
+  startAmbience();
   function parseDialogueMarkup(rawStr) {
     const str = '* ' + rawStr.replace(/\n/g, '\n* ');
     const tokens = [];
@@ -465,15 +487,18 @@
     const k = e.key.toLowerCase();
     if (k === 'z') {
       e.preventDefault();
+      startAmbience();
       handleZ();
     } else if (k === 'x') {
       e.preventDefault();
+      startAmbience();
       handleX();
     }
   });
 
   window.addEventListener('touchend', (e) => {
     e.preventDefault();
+    startAmbience();
     handleZ();
   }, { passive: false });
 
