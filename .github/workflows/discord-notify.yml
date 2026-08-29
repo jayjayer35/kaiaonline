@@ -24,7 +24,7 @@ jobs:
               "title": "Site update successful",
               "color": 5636604,
               "fields": [
-                {"name": "Author", "value": "kaiasei", "inline": true},
+                {"name": "Author", "value": "Hazel", "inline": true},
                 {"name": "Message", "value": "${COMMIT_MSG}"}
               ],
               "footer": {"text": "GitHub Actions"}

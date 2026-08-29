@@ -1,328 +1,485 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kaia online | it's been fun!</title>
+<meta charset="UTF-8">
+<title>* (The girl on the cliff.).</title>
+<style>
 
-  <link rel="stylesheet" href="/kaia-base.css">
+  @font-face {
+    font-family: 'DialogueFont';
+    src: url('/assets/big-shot.ttf') format('truetype');
+    font-display: block;
+  }
 
-  <style>body {
-  font-size: 1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;     
-  padding: 1.5rem;
-  position: relative;
-  background: none;      
-  overflow-x: hidden;
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-body::before {
-  content: "";
-  position: fixed;
-  top: -20px;
-  left: -20px;
-  right: -20px;
-  bottom: -20px;
-  background-image: url('/assets/chapter5_sunset.jpg');
-  background-size: cover;
-  background-position: center;
-  filter: blur(8px);
-  z-index: -1;
-}
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
 
-    .panel {
-      max-width: 56rem;
-      width: 100%;
-      text-align: center;
-    }
+  body {
+    cursor: default;
+  }
 
-    .panel-head {
-      font-size: 1.5rem;
-      text-align: center;
-      letter-spacing: 0.3rem;
-    }
+  #game {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 640px;
+    height: 480px;
+    background: #000;
+    transform-origin: top left;
+    image-rendering: pixelated;
+    overflow: hidden;
+  }
 
-   
-    .rosie {
-      width: 9rem;
-      height: 9rem;
-      object-fit: cover;
-      image-rendering: pixelated;
-      border: 1px solid var(--panel-border);
-      margin: 0.5rem 0 0.75rem;
-      transition: border-color 0.3s;
-    }
+  .scene-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 640px;
+    height: 480px;
+    object-fit: cover;
+    image-rendering: pixelated;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
 
-    .welcome-text {
-      color: var(--text);
-      line-height: 1.5;
-      margin-bottom: 0.75rem;
-      transition: color 0.3s;
-    }
+  #textbox {
+    position: absolute;
+    left: 25px;
+    top: 328px;
+    width: 590px;
+    height: 122px;
+    background: #000;
+    border: 4px solid #fff;
+    padding: 14px 18px;
+    opacity: 1;
+    z-index: 10;
+  }
 
-    .welcome-text em {
-      color: var(--text-soft);
-      font-size: 0.85em;
-      transition: color 0.3s;
-    }
+  #dialogue-text {
+    font-family: 'DialogueFont', monospace;
+    color: #fff;
+    font-size: 24px;
+    line-height: 1.25em;
+    white-space: pre-wrap;
+    letter-spacing: 1px;
 
-    .why-text {
-      display: none;
-    }
+    height: calc(1.35em * 3);
+    overflow: hidden;
+  }
 
-    .why-text.show {
-      display: block;
-    }
-
-    .main-text.hide {
-      display: none;
-    }
-
-    .enter-wrap {
-      margin: 0.75rem 0 0.875rem;
-    }
-
-    .why-wrap {
-      margin: 0.75rem 0 0.875rem;
-    }
-
-    .rating {
-      margin-top: 0.5rem;
-      opacity: 0.75;
-      transition: opacity 0.2s;
-    }
-
-    .rating:hover { opacity: 1; }
-
-    .theme-toggle {
-      position: fixed;
-      top: 0.75rem;
-      right: 0.875rem;
-      font-family: 'NDS', monospace, sans-serif;
-      font-size: 1.25rem;
-      color: var(--text-soft);
-      background: none;
-      border: none;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      transition: color 0.3s;
-      z-index: 10;
-    }
-
-    .theme-toggle:hover { color: var(--text); }
-
-    .music-toggle {
-      position: fixed;
-      top: 0.75rem;
-      right: 3.25rem;
-      font-family: 'NDS', monospace, sans-serif;
-      font-size: 1.25rem;
-      color: var(--text-soft);
-      background: none;
-      border: none;
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      transition: color 0.3s, opacity 0.3s;
-      z-index: 10;
-      display: none;
-    }
-
-    .music-toggle.show { display: inline-block; }
-    .music-toggle:hover { color: var(--text); }
-  </style>
+</style>
 </head>
-
 <body>
 
-  <button class="theme-toggle" id="theme-btn" title="Toggle dark mode">[ ☾ ]</button>
-  <button class="music-toggle" id="music-btn" title="Play music">[ ♪ ]</button>
-  <audio id="bgm" src="/music/scarlet.mp3" preload="auto"></audio>
-  <audio id="splat-sfx" src="/assets/splat.mp3" preload="auto"></audio>
-
-  <div class="panel">
-    <div class="panel-head">wait what?</div>
-    <div class="panel-body">
-
-      <!--<img
-        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia1.tenor.com%2Fimages%2Fefbdbe63a4c6cfc1d0a65659711640f8%2Ftenor.gif%3Fitemid%3D17582159&f=1&nofb=1&ipt=50618fb39702affe8bdde6a55d6535ab5b0ecaf6888ab34991fda8cf5172b273"
-        alt="rosie from animal crossing shaking maracas"
-        class="rosie"> -->
-
-      <p class="welcome-text main-text" id="main-text">
-        Hello!.. This website is currently being shut down. If you have ended up on this page via a webring, or anywhere else I have posted my links, you may 
-        remove me from said list. Or just keep me if u have attachment issues to buttons, but that isn't recommended. <br><br>
-
-        I've been advised to focus on this project less, and while I don't want to entirely say goodbye to it, I think taking the page down will help 
-        kill any sort of drive that would bring me back here. <br><br>
-
-        To the few buddies I have made through this project, you made it very fun <br> and encouraging while it was going!<br><br>
-
-        Bye bye!<br><br>
-
-        <img src="/assets/Kris_battle_act.gif" id="goodbye-gif" style="image-rendering: pixelated; cursor: pointer;" alt=""><br>
-
-        <em>This page has been set to be removed after a month. <br> Final unique visitor count: 1570. <br>(8/26/2026)</em>
-      </p>
-
-      <p class="welcome-text why-text" id="why-text">
-        Well, if you want the longer version... <br><br>
-
-        You may have read some of my blog posts in the recent past, and you would know that my mind is... not exactly in the best place. Personally, I felt that this 
-        page has grown into an echo chamber of my own mental issues rather than a passion project.<br><br>
-
-        At some point along the development of this, it was no longer an outlet of creativity for me. I kept turning to it for processing emotions that 
-        I couldn't really figure out where else to place, other than <a href="https://x.com/seikaia4u">twitter</a> (gross). <br><br>
-        
-        Now, this outcome wasn't really fair to me, or the site, was it? Every page, whether 
-        intentional or not, felt like it was being designed with nothing but negative emotions because I trained myself to turn to the site when I felt that way. 
-        This felt limiting in what I would let myself do in terms of self-expression, and the product would always be something that could never be interesting 
-        to anyone, or myself. It was not healthy. <br><br>
-
-        Thankfully, I don't regret any of what I had created here! Genuinely, some of my favorite little creative projects lie in and around the site, and I am 
-        extremely proud of myself for this entire project over the course of 4+ years I have worked on it. But now... I need some distance to remember why I liked 
-        doing ANY of this in the first place, y'know..? Instead of unwillingly dragging its corpse with me, and getting it tangled up with everything else 
-        going on. <br><br>
-
-        So, that leaves us here. You, reading my frozen words on a webpage, and me, doing better (hopefully). I look forward to creating something new in the 
-        future... though, I cannot say when that will be, in all honesty. Moving on from this is important, everything attached to it, names, photos, music, there's 
-        stuff here from times of my life that I am not the proudest of, including now. So I hope I can return to this when I'm better. I hope that something beautiful can 
-        blossom from the corpse of a webpage dead by my own hand. I hope this can be relatively soon, but only time will tell! <br><br>
-
-        Baia, kaia! o/
-      </p>
-
-      <div class="why-wrap">
-        <a href="#" class="pseudo-button" id="why-link"><span style="color: #0d1117;">why?</span></a>
-      </div>
-
-    </div>
+<div id="game">
+  <img id="scene-layer-0" class="scene-layer" alt="">
+  <img id="scene-layer-1" class="scene-layer" alt="">
+  <div id="textbox">
+    <div id="dialogue-text"></div>
   </div>
+</div>
 
-  <script>
-    const GOODBYE_GIFS = [
-      'kris.gif',
-      'flowery.gif',
-      'seth.gif',
-      'lancer.gif',
-      'noelle.gif',
-      'susie.gif',
-      'ralsei.gif',
-      'jevil.gif',
-      'spammy.gif',
-      'gerson.gif',
-      'tenna.webp',
-      'pink.gif',
-      'berdly.gif',
-      'knight.gif',
-      'tasque.gif',
+<script>
+
+  const game = document.getElementById('game');
+  const NATIVE_W = 640;
+  const NATIVE_H = 480;
+
+  function resize() {
+    const scale = Math.min(window.innerWidth / NATIVE_W, window.innerHeight / NATIVE_H);
+    const offsetX = (window.innerWidth - NATIVE_W * scale) / 2;
+    const offsetY = (window.innerHeight - NATIVE_H * scale) / 2;
+    game.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+
+  // ---- dialogue system ----
+  //   [p:300]              -- a pause in ms
+  //   [c:red]word[/c]      -- colors, use css color name (hex code might word lulz)
+  //   [music:/path.mp3]    -- starts playing specified track
+  //   [hide]               -- fades the whole textbox out
+
+  const DIALOGUE = [
+    ".[p:600].[p:600].[p:600][p:1000]\n(press Z)[p:2000]\n((or tap screen))", //1
+    "Hi! [p:600]It's nice to see you here!",
+    "So,[p:200] I real[p:200]l[p:200]l[p:200]l[p:200]y[p:200] don't want to stop using this website.[p:500]\n(If that much wasn't clear...) ",
+    "I've become attached to it,[p:200] y'know?[p:1000]\nIt's like a little sanctuary.",
+    "[music:/music/vigil.mp3].[p:600].[p:600].[p:600]",
+    "Sure,[p:1000] my relationship with it might be a little odd...",
+    "But I have the power to [c:gold]change[/c] that!",
+    "You see,[p:200] I have NOT been thinking with a clear mind these past few days.",
+    "Constant back and forth with myself trying to figure out what's best for me.",
+    "While also trying to run damage control so I don't really lose my friends.",
+    "It's been a little stressful to say the least.",
+    ".[p:600].[p:600].[p:600]",
+    "so...",
+    "I want to use this as a little outlet to specifically focus on the [c:lime]good[/c] that goes on in my life!",
+    "I know that it won't magically solve everything for me.[p:600].[p:600].",
+    "But it's fulfilling and meaningful to me,[p:400] to do it through here,[p:400] so that's what I'll do!",
+    "There isn't much to put here as of right now though.",
+    "Since I spent the majority of my time making this look like an undertale dialogue box...",
+    "And also learning to use Aseprite for the art...",
+    "And then spending hours to draw and animate something that looked halfway decent...",
+    "But I'm really proud of it!",
+    ".[p:600].[p:600].[p:600]",
+    "Even the little dialogue blip is a clip of my voice too![p:600]\nI hope it isn't too annoying,[p:400] haha.",
+    "Anyways,[p:400] I look forward to making little doodles and animations for this![p:600]\nOh,[p:400] and music!",
+    "'Cause even the song is something I made myself![p:600]\nIt's called 'Vigil'.",
+    "It's original purpose was for D&D,[p:400] but it's an extremely calming song to me.",
+    "So it will probably the be go-to song used here in my little talks.",
+    ".[p:600].[p:600].[p:600]",
+    "Welp,[p:400] that's it for now I suppose!",
+    "Stick around and chill,[p:400] listen to the music with me if you so please.",
+    "Or just take your cursor up to the little [x] and close me out.",
+    "It was fun talking![p:600]\nSee you next time!",
+    "<3[p:600][hide]"
     ];
 
-    const goodbyeGifEl = document.getElementById('goodbye-gif');
-    const splatSfx = document.getElementById('splat-sfx');
-    splatSfx.volume = 0.02;
-    let currentGif = null;
+  const IMAGES = [
+    "",
+    "",
+    "",
+    "",
+    "/assets/anim/kicks.gif",
+    "",
+    "/assets/anim/looking.gif",
+    "/assets/anim/lookaway.gif",
+    "",
+    "",
+    "", 
+    "",
+    "/assets/anim/looking.gif",
+    "/assets/anim/kicks.gif",
+    "/assets/anim/lookaway.gif",
+    "/assets/anim/sing.gif",
+    "/assets/anim/talky.gif",
+    "",
+    "",
+    "/assets/anim/lookaway.gif",
+    "/assets/anim/sing.gif",
+    "/assets/anim/kicks.gif",
+    "",
+    "",
+    "/assets/anim/looking.gif",
+    "/assets/anim/sing.gif",
+    "/assets/anim/kicks.gif",
+    "",
+    "/assets/anim/looking.gif",
+    "/assets/anim/kicks.gif",
+    "",
+    "/assets/anim/waving.gif",
+    "/assets/anim/kicks.gif",
+  ];
+  // big = slower
+  const TYPE_SPEED_MS = 45;
 
-    function pickGoodbyeGif() {
-      let pick;
-      do {
-        pick = GOODBYE_GIFS[Math.floor(Math.random() * GOODBYE_GIFS.length)];
-      } while (pick === currentGif && GOODBYE_GIFS.length > 1);
-      currentGif = pick;
-      if (pick) {
-        goodbyeGifEl.src = '/assets/goodbye/' + pick;
+  const textEl = document.getElementById('dialogue-text');
+  const textboxEl = document.getElementById('textbox');
+  const sceneLayers = [
+    document.getElementById('scene-layer-0'),
+    document.getElementById('scene-layer-1')
+  ];
+  let activeLayer = 0;
+  let currentImageSrc = '';
+
+  function hideTextbox() {
+    textboxEl.style.opacity = '0';
+  }
+
+  function showTextbox() {
+    textboxEl.style.opacity = '1';
+  }
+
+  const preloadedSrcs = new Set();
+  IMAGES.forEach((src) => {
+    if (src && !preloadedSrcs.has(src)) {
+      preloadedSrcs.add(src);
+      const img = new Image();
+      img.src = src;
+      if (img.decode) {
+        img.decode().catch(() => {}); 
       }
     }
+  });
+  function setSceneImage(src) {
+    if (!src || src === currentImageSrc) return;
+    const isFirstImage = currentImageSrc === '';
+    currentImageSrc = src;
 
-    pickGoodbyeGif();
+    const incomingLayer = 1 - activeLayer;
+    const incomingEl = sceneLayers[incomingLayer];
+    const outgoingEl = sceneLayers[activeLayer];
 
-    goodbyeGifEl.addEventListener('click', () => {
-      pickGoodbyeGif();
-      splatSfx.currentTime = 0;
-      splatSfx.play().catch(() => {});
-    });
-
-    (function () {
-      if (localStorage.getItem('kaia-theme') === 'dark') {
-        document.body.classList.add('dark-mode');
-      }
-    })();
-
-    const btn = document.getElementById('theme-btn');
-
-    function syncIcon() {
-      btn.textContent = document.body.classList.contains('dark-mode') ? '[ ☼ ]' : '[ ☾ ]';
-    }
-
-    syncIcon();
-
-    btn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('kaia-theme',
-        document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-      syncIcon();
-    });
-
-    const bgm = document.getElementById('bgm');
-    const musicBtn = document.getElementById('music-btn');
-    bgm.volume = 0.2;
-
-    function showMusicBtn() {
-      musicBtn.classList.add('show');
-      musicBtn.textContent = '[ ♪ play ]';
-    }
-
-    bgm.play().catch(() => {
-      showMusicBtn();
-    });
-
-    musicBtn.addEventListener('click', () => {
-      if (bgm.paused) {
-        bgm.play();
-        musicBtn.textContent = '[ ♪ ]';
-      } else {
-        bgm.pause();
-        musicBtn.textContent = '[ ♪ play ]';
-      }
-    });
-
-    const whyLink = document.getElementById('why-link');
-    const mainText = document.getElementById('main-text');
-    const whyText = document.getElementById('why-text');
-
-    whyLink.addEventListener('click', function (e) {
-      e.preventDefault();
-      const showingWhy = whyText.classList.toggle('show');
-      mainText.classList.toggle('hide', showingWhy);
-      this.querySelector('span').textContent = showingWhy ? 'back' : 'why?';
-    });
-
-    const enterLink = document.getElementById('enter-link');
-
-    function requestFS() {
-      const el = document.documentElement;
-      if (el.requestFullscreen) return el.requestFullscreen();
-      if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
-      if (el.mozRequestFullScreen) return el.mozRequestFullScreen();
-      if (el.msRequestFullscreen) return el.msRequestFullscreen();
-      return Promise.resolve();
-    }
-
-    if (enterLink) {
-      enterLink.addEventListener('click', function (e) {
-        e.preventDefault();
-        const dest = this.getAttribute('href');
-
-        Promise.resolve(requestFS())
-          .catch(() => {  })
-          .finally(() => {
-            window.location.href = dest;
-          });
+    if (isFirstImage) {
+      incomingEl.style.transition = '';
+      incomingEl.src = src;
+      incomingEl.style.zIndex = '0';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          incomingEl.style.opacity = '1';
+        });
       });
+    } else {
+      incomingEl.style.transition = 'none';
+      incomingEl.src = src;
+      incomingEl.style.zIndex = '0';
+      incomingEl.style.opacity = '1';
+
+      outgoingEl.style.transition = 'none';
+      outgoingEl.style.zIndex = '0';
+      outgoingEl.style.opacity = '0';
+
+      void incomingEl.offsetHeight; // 
+      incomingEl.style.transition = '';
+      outgoingEl.style.transition = '';
     }
-  </script>
+
+    activeLayer = incomingLayer;
+  }
+  //blip
+  const TYPE_SOUND_SRC = '/assets/blipmain.wav';
+  const TYPE_SOUND_VOLUME = 0.4;
+  const typeSound = new Audio(TYPE_SOUND_SRC);
+  typeSound.volume = TYPE_SOUND_VOLUME;
+
+  function playTypeSound() {
+    typeSound.pause();
+    typeSound.currentTime = 0;
+    typeSound.play().catch(() => {});
+  }
+
+  // VOLUMES!!!!
+  const MUSIC_VOLUME = 0.03;
+  const MUSIC_FADE_MS = 1500;
+
+  const musicLayers = [new Audio(), new Audio()];
+  musicLayers.forEach((a) => { a.loop = true; a.volume = 0; });
+  let activeMusicLayer = 0;
+  let currentMusicSrc = '';
+
+  function fadeAudio(audioEl, targetVolume, durationMs, onComplete) {
+    const startVolume = audioEl.volume;
+    const startTime = performance.now();
+    function step(now) {
+      if (typeof now !== 'number' || !isFinite(now)) {
+        now = performance.now();
+      }
+      const t = Math.min(Math.max((now - startTime) / durationMs, 0), 1);
+      const nextVolume = startVolume + (targetVolume - startVolume) * t;
+      audioEl.volume = isFinite(nextVolume) ? Math.min(1, Math.max(0, nextVolume)) : targetVolume;
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else if (onComplete) {
+        onComplete();
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function playMusic(src) {
+    if (!src || src === currentMusicSrc) return;
+    currentMusicSrc = src;
+
+    const nextLayer = 1 - activeMusicLayer;
+    const nextEl = musicLayers[nextLayer];
+    const curEl = musicLayers[activeMusicLayer];
+
+    nextEl.src = src;
+    nextEl.currentTime = 0;
+    nextEl.volume = 0;
+    nextEl.play().catch((err) => console.warn('music playback blocked:', err));
+    fadeAudio(nextEl, MUSIC_VOLUME, MUSIC_FADE_MS);
+
+    fadeAudio(curEl, 0, MUSIC_FADE_MS, () => curEl.pause());
+
+    activeMusicLayer = nextLayer;
+  }
+  function parseDialogueMarkup(rawStr) {
+    const str = '* ' + rawStr.replace(/\n/g, '\n* ');
+    const tokens = [];
+    const colorStack = [];
+    let i = 0;
+    while (i < str.length) {
+      const ch = str[i];
+      if (ch === '[') {
+        const close = str.indexOf(']', i);
+        if (close !== -1) {
+          const tag = str.slice(i + 1, close);
+          if (tag.startsWith('p:')) {
+            tokens.push({ type: 'pause', ms: parseInt(tag.slice(2), 10) || 0 });
+            i = close + 1;
+            continue;
+          }
+          if (tag.startsWith('c:')) {
+            colorStack.push(tag.slice(2));
+            i = close + 1;
+            continue;
+          }
+          if (tag === '/c') {
+            colorStack.pop();
+            i = close + 1;
+            continue;
+          }
+          if (tag === 'hide') {
+            tokens.push({ type: 'hide' });
+            i = close + 1;
+            continue;
+          }
+          if (tag.startsWith('music:')) {
+            tokens.push({ type: 'music', src: tag.slice(6) });
+            i = close + 1;
+            continue;
+          }
+        }
+      }
+      tokens.push({ type: 'char', ch, color: colorStack[colorStack.length - 1] || null });
+      i++;
+    }
+    return tokens;
+  }
+
+  function escapeHtml(ch) {
+    if (ch === '<') return '&lt;';
+    if (ch === '>') return '&gt;';
+    if (ch === '&') return '&amp;';
+    if (ch === '"') return '&quot;';
+    return ch;
+  }
+
+  function renderRevealed(revealed) {
+    let html = '';
+    for (const t of revealed) {
+      const safe = escapeHtml(t.ch);
+      html += t.color ? `<span style="color:${t.color}">${safe}</span>` : safe;
+    }
+    textEl.innerHTML = html;
+  }
+
+  let pageIndex = 0;
+  let currentTokens = [];
+  let tokenIndex = 0;
+  let revealed = [];
+  let typing = false;
+  let typeTimer = null;
+
+  function startPage(index) {
+    if (index >= DIALOGUE.length) return;
+    pageIndex = index;
+    currentTokens = parseDialogueMarkup(DIALOGUE[pageIndex]);
+    tokenIndex = 0;
+    revealed = [];
+    typing = true;
+    textEl.innerHTML = '';
+    clearTimeout(typeTimer);
+
+    showTextbox();
+    setSceneImage(IMAGES[pageIndex]);
+
+    typeStep();
+  }
+
+  function typeStep() {
+    if (tokenIndex >= currentTokens.length) {
+      typing = false;
+      return;
+    }
+
+    const token = currentTokens[tokenIndex];
+    tokenIndex++;
+
+    if (token.type === 'pause') {
+      typeTimer = setTimeout(typeStep, token.ms);
+      return;
+    }
+
+    if (token.type === 'hide') {
+      hideTextbox();
+      typeTimer = setTimeout(typeStep, 0);
+      return;
+    }
+
+    if (token.type === 'music') {
+      playMusic(token.src);
+      typeTimer = setTimeout(typeStep, 0);
+      return;
+    }
+
+    revealed.push(token);
+    renderRevealed(revealed);
+    if (!/\s/.test(token.ch)) {
+      playTypeSound();
+    }
+
+    if (tokenIndex >= currentTokens.length) {
+      typing = false;
+      return;
+    }
+    typeTimer = setTimeout(typeStep, TYPE_SPEED_MS);
+  }
+
+  function finishTyping() {
+    clearTimeout(typeTimer);
+    revealed = currentTokens.filter((t) => t.type === 'char');
+    renderRevealed(revealed);
+    if (currentTokens.some((t) => t.type === 'hide')) {
+      hideTextbox();
+    }
+    currentTokens
+      .filter((t) => t.type === 'music')
+      .forEach((t) => playMusic(t.src));
+    tokenIndex = currentTokens.length;
+    typing = false;
+  }
+
+  function handleZ() {
+    if (typing) return;
+    if (pageIndex < DIALOGUE.length - 1) {
+      startPage(pageIndex + 1);
+    } else {
+      hideTextbox();
+    }
+  }
+
+  function handleX() {
+    if (typing) {
+      finishTyping();
+    }
+  }
+
+  window.addEventListener('keydown', (e) => {
+    const k = e.key.toLowerCase();
+    if (k === 'z') {
+      e.preventDefault();
+      handleZ();
+    } else if (k === 'x') {
+      e.preventDefault();
+      handleX();
+    }
+  });
+
+  window.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    handleZ();
+  }, { passive: false });
+
+  startPage(0);
+
+</script>
 
 </body>
 </html>

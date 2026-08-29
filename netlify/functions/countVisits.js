@@ -7,18 +7,14 @@ const IPINFO_TOKEN = process.env.IPINFO_TOKEN;
 // Random messages
 function getRandomMessage() {
   const messages = [
-    "Look, someone stopped by",
-    "How kind of this person to check out my site!",
-    "Welcome :)",
-    "Hi :3",
-    "Grab a snack!"
+    "Hello!"
   ];
   return messages[Math.floor(Math.random() * messages.length)];
 }
 
 // GIFs
 const gifs = [
-  "https://kaia.starscene.com/assets/spamton.gif",
+  /*"https://kaia.starscene.com/assets/spamton.gif",
   "https://kaia.starscene.com/assets/outtahere.gif",
   "https://kaia.starscene.com/assets/mycar.gif",
   "https://kaia.starscene.com/assets/owspin.gif",
@@ -32,7 +28,7 @@ const gifs = [
   "https://kaia.starscene.com/assets/franz.gif",
   "https://kaia.starscene.com/assets/nepeta.gif",
   "https://kaia.starscene.com/assets/johnegbert.gif",
-  "https://kaia.starscene.com/assets/jade-jade-harley.gif",
+  "https://kaia.starscene.com/assets/jade-jade-harley.gif",*/
 ];
 
 // Get location from IP

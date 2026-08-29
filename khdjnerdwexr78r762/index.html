@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaia online | it's been fun!</title>
+
+  <link rel="stylesheet" href="/kaia-base.css">
+
+  <style>body {
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;     
+  padding: 1.5rem;
+  position: relative;
+  background: none;      
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  background-image: url('/assets/chapter5_sunset.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px);
+  z-index: -1;
+}
+
+    .panel {
+      max-width: 56rem;
+      width: 100%;
+      text-align: center;
+    }
+
+    .panel-head {
+      font-size: 1.5rem;
+      text-align: center;
+      letter-spacing: 0.3rem;
+    }
+
+   
+    .rosie {
+      width: 9rem;
+      height: 9rem;
+      object-fit: cover;
+      image-rendering: pixelated;
+      border: 1px solid var(--panel-border);
+      margin: 0.5rem 0 0.75rem;
+      transition: border-color 0.3s;
+    }
+
+    .welcome-text {
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+      transition: color 0.3s;
+    }
+
+    .welcome-text em {
+      color: var(--text-soft);
+      font-size: 0.85em;
+      transition: color 0.3s;
+    }
+
+    .why-text {
+      display: none;
+    }
+
+    .why-text.show {
+      display: block;
+    }
+
+    .main-text.hide {
+      display: none;
+    }
+
+    .enter-wrap {
+      margin: 0.75rem 0 0.875rem;
+    }
+
+    .why-wrap {
+      margin: 0.75rem 0 0.875rem;
+    }
+
+    .rating {
+      margin-top: 0.5rem;
+      opacity: 0.75;
+      transition: opacity 0.2s;
+    }
+
+    .rating:hover { opacity: 1; }
+
+    .theme-toggle {
+      position: fixed;
+      top: 0.75rem;
+      right: 0.875rem;
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1.25rem;
+      color: var(--text-soft);
+      background: none;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+      z-index: 10;
+    }
+
+    .theme-toggle:hover { color: var(--text); }
+
+    .music-toggle {
+      position: fixed;
+      top: 0.75rem;
+      right: 3.25rem;
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1.25rem;
+      color: var(--text-soft);
+      background: none;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: color 0.3s, opacity 0.3s;
+      z-index: 10;
+      display: none;
+    }
+
+    .music-toggle.show { display: inline-block; }
+    .music-toggle:hover { color: var(--text); }
+  </style>
+</head>
+
+<body>
+
+  <button class="theme-toggle" id="theme-btn" title="Toggle dark mode">[ ☾ ]</button>
+  <button class="music-toggle" id="music-btn" title="Play music">[ ♪ ]</button>
+  <audio id="bgm" src="/music/scarlet.mp3" preload="auto"></audio>
+  <audio id="splat-sfx" src="/assets/splat.mp3" preload="auto"></audio>
+
+  <div class="panel">
+    <div class="panel-head">wait what?</div>
+    <div class="panel-body">
+
+      <!--<img
+        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia1.tenor.com%2Fimages%2Fefbdbe63a4c6cfc1d0a65659711640f8%2Ftenor.gif%3Fitemid%3D17582159&f=1&nofb=1&ipt=50618fb39702affe8bdde6a55d6535ab5b0ecaf6888ab34991fda8cf5172b273"
+        alt="rosie from animal crossing shaking maracas"
+        class="rosie"> -->
+
+      <p class="welcome-text main-text" id="main-text">
+        Hello!.. This website is currently being shut down. If you have ended up on this page via a webring, or anywhere else I have posted my links, you may 
+        remove me from said list. Or just keep me if u have attachment issues to buttons, but that isn't recommended. <br><br>
+
+        I've been advised to focus on this project less, and while I don't want to entirely say goodbye to it, I think taking the page down will help 
+        kill any sort of drive that would bring me back here. <br><br>
+
+        To the few buddies I have made through this project, you made it very fun <br> and encouraging while it was going!<br><br>
+
+        Bye bye!<br><br>
+
+        <img src="/assets/Kris_battle_act.gif" id="goodbye-gif" style="image-rendering: pixelated; cursor: pointer;" alt=""><br>
+
+        <em>This page has been set to be removed after a month. <br> Final unique visitor count: 1570. <br>(8/26/2026)</em>
+      </p>
+
+      <p class="welcome-text why-text" id="why-text">
+        Well, if you want the longer version... <br><br>
+
+        You may have read some of my blog posts in the recent past, and you would know that my mind is... not exactly in the best place. Personally, I felt that this 
+        page has grown into an echo chamber of my own mental issues rather than a passion project.<br><br>
+
+        At some point along the development of this, it was no longer an outlet of creativity for me. I kept turning to it for processing emotions that 
+        I couldn't really figure out where else to place, other than <a href="https://x.com/seikaia4u">twitter</a> (gross). <br><br>
+        
+        Now, this outcome wasn't really fair to me, or the site, was it? Every page, whether 
+        intentional or not, felt like it was being designed with nothing but negative emotions because I trained myself to turn to the site when I felt that way. 
+        This felt limiting in what I would let myself do in terms of self-expression, and the product would always be something that could never be interesting 
+        to anyone, or myself. It was not healthy. <br><br>
+
+        Thankfully, I don't regret any of what I had created here! Genuinely, some of my favorite little creative projects lie in and around the site, and I am 
+        extremely proud of myself for this entire project over the course of 4+ years I have worked on it. But now... I need some distance to remember why I liked 
+        doing ANY of this in the first place, y'know..? Instead of unwillingly dragging its corpse with me, and getting it tangled up with everything else 
+        going on. <br><br>
+
+        So, that leaves us here. You, reading my frozen words on a webpage, and me, doing better (hopefully). I look forward to creating something new in the 
+        future... though, I cannot say when that will be, in all honesty. Moving on from this is important, everything attached to it, names, photos, music, there's 
+        stuff here from times of my life that I am not the proudest of, including now. So I hope I can return to this when I'm better. I hope that something beautiful can 
+        blossom from the corpse of a webpage dead by my own hand. I hope this can be relatively soon, but only time will tell! <br><br>
+
+        Baia, kaia! o/
+      </p>
+
+      <div class="why-wrap">
+        <a href="#" class="pseudo-button" id="why-link"><span style="color: #0d1117;">why?</span></a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const GOODBYE_GIFS = [
+      'kris.gif',
+      'flowery.gif',
+      'seth.gif',
+      'lancer.gif',
+      'noelle.gif',
+      'susie.gif',
+      'ralsei.gif',
+      'jevil.gif',
+      'spammy.gif',
+      'gerson.gif',
+      'tenna.webp',
+      'pink.gif',
+      'berdly.gif',
+      'knight.gif',
+      'tasque.gif',
+    ];
+
+    const goodbyeGifEl = document.getElementById('goodbye-gif');
+    const splatSfx = document.getElementById('splat-sfx');
+    splatSfx.volume = 0.02;
+    let currentGif = null;
+
+    function pickGoodbyeGif() {
+      let pick;
+      do {
+        pick = GOODBYE_GIFS[Math.floor(Math.random() * GOODBYE_GIFS.length)];
+      } while (pick === currentGif && GOODBYE_GIFS.length > 1);
+      currentGif = pick;
+      if (pick) {
+        goodbyeGifEl.src = '/assets/goodbye/' + pick;
+      }
+    }
+
+    pickGoodbyeGif();
+
+    goodbyeGifEl.addEventListener('click', () => {
+      pickGoodbyeGif();
+      splatSfx.currentTime = 0;
+      splatSfx.play().catch(() => {});
+    });
+
+    (function () {
+      if (localStorage.getItem('kaia-theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+      }
+    })();
+
+    const btn = document.getElementById('theme-btn');
+
+    function syncIcon() {
+      btn.textContent = document.body.classList.contains('dark-mode') ? '[ ☼ ]' : '[ ☾ ]';
+    }
+
+    syncIcon();
+
+    btn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('kaia-theme',
+        document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+      syncIcon();
+    });
+
+    const bgm = document.getElementById('bgm');
+    const musicBtn = document.getElementById('music-btn');
+    bgm.volume = 0.2;
+
+    function showMusicBtn() {
+      musicBtn.classList.add('show');
+      musicBtn.textContent = '[ ♪ play ]';
+    }
+
+    bgm.play().catch(() => {
+      showMusicBtn();
+    });
+
+    musicBtn.addEventListener('click', () => {
+      if (bgm.paused) {
+        bgm.play();
+        musicBtn.textContent = '[ ♪ ]';
+      } else {
+        bgm.pause();
+        musicBtn.textContent = '[ ♪ play ]';
+      }
+    });
+
+    const whyLink = document.getElementById('why-link');
+    const mainText = document.getElementById('main-text');
+    const whyText = document.getElementById('why-text');
+
+    whyLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      const showingWhy = whyText.classList.toggle('show');
+      mainText.classList.toggle('hide', showingWhy);
+      this.querySelector('span').textContent = showingWhy ? 'back' : 'why?';
+    });
+
+    const enterLink = document.getElementById('enter-link');
+
+    function requestFS() {
+      const el = document.documentElement;
+      if (el.requestFullscreen) return el.requestFullscreen();
+      if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+      if (el.mozRequestFullScreen) return el.mozRequestFullScreen();
+      if (el.msRequestFullscreen) return el.msRequestFullscreen();
+      return Promise.resolve();
+    }
+
+    if (enterLink) {
+      enterLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        const dest = this.getAttribute('href');
+
+        Promise.resolve(requestFS())
+          .catch(() => {  })
+          .finally(() => {
+            window.location.href = dest;
+          });
+      });
+    }
+  </script>
+
+</body>
+</html>
