@@ -66,7 +66,7 @@ Object.assign(window.NODES, {
     next: "n12"
   },
   n12: {
-    text: ".[p:600].[p:600].[p:600]",
+    text: ". [p:600]. [p:600]. [p:600]",
     image: "",
     next: "n13"
   },

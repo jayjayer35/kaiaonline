@@ -109,11 +109,11 @@ const NODES = window.NODES || {};
 // to already be sitting in NODES (via its <script> tag in index.html)
 // for autoplay and resume-progress to work the instant the page loads.
 const SCENES = [
-  // older scene -- not loaded until picked in the LOG menu
-  { id: 'scene-1', label: 'Scene 1', startNode: 'n1', scriptFile: 'dialogue/scene1.js' },
 
   // current/newest scene -- loaded eagerly via dialogue/scene2.js
-  { id: 'scene-2', label: 'Scene 2', startNode: 's2_n1' }
+  { id: 'scene-2', label: 'Latest', startNode: 's2_n1' },
+  // older scene -- not loaded until picked in the LOG menu
+  { id: 'scene-1', label: 'Alive - Aug 29, 2026', startNode: 'n1', scriptFile: 'dialogue/scene1.js' },
 ];
 
 const START_NODE = SCENES[SCENES.length - 1].startNode;
@@ -874,7 +874,7 @@ function closeItemScreen() {
 
 function renderItemList() {
   if (!inventory.length) {
-    itemListEl.innerHTML = '<div class="item-empty">You have nothing.</div>';
+    itemListEl.innerHTML = '<div class="item-empty"></div>';
   } else {
     let html = '';
     inventory.forEach((id, i) => {

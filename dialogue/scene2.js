@@ -17,12 +17,12 @@
 window.NODES = window.NODES || {};
 Object.assign(window.NODES, {
   s2_n1: {
-    text: "this is the newest scene!",
+    text: "Hi! [p:600]It's nice to see you here!",
     image: "/assets/anim/kicks.gif",
     next: "s2_n2"
   },
   s2_n2: {
-    text: "Hi! [p:600]It's nice to see you here![hide]",
+    text: "Hi! [p:600]It's nice to see you here!",
     image: "/assets/anim/kicks.gif",
     next: null
   }
