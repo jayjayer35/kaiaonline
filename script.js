@@ -109,11 +109,11 @@ const NODES = window.NODES || {};
 // to already be sitting in NODES (via its <script> tag in index.html)
 // for autoplay and resume-progress to work the instant the page loads.
 const SCENES = [
+  // older scene -- not loaded until picked in the LOG menu
+  { id: 'scene-1', label: 'Alive - Aug 29, 2026', startNode: 'n1', scriptFile: 'dialogue/scene1.js' },
 
   // current/newest scene -- loaded eagerly via dialogue/scene2.js
   { id: 'scene-2', label: 'Latest', startNode: 's2_n1' },
-  // older scene -- not loaded until picked in the LOG menu
-  { id: 'scene-1', label: 'Alive - Aug 29, 2026', startNode: 'n1', scriptFile: 'dialogue/scene1.js' },
 ];
 
 const START_NODE = SCENES[SCENES.length - 1].startNode;
@@ -161,7 +161,7 @@ const MENU_ENTRIES = [
 // `info` is what the INFO action displays in the dialogue box. Add as
 // many as you want -- ids just need to be unique.
 const ITEMS = {
-  test_item: { label: "example", info: "lorem ipsum, baby" },
+  egg: { label: "Egg", info: "Not too important, not too unimportant." },
 };
 
 const MAX_ITEMS = 8;
@@ -429,17 +429,60 @@ const MENU_SOUND_VOLUME = 0.1;
 const playMenuSelectSound = createBlipPlayer(MENU_SELECT_SRC, MENU_SOUND_VOLUME, 3);
 const playMenuConfirmSound = createBlipPlayer(MENU_CONFIRM_SRC, MENU_SOUND_VOLUME, 3);
 
+// egg item's USE sound effect -- see useSelectedItem() below
+const EGG_USE_SRC = '/assets/egg-use.mp3';
+const EGG_USE_VOLUME = 0.2;
+const playEggUseSound = createBlipPlayer(EGG_USE_SRC, EGG_USE_VOLUME, 3);
+
 // VOLUMES!!!!
 const MUSIC_VOLUME = 0.03;
 const MUSIC_FADE_MS = 1500;
 
-const musicLayers = [new Audio(), new Audio()];
-musicLayers.forEach((a) => { a.loop = true; a.volume = 0; });
+// ---- cued music (the [music:] system) ----
+// This uses the Web Audio API instead of a plain <audio loop> element on
+// purpose: <audio loop> restarts the element when it reaches the end,
+// and that restart is not sample-accurate in most browsers -- for MP3s
+// especially (which almost always have a few ms of silence baked in at
+// the start/end by the encoder) that shows up as an audible click or
+// gap every time the track loops. Decoding the whole file into an
+// AudioBuffer up front and looping it with an AudioBufferSourceNode
+// loops at the exact sample instead, with no seam.
+//
+// The tradeoff: decoding needs the raw file bytes via fetch(), which
+// (like the on-demand scene loading) doesn't work over a bare file://
+// URL -- it needs a real server. Doesn't affect anything else on the
+// site, just this.
+const musicCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+// two gain nodes to crossfade between, same idea as the old two-<audio>-
+// element approach -- whichever track is coming in fades one up while
+// the outgoing one fades down
+const musicGains = [musicCtx.createGain(), musicCtx.createGain()];
+musicGains.forEach((g) => {
+  g.gain.value = 0;
+  g.connect(musicCtx.destination);
+});
+const musicSources = [null, null]; // currently-playing AudioBufferSourceNode per slot
 let activeMusicLayer = 0;
 let currentMusicSrc = '';
 
-function fadeAudio(audioEl, targetVolume, durationMs, onComplete) {
-  const startVolume = audioEl.volume;
+// decoded buffers are cached by src, so replaying a track already heard
+// this session (e.g. resuming, or a scene that reuses a cue) doesn't
+// re-fetch/re-decode it
+const musicBufferCache = {};
+
+async function loadMusicBuffer(src) {
+  if (musicBufferCache[src]) return musicBufferCache[src];
+  const res = await fetch(src);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const arrayBuffer = await res.arrayBuffer();
+  const buffer = await musicCtx.decodeAudioData(arrayBuffer);
+  musicBufferCache[src] = buffer;
+  return buffer;
+}
+
+function fadeGain(gainNode, targetVolume, durationMs, onComplete) {
+  const startVolume = gainNode.gain.value;
   const startTime = performance.now();
   function step(now) {
     if (typeof now !== 'number' || !isFinite(now)) {
@@ -447,7 +490,7 @@ function fadeAudio(audioEl, targetVolume, durationMs, onComplete) {
     }
     const t = Math.min(Math.max((now - startTime) / durationMs, 0), 1);
     const nextVolume = startVolume + (targetVolume - startVolume) * t;
-    audioEl.volume = isFinite(nextVolume) ? Math.min(1, Math.max(0, nextVolume)) : targetVolume;
+    gainNode.gain.value = isFinite(nextVolume) ? Math.max(0, nextVolume) : targetVolume;
     if (t < 1) {
       requestAnimationFrame(step);
     } else if (onComplete) {
@@ -457,21 +500,57 @@ function fadeAudio(audioEl, targetVolume, durationMs, onComplete) {
   requestAnimationFrame(step);
 }
 
-function playMusic(src) {
+// AudioContext starts "suspended" until a user gesture, same idea as
+// the ambience-autoplay retry -- call this from the same interaction
+// handlers that unlock everything else
+function resumeMusicContext() {
+  if (musicCtx.state === 'suspended') {
+    musicCtx.resume().catch(() => {});
+  }
+}
+
+async function playMusic(src) {
   if (!src || src === currentMusicSrc) return;
   currentMusicSrc = src;
+  resumeMusicContext();
+
+  let buffer;
+  try {
+    buffer = await loadMusicBuffer(src);
+  } catch (err) {
+    console.warn('music failed to load:', src, err);
+    if (currentMusicSrc === src) currentMusicSrc = ''; // allow retrying later
+    return;
+  }
+  // if something else got cued while this one was loading, don't step
+  // on it
+  if (currentMusicSrc !== src) return;
 
   const nextLayer = 1 - activeMusicLayer;
-  const nextEl = musicLayers[nextLayer];
-  const curEl = musicLayers[activeMusicLayer];
+  const nextGain = musicGains[nextLayer];
+  const curGain = musicGains[activeMusicLayer];
 
-  nextEl.src = src;
-  nextEl.currentTime = 0;
-  nextEl.volume = 0;
-  nextEl.play().catch((err) => console.warn('music playback blocked:', err));
-  fadeAudio(nextEl, MUSIC_VOLUME, MUSIC_FADE_MS);
+  if (musicSources[nextLayer]) {
+    musicSources[nextLayer].stop();
+    musicSources[nextLayer] = null;
+  }
 
-  fadeAudio(curEl, 0, MUSIC_FADE_MS, () => curEl.pause());
+  const source = musicCtx.createBufferSource();
+  source.buffer = buffer;
+  source.loop = true;
+  source.connect(nextGain);
+  source.start(0);
+  musicSources[nextLayer] = source;
+
+  fadeGain(nextGain, MUSIC_VOLUME, MUSIC_FADE_MS);
+
+  const outgoingLayer = activeMusicLayer;
+  fadeGain(curGain, 0, MUSIC_FADE_MS, () => {
+    if (musicSources[outgoingLayer]) {
+      musicSources[outgoingLayer].stop();
+      musicSources[outgoingLayer] = null;
+    }
+  });
 
   activeMusicLayer = nextLayer;
 }
@@ -488,8 +567,16 @@ ambience.volume = AMBIENCE_VOLUME;
 let ambienceStarted = false;
 function startAmbience() {
   if (ambienceStarted) return;
-  ambienceStarted = true;
-  ambience.play().catch((err) => console.warn('ambience playback blocked:', err));
+  // only lock this in once play() actually succeeds -- setting it
+  // beforehand meant the very first attempt (always blocked, since it
+  // happens on page load before any real interaction) permanently
+  // stopped every later retry from keydown/touchend, even though those
+  // ARE genuine user gestures and should unlock it
+  ambience.play().then(() => {
+    ambienceStarted = true;
+  }).catch((err) => {
+    console.warn('ambience playback blocked, will retry on next interaction:', err);
+  });
 }
 
 // try right away -- works if the browser already allows it (e.g. the
@@ -831,17 +918,9 @@ function closeMenu() {
 
 function toggleMenu() {
   if (itemInfoOpen) return; // back out with X/Z first
-  if (scenePlaybackActive) {
-    // C now works as an "exit this old scene" shortcut too, same as X --
-    // first press finishes any in-flight typing, next press backs out
-    // to the scene picker
-    if (typing) {
-      finishTyping();
-    } else {
-      exitScenePlayback();
-    }
-    return;
-  }
+  // C now works normally during scene playback too -- it opens the
+  // real menu (which pauses the scene's typewriter the same way it
+  // pauses live dialogue), not a shortcut to leave the scene.
   menuOpen ? closeMenu() : openMenu();
 }
 
@@ -993,6 +1072,12 @@ function useSelectedItem() {
     equipped[item.slot] = (equipped[item.slot] === id) ? null : id;
     saveEquipped();
     renderItemList(); // refresh so the equipped marker updates
+    return;
+  }
+  if (id === 'egg') {
+    // just a sound effect -- never removed from inventory, use it as
+    // many times as you want
+    playEggUseSound();
     return;
   }
   console.log('TODO: use item', id);
@@ -1251,9 +1336,17 @@ async function playScene(scene) {
     return;
   }
 
-  liveReturnNodeId = currentNodeId;
-  liveReturnMusicSrc = currentMusicSrc;
+  // only remember the true live position the FIRST time playback
+  // starts -- if a scene is already playing and the visitor picks a
+  // DIFFERENT one from LOG (overriding what's currently showing), we
+  // still want to return to the real live conversation afterward, not
+  // to whatever scene was playing a moment ago
+  if (!scenePlaybackActive) {
+    liveReturnNodeId = currentNodeId;
+    liveReturnMusicSrc = currentMusicSrc;
+  }
   scenePlaybackActive = true;
+  menuOpen = false; // the menu is about to be fully replaced by the scene
   closeSceneLogScreen();
   menuBoxEl.style.display = 'none';
   startNode(scene.startNode);
@@ -1265,6 +1358,12 @@ function exitScenePlayback() {
     startNode(liveReturnNodeId);
     if (liveReturnMusicSrc) playMusic(liveReturnMusicSrc);
   }
+  // startNode() above already kicked off (or, on mobile, finished) the
+  // live node's own typewriter -- closeMenu()'s "resume where it was
+  // paused" logic must NOT also try to advance it, or it'll double up
+  wasTypingBeforeMenu = false;
+  wasTextboxVisibleBeforeMenu = true;
+  menuOpen = true;
   menuBoxEl.style.display = 'flex';
   openSceneLogScreen(); // back to the list so another scene can be picked
 }
@@ -1292,6 +1391,10 @@ function handleZ() {
     sceneLogHandleZ();
     return;
   }
+  if (menuOpen) {
+    activateMenuEntry();
+    return;
+  }
   if (scenePlaybackActive) {
     if (typing) return; // Z doesn't skip typing anymore -- press X for that
     if (choiceActive) {
@@ -1305,10 +1408,6 @@ function handleZ() {
       hideTextbox();
       exitScenePlayback();
     }
-    return;
-  }
-  if (menuOpen) {
-    activateMenuEntry();
     return;
   }
   if (typing) return; // Z doesn't skip typing anymore -- press X for that
@@ -1345,18 +1444,15 @@ function handleX() {
     sceneLogHandleX();
     return;
   }
-  if (scenePlaybackActive) {
-    if (typing) {
-      finishTyping();
-    } else {
-      exitScenePlayback();
-    }
-    return;
-  }
   if (menuOpen) {
     closeMenu();
     return;
   }
+  // No more "X exits scene playback" shortcut -- while watching a
+  // scene, X only ever skips its typewriter, exactly like live
+  // dialogue. The only ways out are letting the scene reach its own
+  // natural end, or opening the menu (C) and picking a different scene
+  // from LOG.
   if (typing) {
     finishTyping();
   }
@@ -1373,10 +1469,6 @@ function handleUp() {
     sceneLogHandleUp();
     return;
   }
-  if (scenePlaybackActive) {
-    if (choiceActive) moveChoiceGrid(-1, 0);
-    return;
-  }
   if (menuOpen) {
     const newIndex = (menuIndex - 1 + MENU_ENTRIES.length) % MENU_ENTRIES.length;
     if (newIndex !== menuIndex) {
@@ -1384,6 +1476,10 @@ function handleUp() {
       renderMenu();
       playMenuSelectSound();
     }
+    return;
+  }
+  if (scenePlaybackActive) {
+    if (choiceActive) moveChoiceGrid(-1, 0);
     return;
   }
   if (choiceActive) moveChoiceGrid(-1, 0);
@@ -1400,10 +1496,6 @@ function handleDown() {
     sceneLogHandleDown();
     return;
   }
-  if (scenePlaybackActive) {
-    if (choiceActive) moveChoiceGrid(1, 0);
-    return;
-  }
   if (menuOpen) {
     const newIndex = (menuIndex + 1) % MENU_ENTRIES.length;
     if (newIndex !== menuIndex) {
@@ -1411,6 +1503,10 @@ function handleDown() {
       renderMenu();
       playMenuSelectSound();
     }
+    return;
+  }
+  if (scenePlaybackActive) {
+    if (choiceActive) moveChoiceGrid(1, 0);
     return;
   }
   if (choiceActive) moveChoiceGrid(1, 0);
@@ -1443,10 +1539,12 @@ if (!IS_MOBILE) {
     if (k === 'z') {
       e.preventDefault();
       startAmbience();
+      resumeMusicContext();
       handleZ();
     } else if (k === 'x' || k === 'escape') {
       e.preventDefault();
       startAmbience();
+      resumeMusicContext();
       handleX();
     } else if (k === 'arrowup' || k === 'w') {
       e.preventDefault();
@@ -1472,6 +1570,7 @@ if (!IS_MOBILE) {
     }
     e.preventDefault();
     startAmbience();
+    resumeMusicContext();
     handleZ();
   }, { passive: false });
 

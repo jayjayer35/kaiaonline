@@ -75,7 +75,7 @@ body {
   color: #fff;
   font-size: 24px;
   letter-spacing: 1px;
-  line-height: 1.45em;
+  line-height: 1.15em;
   white-space: pre-wrap;
   justify-content: center;
   padding-bottom: 2px;
@@ -89,7 +89,7 @@ body {
    affects every character including letters. Tweak this one number if
    the gap needs to be bigger/smaller. */
 .wide-space {
-  margin-right: 0.25em;
+  margin-right: 0.20em;
 }
 
 /* ---- dialogue choices: shown INSIDE the textbox, replacing the text,
@@ -99,7 +99,7 @@ body {
   display: none;
   grid-template-columns: repeat(2, 1fr);
   column-gap: 20px;
-  row-gap: 10px;
+  row-gap: 4px;
   height: 100%;
   align-content: center;
 }
@@ -111,7 +111,7 @@ body {
   font-size: 22px;
   letter-spacing: 2px;
   /* top right bottom left why isnt this just reffed in the hover doc*/
-  padding: 4px 6px 4px 24px;
+  padding: 4px 0px 8px 34px;
   cursor: pointer;
   white-space: nowrap;
 }
