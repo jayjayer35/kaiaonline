@@ -1,0 +1,386 @@
+@font-face {
+  font-family: 'DialogueFont';
+  src: url('/assets/big-shot.ttf') format('truetype');
+  font-display: block;
+}
+
+/* smaller font used for the LV/HP/G stat rows in the menu */
+@font-face {
+  font-family: 'StatFont';
+  src: url('/assets/cot.ttf') format('truetype');
+  font-display: block;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+body {
+  cursor: default;
+}
+
+#game {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 640px;
+  height: 480px;
+  background: #000;
+  transform-origin: top left;
+  image-rendering: pixelated;
+  overflow: hidden;
+}
+
+.scene-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 640px;
+  height: 480px;
+  object-fit: cover;
+  image-rendering: pixelated;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+/* ---- dialogue textbox ---- */
+
+#textbox {
+  position: absolute;
+  left: 25px;
+  top: 328px;
+  width: 590px;
+  height: 122px;
+  background: #000;
+  border: 4px solid #fff;
+  padding: 14px 18px;
+  opacity: 1;
+  z-index: 10;
+}
+
+#dialogue-text {
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 20px;
+  letter-spacing: 2px;
+  line-height: 1.45em;
+  white-space: pre-wrap;
+  justify-content: center;
+
+  height: calc(1.35em * 3);
+  overflow: hidden;
+}
+
+/* extra width added after every space character in the dialogue box
+   (and item-info text, which renders in the same box) -- see
+   charsToHtml() in script.js. Independent of letter-spacing, which
+   affects every character including letters. Tweak this one number if
+   the gap needs to be bigger/smaller. */
+.wide-space {
+  margin-right: 0.25em;
+}
+
+/* ---- dialogue choices: shown INSIDE the textbox, replacing the text,
+   as a heart-cursor grid (Undertale-style Y/N prompt) ---- */
+
+#choice-grid {
+  display: none;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 20px;
+  row-gap: 10px;
+  height: 100%;
+  align-content: center;
+}
+
+.choice-cell {
+  position: relative;
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: 2px;
+  /* top right bottom left why isnt this just reffed in the hover doc*/
+  padding: 4px 6px 4px 24px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ---- shared heart/soul cursor, used in both the choice grid and the
+   custom menu ---- */
+
+.cursor-icon {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  /* -50% here would be exact geometric centering, but pixel fonts
+     usually carry more visual weight above the baseline than below it
+     (empty descender space most letters never use) -- so a perfectly
+     centered heart tends to look like it's sitting a little low next
+     to the actual letterforms. Nudging a bit further up (a bigger
+     negative number) compensates. If it's still off once you see it
+     live, this is the one number to adjust -- try steps of ~3-5%. */
+  transform: translateY(-60%);
+  scale: 90%;
+  width: 22px;
+  height: 22px;
+  image-rendering: pixelated;
+}
+
+/* ---- custom pause menu (press C) ----
+   Two boxes stacked to match the reference: a static stats box (name/
+   LV/HP/G -- edit directly in index.html) sitting on top of the
+   selectable ITEM/STAT/CELL-style nav list. Positions/sizes below are
+   measured from the reference screenshot at native (640x480) scale. */
+
+#menu-box {
+  position: absolute;
+  left: 32px;
+  top: 53px;
+  width: fit-content;
+  min-width: 110px;
+  display: none;
+  flex-direction: column;
+  z-index: 20;
+}
+
+#stats-box {
+  box-sizing: border-box;
+  border: 4px solid #fff;
+  background: #000;
+  padding: 12px 10px 14px;
+}
+
+#stats-name {
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  margin-bottom: 4px;
+  margin-left: 0px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 8px;
+  font-family: 'StatFont', monospace;
+  color: #fff;
+  font-size: 8px;
+  line-height: 1.6em;
+}
+
+.stat-label {
+  width: 18px;
+}
+
+#nav-box {
+  box-sizing: border-box;
+  margin-top: 7px;
+  border: 4px solid #fff;
+  background: #000;
+  padding: 12px 12px;
+  padding-left: 14px;
+}
+
+.menu-entry {
+  position: relative;
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: 1px;
+  /* top right bottom left why isnt this just reffed in the hover doc*/
+  padding: 0px 0px 0px 25px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.menu-entry .cursor-icon {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.choice-cell .cursor-icon {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* ---- item screen (opened via the ITEM entry in the menu) ----
+   Position (left/top) is set by JS at open time, computed from
+   menu-box's actual rendered size -- see openItemScreen() in script.js.
+   Holds up to 8 items, with a USE/INFO/DROP action row like the
+   reference. */
+
+#item-box {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 300px;
+  border: 4px solid #fff;
+  background: #000;
+  padding: 14px 16px 12px;
+  z-index: 25;
+}
+
+#item-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-entry {
+  position: relative;
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: 1px;
+  padding: 0px 4px 0px 26px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.item-entry .cursor-icon {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.item-empty {
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: 1px;
+  opacity: 0.6;
+  padding: 0px 4px;
+}
+
+#item-actions {
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+  font-size: 18px;
+  letter-spacing: 1px;
+  margin-top: 0px;
+  padding-top: 8px;
+}
+
+.item-action {
+  position: relative;
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 18px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  padding: 0px 4px 0px 22px;
+}
+
+.item-action.disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.item-action .cursor-icon {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* ---- scene log (opened via the LOG entry in the menu) ----
+   Same positioning approach as item-box (set by JS relative to
+   menu-box's actual rendered size). No USE/INFO/DROP row here --
+   picking an entry plays it back immediately. */
+
+#scene-log-box {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 260px;
+  border: 4px solid #fff;
+  background: #000;
+  padding: 14px 16px;
+  z-index: 25;
+}
+
+#scene-log-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.scene-log-entry {
+  position: relative;
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 18px;
+  padding: 0px 4px 0px 26px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.scene-log-entry .cursor-icon {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.item-equipped-tag {
+  font-size: 20px;
+  opacity: 0.6;
+}
+
+/* ---- STAT screen (opened via the STAT entry in the menu) ----
+   Purely informational -- no cursor, nothing selectable. Positioned the
+   same way as item-box/scene-log-box. */
+
+#stat-screen {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 260px;
+  border: 4px solid #fff;
+  background: #000;
+  padding: 16px 18px;
+  z-index: 25;
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+}
+
+#stat-screen-name {
+  font-family: 'DialogueFont', monospace;
+  font-size: 18px;
+  margin-bottom: 0px;
+}
+
+.stat-screen-row {
+  display: flex;
+  gap: 20px;
+  font-size: 18px;
+  line-height: 1.025em;
+  white-space: nowrap;
+}
+
+.stat-screen-label {
+  opacity: 0.85;
+}
+
+.stat-screen-row.section-start {
+  margin-top: 10px;
+}
+
+.stat-screen-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 14px;
+  margin: 10px 0;
+}

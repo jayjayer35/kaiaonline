@@ -3,518 +3,80 @@
 <head>
 <meta charset="UTF-8">
 <title>* (The girl on the cliff.).</title>
-<style>
-
-  @font-face {
-    font-family: 'DialogueFont';
-    src: url('/assets/big-shot.ttf') format('truetype');
-    font-display: block;
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  html, body {
-    width: 100%;
-    height: 100%;
-    background: #000;
-    overflow: hidden;
-    user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-  }
-
-  body {
-    cursor: default;
-  }
-
-  #game {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 640px;
-    height: 480px;
-    background: #000;
-    transform-origin: top left;
-    image-rendering: pixelated;
-    overflow: hidden;
-  }
-
-  .scene-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 640px;
-    height: 480px;
-    object-fit: cover;
-    image-rendering: pixelated;
-    opacity: 0;
-    transition: opacity 1.2s ease;
-  }
-
-  #textbox {
-    position: absolute;
-    left: 25px;
-    top: 328px;
-    width: 590px;
-    height: 122px;
-    background: #000;
-    border: 4px solid #fff;
-    padding: 14px 18px;
-    opacity: 1;
-    z-index: 10;
-  }
-
-  #dialogue-text {
-    font-family: 'DialogueFont', monospace;
-    color: #fff;
-    font-size: 24px;
-    line-height: 1.25em;
-    white-space: pre-wrap;
-    letter-spacing: 1px;
-
-    height: calc(1.35em * 3);
-    overflow: hidden;
-  }
-
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="game">
   <img id="scene-layer-0" class="scene-layer" alt="">
   <img id="scene-layer-1" class="scene-layer" alt="">
+
   <div id="textbox">
     <div id="dialogue-text"></div>
+    <div id="choice-grid"></div>
+  </div>
+
+  <!-- press C to open/close this -- see MENU_ENTRIES in script.js to
+       customize the ITEM/STAT/CELL-style list. The stats box above it
+       (name/LV/HP/G) is plain static markup -- edit the values directly
+       below whenever they change. -->
+  <div id="menu-box">
+    <div id="stats-box">
+      <div id="stats-name">Kaia</div>
+      <div class="stats-row"><span class="stat-label">LV</span><span>3</span></div>
+      <div class="stats-row"><span class="stat-label">HP</span><span>28/28</span></div>
+      <div class="stats-row"><span class="stat-label">G</span><span>51</span></div>
+    </div>
+    <div id="nav-box">
+      <div id="menu-list"></div>
+    </div>
+  </div>
+
+  <!-- opened by selecting ITEM in the menu -- see ITEMS/addItem() in
+       script.js. Positioned next to menu-box by JS at open time, since
+       menu-box's width changes depending on its content. -->
+  <div id="item-box">
+    <div id="item-list"></div>
+    <div id="item-actions"></div>
+  </div>
+
+  <!-- opened by selecting LOG in the menu -- see SCENES in script.js.
+       Picking an entry replays that old scene using the normal dialogue
+       engine, without touching your real progress. -->
+  <div id="scene-log-box">
+    <div id="scene-log-list"></div>
+  </div>
+
+  <!-- opened by selecting STAT in the menu -- purely informational,
+       nothing here is selectable. Everything except WEAPON/ARMOR is
+       plain static markup -- edit the values directly whenever they
+       change, same as the corner stats box above. WEAPON/ARMOR are
+       filled in by script.js from whatever's currently equipped (see
+       `equipped` and useSelectedItem() in script.js). -->
+  <div id="stat-screen">
+    <div id="stat-screen-name">"Kaia"</div>
+
+    <div class="stat-screen-row"><span class="stat-screen-label">LV</span><span>3</span></div>
+    <div class="stat-screen-row"><span class="stat-screen-label">HP</span><span>28 / 28</span></div>
+
+    <div class="stat-screen-grid">
+      <div class="stat-screen-row"><span class="stat-screen-label">AT</span><span>4 (0)</span></div>
+      <div class="stat-screen-row"><span class="stat-screen-label">EXP:</span><span>50</span></div>
+      <div class="stat-screen-row"><span class="stat-screen-label">DF</span><span>0 (0)</span></div>
+      <div class="stat-screen-row"><span class="stat-screen-label">NEXT:</span><span>20</span></div>
+    </div>
+
+    <div class="stat-screen-row section-start"><span class="stat-screen-label">WEAPON: </span><span id="stat-screen-weapon">None</span></div>
+    <div class="stat-screen-row"><span class="stat-screen-label">ARMOR: </span><span id="stat-screen-armor">None</span></div>
+
+    <div class="stat-screen-grid">
+      <div class="stat-screen-row"><span class="stat-screen-label">GOLD: </span><span>51</span></div>
+      <div class="stat-screen-row"><span class="stat-screen-label">KILLS: </span><span>15</span></div>
+    </div>
   </div>
 </div>
-
-<script>
-
-  // On mobile, skip the letter-by-letter typewriter animation and just
-  // show each page's full text right away.
-  const IS_MOBILE = window.matchMedia('(pointer: coarse)').matches
-    || navigator.maxTouchPoints > 0
-    || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-  const game = document.getElementById('game');
-  const NATIVE_W = 640;
-  const NATIVE_H = 480;
-
-  function resize() {
-    const scale = Math.min(window.innerWidth / NATIVE_W, window.innerHeight / NATIVE_H);
-    const offsetX = (window.innerWidth - NATIVE_W * scale) / 2;
-    const offsetY = (window.innerHeight - NATIVE_H * scale) / 2;
-    game.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-
-  // ---- dialogue system ----
-  //   [p:300]              -- a pause in ms
-  //   [c:red]word[/c]      -- colors, use css color name (hex code might word lulz)
-  //   [music:/path.mp3]    -- starts playing specified track
-  //   [hide]               -- fades the whole textbox out
-
-  const DIALOGUE = [
-    ".[p:600].[p:600].[p:600][p:1000]\n(unmute the tab)[p:1000]\n((press Z or tap screen))", //1
-    "Hi! [p:600]It's nice to see you here!",
-    "So,[p:200] I real[p:200]l[p:200]l[p:200]l[p:200]y[p:200] don't want to stop using this website.[p:500]\n(If that much wasn't clear...) ",
-    "I've become attached to it,[p:200] y'know?[p:1000]\nIt's like a little sanctuary.",
-    "[music:/music/vigil.mp3].[p:600].[p:600].[p:600]",
-    "Sure,[p:1000] my relationship with it might be a little odd...",
-    "But I have the power to [c:gold]change[/c] that!",
-    "You see,[p:200] I have NOT been thinking with a clear mind these past few days.",
-    "Constant back and forth with myself trying to figure out what's best for me.",
-    "While also trying to run damage control so I don't really lose my friends.",
-    "It's been a little stressful to say the least.",
-    ".[p:600].[p:600].[p:600]",
-    "so...",
-    "I want to use this as a little outlet to specifically focus on the [c:lime]good[/c] that goes on in my life!",
-    "I know that it won't magically solve everything for me.[p:600].[p:600].",
-    "But it's fulfilling and meaningful to me,[p:400] to do it through here,[p:400] so that's what I'll do!",
-    "There isn't much to put here as of right now though.",
-    "Since I spent the majority of my time making this look like an undertale dialogue box...",
-    "And also learning to use Aseprite for the art...",
-    "And then spending hours to draw and animate something that looked halfway decent...",
-    "But I'm really proud of it!",
-    ".[p:600].[p:600].[p:600]",
-    "Even the little dialogue blip is a clip of my voice too![p:600]\nI hope it isn't too annoying,[p:400] haha.",
-    "Anyways,[p:400] I look forward to making little doodles and animations for this![p:600]\nOh,[p:400] and music!",
-    "'Cause even the song is something I made myself![p:600]\nIt's called 'Vigil'.",
-    "It's original purpose was for D&D,[p:400] but it's an extremely calming song to me.",
-    "So it will probably the be go-to song used here in my little talks.",
-    ".[p:600].[p:600].[p:600]",
-    "Welp,[p:400] that's it for now I suppose!",
-    "Stick around and chill,[p:400] listen to the music with me if you so please.",
-    "Or just take your cursor up to the little [x] and close me out.",
-    "It was fun talking![p:600]\nSee you next time!",
-    "<3[p:600][hide]"
-    ];
-
-  const IMAGES = [
-    "",
-    "",
-    "",
-    "",
-    "/assets/anim/kicks.gif",
-    "",
-    "/assets/anim/looking.gif",
-    "/assets/anim/lookaway.gif",
-    "",
-    "",
-    "", 
-    "",
-    "/assets/anim/looking.gif",
-    "/assets/anim/kicks.gif",
-    "/assets/anim/lookaway.gif",
-    "/assets/anim/sing.gif",
-    "/assets/anim/talky.gif",
-    "",
-    "",
-    "/assets/anim/lookaway.gif",
-    "/assets/anim/sing.gif",
-    "/assets/anim/kicks.gif",
-    "",
-    "",
-    "/assets/anim/looking.gif",
-    "/assets/anim/sing.gif",
-    "/assets/anim/kicks.gif",
-    "",
-    "/assets/anim/looking.gif",
-    "/assets/anim/kicks.gif",
-    "",
-    "/assets/anim/waving.gif",
-    "/assets/anim/kicks.gif",
-  ];
-  // big = slower
-  const TYPE_SPEED_MS = 45;
-
-  const textEl = document.getElementById('dialogue-text');
-  const textboxEl = document.getElementById('textbox');
-  const sceneLayers = [
-    document.getElementById('scene-layer-0'),
-    document.getElementById('scene-layer-1')
-  ];
-  let activeLayer = 0;
-  let currentImageSrc = '';
-
-  function hideTextbox() {
-    textboxEl.style.opacity = '0';
-  }
-
-  function showTextbox() {
-    textboxEl.style.opacity = '1';
-  }
-
-  const preloadedSrcs = new Set();
-  IMAGES.forEach((src) => {
-    if (src && !preloadedSrcs.has(src)) {
-      preloadedSrcs.add(src);
-      const img = new Image();
-      img.src = src;
-      if (img.decode) {
-        img.decode().catch(() => {}); 
-      }
-    }
-  });
-  function setSceneImage(src) {
-    if (!src || src === currentImageSrc) return;
-    const isFirstImage = currentImageSrc === '';
-    currentImageSrc = src;
-
-    const incomingLayer = 1 - activeLayer;
-    const incomingEl = sceneLayers[incomingLayer];
-    const outgoingEl = sceneLayers[activeLayer];
-
-    if (isFirstImage) {
-      incomingEl.style.transition = '';
-      incomingEl.src = src;
-      incomingEl.style.zIndex = '0';
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          incomingEl.style.opacity = '1';
-        });
-      });
-    } else {
-      incomingEl.style.transition = 'none';
-      incomingEl.src = src;
-      incomingEl.style.zIndex = '0';
-      incomingEl.style.opacity = '1';
-
-      outgoingEl.style.transition = 'none';
-      outgoingEl.style.zIndex = '0';
-      outgoingEl.style.opacity = '0';
-
-      void incomingEl.offsetHeight; // 
-      incomingEl.style.transition = '';
-      outgoingEl.style.transition = '';
-    }
-
-    activeLayer = incomingLayer;
-  }
-  //blip
-  const TYPE_SOUND_SRC = '/assets/blipmain.wav';
-  const TYPE_SOUND_VOLUME = 0.4;
-  const typeSound = new Audio(TYPE_SOUND_SRC);
-  typeSound.volume = TYPE_SOUND_VOLUME;
-
-  function playTypeSound() {
-    typeSound.pause();
-    typeSound.currentTime = 0;
-    typeSound.play().catch(() => {});
-  }
-
-  // VOLUMES!!!!
-  const MUSIC_VOLUME = 0.03;
-  const MUSIC_FADE_MS = 1500;
-
-  const musicLayers = [new Audio(), new Audio()];
-  musicLayers.forEach((a) => { a.loop = true; a.volume = 0; });
-  let activeMusicLayer = 0;
-  let currentMusicSrc = '';
-
-  function fadeAudio(audioEl, targetVolume, durationMs, onComplete) {
-    const startVolume = audioEl.volume;
-    const startTime = performance.now();
-    function step(now) {
-      if (typeof now !== 'number' || !isFinite(now)) {
-        now = performance.now();
-      }
-      const t = Math.min(Math.max((now - startTime) / durationMs, 0), 1);
-      const nextVolume = startVolume + (targetVolume - startVolume) * t;
-      audioEl.volume = isFinite(nextVolume) ? Math.min(1, Math.max(0, nextVolume)) : targetVolume;
-      if (t < 1) {
-        requestAnimationFrame(step);
-      } else if (onComplete) {
-        onComplete();
-      }
-    }
-    requestAnimationFrame(step);
-  }
-
-  function playMusic(src) {
-    if (!src || src === currentMusicSrc) return;
-    currentMusicSrc = src;
-
-    const nextLayer = 1 - activeMusicLayer;
-    const nextEl = musicLayers[nextLayer];
-    const curEl = musicLayers[activeMusicLayer];
-
-    nextEl.src = src;
-    nextEl.currentTime = 0;
-    nextEl.volume = 0;
-    nextEl.play().catch((err) => console.warn('music playback blocked:', err));
-    fadeAudio(nextEl, MUSIC_VOLUME, MUSIC_FADE_MS);
-
-    fadeAudio(curEl, 0, MUSIC_FADE_MS, () => curEl.pause());
-
-    activeMusicLayer = nextLayer;
-  }
-
-  // background ambience: one track, looping, on from the start -- separate
-  // from the cued [music:] system above. EDIT ME to point at your file
-  // and set how loud it plays.
-  const AMBIENCE_SRC = '/assets/ambience.mp3';
-  const AMBIENCE_VOLUME = 0.08;
-  const ambience = new Audio(AMBIENCE_SRC);
-  ambience.loop = true;
-  ambience.volume = AMBIENCE_VOLUME;
-
-  let ambienceStarted = false;
-  function startAmbience() {
-    if (ambienceStarted) return;
-    ambienceStarted = true;
-    ambience.play().catch((err) => console.warn('ambience playback blocked:', err));
-  }
-
-  // try right away -- works if the browser already allows it (e.g. the
-  // site has enough "media engagement" history). if that's blocked by
-  // autoplay policy, the keydown/touchend listeners below retry it on
-  // the first real interaction, same as the type-blip/music pattern.
-  startAmbience();
-  function parseDialogueMarkup(rawStr) {
-    const str = '* ' + rawStr.replace(/\n/g, '\n* ');
-    const tokens = [];
-    const colorStack = [];
-    let i = 0;
-    while (i < str.length) {
-      const ch = str[i];
-      if (ch === '[') {
-        const close = str.indexOf(']', i);
-        if (close !== -1) {
-          const tag = str.slice(i + 1, close);
-          if (tag.startsWith('p:')) {
-            tokens.push({ type: 'pause', ms: parseInt(tag.slice(2), 10) || 0 });
-            i = close + 1;
-            continue;
-          }
-          if (tag.startsWith('c:')) {
-            colorStack.push(tag.slice(2));
-            i = close + 1;
-            continue;
-          }
-          if (tag === '/c') {
-            colorStack.pop();
-            i = close + 1;
-            continue;
-          }
-          if (tag === 'hide') {
-            tokens.push({ type: 'hide' });
-            i = close + 1;
-            continue;
-          }
-          if (tag.startsWith('music:')) {
-            tokens.push({ type: 'music', src: tag.slice(6) });
-            i = close + 1;
-            continue;
-          }
-        }
-      }
-      tokens.push({ type: 'char', ch, color: colorStack[colorStack.length - 1] || null });
-      i++;
-    }
-    return tokens;
-  }
-
-  function escapeHtml(ch) {
-    if (ch === '<') return '&lt;';
-    if (ch === '>') return '&gt;';
-    if (ch === '&') return '&amp;';
-    if (ch === '"') return '&quot;';
-    return ch;
-  }
-
-  function renderRevealed(revealed) {
-    let html = '';
-    for (const t of revealed) {
-      const safe = escapeHtml(t.ch);
-      html += t.color ? `<span style="color:${t.color}">${safe}</span>` : safe;
-    }
-    textEl.innerHTML = html;
-  }
-
-  let pageIndex = 0;
-  let currentTokens = [];
-  let tokenIndex = 0;
-  let revealed = [];
-  let typing = false;
-  let typeTimer = null;
-
-  function startPage(index) {
-    if (index >= DIALOGUE.length) return;
-    pageIndex = index;
-    currentTokens = parseDialogueMarkup(DIALOGUE[pageIndex]);
-    tokenIndex = 0;
-    revealed = [];
-    typing = true;
-    textEl.innerHTML = '';
-    clearTimeout(typeTimer);
-
-    showTextbox();
-    setSceneImage(IMAGES[pageIndex]);
-
-    if (IS_MOBILE) {
-      finishTyping();
-    } else {
-      typeStep();
-    }
-  }
-
-  function typeStep() {
-    if (tokenIndex >= currentTokens.length) {
-      typing = false;
-      return;
-    }
-
-    const token = currentTokens[tokenIndex];
-    tokenIndex++;
-
-    if (token.type === 'pause') {
-      typeTimer = setTimeout(typeStep, token.ms);
-      return;
-    }
-
-    if (token.type === 'hide') {
-      hideTextbox();
-      typeTimer = setTimeout(typeStep, 0);
-      return;
-    }
-
-    if (token.type === 'music') {
-      playMusic(token.src);
-      typeTimer = setTimeout(typeStep, 0);
-      return;
-    }
-
-    revealed.push(token);
-    renderRevealed(revealed);
-    if (!/\s/.test(token.ch)) {
-      playTypeSound();
-    }
-
-    if (tokenIndex >= currentTokens.length) {
-      typing = false;
-      return;
-    }
-    typeTimer = setTimeout(typeStep, TYPE_SPEED_MS);
-  }
-
-  function finishTyping() {
-    clearTimeout(typeTimer);
-    revealed = currentTokens.filter((t) => t.type === 'char');
-    renderRevealed(revealed);
-    if (currentTokens.some((t) => t.type === 'hide')) {
-      hideTextbox();
-    }
-    currentTokens
-      .filter((t) => t.type === 'music')
-      .forEach((t) => playMusic(t.src));
-    tokenIndex = currentTokens.length;
-    typing = false;
-  }
-
-  function handleZ() {
-    if (typing) return;
-    if (pageIndex < DIALOGUE.length - 1) {
-      startPage(pageIndex + 1);
-    } else {
-      hideTextbox();
-    }
-  }
-
-  function handleX() {
-    if (typing) {
-      finishTyping();
-    }
-  }
-
-  window.addEventListener('keydown', (e) => {
-    const k = e.key.toLowerCase();
-    if (k === 'z') {
-      e.preventDefault();
-      startAmbience();
-      handleZ();
-    } else if (k === 'x') {
-      e.preventDefault();
-      startAmbience();
-      handleX();
-    }
-  });
-
-  window.addEventListener('touchend', (e) => {
-    e.preventDefault();
-    startAmbience();
-    handleZ();
-  }, { passive: false });
-
-  startPage(0);
-
-</script>
-
+<!-- MAKE SURE TO CALL A NEW SCENE ON UPDATE-->
+<script src="dialogue/scene2.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
