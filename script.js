@@ -110,7 +110,7 @@ const NODES = window.NODES || {};
 // for autoplay and resume-progress to work the instant the page loads.
 const SCENES = [
   // older scene -- not loaded until picked in the LOG menu
-  { id: 'scene-1', label: 'Alive - Aug 29, 2026', startNode: 'n1', scriptFile: 'dialogue/scene1.js' },
+  { id: 'scene-1', label: 'Aug 29, 2026', startNode: 'n1', scriptFile: 'dialogue/scene1.js' },
 
   // current/newest scene -- loaded eagerly via dialogue/scene2.js
   { id: 'scene-2', label: 'Latest', startNode: 's2_n1' },

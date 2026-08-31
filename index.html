@@ -15,11 +15,6 @@
     <div id="dialogue-text"></div>
     <div id="choice-grid"></div>
   </div>
-
-  <!-- press C to open/close this -- see MENU_ENTRIES in script.js to
-       customize the ITEM/STAT/CELL-style list. The stats box above it
-       (name/LV/HP/G) is plain static markup -- edit the values directly
-       below whenever they change. -->
   <div id="menu-box">
     <div id="stats-box">
       <div id="stats-name">Kaia</div>
@@ -31,28 +26,13 @@
       <div id="menu-list"></div>
     </div>
   </div>
-
-  <!-- opened by selecting ITEM in the menu -- see ITEMS/addItem() in
-       script.js. Positioned next to menu-box by JS at open time, since
-       menu-box's width changes depending on its content. -->
   <div id="item-box">
     <div id="item-list"></div>
     <div id="item-actions"></div>
   </div>
-
-  <!-- opened by selecting LOG in the menu -- see SCENES in script.js.
-       Picking an entry replays that old scene using the normal dialogue
-       engine, without touching your real progress. -->
   <div id="scene-log-box">
     <div id="scene-log-list"></div>
   </div>
-
-  <!-- opened by selecting STAT in the menu -- purely informational,
-       nothing here is selectable. Everything except WEAPON/ARMOR is
-       plain static markup -- edit the values directly whenever they
-       change, same as the corner stats box above. WEAPON/ARMOR are
-       filled in by script.js from whatever's currently equipped (see
-       `equipped` and useSelectedItem() in script.js). -->
   <div id="stat-screen">
     <div id="stat-screen-name">"Kaia"</div>
 
@@ -75,7 +55,6 @@
     </div>
   </div>
 </div>
-<!-- MAKE SURE TO CALL A NEW SCENE ON UPDATE-->
 <script src="dialogue/scene2.js"></script>
 <script src="script.js"></script>
 </body>
