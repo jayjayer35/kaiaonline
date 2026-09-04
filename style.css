@@ -31,6 +31,62 @@ body {
   cursor: default;
 }
 
+/* warm sunset glow for the scene-3 ending -- toggled on/off via the
+   .bar-glow class on <body> (see BAR_GLOW_* in script.js). The gradient
+   slowly shifts position on a loop for a soft "breathing" glow, rather
+   than sitting static. Tweak the colors or the 6s speed freely. */
+@keyframes bar-glow-intro {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes bar-glow-pulse {
+  0%, 100% {
+    background-size: 115% 115%;
+  }
+
+  50% {
+    background-size: 170% 170%;
+  }
+}
+
+body.bar-glow {
+  position: relative;
+
+  background:
+    radial-gradient(
+      ellipse 115% 80% at 50% 105%,
+      rgba(242, 153, 74, 0.58) 0%,
+      rgba(222, 112, 82, 0.45) 18%,
+      rgba(190, 76, 92, 0.32) 35%,
+      rgba(122, 44, 91, 0.18) 55%,
+      rgba(70, 27, 61, 0.08) 72%,
+      rgba(26, 11, 36, 0) 90%
+    ),
+    #1a0b24;
+
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-size: 115% 115%;
+
+  animation: bar-glow-pulse 12s ease-in-out infinite;
+}
+
+body.bar-glow::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: #000;
+  pointer-events: none;
+
+  animation: bar-glow-intro 4s ease-out forwards;
+}
+
 #game {
   position: absolute;
   top: 0;
@@ -53,6 +109,23 @@ body {
   image-rendering: pixelated;
   opacity: 0;
   transition: opacity 1.2s ease;
+}
+
+/* clicking this opens the shop -- these four numbers are the ONLY
+   thing you need to touch to reposition/resize it over the character.
+   Coordinates are relative to the top-left of #game (native 640x480,
+   same space everything else on this page is positioned in). Starting
+   box below is just a rough guess -- see the note in script.js for how
+   to make it visible while you tune these. */
+#shop-hotspot {
+  position: absolute;
+  left: 150px;
+  top: 250px;
+  width: 15px;
+  height: 30px;
+  cursor: help;
+  z-index: 5; /* above the scene art, below the dialogue box/menus */
+  /*background: rgba(255,0,0,0.4) !important;*/
 }
 
 /* ---- dialogue textbox ---- */
@@ -108,8 +181,8 @@ body {
   position: relative;
   font-family: 'DialogueFont', monospace;
   color: #fff;
-  font-size: 22px;
-  letter-spacing: 2px;
+  font-size: 24px;
+  letter-spacing: 1px;
   /* top right bottom left why isnt this just reffed in the hover doc*/
   padding: 4px 0px 8px 34px;
   cursor: pointer;
@@ -383,4 +456,102 @@ body {
   grid-template-columns: 1fr 1fr;
   column-gap: 14px;
   margin: 10px 0;
+}
+
+/* ---- shop (opened by clicking the character) ----
+   Two panels sitting where the main textbox does, and replacing it
+   while open: left is dialogue-style flavor text, right is the
+   Buy/Sell/Talk/Exit nav (or, once inside Buy/Sell, the item list) plus
+   a gold/inventory-count footer, matching the reference layout. */
+
+#shop-box {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 640px;
+  height: 170px;
+  display: none;
+  z-index: 15;
+}
+
+#shop-dialogue {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 490px;
+  height: 170px;
+  box-sizing: border-box;
+  border: 4px solid #fff;
+  background: #000;
+  padding: 14px 14px;
+  padding-left: 16px;
+}
+
+#shop-dialogue-text {
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 24px;
+  letter-spacing: 1px;
+  line-height: 1.3em;
+  white-space: pre-wrap;
+}
+
+#shop-nav {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 160px;
+  height: 170px;
+  box-sizing: border-box;
+  border: 4px solid #fff;
+  background: #000;
+  padding: 12px 14px 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+#shop-nav-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.shop-nav-entry {
+  position: relative;
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 22px;
+  letter-spacing: 1px;
+  padding: 2px 4px 2px 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shop-nav-entry .cursor-icon {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+#shop-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8px;
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* ---- fade-to-black transition (used entering/leaving the shop) ---- */
+
+#fade-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 640px;
+  height: 480px;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 999;
 }

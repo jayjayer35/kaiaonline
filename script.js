@@ -4,9 +4,22 @@
 // audio autoplay, the final startNode() call, etc.) is individually
 // guarded with `if (!IS_MOBILE)` further down, so none of it actually
 // runs on a phone/tablet.
-const IS_MOBILE = window.matchMedia('(pointer: coarse)').matches
-  || navigator.maxTouchPoints > 0
-  || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+// Detecting "mobile" by touch capability (pointer:coarse, maxTouchPoints)
+// sounds reasonable but isn't -- plenty of Windows laptops (2-in-1s,
+// touchscreen convertibles) report touch support while still being used
+// with a real keyboard, and Firefox in particular tends to report those
+// two checks more aggressively than Chrome on identical hardware. What
+// actually matters here is "does this device have a keyboard", and
+// touch support doesn't answer that -- OS identity does. So this checks
+// navigator.userAgentData.mobile where the browser supports it (a
+// purpose-built API for exactly this, correctly telling a touchscreen
+// laptop apart from an actual phone), and otherwise falls back to
+// matching known mobile OS names in the user agent string -- which is
+// what Firefox always uses, since it doesn't support userAgentData, and
+// "Windows" never matches that pattern.
+const IS_MOBILE = (navigator.userAgentData && typeof navigator.userAgentData.mobile === 'boolean')
+  ? navigator.userAgentData.mobile
+  : /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 if (IS_MOBILE) {
   document.body.innerHTML = `
@@ -110,10 +123,13 @@ const NODES = window.NODES || {};
 // for autoplay and resume-progress to work the instant the page loads.
 const SCENES = [
   // older scene -- not loaded until picked in the LOG menu
-  { id: 'scene-1', label: 'Aug 29, 2026', startNode: 'n1', scriptFile: 'dialogue/scene1.js' },
+  { id: 'scene-1', label: 'Aug 29 - Start', startNode: 'n1', scriptFile: 'dialogue/scene1.js' },
 
-  // current/newest scene -- loaded eagerly via dialogue/scene2.js
-  { id: 'scene-2', label: 'Latest', startNode: 's2_n1' },
+  // older scene -- not loaded until picked in the LOG menu
+  { id: 'scene-2', label: 'Aug 30 - Egg', startNode: 's2_n1', scriptFile: 'dialogue/scene2.js' },
+
+  // current/newest scene -- loaded eagerly via dialogue/scene3.js
+  { id: 'scene-3', label: 'Sep 04 - Yourself', startNode: 's3_n0' },
 ];
 
 const START_NODE = SCENES[SCENES.length - 1].startNode;
@@ -136,36 +152,126 @@ const MENU_ENTRIES = [
       openStatScreen();
     }
   },
-//  {
-//    label: "CELL",
-//    action: () => {
-//      console.log("TODO: wire up the Credits entry");
-//    }
-//  },
-//  {
-//    label: "MUSI",
-//    action: () => {
-//      console.log("TODO: wire up the Credits entry");
-//    }
-//  },
   {
     label: "LOG",
     action: () => {
       openSceneLogScreen();
     }
-  }
+  },
+  {
+    label: "-", //CELL
+    action: () => {
+      console.log("not hooked up");
+    }
+  },
+  {
+    label: "-", //SITE
+    action: () => {
+      console.log("not hooked up");
+    }
+  },
 ];
 
 // ---- inventory system ----
 // Catalog of every item that can exist. `label` shows in the item list,
-// `info` is what the INFO action displays in the dialogue box. Add as
-// many as you want -- ids just need to be unique.
+// `info` is what the INFO action displays in the dialogue box. `slot`
+// (weapon/armor) makes it equippable -- see the equip system below.
+//
+// `buyPrice`/`sellPrice` (in gold) control the shop: an item shows up
+// under Buy only if it has a buyPrice, and shows a sell value under
+// Sell (once you're actually holding one) only if it has a sellPrice.
+// Leave either one out for an item that shouldn't be tradeable that
+// way -- e.g. a quest item with neither never appears in the shop at
+// all, regardless of what's in your inventory.
+//
+// `shopBuyLine`/`shopSellLine` are what the shopkeeper actually SAYS
+// about the item while you're looking at it in Buy or Sell respectively
+// -- separate from `info` on purpose, since a neutral INFO description
+// doesn't read like something a person would say out loud, and what
+// they say usually differs depending on whether you're buying from them
+// or selling to them. Either can be left out for a generic fallback
+// line instead.
+//
+// `shopLabel` is an optional SHORTER name shown only in the shop's
+// Buy/Sell lists, which are narrower than the ITEM menu -- for an item
+// whose real `label` is too long to read comfortably there ("Lily of
+// the Valley"), set `shopLabel` to something shorter ("Lily"). Leave it
+// out and the shop just falls back to `label`, same as everywhere else.
 const ITEMS = {
-  egg: { label: "Egg", info: "Not too important, not too unimportant." },
+  egg: {
+    label: "Egg",
+    info: "Not too important,[p:200] not too unimportant.",
+    shopBuyLine: "In case you missed when I handed it out the first time.",
+    shopSellLine: "Might be important.",
+    buyPrice: 10,
+  },
+  lily: {
+    label: "Lily of the Valley",
+    shopLabel: "Lily",
+    info: "Undeniably,[p:300] someone's favorite flower.[p:700]\nIf only you could give it to them.",
+    shopBuyLine: "You shouldn't be able to buy this.",
+    shopSellLine: "Save it for someone special.",
+    sellPrice: 0
+  },
 };
 
 const MAX_ITEMS = 8;
 const INVENTORY_STORAGE_KEY = 'site-inventory';
+
+// ids of every item currently buyable in the shop, in catalog order
+function getBuyableItemIds() {
+  return Object.keys(ITEMS).filter((id) => ITEMS[id].buyPrice != null);
+}
+
+const SHOP_MAIN_ENTRIES = ["Buy", "Sell", "Talk", "Exit"];
+
+// shown in the left panel when the shop opens, and again after backing
+// out of Buy/Sell -- a normal dialogue-style string, so [p:ms]/[c:color]
+// tags and \n both work exactly like they do in NODES text
+const SHOP_GREETING = "(snore [p:800].[p:800] .[p:800] .)[p:1000]\nHuh? [p:400]Oh,[p:500] uh,[p:500] hello.[p:800]\nNice to see you.";
+
+// shown when Talk is picked from the main menu, before a topic is chosen
+const SHOP_TALK_PROMPT = "Hm? [p:400]What's up?";
+
+// Talk opens its own sub-menu of 4 topics -- `label` is what shows in
+// the list, `response` is what actually gets said once you pick it
+// (also a normal dialogue-style string, so [p:]/[c:] tags work here
+// too). `image` is optional -- swap the shopkeeper's picture to react
+// to what's being asked (an annoyed look for "Shop", a shy one for
+// "You", etc). Left out, it just stays on SHOP_IMAGES.talk. Either way
+// it reverts to SHOP_IMAGES.talk automatically once you're back to
+// browsing the topic list.
+const SHOP_TALK_TOPICS = [
+  { label: "You", response: "Me? [p:400]Well, [p:200]I like to sit here and admire the sunset. Do you not?", image: '/assets/anim/shopkeep_bh.gif', },
+  { label: "Shop?", response: 
+    [
+    "Yeah...[p:400] you can spend your-[p:200] wait,[p:200] MY? [p:400]money on stuff!?[p:800][img:/assets/anim/shopkeep_bh.gif]",
+    "Well, [p:200]whatever I suppose.[p:800][img:/assets/anim/shopkeep.gif]\nYou are technically me here, [p:200]still, [p:200]this whole arrangement is weird." 
+
+    ]},
+  // `response` can be an ARRAY of strings instead of one -- each
+  // becomes its own page: the box clears and types the next one each
+  // time you press Z/X, exactly like advancing normal dialogue
+  { label: "Advice", response: 
+    [
+    "Hah..[p:400] Isn't that what we are all here for?",
+    "How's this,[p:200] if I ever stumble across something worthwhile to say, [p:200] I'll share it with you on the cliff.",
+    "Not really any good at this face-to-face kinda thing. [p:200]Never was."
+    ]},
+  { label: "Cliff", response: 
+    [
+    "Lovely day, [p:200] isn't it?",
+    ". [p:600]. [p:600]. [p:600]",
+    "This cliff isn't too far from my usual place.",
+    "[img:/assets/anim/shopkeep_lh.gif]I came from just past these trees,[p:200] and up onto this cliff to have some time to myself.",
+    "[img:/assets/anim/shopkeep_bh.gif]I'd love to bring you around some time.[p:800]\nMaybe you could meet my friends!",
+    "[img:/assets/anim/shopkeep.gif]. [p:600]. [p:600]. [p:600]",
+    "[img:/assets/anim/shopkeep_looking.gif]From a [c:gold]meta[/c] perspective,[p:200] this place is a place that exists in my mind.",
+    "[img:/assets/anim/shopkeep_lh.gif]A place I come to mentally when things are a little rocky.",
+    "[img:/assets/anim/shopkeep_looking.gif]I've just spent the time to make it a little bit of a reality here."
+    ]},
+];
+
 
 function loadInventory() {
   try {
@@ -220,6 +326,55 @@ function saveEquipped() {
 }
 
 let equipped = loadEquipped();
+
+// ---- gold ----
+const GOLD_STORAGE_KEY = 'site-gold';
+const DEFAULT_GOLD = 13; // starting amount for a fresh visitor
+
+function loadGold() {
+  try {
+    const raw = localStorage.getItem(GOLD_STORAGE_KEY);
+    const n = raw !== null ? parseInt(raw, 10) : NaN;
+    return Number.isFinite(n) ? n : DEFAULT_GOLD;
+  } catch (err) {
+    console.warn('gold load failed:', err);
+    return DEFAULT_GOLD;
+  }
+}
+
+function saveGold() {
+  try {
+    localStorage.setItem(GOLD_STORAGE_KEY, String(gold));
+  } catch (err) {
+    console.warn('gold save failed:', err);
+  }
+}
+
+let gold = loadGold();
+
+// updates every place gold is displayed -- call this any time gold
+// actually changes
+function renderGoldDisplays() {
+  if (statsGoldEl) statsGoldEl.textContent = String(gold);
+  if (statScreenGoldEl) statScreenGoldEl.textContent = String(gold);
+  if (shopGoldEl) shopGoldEl.textContent = gold + 'G';
+}
+
+function addGold(amount) {
+  gold += amount;
+  saveGold();
+  renderGoldDisplays();
+}
+
+// returns true if there was enough gold to spend, false (and spends
+// nothing) otherwise
+function spendGold(amount) {
+  if (gold < amount) return false;
+  gold -= amount;
+  saveGold();
+  renderGoldDisplays();
+  return true;
+}
 
 // ---- dialogue progress (so returning visitors resume instead of
 // replaying everything from the start) ----
@@ -319,11 +474,42 @@ const sceneLogListEl = document.getElementById('scene-log-list');
 const statScreenEl = document.getElementById('stat-screen');
 const statScreenWeaponEl = document.getElementById('stat-screen-weapon');
 const statScreenArmorEl = document.getElementById('stat-screen-armor');
+const statsGoldEl = document.getElementById('stats-gold');const statScreenGoldEl = document.getElementById('stat-screen-gold');
+const shopBoxEl = document.getElementById('shop-box');
+const fadeOverlayEl = document.getElementById('fade-overlay');
+
+// ---- fade-to-black (entering/leaving the shop) ----
+// Both resolve once the fade has visually finished, so callers can
+// await them and know it's safe to either change what's on screen
+// (fadeToBlack) or let the new content actually be seen (fadeFromBlack).
+const FADE_MS = 300;
+
+function fadeToBlack() {
+  return new Promise((resolve) => {
+    fadeOverlayEl.style.transition = `opacity ${FADE_MS}ms ease`;
+    fadeOverlayEl.style.opacity = '1';
+    setTimeout(resolve, FADE_MS);
+  });
+}
+
+function fadeFromBlack() {
+  return new Promise((resolve) => {
+    fadeOverlayEl.style.transition = `opacity ${FADE_MS}ms ease`;
+    fadeOverlayEl.style.opacity = '0';
+    setTimeout(resolve, FADE_MS);
+  });
+}
+const shopDialogueTextEl = document.getElementById('shop-dialogue-text');
+const shopNavListEl = document.getElementById('shop-nav-list');
+const shopGoldEl = document.getElementById('shop-gold');
+const shopInventoryCountEl = document.getElementById('shop-inventory-count');
+renderGoldDisplays(); // reflect the real persisted value immediately, not the static placeholder in the HTML
 
 const sceneLayers = [
   document.getElementById('scene-layer-0'),
   document.getElementById('scene-layer-1')
 ];
+const shopHotspotEl = document.getElementById('shop-hotspot');
 let activeLayer = 0;
 let currentImageSrc = '';
 
@@ -386,6 +572,19 @@ function setSceneImage(src) {
 
   activeLayer = incomingLayer;
 }
+
+// setSceneImage() intentionally does nothing when given an empty/falsy
+// src (that's what lets a node with image:"" mean "keep whatever's
+// already showing"). Restoring the shop's background needs the OPPOSITE
+// behavior -- explicitly clear back to blank if that's genuinely what
+// was showing before the shop opened (e.g. the very first node, before
+// any image has been set yet) -- so it gets its own function instead of
+// changing setSceneImage()'s behavior for everything else.
+function clearSceneImage() {
+  if (!currentImageSrc) return; // already blank
+  currentImageSrc = '';
+  sceneLayers[activeLayer].style.opacity = '0';
+}
 //blip
 const TYPE_SOUND_SRC = '/assets/blipmain.wav';
 const TYPE_SOUND_VOLUME = 0.4;
@@ -418,6 +617,21 @@ function createBlipPlayer(src, volume, poolSize = 6) {
 }
 
 const playTypeSound = createBlipPlayer(TYPE_SOUND_SRC, TYPE_SOUND_VOLUME);
+
+// alternate typing blips a NODE can opt into via a `blip: "..."` field
+// in its definition (e.g. `blip: "none"`) -- reuses playItemInfoBlip
+// (blip_none.wav), defined further down, since it's the exact same
+// sound already used for item INFO text; no separate Audio pool
+// needed for it. Leaving `blip` out of a node entirely (the normal
+// case) always falls back to the regular blip, playTypeSound.
+const BLIP_PRESETS = {
+  none: () => playItemInfoBlip
+};
+
+function pickBlipPlayerForNode(node) {
+  const preset = node && node.blip && BLIP_PRESETS[node.blip];
+  return preset ? preset() : playTypeSound;
+}
 
 // menu/choice cursor sounds -- "select" plays whenever the cursor moves to
 // a new entry, "confirm" plays when Z activates one (menu only -- dialogue
@@ -555,6 +769,22 @@ async function playMusic(src) {
   activeMusicLayer = nextLayer;
 }
 
+// fades whatever's currently playing down to silence and stops it --
+// for going back to "no music", which playMusic() itself can't express
+// (an empty src just no-ops there)
+function stopMusic() {
+  if (!currentMusicSrc) return;
+  currentMusicSrc = '';
+  const curLayer = activeMusicLayer;
+  const curGain = musicGains[curLayer];
+  fadeGain(curGain, 0, MUSIC_FADE_MS, () => {
+    if (musicSources[curLayer]) {
+      musicSources[curLayer].stop();
+      musicSources[curLayer] = null;
+    }
+  });
+}
+
 // background ambience: one track, looping, on from the start -- separate
 // from the cued [music:] system above. EDIT ME to point at your file
 // and set how loud it plays.
@@ -623,6 +853,11 @@ function parseDialogueMarkup(rawStr) {
           i = close + 1;
           continue;
         }
+        if (tag.startsWith('img:')) {
+          tokens.push({ type: 'image', src: tag.slice(4) });
+          i = close + 1;
+          continue;
+        }
       }
     }
     tokens.push({ type: 'char', ch, color: colorStack[colorStack.length - 1] || null });
@@ -666,6 +901,7 @@ let tokenIndex = 0;
 let revealed = [];
 let typing = false;
 let typeTimer = null;
+let currentBlipPlayer = playTypeSound; // set per-node in startNode(), based on node.blip
 
 // ---- choice grid state ----
 let choiceActive = false;
@@ -688,6 +924,45 @@ let itemInfoOpen = false; // showing an item's info text in the dialogue box
 // ---- STAT screen state ----
 let statScreenOpen = false;
 
+// ---- shop state (opened by clicking the character) ----
+let shopOpen = false;
+let shopTransitioning = false; // fading to/from black -- input is held off
+let shopMode = 'main'; // 'main' | 'buy' | 'sell' | 'confirm' | 'talk'
+let shopNavIndex = 0;  // index into SHOP_MAIN_ENTRIES, while in 'main'
+let shopListIndex = 0; // index into the current Buy/Sell list, while in 'buy'/'sell'
+let shopTalkIndex = 0; // index into SHOP_TALK_TOPICS, while in 'talk'
+
+// true while showing LOCKED, must-finish-reading dialogue (currently
+// only Talk responses use this) -- while true, the shop behaves like
+// normal dialogue (Z/X only advance/finish, don't ALSO jump to a
+// different topic or leave in the same press) instead of the "always
+// interruptible" rule everywhere else in the shop. Unlike a simpler
+// on/off flag, this also supports MULTIPLE PAGES -- see
+// startShopReadingText() below -- so a response can be longer than
+// fits in the box: the box clears and types the next page each time,
+// and only once the LAST page is finished does normal navigation
+// become available again, automatically, with no extra dedicated
+// "done reading" press needed.
+let shopReading = false;
+let shopReadingPages = [];
+let shopReadingPageIndex = 0;
+
+// what's being confirmed while shopMode === 'confirm'
+let shopConfirmAction = null; // 'buy' | 'sell'
+let shopConfirmId = null;     // item id being bought (sell uses shopListIndex instead, since duplicates are allowed)
+let shopConfirmChoice = 0;    // 0 = Yes, 1 = No
+
+// ---- shop dialogue typewriter ----
+// Separate from the main dialogue typewriter (same reasoning as the
+// item-info one: this way opening the shop can never interfere with
+// currentNodeId or the live conversation's state) but uses the SAME
+// blip sound as normal dialogue, per request -- not a different one.
+let shopDialogueTokens = [];
+let shopDialogueTokenIndex = 0;
+let shopDialogueRevealed = [];
+let shopDialogueTyping = false;
+let shopDialogueTypeTimer = null;
+
 // ---- scene log state ----
 let sceneLogScreenOpen = false;
 let sceneLogIndex = 0;
@@ -695,9 +970,104 @@ let scenePlaybackActive = false; // currently replaying an old scene
 let liveReturnNodeId = null;     // where to snap back to once playback ends
 let liveReturnMusicSrc = '';
 
+// ---- scene 3 ending: warm sunset glow on the background bars ----
+// 20 seconds after reaching the very last node of scene 3, the black
+// bars outside the 640x480 game canvas (visible on the sides when the
+// browser window is wider than the game's 4:3-ish shape) toggle on a
+// slowly-shifting warm sunset gradient (see the .bar-glow class and its
+// keyframes in style.css). After glowing for BAR_GLOW_DURATION_MS, it
+// toggles back off (black) and waits BAR_GLOW_DELAY_MS again -- the
+// SAME delay as the initial one -- before toggling on again, repeating
+// that wait/glow loop indefinitely. Reaching any OTHER node (moving on
+// in live dialogue, or leaving via LOG back to somewhere else) cancels
+// it and reverts the bars back to black for good. Opening the shop or
+// pause menu PAUSES it exactly where it was (whichever phase, however
+// far in) and resumes with the real remaining time once closed, rather
+// than letting a real timer tick along in the background regardless of
+// what's on screen. Edit the node id, delay, or glow duration freely --
+// the gradient/animation itself lives in style.css.
+const BAR_GLOW_NODE_ID = 's3_n23';
+const BAR_GLOW_DELAY_MS = 19903;    // how long the black "waiting" phase lasts, both the first time and between every glow burst
+const BAR_GLOW_DURATION_MS = 9999999; // how long the glow stays on before going back to black and waiting again
+
+let barGlowTimer = null;
+let barGlowPhase = 'idle'; // 'idle' | 'waiting' (black) | 'glowing'
+let barGlowDeadline = 0;      // timestamp (Date.now()) the current phase is due to fire
+let barGlowRemainingMs = 0;   // set while paused, used to resume with the correct time left
+
+function setBarGlow(on) {
+  document.body.classList.toggle('bar-glow', on);
+}
+
+function armBarGlowTimer(delay) {
+  barGlowDeadline = Date.now() + delay;
+  barGlowTimer = setTimeout(onBarGlowTick, delay);
+}
+
+function onBarGlowTick() {
+  if (barGlowPhase === 'waiting') {
+    // the black "waiting" phase just ended -- toggle the glow on
+    barGlowPhase = 'glowing';
+    setBarGlow(true);
+    armBarGlowTimer(BAR_GLOW_DURATION_MS);
+    return;
+  }
+  if (barGlowPhase === 'glowing') {
+    // this burst is done -- toggle off, then wait the same delay as
+    // before, and the whole loop repeats
+    barGlowPhase = 'waiting';
+    setBarGlow(false);
+    armBarGlowTimer(BAR_GLOW_DELAY_MS);
+  }
+}
+
+function stopBarGlow() {
+  clearTimeout(barGlowTimer);
+  barGlowTimer = null;
+  barGlowPhase = 'idle';
+  setBarGlow(false);
+}
+
+function scheduleBarGlow() {
+  stopBarGlow(); // clear out any previous schedule first
+  barGlowPhase = 'waiting';
+  armBarGlowTimer(BAR_GLOW_DELAY_MS);
+}
+
+// called when the shop or pause menu opens -- freezes the countdown
+// exactly where it is without losing progress, and immediately turns
+// the glow off instead of leaving it showing -- the effect should only
+// ever be visible while genuinely looking at this node with nothing
+// else open
+function pauseBarGlow() {
+  if (barGlowPhase === 'idle') return;
+  clearTimeout(barGlowTimer);
+  barGlowTimer = null;
+  barGlowRemainingMs = Math.max(0, barGlowDeadline - Date.now());
+  setBarGlow(false);
+}
+
+// called when the shop or pause menu closes -- restores the glow if it
+// was on before pausing (so it doesn't look like the effect silently
+// reset), then keeps going with the exact time that was left, not a
+// fresh delay
+function resumeBarGlow() {
+  if (barGlowPhase === 'idle') return;
+  if (barGlowPhase === 'glowing') {
+    setBarGlow(true);
+  }
+  armBarGlowTimer(barGlowRemainingMs);
+}
+
 function startNode(id) {
   const node = NODES[id];
   if (!node) return;
+
+  if (id === BAR_GLOW_NODE_ID) {
+    scheduleBarGlow();
+  } else {
+    stopBarGlow();
+  }
 
   currentNodeId = id;
 
@@ -716,6 +1086,7 @@ function startNode(id) {
   tokenIndex = 0;
   revealed = [];
   typing = true;
+  currentBlipPlayer = pickBlipPlayerForNode(node);
   textEl.innerHTML = '';
   clearTimeout(typeTimer);
 
@@ -764,10 +1135,16 @@ function typeStep() {
     return;
   }
 
+  if (token.type === 'image') {
+    setSceneImage(token.src);
+    typeTimer = setTimeout(typeStep, 0);
+    return;
+  }
+
   revealed.push(token);
   renderRevealed(revealed);
   if (!/\s/.test(token.ch)) {
-    playTypeSound();
+    currentBlipPlayer();
   }
 
   if (tokenIndex >= currentTokens.length) {
@@ -788,6 +1165,9 @@ function finishTyping() {
   currentTokens
     .filter((t) => t.type === 'music')
     .forEach((t) => playMusic(t.src));
+  currentTokens
+    .filter((t) => t.type === 'image')
+    .forEach((t) => setSceneImage(t.src));
   tokenIndex = currentTokens.length;
   typing = false;
   onNodeTypingDone();
@@ -883,8 +1263,9 @@ function activateMenuEntry() {
 }
 
 function openMenu() {
-  // don't let the menu interrupt a forced dialogue choice
-  if (menuOpen || choiceActive || !MENU_ENTRIES.length) return;
+  // don't let the menu interrupt a forced dialogue choice, and don't
+  // stack on top of the shop -- they're mutually exclusive
+  if (menuOpen || choiceActive || shopOpen || !MENU_ENTRIES.length) return;
   wasTypingBeforeMenu = typing;
   // remember whether the dialogue box was actually showing (a finished
   // scene may have already hidden itself via [hide]) -- otherwise
@@ -892,6 +1273,7 @@ function openMenu() {
   // conversation that was never meant to reappear
   wasTextboxVisibleBeforeMenu = textboxEl.style.opacity !== '0';
   if (typing) clearTimeout(typeTimer);
+  pauseBarGlow();
   menuOpen = true;
   menuIndex = 0;
   hideTextbox();
@@ -906,6 +1288,7 @@ function closeMenu() {
   if (statScreenOpen) closeStatScreen();
   menuOpen = false;
   menuBoxEl.style.display = 'none';
+  resumeBarGlow();
   if (wasTextboxVisibleBeforeMenu) {
     showTextbox();
   }
@@ -917,7 +1300,7 @@ function closeMenu() {
 }
 
 function toggleMenu() {
-  if (itemInfoOpen) return; // back out with X/Z first
+  if (itemInfoOpen || shopTransitioning) return; // back out with X/Z first
   // C now works normally during scene playback too -- it opens the
   // real menu (which pauses the scene's typewriter the same way it
   // pauses live dialogue), not a shortcut to leave the scene.
@@ -1078,7 +1461,7 @@ function useSelectedItem() {
     // just a sound effect -- never removed from inventory, use it as
     // many times as you want
     playEggUseSound();
-    return;
+    closeMenu();
   }
   console.log('TODO: use item', id);
 }
@@ -1211,6 +1594,585 @@ function renderStatScreen() {
   const armorItem = equipped.armor && ITEMS[equipped.armor];
   statScreenWeaponEl.textContent = weaponItem ? weaponItem.label : 'None';
   statScreenArmorEl.textContent = armorItem ? armorItem.label : 'None';
+}
+
+// ---- shop (opened by clicking the character) ----
+// Two panels sitting where the main textbox does, replacing it while
+// open (same pause/resume mechanism as the pause menu, via
+// wasTypingBeforeMenu/wasTextboxVisibleBeforeMenu). Left panel is
+// flavor text, right panel is a nav list that starts as Buy/Sell/Talk/
+// Exit and swaps to a Buy or Sell item list once you pick one.
+
+// shopkeeper images for different parts of the shop -- swapped in
+// automatically as you move around (see updateShopImage() below), and
+// all restored to whatever the scene was actually showing once the
+// shop closes. Anything left out just falls back to `default`. All
+// three point at the same file right now -- swap in different poses/
+// expressions for `buy`/`sell`/`talk` whenever you have them.
+const SHOP_IMAGES = {
+  default: '/assets/anim/shopkeep_default.gif',
+  buy: '/assets/anim/shopkeep_looking.gif',
+  sell: '/assets/anim/shopkeep_looking.gif',
+  talk: '/assets/anim/shopkeep_looking.gif'
+};
+const SHOP_MUSIC_SRC = '/music/clockwork.wav';
+let preShopImageSrc = '';
+let preShopMusicSrc = '';
+
+// picks the right SHOP_IMAGES entry for whatever's currently going on
+// and swaps to it -- call this any time shopMode (or, in 'confirm',
+// shopConfirmAction) changes
+function updateShopImage() {
+  let key = 'default';
+  if (shopMode === 'buy') key = 'buy';
+  else if (shopMode === 'sell') key = 'sell';
+  else if (shopMode === 'talk') key = 'talk';
+  else if (shopMode === 'confirm') key = shopConfirmAction === 'buy' ? 'buy' : shopConfirmAction === 'sell' ? 'sell' : 'default';
+  setSceneImage(SHOP_IMAGES[key] || SHOP_IMAGES.default);
+}
+
+async function openShop() {
+  // don't let the shop interrupt the menu, a forced choice, or scene
+  // playback -- and don't let a second click re-trigger this while
+  // already fading in/out
+  if (shopOpen || shopTransitioning || menuOpen || choiceActive || scenePlaybackActive) return;
+  shopTransitioning = true;
+  await fadeToBlack();
+
+  wasTypingBeforeMenu = typing;
+  wasTextboxVisibleBeforeMenu = textboxEl.style.opacity !== '0';
+  if (typing) clearTimeout(typeTimer);
+  hideTextbox();
+  pauseBarGlow();
+
+  preShopImageSrc = currentImageSrc;
+
+  preShopMusicSrc = currentMusicSrc;
+  playMusic(SHOP_MUSIC_SRC);
+
+  shopOpen = true;
+  shopMode = 'main';
+  shopNavIndex = 0;
+  shopListIndex = 0;
+  updateShopImage();
+  startShopDialogueText(SHOP_GREETING);
+  renderShopNav();
+  renderShopFooter();
+  shopBoxEl.style.display = 'block';
+  shopHotspotEl.style.display = 'none'; // nothing to click while already in the shop
+  playMenuConfirmSound();
+
+  await fadeFromBlack();
+  shopTransitioning = false;
+}
+
+async function closeShop() {
+  if (shopTransitioning) return;
+  shopTransitioning = true;
+  await fadeToBlack();
+
+  clearTimeout(shopDialogueTypeTimer);
+  shopDialogueTyping = false;
+  shopReading = false;
+  shopOpen = false;
+  shopBoxEl.style.display = 'none';
+  shopHotspotEl.style.display = ''; // clickable again now that the shop's closed
+  resumeBarGlow();
+  if (preShopImageSrc) {
+    setSceneImage(preShopImageSrc);
+  } else {
+    clearSceneImage();
+  }
+  if (preShopMusicSrc) {
+    playMusic(preShopMusicSrc);
+  } else {
+    stopMusic();
+  }
+  if (wasTextboxVisibleBeforeMenu) {
+    showTextbox();
+  }
+  playMenuConfirmSound();
+  if (wasTypingBeforeMenu) {
+    wasTypingBeforeMenu = false;
+    typeStep(); // resume typing exactly where it was paused
+  }
+
+  await fadeFromBlack();
+  shopTransitioning = false;
+}
+
+function renderShopDialogueRevealed() {
+  shopDialogueTextEl.innerHTML = charsToHtml(shopDialogueRevealed);
+}
+
+function shopDialogueTypeStep() {
+  if (shopDialogueTokenIndex >= shopDialogueTokens.length) {
+    shopDialogueTyping = false;
+    return;
+  }
+
+  const token = shopDialogueTokens[shopDialogueTokenIndex];
+  shopDialogueTokenIndex++;
+
+  if (token.type === 'pause') {
+    shopDialogueTypeTimer = setTimeout(shopDialogueTypeStep, token.ms);
+    return;
+  }
+  if (token.type === 'hide' || token.type === 'music') {
+    // not meaningful for shop flavor text -- just skip over it
+    shopDialogueTypeTimer = setTimeout(shopDialogueTypeStep, 0);
+    return;
+  }
+  if (token.type === 'image') {
+    setSceneImage(token.src);
+    shopDialogueTypeTimer = setTimeout(shopDialogueTypeStep, 0);
+    return;
+  }
+
+  shopDialogueRevealed.push(token);
+  renderShopDialogueRevealed();
+  if (!/\s/.test(token.ch)) {
+    playTypeSound(); // the same blip normal dialogue uses
+  }
+
+  if (shopDialogueTokenIndex >= shopDialogueTokens.length) {
+    shopDialogueTyping = false;
+    return;
+  }
+  shopDialogueTypeTimer = setTimeout(shopDialogueTypeStep, TYPE_SPEED_MS);
+}
+
+function finishShopDialogueTyping() {
+  clearTimeout(shopDialogueTypeTimer);
+  // apply whichever [img:] tags are still ahead, so skipping straight to
+  // the end still lands on the right picture -- same as if you'd
+  // watched it type out one character at a time
+  for (let i = shopDialogueTokenIndex; i < shopDialogueTokens.length; i++) {
+    if (shopDialogueTokens[i].type === 'image') {
+      setSceneImage(shopDialogueTokens[i].src);
+    }
+  }
+  shopDialogueRevealed = shopDialogueTokens.filter((t) => t.type === 'char');
+  renderShopDialogueRevealed();
+  shopDialogueTokenIndex = shopDialogueTokens.length;
+  shopDialogueTyping = false;
+}
+
+// starts (or restarts) the shop dialogue panel typing out `rawText` --
+// a normal dialogue-style string, so [p:ms]/[c:color] tags and \n all
+// work exactly like they do in NODES text
+function startShopDialogueText(rawText) {
+  clearTimeout(shopDialogueTypeTimer);
+  shopDialogueTokens = parseDialogueMarkup(rawText);
+  shopDialogueTokenIndex = 0;
+  shopDialogueRevealed = [];
+  shopDialogueTyping = true;
+  shopDialogueTextEl.innerHTML = '';
+
+  if (IS_MOBILE) {
+    finishShopDialogueTyping();
+  } else {
+    shopDialogueTypeStep();
+  }
+}
+
+// Starts a LOCKED, possibly multi-page piece of dialogue. Pass a single
+// string for one page, or an array of strings to write more than fits
+// in the box -- Z or X (once the current page is done typing) clears
+// the box and shows the next one, exactly like advancing normal
+// dialogue. After the LAST page, normal shop navigation becomes
+// available again immediately -- no separate "done reading" press
+// needed beyond the one that finished that last page.
+function startShopReadingText(rawTextOrPages) {
+  shopReadingPages = Array.isArray(rawTextOrPages) ? rawTextOrPages : [rawTextOrPages];
+  shopReadingPageIndex = 0;
+  shopReading = true;
+  renderShopNav(); // hides the cursor immediately -- the list isn't selectable now
+  startShopDialogueText(shopReadingPages[0]);
+}
+
+// call once the CURRENT page has finished typing (from Z/X) -- moves to
+// the next queued page, or ends the reading session if that was the
+// last one
+// call once there's nothing left to read (last page dismissed, or the
+// player moved on before finishing a not-yet-started page) -- reverts
+// to the generic per-mode image (e.g. 'talk') now that a specific
+// topic's reactive image, if any, no longer applies
+function endShopReading() {
+  shopReading = false;
+  updateShopImage();
+  renderShopNav();
+}
+
+function advanceShopReadingPage() {
+  shopReadingPageIndex++;
+  if (shopReadingPageIndex < shopReadingPages.length) {
+    startShopDialogueText(shopReadingPages[shopReadingPageIndex]);
+  } else {
+    endShopReading();
+  }
+}
+
+// updates the left panel to describe whatever item the cursor is
+// currently on in Buy/Sell -- the "hovering" request. Does nothing on
+// an empty list (the "Nothing for sale."/"Nothing to sell." row in the
+// nav panel already covers that).
+function updateShopHoverInfo() {
+  let id = null;
+  if (shopMode === 'buy') {
+    id = getBuyableItemIds()[shopListIndex];
+  } else if (shopMode === 'sell') {
+    id = inventory[shopListIndex];
+  }
+  if (!id) return;
+  const item = ITEMS[id];
+  const line = item && (shopMode === 'buy' ? item.shopBuyLine : item.shopSellLine);
+  startShopDialogueText(line || `A ${item ? item.label : id}.`);
+}
+
+function renderShopFooter() {
+  shopGoldEl.textContent = gold + 'G';
+  // "1/8" here is how many of your MAX_ITEMS inventory slots are
+  // filled -- not a count of what's for sale
+  shopInventoryCountEl.textContent = inventory.length + '/' + MAX_ITEMS;
+}
+
+function renderShopNav() {
+  let html = '';
+  if (shopMode === 'main') {
+    SHOP_MAIN_ENTRIES.forEach((label, i) => {
+      const cursor = i === shopNavIndex ? cursorImgHtml() : '';
+      html += `<div class="shop-nav-entry" data-index="${i}">${cursor}${escapeHtml(label)}</div>`;
+    });
+  } else if (shopMode === 'buy') {
+    const buyableIds = getBuyableItemIds();
+    if (!buyableIds.length) {
+      html = '<div class="item-empty">Nothing for sale.</div>';
+    } else {
+      buyableIds.forEach((id, i) => {
+        const item = ITEMS[id];
+        const label = item.shopLabel || item.label;
+        const cursor = i === shopListIndex ? cursorImgHtml() : '';
+        html += `<div class="shop-nav-entry" data-index="${i}">${cursor}${escapeHtml(label)} - ${item.buyPrice}G</div>`;
+      });
+    }
+  } else if (shopMode === 'sell') {
+    if (!inventory.length) {
+      html = '<div class="item-empty">Nothing to sell.</div>';
+    } else {
+      inventory.forEach((id, i) => {
+        const item = ITEMS[id];
+        const label = item ? (item.shopLabel || item.label) : id;
+        const price = (item && item.sellPrice != null) ? item.sellPrice : 0;
+        const cursor = i === shopListIndex ? cursorImgHtml() : '';
+        html += `<div class="shop-nav-entry" data-index="${i}">${cursor}${escapeHtml(label)} - ${price}G</div>`;
+      });
+    }
+  } else if (shopMode === 'confirm') {
+    ['Yes', 'No'].forEach((label, i) => {
+      const cursor = i === shopConfirmChoice ? cursorImgHtml() : '';
+      html += `<div class="shop-nav-entry" data-index="${i}">${cursor}${escapeHtml(label)}</div>`;
+    });
+  } else if (shopMode === 'talk') {
+    SHOP_TALK_TOPICS.forEach((topic, i) => {
+      // hidden while shopReading -- the list isn't actually selectable
+      // right now (you're reading a response), so showing a cursor
+      // would misleadingly suggest otherwise
+      const cursor = (i === shopTalkIndex && !shopReading) ? cursorImgHtml() : '';
+      html += `<div class="shop-nav-entry" data-index="${i}">${cursor}${escapeHtml(topic.label)}</div>`;
+    });
+  }
+  shopNavListEl.innerHTML = html;
+
+  // the list can now scroll (a full Sell list won't always fit in the
+  // box), so make sure the selected row is actually visible instead of
+  // potentially scrolled off -- same manual approach used elsewhere in
+  // this file, since relying on the browser's own scrollIntoView proved
+  // unreliable for this exact kind of list
+  const selectedIndex = shopMode === 'main' ? shopNavIndex
+    : shopMode === 'confirm' ? shopConfirmChoice
+    : shopMode === 'talk' ? shopTalkIndex
+    : shopListIndex;
+  const selectedEl = shopNavListEl.querySelector(`.shop-nav-entry[data-index="${selectedIndex}"]`);
+  if (selectedEl) {
+    const listRect = shopNavListEl.getBoundingClientRect();
+    const rowRect = selectedEl.getBoundingClientRect();
+    if (rowRect.top < listRect.top) {
+      shopNavListEl.scrollTop -= (listRect.top - rowRect.top);
+    } else if (rowRect.bottom > listRect.bottom) {
+      shopNavListEl.scrollTop += (rowRect.bottom - listRect.bottom);
+    }
+  }
+}
+
+function shopCurrentListLength() {
+  if (shopMode === 'buy') return getBuyableItemIds().length;
+  if (shopMode === 'sell') return inventory.length;
+  if (shopMode === 'confirm') return 2;
+  if (shopMode === 'talk') return SHOP_TALK_TOPICS.length;
+  return 0;
+}
+
+function shopHandleUp() {
+  // unlike the rest of the site, moving the cursor here works even
+  // while the shop's dialogue is still typing -- selecting/confirming
+  // (Z) still waits for it, same as everywhere else. The one exception
+  // is while shopReading is active (a Talk response, possibly
+  // multi-page) -- there's no list to move through while a page is
+  // still typing. Once it's done, though, trying to move the cursor
+  // (like this) ends the reading session right then and proceeds with
+  // the move in the same press -- no separate Z/X needed first.
+  if (shopReading) {
+    if (shopDialogueTyping) return;
+    // if more pages are still queued, Up/Down stay locked too -- only
+    // Z/X advance through pages, so a mid-reading Up/Down press doesn't
+    // accidentally abandon a page you haven't seen yet
+    if (shopReadingPageIndex < shopReadingPages.length - 1) return;
+    endShopReading();
+  }
+  if (shopMode === 'main') {
+    if (shopNavIndex > 0) {
+      shopNavIndex--;
+      renderShopNav();
+      playMenuSelectSound();
+    }
+    return;
+  }
+  if (shopMode === 'confirm') {
+    if (shopConfirmChoice > 0) {
+      shopConfirmChoice--;
+      renderShopNav();
+      playMenuSelectSound();
+    }
+    return;
+  }
+  if (shopMode === 'talk') {
+    if (shopTalkIndex > 0) {
+      shopTalkIndex--;
+      renderShopNav();
+      playMenuSelectSound();
+    }
+    return;
+  }
+  if (shopListIndex > 0) {
+    shopListIndex--;
+    renderShopNav();
+    updateShopHoverInfo();
+    playMenuSelectSound();
+  }
+}
+
+function shopHandleDown() {
+  if (shopReading) {
+    if (shopDialogueTyping) return;
+    if (shopReadingPageIndex < shopReadingPages.length - 1) return;
+    endShopReading();
+  }
+  if (shopMode === 'main') {
+    if (shopNavIndex < SHOP_MAIN_ENTRIES.length - 1) {
+      shopNavIndex++;
+      renderShopNav();
+      playMenuSelectSound();
+    }
+    return;
+  }
+  if (shopMode === 'confirm') {
+    if (shopConfirmChoice < 1) {
+      shopConfirmChoice++;
+      renderShopNav();
+      playMenuSelectSound();
+    }
+    return;
+  }
+  if (shopMode === 'talk') {
+    if (shopTalkIndex < SHOP_TALK_TOPICS.length - 1) {
+      shopTalkIndex++;
+      renderShopNav();
+      playMenuSelectSound();
+    }
+    return;
+  }
+  if (shopListIndex < shopCurrentListLength() - 1) {
+    shopListIndex++;
+    renderShopNav();
+    updateShopHoverInfo();
+    playMenuSelectSound();
+  }
+}
+
+function shopHandleZ() {
+  if (shopMode === 'main') {
+    const choice = SHOP_MAIN_ENTRIES[shopNavIndex];
+    playMenuConfirmSound();
+    if (choice === 'Buy') {
+      shopMode = 'buy';
+      shopListIndex = 0;
+      updateShopImage();
+      renderShopNav();
+      updateShopHoverInfo();
+    } else if (choice === 'Sell') {
+      shopMode = 'sell';
+      shopListIndex = 0;
+      updateShopImage();
+      renderShopNav();
+      updateShopHoverInfo();
+    } else if (choice === 'Talk') {
+      shopMode = 'talk';
+      shopTalkIndex = 0;
+      shopReading = false;
+      updateShopImage();
+      renderShopNav();
+      startShopDialogueText(SHOP_TALK_PROMPT);
+    } else if (choice === 'Exit') {
+      closeShop();
+    }
+    return;
+  }
+
+  if (shopMode === 'talk') {
+    if (shopReading) {
+      // reading a (possibly multi-page) response -- Z does nothing
+      // until the current page finishes typing, same as normal
+      // dialogue. Once it has, Z either shows the next page or, if that
+      // was the last one, returns to the topic list automatically --
+      // you can't jump to a different topic mid-response.
+      if (shopDialogueTyping) return;
+      advanceShopReadingPage();
+      return;
+    }
+    const topic = SHOP_TALK_TOPICS[shopTalkIndex];
+    if (!topic) return;
+    playMenuConfirmSound();
+    if (topic.image) setSceneImage(topic.image);
+    startShopReadingText(topic.response);
+    return;
+  }
+
+  if (shopMode === 'buy') {
+    const id = getBuyableItemIds()[shopListIndex];
+    if (!id) return;
+    const item = ITEMS[id];
+    playMenuConfirmSound();
+    shopConfirmAction = 'buy';
+    shopConfirmId = id;
+    shopConfirmChoice = 0;
+    shopMode = 'confirm';
+    renderShopNav();
+    startShopDialogueText(`Buy the ${item.label} for ${item.buyPrice}G?`);
+    return;
+  }
+
+  if (shopMode === 'sell') {
+    const id = inventory[shopListIndex];
+    if (!id) return;
+    const item = ITEMS[id];
+    const price = (item && item.sellPrice != null) ? item.sellPrice : 0;
+    playMenuConfirmSound();
+    shopConfirmAction = 'sell';
+    shopConfirmChoice = 0;
+    shopMode = 'confirm';
+    renderShopNav();
+    startShopDialogueText(`Sell the ${item ? item.label : id} for ${price}G?`);
+    return;
+  }
+
+  if (shopMode === 'confirm') {
+    playMenuConfirmSound();
+    if (shopConfirmChoice === 0) {
+      executeShopConfirm();
+    } else {
+      // No -- cancel back to whichever list we were confirming from
+      shopMode = shopConfirmAction;
+      renderShopNav();
+      updateShopHoverInfo();
+    }
+    return;
+  }
+}
+
+// actually performs whatever shopConfirmAction/shopConfirmId describe,
+// once the player has said Yes -- returns to the Buy/Sell list either
+// way afterward
+function executeShopConfirm() {
+  if (shopConfirmAction === 'buy') {
+    const item = ITEMS[shopConfirmId];
+    shopMode = 'buy';
+    if (!item) {
+      renderShopNav();
+      return;
+    }
+    if (inventory.length >= MAX_ITEMS) {
+      renderShopNav();
+      startShopDialogueText("You can't carry any more.");
+      return;
+    }
+    if (!spendGold(item.buyPrice)) {
+      renderShopNav();
+      startShopDialogueText("You don't have enough gold.");
+      return;
+    }
+    addItem(shopConfirmId);
+    renderShopNav();
+    renderShopFooter();
+    startShopDialogueText(`Got the ${item.label}!`);
+    return;
+  }
+
+  if (shopConfirmAction === 'sell') {
+    shopMode = 'sell';
+    const id = inventory[shopListIndex];
+    if (!id) {
+      renderShopNav();
+      return;
+    }
+    const item = ITEMS[id];
+    const price = (item && item.sellPrice != null) ? item.sellPrice : 0;
+    removeItemAt(shopListIndex);
+    addGold(price);
+    if (shopListIndex >= inventory.length) {
+      shopListIndex = Math.max(0, inventory.length - 1);
+    }
+    renderShopNav();
+    renderShopFooter();
+    startShopDialogueText(`Sold the ${item ? item.label : id}.`);
+    return;
+  }
+}
+
+function shopHandleX() {
+  // reading a Talk response is the one exception to "always
+  // interruptible": a press only finishes the CURRENT page's typing
+  // (matching normal dialogue) -- once it's done, X advances to the
+  // next page or, on the last one, ends the reading session
+  // automatically. You can't skip straight to a different topic or
+  // leave mid-response.
+  if (shopReading) {
+    if (shopDialogueTyping) {
+      finishShopDialogueTyping();
+      return;
+    }
+    advanceShopReadingPage();
+    return;
+  }
+
+  // everything else backs out immediately and cuts the current line
+  // off, same philosophy as Z
+  if (shopMode === 'confirm') {
+    // same as choosing No
+    shopMode = shopConfirmAction;
+    renderShopNav();
+    updateShopHoverInfo();
+    return;
+  }
+  if (shopMode !== 'main') {
+    shopMode = 'main';
+    shopNavIndex = 0;
+    updateShopImage();
+    startShopDialogueText(SHOP_GREETING);
+    renderShopNav();
+    return;
+  }
+  closeShop();
 }
 
 // ---- scene log screen (LOG entry inside the menu) ----
@@ -1371,12 +2333,17 @@ function exitScenePlayback() {
 // ---- input ----
 
 function handleZ() {
+  if (shopTransitioning) return;
   if (itemInfoOpen) {
     if (itemInfoTyping) {
       finishItemInfoTyping();
     } else {
       closeItemInfo();
     }
+    return;
+  }
+  if (shopOpen) {
+    shopHandleZ();
     return;
   }
   if (itemScreenOpen) {
@@ -1424,12 +2391,17 @@ function handleZ() {
 }
 
 function handleX() {
+  if (shopTransitioning) return;
   if (itemInfoOpen) {
     if (itemInfoTyping) {
       finishItemInfoTyping();
     } else {
       closeItemInfo();
     }
+    return;
+  }
+  if (shopOpen) {
+    shopHandleX();
     return;
   }
   if (itemScreenOpen) {
@@ -1459,7 +2431,12 @@ function handleX() {
 }
 
 function handleUp() {
+  if (shopTransitioning) return;
   if (itemInfoOpen) return;
+  if (shopOpen) {
+    shopHandleUp();
+    return;
+  }
   if (itemScreenOpen) {
     itemHandleUp();
     return;
@@ -1486,7 +2463,12 @@ function handleUp() {
 }
 
 function handleDown() {
+  if (shopTransitioning) return;
   if (itemInfoOpen) return;
+  if (shopOpen) {
+    shopHandleDown();
+    return;
+  }
   if (itemScreenOpen) {
     itemHandleDown();
     return;
@@ -1565,7 +2547,7 @@ if (!IS_MOBILE) {
   });
 
   window.addEventListener('touchend', (e) => {
-    if (e.target && e.target.closest && e.target.closest('#choice-grid, #menu-box, #item-box, #scene-log-box, #stat-screen')) {
+    if (e.target && e.target.closest && e.target.closest('#choice-grid, #menu-box, #item-box, #scene-log-box, #stat-screen, #shop-box, #shop-hotspot')) {
       return;
     }
     e.preventDefault();
@@ -1574,16 +2556,12 @@ if (!IS_MOBILE) {
     handleZ();
   }, { passive: false });
 
-  // ---- example: granting an item by clicking somewhere on the screen ----
-  // Any element can do this -- just attach a click handler and call
-  // addItem() with an id from ITEMS. This demo grants a Crab Apple every
-  // time you click directly on the character/scene art (up to the
-  // 8-item cap). Swap the id, move it to a different element, or delete
-  // it -- whatever fits what you actually want clickable.
-  sceneLayers.forEach((layer) => {
-    layer.addEventListener('click', () => {
-      addItem('crab_apple');
-    });
+  // clicking the small hotspot over the character opens the shop --
+  // position/size it in style.css (#shop-hotspot). To see exactly
+  // where it currently sits while you're tuning it, temporarily add
+  // "background: rgba(255,0,0,0.4) !important;" to that same rule.
+  shopHotspotEl.addEventListener('click', () => {
+    openShop();
   });
 
   // Resume wherever they left off instead of replaying dialogue they've

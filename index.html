@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>* (The girl on the cliff.).</title>
+<title>* (The girl and the sun.).</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+<!-- DUMBASS MAKE SURE TO CALL A NEW SCENE ON UPDATE, YOU HAVE FORGOTTEN THIS LIKE 200000 TIMES DURING TESTING-->
 <div id="game">
+  <div id="fade-overlay"></div>
+  <div id="shop-hotspot"></div>
+
   <img id="scene-layer-0" class="scene-layer" alt="">
   <img id="scene-layer-1" class="scene-layer" alt="">
 
@@ -15,17 +18,19 @@
     <div id="dialogue-text"></div>
     <div id="choice-grid"></div>
   </div>
+
   <div id="menu-box">
     <div id="stats-box">
       <div id="stats-name">Kaia</div>
-      <div class="stats-row"><span class="stat-label">LV</span><span>3</span></div>
-      <div class="stats-row"><span class="stat-label">HP</span><span>28/28</span></div>
-      <div class="stats-row"><span class="stat-label">G</span><span>13</span></div>
+      <div class="stats-row"><span class="stat-label">LV</span><span>1</span></div>
+      <div class="stats-row"><span class="stat-label">HP</span><span>10/10</span></div>
+      <div class="stats-row"><span class="stat-label">G</span><span id="stats-gold">13</span></div>
     </div>
     <div id="nav-box">
       <div id="menu-list"></div>
     </div>
   </div>
+
   <div id="item-box">
     <div id="item-list"></div>
     <div id="item-actions"></div>
@@ -33,6 +38,7 @@
   <div id="scene-log-box">
     <div id="scene-log-list"></div>
   </div>
+
   <div id="stat-screen">
     <div id="stat-screen-name">"Kaia"</div>
 
@@ -50,12 +56,26 @@
     <div class="stat-screen-row"><span class="stat-screen-label">ARMOR: </span><span id="stat-screen-armor">None</span></div>
 
     <div class="stat-screen-grid">
-      <div class="stat-screen-row"><span class="stat-screen-label">GOLD: </span><span>13</span></div>
+      <div class="stat-screen-row"><span class="stat-screen-label">GOLD: </span><span id="stat-screen-gold">13</span></div>
       <div class="stat-screen-row"><span class="stat-screen-label">KILLS: </span><span>0</span></div>
     </div>
   </div>
+
+  <div id="shop-box">
+    <div id="shop-dialogue">
+      <div id="shop-dialogue-text"></div>
+    </div>
+    <div id="shop-nav">
+      <div id="shop-nav-list"></div>
+      <div id="shop-footer">
+        <span id="shop-gold">13G</span>
+        <span id="shop-inventory-count">0/8</span>
+      </div>
+    </div>
+  </div>
 </div>
-<script src="dialogue/scene2.js"></script>
+<!-- HERE HERE HERE HEREHERE-->
+<script src="dialogue/scene3.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
