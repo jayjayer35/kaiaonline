@@ -126,7 +126,7 @@ const SCENES = [
   { id: 'scene-1', label: 'Aug 29 - Start', startNode: 'n1', scriptFile: 'dialogue/scene1.js' },
 
   // older scene -- not loaded until picked in the LOG menu
-  { id: 'scene-2', label: 'Aug 30 - Egg', startNode: 's2_n1', scriptFile: 'dialogue/scene2.js' },
+  { id: 'scene-2', label: 'Aug 30 - Arbitrary', startNode: 's2_n1', scriptFile: 'dialogue/scene2.js' },
 
   // current/newest scene -- loaded eagerly via dialogue/scene3.js
   { id: 'scene-3', label: 'Sep 04 - Yourself', startNode: 's3_n0' },
