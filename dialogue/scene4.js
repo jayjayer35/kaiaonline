@@ -59,7 +59,7 @@ Object.assign(window.NODES, {
     next: "s4_n8_2"
   },
   s4_n8_2: {
-    text: "[music:/music/glade.mp3]I shouldn't even be in one right now, [p:200]I just keep telling myself.",
+    text: "[music:/music/glade.mp3]I shouldn't entertain the idea right now, [p:200]is what I keep telling myself.",
     image: "/assets/anim/looking.gif",
     next: "s4_n9"
   },
