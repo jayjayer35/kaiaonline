@@ -1,81 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>* (The girl and the sun.).</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>kaia online | welcome!</title>
+
+  <link rel="stylesheet" href="/kaia-base.css">
+
+  <style>
+    body {
+      font-size: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    .panel {
+      max-width: 36rem;
+      width: 100%;
+      text-align: center;
+    }
+
+    .panel-head {
+      font-size: 1.5rem;
+      text-align: center;
+      letter-spacing: 0.3rem;
+    }
+
+    /* ── rosie gif ── */
+    .rosie {
+      width: 9rem;
+      height: 9rem;
+      object-fit: cover;
+      image-rendering: pixelated;
+      border: 1px solid var(--panel-border);
+      margin: 0.5rem 0 0.75rem;
+      transition: border-color 0.3s;
+    }
+
+    .welcome-text {
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+      transition: color 0.3s;
+    }
+
+    .welcome-text em {
+      color: var(--text-soft);
+      font-size: 0.85em;
+      transition: color 0.3s;
+    }
+
+    .enter-wrap {
+      margin: 0.75rem 0 0.875rem;
+    }
+
+    .rating {
+      margin-top: 0.5rem;
+      opacity: 0.75;
+      transition: opacity 0.2s;
+    }
+
+    .rating:hover { opacity: 1; }
+
+    .theme-toggle {
+      position: fixed;
+      top: 0.75rem;
+      right: 0.875rem;
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 1.25rem;
+      color: var(--text-soft);
+      background: none;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: color 0.3s;
+      z-index: 10;
+    }
+
+    .theme-toggle:hover { color: var(--text); }
+  </style>
 </head>
+
 <body>
-<!-- DUMBASS MAKE SURE TO CALL A NEW SCENE ON UPDATE, YOU HAVE FORGOTTEN THIS LIKE 200000 TIMES DURING TESTING-->
-<div id="game">
-  <div id="fade-overlay"></div>
-  <div id="shop-hotspot"></div>
 
-  <img id="scene-layer-0" class="scene-layer" alt="">
-  <img id="scene-layer-1" class="scene-layer" alt="">
+  <button class="theme-toggle" id="theme-btn" title="Toggle dark mode">[ ☾ ]</button>
 
-  <div id="textbox">
-    <div id="dialogue-text"></div>
-    <div id="choice-grid"></div>
-  </div>
+  <div class="panel">
+    <div class="panel-head">hold on!</div>
+    <div class="panel-body">
 
-  <div id="menu-box">
-    <div id="stats-box">
-      <div id="stats-name">Kaia</div>
-      <div class="stats-row"><span class="stat-label">LV</span><span>1</span></div>
-      <div class="stats-row"><span class="stat-label">HP</span><span>10/10</span></div>
-      <div class="stats-row"><span class="stat-label">G</span><span id="stats-gold">13</span></div>
-    </div>
-    <div id="nav-box">
-      <div id="menu-list"></div>
-    </div>
-  </div>
+      <img
+        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia1.tenor.com%2Fimages%2Fefbdbe63a4c6cfc1d0a65659711640f8%2Ftenor.gif%3Fitemid%3D17582159&f=1&nofb=1&ipt=50618fb39702affe8bdde6a55d6535ab5b0ecaf6888ab34991fda8cf5172b273"
+        alt="rosie from animal crossing shaking maracas"
+        class="rosie">
 
-  <div id="item-box">
-    <div id="item-list"></div>
-    <div id="item-actions"></div>
-  </div>
-  <div id="scene-log-box">
-    <div id="scene-log-list"></div>
-  </div>
+      <p class="welcome-text">
+        Welcome! <br>
+        The page you're about to enter is a <span style="text-decoration: underline;">personal</span> site.
+        <br><br>
+        This site makes use of sound, javascript, and the occasional iframes.
+        It was designed on 1920×1080 in firefox, but most things should play nice on different devices and resolutions.
+        <br><br>
+        The site is meant to be viewed in its light mode variant, but I have added a toggle in the <span style="text-decoration: underline;">top right</span> of this screen. <br>
+        You can also toggle it when you're on site via the <span style="text-decoration: underline;">nav bar</span>. <br>
+        The <span style="text-decoration: underline;">music player</span> controls are also there.
+        <br><br>Lastly, if you have trouble reading <span style="font-size: 60%;">small text</span> <span style="text-decoration: underline;">I recommend zooming the site to 120%!</span>, it may help you in some places.
+      </p>
 
-  <div id="stat-screen">
-    <div id="stat-screen-name">"Kaia"</div>
-
-    <div class="stat-screen-row"><span class="stat-screen-label">LV</span><span>1</span></div>
-    <div class="stat-screen-row"><span class="stat-screen-label">HP</span><span>20 / 20</span></div>
-
-    <div class="stat-screen-grid">
-      <div class="stat-screen-row"><span class="stat-screen-label">AT</span><span>-2 (0)</span></div>
-      <div class="stat-screen-row"><span class="stat-screen-label">EXP:</span><span>0</span></div>
-      <div class="stat-screen-row"><span class="stat-screen-label">DF</span><span>0 (0)</span></div>
-      <div class="stat-screen-row"><span class="stat-screen-label">NEXT:</span><span>10</span></div>
-    </div>
-
-    <div class="stat-screen-row section-start"><span class="stat-screen-label">WEAPON: </span><span id="stat-screen-weapon">None</span></div>
-    <div class="stat-screen-row"><span class="stat-screen-label">ARMOR: </span><span id="stat-screen-armor">None</span></div>
-
-    <div class="stat-screen-grid">
-      <div class="stat-screen-row"><span class="stat-screen-label">GOLD: </span><span id="stat-screen-gold">13</span></div>
-      <div class="stat-screen-row"><span class="stat-screen-label">KILLS: </span><span>0</span></div>
-    </div>
-  </div>
-
-  <div id="shop-box">
-    <div id="shop-dialogue">
-      <div id="shop-dialogue-text"></div>
-    </div>
-    <div id="shop-nav">
-      <div id="shop-nav-list"></div>
-      <div id="shop-footer">
-        <span id="shop-gold">13G</span>
-        <span id="shop-inventory-count">0/8</span>
+      <div class="enter-wrap">
+        <a href="indexnew.html" class="pseudo-button"><span style="color: #0d1117;">let me in!</span></a> <a href="https://www.dictionary.com/browse/weakling" class="pseudo-button"><span style="color: #0d1117;">flee!</span></a>
       </div>
+
+      <a href="https://www.mabsland.com/Adoption.html"><img src="http://www.mabsland.com/Pandas/Censor_14c.gif" alt="web rated 14!"></a>
+
     </div>
   </div>
-</div>
-<!-- HERE HERE HERE HEREHERE-->
-<script src="dialogue/scene4.js"></script>
-<script src="script.js"></script>
+
+  <script>
+    /* ── seasonal theme: mirrors the SITE_THEME flag in header.js ──
+       this page doesn't load header.js, so it needs its own copy.
+       keep this in sync with header.js by hand. */
+    (function () {
+      const SITE_THEME = "fall"; // "fall" or "default"
+      if (SITE_THEME === "fall") {
+        document.body.classList.add('theme-fall');
+      }
+    })();
+
+    /* ── dark mode: read saved pref ── */
+    (function () {
+      if (localStorage.getItem('kaia-theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+      }
+    })();
+
+    /* ── dark mode: toggle ── */
+    const btn = document.getElementById('theme-btn');
+
+    function syncIcon() {
+      btn.textContent = document.body.classList.contains('dark-mode') ? '[ ☼ ]' : '[ ☾ ]';
+    }
+
+    syncIcon();
+
+    btn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('kaia-theme',
+        document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+      syncIcon();
+    });
+  </script>
+
 </body>
 </html>

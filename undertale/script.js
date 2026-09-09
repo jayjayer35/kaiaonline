@@ -131,8 +131,11 @@ const SCENES = [
   // current/newest scene -- loaded eagerly via dialogue/scene3.js
   { id: 'scene-3', label: 'Sep 04 - Yourself', startNode: 's3_n0' },
 
-  // current/newest scene -- loaded eagerly via dialogue/scene3.js
+  // current/newest scene -- loaded eagerly via dialogue/scene4.js
   { id: 'scene-3', label: 'Sep 07 - Heartache', startNode: 's4_n0' },
+
+  // current/newest scene -- loaded eagerly via dialogue/scene5.js
+  { id: 'scene-3', label: 'Sep 09 - ???', startNode: 's5_n0' },
 ];
 
 const START_NODE = SCENES[SCENES.length - 1].startNode;

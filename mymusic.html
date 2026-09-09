@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>my musical creations</title>
+  <link rel="stylesheet" href="rework/assets/css/kaia-base.css">
+  <script src="hide-scrollbars.js"></script>
+  <link rel="stylesheet" href="/kaia-base.css">
+  <link rel="stylesheet" href="/header.css">
 
   <style>
     @font-face {
@@ -13,50 +17,33 @@
       -webkit-font-smoothing: none;
     }
 
-    /* ── tokens: light ── */
+    /* ── tokens: page-specific only — everything else comes from
+       kaia-base.css (--sky, --panel-*, --text*, --link, --divider,
+       --bg-header, --border-header, etc). Don't redefine those here,
+       or this block will shadow theme-fall/dark-mode changes made
+       there. ── */
     :root {
-      --sky:           #d8eaf8;
-      --sky2:          #eef5fc;
-      --panel-bg:      #fff;
-      --panel-border:  #b6c6df;
-      --panel-shadow:  #9ca7c3;
-      --panel-head:    #b6c6df;
-      --panel-head-b:  #8a99b8;
-      --head-t-shadow: #7a93b0;
-      --head-b-s1:     #cddaea;
-      --head-b-s2:     #8a99b8;
-      --text:          #2a3a50;
-      --text-soft:     #6a7e96;
-      --link:          #3a7acf;
-      --divider:       rgba(182,198,223,0.4);
-      --bg-header:     #9eb4d1;
-      --border-header: #7e8ba3;
       --groove-ring:   rgba(58,122,207,0.22);
       --art-border:    #b6c6df;
       --art-selected:  #3a7acf;
     }
 
     body.dark-mode {
-      --sky:           #1a2028;
-      --sky2:          #11151a;
-      --panel-bg:      #1e2530;
-      --panel-border:  #151a22;
-      --panel-shadow:  #0d1117;
-      --panel-head:    #2a3340;
-      --panel-head-b:  #151a22;
-      --head-t-shadow: #000;
-      --head-b-s1:     #3a4a60;
-      --head-b-s2:     #10141a;
-      --text:          #e0e8f0;
-      --text-soft:     #8a99b8;
-      --link:          #6b9ac4;
-      --divider:       rgba(255,255,255,0.05);
-      --bg-header:     #2a3340;
-      --border-header: #1a2028;
       --groove-ring:   rgba(107,154,196,0.25);
       --art-border:    #2a3340;
       --art-selected:  #6b9ac4;
-      background-blend-mode: multiply;
+    }
+
+    body.theme-fall {
+      --groove-ring:   rgba(201,106,44,0.22);
+      --art-border:    #e0c19c;
+      --art-selected:  #c96a2c;
+    }
+
+    body.dark-mode.theme-fall {
+      --groove-ring:   rgba(232,148,74,0.25);
+      --art-border:    #1a1008;
+      --art-selected:  #e8944a;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,7 +57,7 @@
       color: var(--text);
       line-height: 1.5;
       background:
-        url('rework/assets/general/bkg3.gif'),
+        url('rework/assets/general/bkg4.png'),
         linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
       background-attachment: fixed;
       background-size: auto, 100% 100%;

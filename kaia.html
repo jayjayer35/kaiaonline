@@ -40,17 +40,9 @@
       gap: 1.125rem;
     }
 
-    .panel-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.125rem;
-      align-items: start;
-    }
-
     @media (max-width: 65.25rem) {
       .page { grid-template-columns: 1fr; }
       .sidebar { position: static; }
-      .panel-row { grid-template-columns: 1fr; }
     }
 
     .profile-photo {
@@ -78,16 +70,6 @@
     .about-text p { margin-bottom: 0.45rem; }
     .about-text p:last-child { margin-bottom: 0; }
     .about-text a { color: var(--link); }
-
-    /* ── fact list ── */
-    .fact-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(10.125rem, 1fr));
-      gap: 0.45rem 1.125rem;
-    }
-    .fact-list .fact-row { display: flex; justify-content: space-between; gap: 0.5625rem; }
-    .fact-list .fact-label { color: var(--text-soft); }
-    .fact-list .fact-value { text-align: right; }
 
     /* ── currently ── */
     .simple-list { display: flex; flex-direction: column; gap: 0.5062rem; }
@@ -198,7 +180,45 @@
     .fav-card .cover-placeholder-music img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     /* ── random fact ── */
-    #fact-output { min-height: 1.4em; color: var(--text-soft); margin-bottom: 0.675rem; }
+    .fact-box {
+      background: var(--pull-bg);
+      border: 1px solid var(--pull-border);
+      padding: 0.9rem 1.125rem;
+      min-height: 3.5em;
+      display: flex;
+      align-items: center;
+      text-align: left;
+      font-size: 1.0125rem;
+      line-height: 1.4;
+    }
+    #fact-output {
+      color: var(--text-soft);
+      transition: color 0.3s;
+    }
+    #fact-output:empty::before {
+      content: "click the button for info about me!";
+      font-style: italic;
+      opacity: 0.75;
+    }
+
+    #fact-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.9562rem;
+      font-family: 'NDS', monospace, sans-serif;
+      font-size: 0.9562rem;
+      letter-spacing: 0.05em;
+      border-radius: 2px;
+      background: var(--panel-bg);
+      color: var(--text);
+      border: 1.5px solid var(--text);
+      padding: 0.5625rem 0.9rem;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    #fact-btn:hover { background: var(--text); color: var(--panel-bg); }
 
     /* ── identity button images (86x15) ── */
     .id-badges { display: flex; gap: 0.3375rem; flex-wrap: wrap; margin-top: 0.7875rem; text-align: center; }
@@ -299,6 +319,15 @@
       </div>
     </div>
 
+    <div class="panel" id="intro">
+      <div class="panel-body">
+        <button id="fact-btn" type="button">???</button>
+        <div class="fact-box"><p id="fact-output"></p></div>
+
+          <div class="id-badges" id="identity-badges"></div>
+      </div>
+    </div>
+
     <div class="panel" id="currently">
       <div class="panel-head">currently</div>
       <div class="panel-body">
@@ -317,20 +346,10 @@
 
   <div class="main-col">
 
-    <div class="panel-row">
-      <div class="panel" id="facts">
-        <div class="panel-head">facts</div>
-        <div class="panel-body">
-          <div class="fact-list" id="facts-list"></div>
-        </div>
-      </div>
-
-      <div class="panel" id="fact-btn-panel">
-        <div class="panel-head">random bullshit go</div>
-        <div class="panel-body">
-          <p id="fact-output"></p>
-          <button id="fact-btn" class="dl-btn" type="button">gimme a random fact</button>
-        </div>
+    <div class="panel" id="other-stuff">
+      <div class="panel-head">other stuff</div>
+      <div class="panel-body">
+        <p style="color:var(--text-soft);">this page still a wip, need to write and add some stuff here</p>
       </div>
     </div>
 
@@ -517,17 +536,11 @@
     { src: "/assets/idbuttons/derse.png", alt: "" },
   ];
 
-  const factsData = [
-    { label: "birthday", value: "02/03" },
-    { label: "fav color(s)", value: "lavender & mint" },
-    { label: "plan for this page", value: "its  a WIP trust" },
-  ];
-
   const currentlyData = [
-    { icon: "/assets/icon_music.gif", label: "listening to:", value: "Deltarune Chapter 5" },
+    { icon: "/assets/icon_music.gif", label: "listening to:", value: "Harvest Moon OST" },
     { icon: "/assets/icon_reading.gif", label: "reading:", value: "Witch Hat Atelier" },
-    { icon: "/assets/icon_playing.gif", label: "playing:", value: "Minecraft & TF2" },
-    { icon: "/assets/icon_watching.gif", label: "watching:", value: "you..." },
+    { icon: "/assets/icon_playing.gif", label: "playing:", value: "TerraFirmaGreg" },
+    { icon: "/assets/icon_watching.gif", label: "watching:", value: "my life fall apart" },
   ];
 
   const hobbiesData = [
@@ -546,16 +559,33 @@
   ];
 
   const funFacts = [
-    "please dont click it again your browser will crash im serious i dont feel like fixing this bug right now",
-    "please dont click it again your browser will crash im serious i dont feel like fixing this bug right now",
+    "my birthday is 234! 02/03/2004",
+    "my favorite colors are lavender & mint",
+    "i fractured my femur when i was little",
+    "any assets i made for this site were done entirely through krita and aseprite",
+    "ive gone through a lot of pet fish...",
+    "i have trouble keeping friends for a long long time",
+    "my cockatiel, big guy, likes feet..",
+    "i have a brother who is 3 years older than me",
+    "i have always wanted to create an rpg",
+    "i play 5 intstruments! clarinet, sax, piano, guitar, and drums!",
+    "i started coding way back when i was 12, but never really made anything of it until the recent past",
+    "i know how to use ableton, pro tools, fl studio, and logic!",
+    "i fractured the same collar bone 3 times when i was litte",
+    "my middle name is literally merlin, my father is such a nerd..",
+    "the first fandom i ever really 'joined' was undertale!",
+    "baking is my love language, let me feed you!",
+    "i am very mentally stable, trust me",
+    "being trans is utter hell, but i wouldnt have it any other way",
+    "i own a modded minecraft server!",
+    "i worked in a bakery for 5 months and it sucked",
+    "i have rollerbladed over a marathon in one sitting before!",
+    "i own a modded minecraft server!",
+    "i own a modded minecraft server!",
   ];
 
   document.getElementById('identity-badges').innerHTML = identityBadges
     .map(b => `<img src="${b.src}" alt="${b.alt}" title="${b.alt}">`).join('');
-
-  document.getElementById('facts-list').innerHTML = factsData.map(f => `
-    <div class="fact-row"><span class="fact-label">${f.label}</span><span class="fact-value">${f.value}</span></div>
-  `).join('');
 
   document.getElementById('currently-list').innerHTML = currentlyData.map(c => `
     <div class="currently-row">
@@ -594,13 +624,12 @@
     });
   });
 
+  let factIndex = -1;
+  const factList = funFacts.filter(f => f.trim() !== '');
   document.getElementById('fact-btn').addEventListener('click', () => {
     const output = document.getElementById('fact-output');
-    let next;
-    do {
-      next = funFacts[Math.floor(Math.random() * funFacts.length)];
-    } while (funFacts.length > 1 && next === output.textContent);
-    output.textContent = next;
+    factIndex = (factIndex + 1) % factList.length;
+    output.textContent = factList[factIndex];
   });
 </script>
 

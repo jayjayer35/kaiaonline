@@ -59,7 +59,7 @@ body {
   margin: 0;
   color: var(--text);
   background:
-    url('../rework/assets/general/bkg3.gif'),
+    url('../rework/assets/general/bkg4.png'),
     linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
   background-attachment: fixed;
   background-size: auto, 100% 100%;

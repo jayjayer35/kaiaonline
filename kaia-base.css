@@ -97,6 +97,12 @@ body.dark-mode {
   --head-b-shadow1: #3a4a60;
   --head-b-shadow2: #10141a;
 
+  /* re-declare alias here — var() aliases resolve using the value on
+     the element they're declared on, so without this it stays frozen
+     to :root's light-mode shadow regardless of theme */
+  --head-b-s1: var(--head-b-shadow1);
+  --head-b-s2: var(--head-b-shadow2);
+
   --text:          #e0e8f0;
   --text-soft:     #8a99b8;
   --link:          #6b9ac4;
@@ -155,6 +161,9 @@ body.theme-fall {
   --head-b-shadow1: #f5dcb8;
   --head-b-shadow2: #cf9a5e;
 
+  --head-b-s1: var(--head-b-shadow1);
+  --head-b-s2: var(--head-b-shadow2);
+
   --text:          #4a3420;
   --text-soft:     #8a6f52;
   --link:          #c96a2c;
@@ -171,6 +180,18 @@ body.theme-fall {
 
   --pull-bg:       #fdf2e4;
   --pull-border:   #e0c19c;
+
+  --wall:          #f2e2c8;
+  --plaque-bg:     #f7f0e0;
+  --plaque-border: #d1b88f;
+  --plaque-text:   #4a3420;
+  --plaque-soft:   #8a6f52;
+  --mat:           #ecdfc0;
+
+  --soft-blue:     #f5ddc0;
+  --pale-blue:     #fdf2e4;
+  --soft-pink:     #f8d9c4;
+  --soft-yellow:   #f5e2a8;
 
   /* interactive buttons / selection (used by blog) */
   --button-bg:          #f5ddc0;
@@ -197,6 +218,9 @@ body.dark-mode.theme-fall {
   --head-b-shadow1: #6b4525;
   --head-b-shadow2: #100a05;
 
+  --head-b-s1: var(--head-b-shadow1);
+  --head-b-s2: var(--head-b-shadow2);
+
   --text:          #f0dcc0;
   --text-soft:     #c9a877;
   --link:          #e8944a;
@@ -209,6 +233,18 @@ body.dark-mode.theme-fall {
 
   --pull-bg:       #241608;
   --pull-border:   #4a2f18;
+
+  --wall:          #241608;
+  --plaque-bg:     #2e2013;
+  --plaque-border: #4a3420;
+  --plaque-text:   #f0dcc0;
+  --plaque-soft:   #c9a877;
+  --mat:           #3a2815;
+
+  --soft-blue:     #3a2815;
+  --pale-blue:     #241608;
+  --soft-pink:     #3a2415;
+  --soft-yellow:   #4a3315;
 
   /* explicit — without these, body.theme-fall's light rgba values would
      win the cascade tie against body.dark-mode's, since both selectors
@@ -255,7 +291,7 @@ body {
   line-height: 1.5;
   min-height: 100%;
   background:
-    url('/rework/assets/general/bkg3.gif'),
+    url('/rework/assets/general/bkg4.png'),
     linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
   background-attachment: fixed;
   background-size: auto, 100% 100%;
