@@ -192,13 +192,9 @@ button:disabled {
 </head>
 <body>
 <script>
-// Mirrors just the theme-detection lines from header.js (not the nav/status
-// bar/music player, since this page doesn't want those). Runs first so the
-// classes are set before the rest of the page renders.
 if (localStorage.getItem("kaia-theme") === "dark") {
   document.body.classList.add("dark-mode");
 }
-// EDIT ME: keep this in sync with the SITE_THEME constant in header.js
 var SITE_THEME = "fall";
 if (SITE_THEME === "fall") document.body.classList.add("theme-fall");
 </script>
