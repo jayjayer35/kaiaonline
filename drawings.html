@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>draw the guestbook</title>
+<link rel="stylesheet" href="/header.css">
+<link rel="stylesheet" href="/kaia-base.css">
+<link rel="stylesheet" href="/hide-scrollbars.js">
+<style>
+/* this page pulls its palette, font, and panel look from kaia-base.css —
+   only layout + drawing-specific bits live here */
+
+body {
+  min-height: 100%;
+}
+
+.draw-page {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 1rem 0.75rem 2.5rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.draw-panel {
+  flex: 0 0 27rem; /* EDIT ME: width of the left draw column */
+  text-align: center;
+}
+
+.gallery-panel {
+  flex: 1;
+  min-width: 0; /* lets the gallery grid shrink instead of overflowing */
+}
+
+/* stack instead of squeezing side by side on narrow viewports */
+@media (max-width: 700px) {
+  .draw-page {
+    flex-direction: column;
+  }
+  .draw-panel {
+    flex-basis: auto;
+    width: 100%;
+  }
+}
+
+.draw-sub {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  margin: 0 0 0.75rem;
+}
+
+.draw-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+#pixelCanvas {
+  /* scales down to fit a narrow tile/pane, but never grows past this */
+  width: 100%;
+  max-width: 32rem; /* EDIT ME: largest the canvas will display at */
+  aspect-ratio: 1;
+  height: auto;
+  background: #ffffff;
+  border: 0.0625rem solid var(--panel-border);
+  box-shadow: 0.125rem 0.125rem 0 var(--panel-shadow);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.palette {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.3rem;
+  width: 100%;
+  max-width: 24rem;
+}
+
+.swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 0.1875rem solid transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.swatch.selected {
+  border-color: var(--selected-bg);
+  box-shadow: 0 0 0 0.0625rem var(--button-border);
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.625rem;
+}
+
+button {
+  font-family: 'NDS', monospace, sans-serif;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border: 0.0625rem solid var(--button-border);
+  background: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
+}
+
+button:hover {
+  background: var(--button-bg-hover);
+}
+
+button.active {
+  background: var(--button-bg-selected);
+  color: var(--selected-text);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+#submitBtn {
+  background: var(--button-bg-selected);
+  color: var(--selected-text);
+  border-color: var(--button-border);
+}
+
+#nameInput {
+  font-family: 'NDS', monospace, sans-serif;
+  font-size: 1rem;
+  padding: 0.5rem 0.625rem;
+  border: 0.0625rem solid var(--panel-border);
+  background: var(--pale-blue);
+  color: var(--text);
+  width: 100%;
+  max-width: 20rem;
+  box-sizing: border-box;
+}
+
+.status-msg {
+  font-size: 0.9rem;
+  min-height: 1em;
+  margin: 0;
+  color: var(--text-soft);
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: 0.75rem;
+}
+
+.gallery-item {
+  background: var(--panel-bg);
+  border: 0.0625rem solid var(--panel-border);
+  box-shadow: 0.125rem 0.125rem 0 var(--panel-shadow);
+  padding: 0.25rem;
+}
+
+.gallery-item img {
+  width: 100%;
+  aspect-ratio: 1;
+  image-rendering: pixelated;
+  display: block;
+  background: #fff;
+}
+
+.gallery-item .caption {
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  color: var(--text-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gallery-empty {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  grid-column: 1 / -1;
+}
+</style>
+</head>
+<body>
+<script>
+// Mirrors just the theme-detection lines from header.js (not the nav/status
+// bar/music player, since this page doesn't want those). Runs first so the
+// classes are set before the rest of the page renders.
+if (localStorage.getItem("kaia-theme") === "dark") {
+  document.body.classList.add("dark-mode");
+}
+// EDIT ME: keep this in sync with the SITE_THEME constant in header.js
+var SITE_THEME = "fall";
+if (SITE_THEME === "fall") document.body.classList.add("theme-fall");
+</script>
+
+<main class="draw-page">
+  <div class="panel draw-panel">
+    <div class="panel-head">draw something</div>
+    <div class="panel-body">
+      <p class="draw-sub">leave a small pixel doodle for the guestbook! do not draw anything offensive, this is a welcoming space <br>your canvas is limited to 32x32 and your colors are limited too... >:) get creative</p>
+
+      <div class="draw-area">
+        <canvas id="pixelCanvas" width="32" height="32"></canvas>
+
+        <div class="palette" id="palette"></div>
+
+        <div class="tools">
+          <button id="undoBtn" type="button" title="Undo (Ctrl+Z)">undo</button>
+          <button id="redoBtn" type="button" title="Redo (Ctrl+Y)">redo</button>
+          <button id="eraserBtn" type="button">eraser</button>
+          <button id="clearBtn" type="button">clear</button>
+        </div>
+
+        <input id="nameInput" type="text" maxlength="40" placeholder="name (optional, max 40 char.)">
+        <button id="submitBtn" type="button">post drawing</button>
+        <p id="statusMsg" class="status-msg"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel gallery-panel">
+    <div class="panel-head">recent drawings</div>
+    <div class="panel-body">
+      <div id="gallery" class="gallery">loading…</div>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  // ===== EDIT ME: grid size — must match the canvas width/height attributes above =====
+  const GRID_SIZE = 32;
+
+  // ===== EDIT ME: palette colors — neutrals/skin tones, warm, then cool =====
+  const PALETTE = [
+    '#000000', '#3a3a3a', '#7a7a7a', '#c9c9c9', '#ffffff', '#3a2e2c', '#7a5c58', '#c9967a',
+    '#e8c39e', '#f4e0c0', '#eb6a4e', '#f4a63a', '#f4c95d', '#c94040', '#8a2c2c', '#d68a9a',
+    '#7fb069', '#4a7c59', '#9fd8a0', '#5a8fb0', '#8ec1e0', '#2a4d69', '#a78bd6', '#d6b3e0'
+  ];
+
+  const canvas = document.getElementById('pixelCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, GRID_SIZE, GRID_SIZE);
+
+  let currentColor = PALETTE[0];
+  let erasing = false;
+  let drawing = false;
+
+  const paletteEl = document.getElementById('palette');
+  const undoBtn = document.getElementById('undoBtn');
+  const redoBtn = document.getElementById('redoBtn');
+  const eraserBtn = document.getElementById('eraserBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const nameInput = document.getElementById('nameInput');
+  const submitBtn = document.getElementById('submitBtn');
+  const statusMsg = document.getElementById('statusMsg');
+  const galleryEl = document.getElementById('gallery');
+
+  function buildPalette() {
+    PALETTE.forEach((color, i) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'swatch' + (i === 0 ? ' selected' : '');
+      btn.style.background = color;
+      btn.addEventListener('click', () => {
+        currentColor = color;
+        erasing = false;
+        eraserBtn.classList.remove('active');
+        [...paletteEl.children].forEach(c => c.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+      paletteEl.appendChild(btn);
+    });
+  }
+
+  // ===== EDIT ME: how many steps of undo history to keep =====
+  const MAX_HISTORY = 50;
+  let undoStack = [];
+  let redoStack = [];
+
+  function snapshot() {
+    return ctx.getImageData(0, 0, GRID_SIZE, GRID_SIZE);
+  }
+
+  function updateHistoryButtons() {
+    undoBtn.disabled = undoStack.length === 0;
+    redoBtn.disabled = redoStack.length === 0;
+  }
+
+  // Call before any change that should become one undo step
+  function pushHistory() {
+    undoStack.push(snapshot());
+    if (undoStack.length > MAX_HISTORY) undoStack.shift();
+    redoStack = [];
+    updateHistoryButtons();
+  }
+
+  function undo() {
+    if (undoStack.length === 0) return;
+    redoStack.push(snapshot());
+    const prev = undoStack.pop();
+    ctx.putImageData(prev, 0, 0);
+    updateHistoryButtons();
+  }
+
+  function redo() {
+    if (redoStack.length === 0) return;
+    undoStack.push(snapshot());
+    const next = redoStack.pop();
+    ctx.putImageData(next, 0, 0);
+    updateHistoryButtons();
+  }
+
+  undoBtn.addEventListener('click', undo);
+  redoBtn.addEventListener('click', redo);
+  updateHistoryButtons();
+
+  document.addEventListener('keydown', (e) => {
+    // Don't hijack undo/redo while typing in the name field
+    const tag = e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+    const mod = e.ctrlKey || e.metaKey;
+    if (!mod) return;
+    const key = e.key.toLowerCase();
+
+    if (key === 'z' && !e.shiftKey) {
+      e.preventDefault();
+      undo();
+    } else if (key === 'y' || (key === 'z' && e.shiftKey)) {
+      // Ctrl+Y (Windows convention) and Ctrl/Cmd+Shift+Z (Mac convention)
+      e.preventDefault();
+      redo();
+    }
+  });
+
+  function pixelFromEvent(e) {
+    const rect = canvas.getBoundingClientRect();
+    const point = e.touches ? e.touches[0] : e;
+    const x = Math.floor(((point.clientX - rect.left) / rect.width) * GRID_SIZE);
+    const y = Math.floor(((point.clientY - rect.top) / rect.height) * GRID_SIZE);
+    return { x, y };
+  }
+
+  function paint(e) {
+    const { x, y } = pixelFromEvent(e);
+    if (x < 0 || y < 0 || x >= GRID_SIZE || y >= GRID_SIZE) return;
+    ctx.fillStyle = erasing ? '#ffffff' : currentColor;
+    ctx.fillRect(x, y, 1, 1);
+  }
+
+  function startDraw(e) {
+    drawing = true;
+    pushHistory();
+    paint(e);
+    e.preventDefault();
+  }
+  function moveDraw(e) {
+    if (!drawing) return;
+    paint(e);
+    e.preventDefault();
+  }
+  function endDraw() {
+    drawing = false;
+  }
+
+  canvas.addEventListener('mousedown', startDraw);
+  canvas.addEventListener('mousemove', moveDraw);
+  window.addEventListener('mouseup', endDraw);
+  canvas.addEventListener('touchstart', startDraw, { passive: false });
+  canvas.addEventListener('touchmove', moveDraw, { passive: false });
+  canvas.addEventListener('touchend', endDraw);
+
+  eraserBtn.addEventListener('click', () => {
+    erasing = !erasing;
+    eraserBtn.classList.toggle('active', erasing);
+  });
+
+  clearBtn.addEventListener('click', () => {
+    pushHistory();
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, GRID_SIZE, GRID_SIZE);
+  });
+
+  function setStatus(msg, isError) {
+    statusMsg.textContent = msg;
+    statusMsg.style.color = isError ? '#b3413a' : 'inherit';
+  }
+
+  submitBtn.addEventListener('click', async () => {
+    submitBtn.disabled = true;
+    setStatus('posting…', false);
+    try {
+      const dataUrl = canvas.toDataURL('image/png');
+      const res = await fetch('/.netlify/functions/save-drawing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: dataUrl, name: nameInput.value.trim() })
+      });
+      if (!res.ok) throw new Error('save failed');
+      setStatus('posted!', false);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, GRID_SIZE, GRID_SIZE);
+      undoStack = [];
+      redoStack = [];
+      updateHistoryButtons();
+      nameInput.value = '';
+      loadGallery();
+    } catch (err) {
+      setStatus('something went wrong, try again', true);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  function timeAgo(ts) {
+    const diff = Date.now() - ts;
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return mins + 'm ago';
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + 'h ago';
+    return Math.floor(hrs / 24) + 'd ago';
+  }
+
+  async function loadGallery() {
+    try {
+      const res = await fetch('/.netlify/functions/get-drawings');
+      if (!res.ok) throw new Error('load failed');
+      const { drawings } = await res.json();
+      galleryEl.innerHTML = '';
+      if (!drawings || drawings.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'gallery-empty';
+        empty.textContent = 'no drawings yet — be the first!';
+        galleryEl.appendChild(empty);
+        return;
+      }
+      drawings.forEach(d => {
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+
+        const img = document.createElement('img');
+        img.src = d.image;
+        img.alt = d.name ? (d.name + "'s drawing") : 'a doodle';
+        item.appendChild(img);
+
+        const caption = document.createElement('div');
+        caption.className = 'caption';
+        caption.textContent = (d.name || 'anonymous') + ' · ' + timeAgo(d.timestamp);
+        item.appendChild(caption);
+
+        galleryEl.appendChild(item);
+      });
+    } catch (err) {
+      galleryEl.innerHTML = '<p class="gallery-empty">couldn\'t load drawings right now.</p>';
+    }
+  }
+
+  buildPalette();
+  loadGallery();
+})();
+</script>
+</body>
+</html>

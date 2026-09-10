@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>drawings — admin</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="/kaia-base.css">
+<style>
+/* kept plainer than the public pages since it's just for you — but still
+   pulling colors/font from kaia-base.css so it doesn't clash */
+body {
+  max-width: 44rem;
+  margin: 1.25rem auto;
+  padding: 0 0.875rem 2.5rem;
+}
+h1 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+#gate {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+#gate input {
+  flex: 1;
+  font-family: 'NDS', monospace, sans-serif;
+  padding: 0.375rem 0.5rem;
+  border: 0.0625rem solid var(--panel-border);
+  background: var(--pale-blue);
+  color: var(--text);
+}
+#gate button, .del-btn {
+  font-family: 'NDS', monospace, sans-serif;
+  padding: 0.375rem 0.75rem;
+  border: 0.0625rem solid var(--button-border);
+  background: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+}
+#gate button:hover, .del-btn:hover {
+  background: var(--button-bg-hover);
+}
+#list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.item {
+  background: var(--panel-bg);
+  border: 0.0625rem solid var(--panel-border);
+  box-shadow: 0.125rem 0.125rem 0 var(--panel-shadow);
+  padding: 0.375rem;
+  text-align: center;
+}
+.item img {
+  width: 100%;
+  aspect-ratio: 1;
+  image-rendering: pixelated;
+  background: #fff;
+}
+.item .caption {
+  font-size: 0.7rem;
+  margin: 0.25rem 0;
+  color: var(--text-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.del-btn {
+  font-size: 0.7rem;
+  background: #ffc1c1;
+  border-color: #694f4f;
+  color: #3a2020;
+}
+.del-btn:hover {
+  background: #ffb0b0;
+}
+.del-btn:disabled { opacity: 0.5; }
+#status {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+</style>
+</head>
+<body>
+<h1>drawing guestbook — admin</h1>
+
+<div id="gate">
+  <input id="pw" type="password" placeholder="admin password">
+  <button id="unlockBtn" type="button">unlock</button>
+</div>
+<p id="status"></p>
+
+<div id="list"></div>
+
+<script>
+(function () {
+  let password = null;
+
+  const pwInput = document.getElementById('pw');
+  const unlockBtn = document.getElementById('unlockBtn');
+  const statusEl = document.getElementById('status');
+  const listEl = document.getElementById('list');
+
+  function timeAgo(ts) {
+    const diff = Date.now() - ts;
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return mins + 'm ago';
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + 'h ago';
+    return Math.floor(hrs / 24) + 'd ago';
+  }
+
+  async function loadDrawings() {
+    statusEl.textContent = 'loading…';
+    try {
+      const res = await fetch('/.netlify/functions/get-drawings');
+      const { drawings } = await res.json();
+      listEl.innerHTML = '';
+      statusEl.textContent = drawings.length + ' drawing(s)';
+      drawings.forEach(d => {
+        const item = document.createElement('div');
+        item.className = 'item';
+
+        const img = document.createElement('img');
+        img.src = d.image;
+        item.appendChild(img);
+
+        const caption = document.createElement('div');
+        caption.className = 'caption';
+        caption.textContent = (d.name || 'anonymous') + ' · ' + timeAgo(d.timestamp);
+        item.appendChild(caption);
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'del-btn';
+        delBtn.type = 'button';
+        delBtn.textContent = 'delete';
+        delBtn.addEventListener('click', () => deleteDrawing(d.id, delBtn));
+        item.appendChild(delBtn);
+
+        listEl.appendChild(item);
+      });
+    } catch (err) {
+      statusEl.textContent = 'failed to load.';
+    }
+  }
+
+  async function deleteDrawing(id, btn) {
+    if (!confirm('delete this drawing?')) return;
+    btn.disabled = true;
+    try {
+      const res = await fetch('/.netlify/functions/delete-drawing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, password })
+      });
+      if (!res.ok) throw new Error('delete failed');
+      loadDrawings();
+    } catch (err) {
+      alert('could not delete — wrong password, or something went wrong.');
+      btn.disabled = false;
+    }
+  }
+
+  unlockBtn.addEventListener('click', () => {
+    password = pwInput.value;
+    if (!password) return;
+    loadDrawings();
+  });
+})();
+</script>
+</body>
+</html>

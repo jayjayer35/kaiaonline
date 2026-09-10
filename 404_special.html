@@ -3,119 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kaia online - uh oh!</title>
+  <title>hey!!!!</title>
+  <link rel="stylesheet" href="/kaia-base.css">
+  <link rel="stylesheet" href="/header.css">
   <style>
-    @font-face {
-      font-family: "NDS";
-      src: url('/rework/assets/fonts/nds.ttf') format("truetype");
-      font-display: swap;
-      image-rendering: pixelated;
-      font-smooth: never;
-      -webkit-font-smoothing: none;
-    }
-
-    :root {
-      --bg-tile: #fff;
-      --bg-header: #9eb4d1;
-      --border-tile: #b6c6df;
-      --border-header: #7e8ba3;
-      --header-shadow: #9ca7c3;
-      --tile-header-bg: #b6c6df;
-      --tile-header-border: #8a99b8;
-      --text-color: #444;
-      --font-base: 1rem;
-      --line-height: 1;
-      --custom-font-scale: 1.5;
-      
-    }
-
-    html { font-size: var(--font-base); }
-
     body {
-      margin: 0;
-      font-family: 'NDS', sans-serif;
-      font-size: calc(1rem * var(--custom-font-scale));
-      background: #e8eff7 url('/rework/assets/general/bkg1.png');
+      background: var(--sky) url('/rework/assets/general/bkg4.png');
       image-rendering: pixelated;
-      color: var(--text-color);
-      line-height: var(--line-height);
-      
+      font-size: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .center-wrap {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      padding: 2rem 1rem;
     }
 
     .tile {
-      background: var(--bg-tile);
-      border: 0.15rem solid var(--border-tile);
-      border-radius: 0.375rem;
-      padding: 0.625rem;
-      box-shadow: 0 0 0.25rem var(--header-shadow);
-      position: relative;
       max-width: 40rem;
       text-align: center;
+      box-shadow: none;
+      background: #ffffff56;
     }
 
     .tile h2 {
-      background: var(--tile-header-bg);
-      border: none;
-      margin: 0 0 0.625rem 0;
-      padding: 0;
-      color: #fff;
+      border-radius: 0rem;
+      letter-spacing: 0.3rem;
     }
-
-    .tile .decor {
-      position: absolute;
-      width: 2.5rem;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .corner-top-right { top: -0.4rem; right: -0.4rem; }
-
 
     .pseudo-button {
       width: 20%;
       margin: 0 auto;
-      border-image: url('/rework/assets/general/divborder1.png') 9 fill round;
-      border-style: solid;
-      border-width: .75rem;
-      image-rendering: pixelated;
-      box-shadow: none;
-      transition: transform 0.2s ease-in-out;
       display: inline-block;
-    }
-
-    .pseudo-button:hover {
-      transform: scale(1.05) rotate(2deg);
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
+<script src="header.js"></script>
 
-  <div class="tile" style="text-align: center; box-shadow: none; background: #ffffff56;">
-    <h2 style="border-radius: .25rem; letter-spacing: .3rem;">o noes!</h2>
-    <p>
-      ...you "somehow" ended up on a broken link... <br> <br>
-      you're not going to get my twitter!!! <br>
-      over my dead body. <br><br>
+  <div class="center-wrap">
+    <div class="tile">
+      <h2>o noes!</h2>
+      <div class="tile-body">
+        <p>
+          ...you "somehow" ended up on a broken link... <br> <br>
+          you're not getting my twitter! <br><br>
 
-      <img src="/rework/assets/general/rosie/rosie8.gif" alt="rosie from animal crossing shaking maracas" style="width: 25%; height: 25%; border-radius: 1rem;"><br><br>
+          <img src="/assets/ohnoes.gif" alt="rosie from animal crossing shaking maracas" style="width: 25%; height: 25%; border-radius: 0rem;"><br><br>
 
-      
-
-       <br>
-       <div style="text-align: center;">
-        <a href="indexnew.html" style="text-decoration: none; color: var(--text-color);">
-          <div class="pseudo-button">
-            im sorry!!
-          </div>
-        </a>
+          if you know it, you know it. and thats it!<br>
+        </p>
       </div>
-      
-    </p>
+    </div>
   </div>
 
 </body>

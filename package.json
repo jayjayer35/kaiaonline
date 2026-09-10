@@ -1,0 +1,23 @@
+{
+  "name": "kaiaonline",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gfdkris.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayjayer35/kaiaonline.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jayjayer35/kaiaonline/issues"
+  },
+  "homepage": "https://github.com/jayjayer35/kaiaonline#readme",
+  "dependencies": {
+    "@netlify/blobs": "^11.0.3"
+  }
+}
