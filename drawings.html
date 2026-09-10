@@ -440,7 +440,7 @@ if (SITE_THEME === "fall") document.body.classList.add("theme-fall");
       if (!drawings || drawings.length === 0) {
         const empty = document.createElement('p');
         empty.className = 'gallery-empty';
-        empty.textContent = 'no drawings yet — be the first!';
+        empty.textContent = 'no drawings yet..';
         galleryEl.appendChild(empty);
         return;
       }
