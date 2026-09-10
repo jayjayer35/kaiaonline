@@ -75,7 +75,7 @@
         { label: "the blog",     href: "/blog/index.html" },
         { label: "friends", badge: "",
           submenu: [
-            { label: "memory vids", href: "/memoryvids.html", badge: ""},
+            { label: "memory vids", href: "/memoryvids.html"},
             { label: "hall of messages (wip)", href: "/msgs.html" },
           ]
         },
@@ -95,7 +95,7 @@
       label: "web",
       children: [
         { label: "the indie web!", href: "/indieweb.html" },
-        { label: "guestbook",   href: "/guestbook.html" },
+        { label: "guestbook",   href: "/guestbook.html" , badge: "new"},
         { label: "bookmarks", href: "/bookmarks.html" },
         { label: "shrines",
           submenu: [
