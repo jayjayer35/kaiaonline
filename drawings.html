@@ -217,7 +217,7 @@ if (SITE_THEME === "fall") document.body.classList.add("theme-fall");
           <button id="clearBtn" type="button">clear</button>
         </div>
 
-        <input id="nameInput" type="text" maxlength="40" placeholder="name (optional, max 40 char.)">
+        <input id="nameInput" type="text" maxlength="40" placeholder="optional: your name or note (max 40 char.)">
         <button id="submitBtn" type="button">post drawing</button>
         <p id="statusMsg" class="status-msg"></p>
       </div>
@@ -455,7 +455,7 @@ if (SITE_THEME === "fall") document.body.classList.add("theme-fall");
 
         const caption = document.createElement('div');
         caption.className = 'caption';
-        caption.textContent = (d.name || 'anonymous') + ' · ' + timeAgo(d.timestamp);
+        caption.textContent = (d.name || 'anonymous') + ' - ' + timeAgo(d.timestamp);
         item.appendChild(caption);
 
         galleryEl.appendChild(item);
