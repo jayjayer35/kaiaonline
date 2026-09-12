@@ -13,6 +13,7 @@
     { file: "/music/castletown.mp3",  name: "My Castle Town - Toby Fox" },
     //{ file: "/music/story.mp3",  name: "Before the Story - Toby Fox" },
     { file: "/music/walking.mp3",  name: "Walking Home - Toby Fox" },
+    { file: "/music/inlove.mp3",  name: "I guess I'm in love feat. Itoki Hana - Toby Fox" },
     { file: "/music/scarletforest.mp3",  name: "Scarlet Forest - Toby Fox" },
     //{ file: "/music/scarlet.mp3",  name: "Scarlet Forest - Toby Fox & Trevor Alan Gomes" },
     //{ file: "/music/scarfor.mp3",  name: "Field of Hopes and Dreams (Credits Version) - Toby Fox & Trevor Alan Gomes" },
