@@ -268,7 +268,7 @@
       .dream-page .dp-text { animation: none; opacity: 1; }
     }
 
-    .dl-flip { display: flex; align-items: center; justify-content: space-between; gap: 0.8438rem; margin-top: 0.675rem; }
+    .dl-flip { display: flex; align-items: center; justify-content: center; gap: 0.8438rem; margin-top: 0.675rem; }
     .dl-flip .dl-count { font-size: 0.9rem; color: var(--text-soft); white-space: nowrap; }
 
     .dl-btn {
@@ -290,6 +290,17 @@
       .page { padding: 0.5625rem; gap: 0.8438rem; }
     }
 
+    .card-deco {
+      position: absolute;
+      width: 4rem;              /* default size, override per image if needed */
+      image-rendering: pixelated;
+      pointer-events: none;    
+    }
+
+    .deco-tl { top: -1rem;    left: -1rem; }
+    .deco-tr { top: -1rem;    right: -1rem; }
+    .deco-bl { bottom: -1rem; left: -1rem; }
+    .deco-br { bottom: -1rem; right: -1rem; }
   </style>
 </head>
 <body>
@@ -299,7 +310,7 @@
   <div class="sidebar">
 
     <div class="panel" id="intro">
-      <div class="panel-head">hi, i'm kaia! (◕‿◕✿)</div>
+      <div class="panel-head">haia, i'm kaia! (◕‿◕✿)</div>
       <div class="panel-body">
 
         <div class="profile-photo" id="profile-photo"><img src="assets/meposter.jpg" alt=""></div>
@@ -310,23 +321,28 @@
         </div>
 
         <div class="about-text">
-          <p>this page is all mine!!!! i will indulge in myself here <br><br>
+          <p>this page is all mine!!!! i will indulge in myself here <br>
           
-          im still building this page out so bear with me</p>
+          im still building this page out so bear with me xP</p>
         </div>
 
-          <div class="id-badges" id="identity-badges"></div>
+        <div class="id-badges" id="identity-badges"></div>
+
+        <div>
+         <a href="#">discord</a> | <a href="https://kaiasei.bandcamp.com/">bandcamp (artist)</a> | <a href="https://bandcamp.com/kaiasei">bandcamp</a> | <a href="mailto:blue.jay02304@gmail.com">email</a> | <a href="https://www.youtube.com/@kaiasei">youtube</a><br>
+         <a href="https://steamcommunity.com/profiles/76561198256786828/">steam</a>
+        </div>
       </div>
     </div>
 
-    <div class="panel" id="intro">
+    <!-- <div class="panel" id="intro">
       <div class="panel-body">
         <button id="fact-btn" type="button">???</button>
         <div class="fact-box"><p id="fact-output"></p></div>
 
           <div class="id-badges" id="identity-badges"></div>
       </div>
-    </div>
+    </div> -->
 
     <div class="panel" id="currently">
       <div class="panel-head">currently</div>
@@ -354,16 +370,76 @@
     </div>
 
     <div class="panel" id="favorites">
-      <div class="panel-head">favorites</div>
+      <div class="panel-head">stuff i like</div>
       <div class="panel-body">
 
-        <div class="fav-group">
-          <button type="button" class="fav-group-label"><span>games</span><span class="fav-group-arrow">&#9656;</span></button>
+        <div class="fav-group collapsed">
+          <button type="button" class="fav-group-label"><span>games (links to the games official site! if unable, falls back to steam!)</span><span class="fav-group-arrow">&#9656;</span></button>
           <ul class="fav-gallery" id="fav-gallery-games">
             <li class="fav-card">
               <a class="fav-card-link" href="https://www.mobiusdigitalgames.com/outer-wilds.html" target="_blank" rel="noopener">
                 <div class="cover-placeholder"><img src="/assets/covers/wilds.gif" alt="" onerror="this.parentElement.textContent='cover'"></div>
                 <div class="fav-title">Outer Wilds</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://www.vintagestory.at/" target="_blank" rel="noopener">
+                <div class="cover-placeholder"><img src="/assets/covers/vintagestory.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Vintage Story</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://www.nintendo.com/us/explore/characters/zelda/" target="_blank" rel="noopener">
+                <div class="cover-placeholder"><img src="/assets/covers/botw.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">The Legend of Zelda: Breath of the Wild</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="http://www.nightinthewoods.com/" target="_blank" rel="noopener">
+                <div class="cover-placeholder"><img src="/assets/covers/nitw.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Night in the Woods</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://terraria.wiki.gg/" target="_blank" rel="noopener">
+                <div class="cover-placeholder"><img src="/assets/covers/terraria.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Terraria</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://store.steampowered.com/app/3480/Peggle_Deluxe/" target="_blank" rel="noopener">
+                <div class="cover-placeholder"><img src="/assets/covers/peggle.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Peggle</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://www.omori-game.com/en" target="_blank" rel="noopener">
+                <div class="cover-placeholder"><img src="/assets/covers/omori.webp" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">OMORI</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://www.stardewvalley.net/" target="_blank" rel="noopener">
+                <div class="cover-placeholder"><img src="/assets/covers/stardew.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Stardew Valley</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://hello.vrchat.com/" target="_blank" rel="noopener">
+                <div class="cover-placeholder"><img src="/assets/covers/vrc.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">VRChat</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://projectzomboid.com/blog/" target="_blank" rel="noopener">
+                <div class="cover-placeholder"><img src="/assets/covers/zomboid.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Project Zomboid</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://www.celestegame.com/" target="_blank" rel="noopener">
+                <div class="cover-placeholder"><img src="/assets/covers/celeste2.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Celeste</div>
               </a>
             </li>
             <li class="fav-card">
@@ -397,6 +473,12 @@
               </a>
             </li>
             <li class="fav-card">
+              <a class="fav-card-link" href="" target="_blank" rel="noopener">
+                <div class="cover-placeholder"><img src="/assets/covers/earthbound.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">EarthBound</div>
+              </a>
+            </li>
+            <li class="fav-card">
               <a class="fav-card-link" href="https://store.steampowered.com/app/1229490/ULTRAKILL/" target="_blank" rel="noopener">
                 <div class="cover-placeholder"><img src="/assets/covers/ultrakill.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
                 <div class="fav-title">ULTRAKILL</div>
@@ -405,9 +487,177 @@
           </ul>
         </div>
 
-        <div class="fav-group">
-          <button type="button" class="fav-group-label"><span>music</span><span class="fav-group-arrow">&#9656;</span></button>
+        <div class="fav-group collapsed">
+          <button type="button" class="fav-group-label"><span>music (links to bandcamp, go support artists! if unable, falls back to spotify... boo...) ((this is basically mostly my bandcamp library, LMAO))</span><span class="fav-group-arrow">&#9656;</span></button>
           <ul class="fav-gallery" id="fav-gallery-music">
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://ninajirachi.bandcamp.com/album/i-love-my-computer" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a0649909828_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">I Love My Computer</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://kirairi.bandcamp.com/album/cutest-started" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a2554753591_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">CUTEST♡STARTED!</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://virginbabylonrecords.bandcamp.com/album/laideronnette" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a3902115001_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Laideronnette</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://karlflodin.bandcamp.com/album/haste-original-soundtrack" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a0318572520_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Haste - Original Soundtrack</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://city-girl.bandcamp.com/album/i-dont-know-why-i-feel-ok-right-now-but-its-nice" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a0360094752_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">I don't know why I feel ok right now, but it's nice</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://smilingbroadly.bandcamp.com/album/for-a-moment-i-saw-myself-as-inexorably-beautiful" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a3493306931_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">for a moment i saw myself as inexorably beautiful</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://smilingbroadly.bandcamp.com/album/touched-or-been-touched-by-2" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a2215146362_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">touched, or been touched by</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://friendshouserecords.bandcamp.com/album/the-loudest-and-brightest-thing" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a2644815158_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">the loudest and brightest thing</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://kenashcorp.bandcamp.com/track/hold-my-hand" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a0459978159_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Hold My Hand</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://ippotsk.bandcamp.com/album/seeyalater-stratocaster" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a3102753866_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">seeyalater stratocaster</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://c418.bandcamp.com/album/minecraft-volume-alpha" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a3390257927_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Minecraft - Volume Alpha</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://c418.bandcamp.com/album/minecraft-volume-beta" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a1112985681_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Minecraft - Volume Beta</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://xaev.bandcamp.com/album/berdlycore-chapter-1" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a2594885842_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">berdlycore chapter 1</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://xaev.bandcamp.com/album/trendsurfer" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a0180513812_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Trendsurfer</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://diversesystem.bandcamp.com/album/ad-piano3" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a2280210872_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">AD:PIANO3</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://xaev.bandcamp.com/album/just-dansen" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a3871868933_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">just.dansen</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://femtanyl.bandcamp.com/album/chaser" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a1434684100_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">CHASER</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://aivisura.bandcamp.com/album/the-black-box" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a3513503505_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">The Black Box</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://seycara.bandcamp.com/track/ad-astra" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a3609490238_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">AD ASTRA</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://dmdokuro.bandcamp.com/album/the-tale-of-a-cruel-world-calamity-original-soundtrack" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a2145936506_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">The Tale of a Cruel World</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://heavenpierceher.bandcamp.com/album/ultrakill-imperfect-hatred" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a4193946062_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">ULTRAKILL: IMPERFECT HATRED </div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://open.spotify.com/album/7I0nZ1uqE3Qydi7gyyd187" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="assets/covers/music/toge.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">TOGENASHI</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://open.spotify.com/artist/7JAG8hDvCiDFBJkTdOCJ6F" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fis1-ssl.mzstatic.com%2Fimage%2Fthumb%2FMusic211%2Fv4%2F36%2F0f%2F62%2F360f628c-b042-e755-95f5-4b6e08c8c367%2F24UMGIM27973.rgb.jpg%2F600x600bb.jpg&f=1&nofb=1&ipt=b5ba6444396a1201621315640721e2b4123da2f4882d89970d7ad35b6ab2aa22" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Togeari</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://open.spotify.com/album/0JzdeLGqbDXPBlDbV4Y0c3" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.scdn.co%2Fimage%2Fab67616d0000b273a89cda77ec382a3e365cb3f5&f=1&nofb=1&ipt=84f735a460343cb3fa540fc9c02fb0f4194fdbff36900d3634049b7608df2371" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Alive</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://flavorfoley.bandcamp.com/album/spoken-for" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="https://f4.bcbits.com/img/a2264356507_2.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Spoken For</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://open.spotify.com/album/4Hjqdhj5rh816i1dfcUEaM" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="/assets/covers/music/nurture.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Nurture</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://open.spotify.com/album/2iS4pBIiQf4sCTJLZ5n8dy" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="/assets/covers/music/smile.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">SMIILE! :D</div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://elliothsu.bandcamp.com/album/lost-aria" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="/assets/covers/music/lostaria.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">Lost Aria</div>
+              </a>
+            </li>
             <li class="fav-card">
               <a class="fav-card-link" href="https://kaiasei.bandcamp.com/album/voidwalker-vol-1" target="_blank" rel="noopener">
                 <div class="cover-placeholder-music"><img src="/assets/covers/music/vw.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
@@ -430,6 +680,30 @@
               <a class="fav-card-link" href="https://0101.bandcamp.com/album/v" target="_blank" rel="noopener">
                 <div class="cover-placeholder-music"><img src="/assets/covers/music/alienpopV.jpg" alt="" onerror="this.parentElement.textContent='cover'"></div>
                 <div class="fav-title">エイリアン☆ポップ V </div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://0101.bandcamp.com/album/iv" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="/assets/covers/music/alienpop4.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">エイリアン☆ポップ IV </div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://0101.bandcamp.com/album/iii" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="/assets/covers/music/alienpop3.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">エイリアン☆ポップ III </div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://0101.bandcamp.com/album/ii" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="/assets/covers/music/alienpop2.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">エイリアン☆ポップ II </div>
+              </a>
+            </li>
+            <li class="fav-card">
+              <a class="fav-card-link" href="https://0101.bandcamp.com/album/--2" target="_blank" rel="noopener">
+                <div class="cover-placeholder-music"><img src="/assets/covers/music/alienpop.png" alt="" onerror="this.parentElement.textContent='cover'"></div>
+                <div class="fav-title">エイリアン☆ポップ </div>
               </a>
             </li>
             <li class="fav-card">
@@ -505,9 +779,7 @@
         <div id="dl-page-slot"></div>
 
         <div class="dl-flip">
-          <button id="dl-prev" class="dl-btn" type="button">&larr; prev</button>
           <span class="dl-count" id="dl-count"></span>
-          <button id="dl-next" class="dl-btn" type="button">next &rarr;</button>
         </div>
       </div>
     </div>
@@ -547,11 +819,11 @@
     { label: "rollerblading", link: "" },
     { label: "baking", link: "/recipes.html" },
     { label: "card games", link: "" },
-    { label: "making music", link: "" },
+    { label: "making music", link: "/mymusic.html" },
     { label: "doodling", link: "" },
     { label: "photography", link: "" },
     { label: "gaming", link: "" },
-    { label: "video editing", link: "" },
+    { label: "video editing", link: "/memoryvids.html" },
   ];
 
   const showsData = [
@@ -636,8 +908,6 @@
 <script>
   const slot    = document.getElementById('dl-page-slot');
   const jumpEl  = document.getElementById('dl-jump');
-  const prevBtn = document.getElementById('dl-prev');
-  const nextBtn = document.getElementById('dl-next');
   const countEl = document.getElementById('dl-count');
 
   let dreams = [];
@@ -668,9 +938,6 @@
     slot.replaceChildren(page);
 
     jumpEl.value = String(dlIndex);
-    countEl.textContent = `${dlIndex + 1} of ${dreams.length}`;
-    prevBtn.disabled = dlIndex === 0;
-    nextBtn.disabled = dlIndex === dreams.length - 1;
   }
 
   function goToDream(i) {
@@ -678,8 +945,6 @@
     renderDream();
   }
 
-  prevBtn.addEventListener('click', () => goToDream(dlIndex - 1));
-  nextBtn.addEventListener('click', () => goToDream(dlIndex + 1));
   jumpEl.addEventListener('change', (e) => goToDream(Number(e.target.value)));
 
   fetch('dreams.json')

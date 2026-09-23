@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>recipes</title>
+  <link rel="stylesheet" href="/kaia-base.css">
+  <link rel="stylesheet" href="/header.css">
+  <style>
+    body { font-size: 1.5rem; overflow-x: clip; }
+    html { scroll-behavior: smooth; }
+
+    /* one plain column, like an old homepage */
+    .recipe-page {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 2rem;
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 2.25rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.25rem;
+    }
+
+    .page-intro {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--text-soft);
+      line-height: 1.4;
+      margin-bottom: 1rem;
+    }
+
+    hr {
+      border: none;
+      border-top: 2px dashed var(--panel-border);
+      margin: 1.25rem 0;
+    }
+
+    a { color: var(--link); }
+
+    /* ── table of contents ── */
+    .toc {
+      font-size: 1.15rem;
+      line-height: 1.5;
+    }
+
+    .toc-label {
+      font-size: 1.2rem;
+      text-decoration: underline;
+      margin-bottom: 0.2rem;
+    }
+
+    /* retro bevelled buttons */
+    .toc ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+
+    .toc a {
+      display: inline-block;
+      padding: 0.2rem 0.75rem;
+      font-size: 1.1rem;
+      color: var(--button-text);
+      text-decoration: none;
+      background: var(--button-bg);
+      border: 3px solid;
+      /* light top/left, dark bottom/right = raised */
+      border-color: var(--head-b-shadow1) var(--panel-shadow) var(--panel-shadow) var(--head-b-shadow1);
+      box-shadow: 1px 1px 0 var(--text);
+    }
+
+    .toc a:hover { background: var(--button-bg-hover); }
+
+    /* pressed in — while clicking, and for the recipe on top of the pile */
+    .toc a:active,
+    .toc a.pressed {
+      border-color: var(--panel-shadow) var(--head-b-shadow1) var(--head-b-shadow1) var(--panel-shadow);
+      box-shadow: none;
+      background: var(--selected-bg);
+      color: var(--selected-text);
+      transform: translate(1px, 1px);
+    }
+
+    /* ── recipe cards (index-card look) ── */
+    .recipe-card {
+      position: relative;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 1.6rem,
+          var(--update-line) 1.6rem,
+          var(--update-line) calc(1.6rem + 1px)
+        ),
+        var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      box-shadow: 3px 3px 0 var(--panel-shadow);
+      padding: 1.25rem 1.25rem 1rem;
+      /* stacked on top of each other — position/tilt set by the script */
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      transition: transform 0.35s ease, opacity 0.35s ease,
+                  background-color 0.3s, border-color 0.3s;
+    }
+
+    /* shade for cards behind the front one — tinted with the theme's shadow color */
+    .recipe-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--panel-shadow);
+      opacity: var(--shade, 0);
+      pointer-events: none;
+      transition: opacity 0.35s ease, background 0.3s;
+    }
+
+    /* ── the pile ── */
+    .card-stack {
+      position: relative;
+      margin: 2rem 0 1rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .recipe-card { transition: none; }
+    }
+
+    /* bit of "tape" at the top */
+    .recipe-card::before {
+      content: "";
+      position: absolute;
+      top: -0.7rem;
+      left: 50%;
+      width: 5rem;
+      height: 1.3rem;
+      background: var(--panel-head);
+      opacity: 0.6;
+      transform: translateX(-50%) rotate(2deg);
+    }
+
+    .recipe-name {
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .recipe-img {
+      display: block;
+      max-width: 100%;
+      max-height: 20rem;
+      margin: 0 auto 0.75rem;
+      border: 4px solid #fff;
+      box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    /* stand-in until there's a real photo */
+    .recipe-img-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 70%;
+      height: 11rem;
+      margin: 0 auto 0.75rem;
+      border: 2px dashed var(--panel-border);
+      color: var(--text-soft);
+      font-size: 1rem;
+    }
+
+    .section-label {
+      font-size: 1.2rem;
+      text-decoration: underline;
+      margin-top: 0.6rem;
+    }
+
+    .recipe-card ul,
+    .recipe-card ol {
+      font-size: 1.1rem;
+      line-height: 1.45;
+      padding-left: 1.75rem;
+    }
+
+    .recipe-note {
+      font-size: 1.05rem;
+      color: var(--text-soft);
+      line-height: 1.4;
+      margin-top: 0.75rem;
+    }
+
+    .card-deco {
+      position: absolute;
+      width: 4rem;              /* default size, override per image if needed */
+      image-rendering: pixelated;
+      pointer-events: none;    
+    }
+
+    .deco-tl { top: -1rem;    left: -1rem; }
+    .deco-tr { top: -1rem;    right: -1rem; }
+    .deco-bl { bottom: -1rem; left: -1rem; }
+    .deco-br { bottom: -1rem; right: -1rem; }
+  </style>
+</head>
+
+<body>
+  <script src="header.js"></script>
+
+<main class="recipe-page" id="top">
+
+  <div class="panel">
+    <div class="panel-body toc">
+      <ul>
+        <li><a href="#molassescookie">ginger snap cookies</a></li>
+        <li><a href="#cinnaroll">cinnamon rolls</a></li>
+        <li><a href="#buttspie">cinnamon butterscotch pie</a></li>
+        <li><a href="#bluejam">blueberry jam</a></li>
+        <li><a href="#cheesecake">cheesecake</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="card-stack" id="card-stack">
+
+  <div class="recipe-card" id="molassescookie">
+  <img class="card-deco deco-tl" src="/assets/nekoatsume.gif" alt="" style="width: 6rem;">
+  <img class="card-deco deco-br" src="/assets/nekoatsume2.gif" alt="" style="width: 6rem;">
+    <h2 class="recipe-name">ginger snaps! (a.k.a molasses cookies)</h2>
+
+    <!--<img class="recipe-img" src="assets/..." alt="...">
+    <div class="recipe-img-placeholder">photo goes here</div>-->
+
+    <div class="section-label">ingredients:</div>
+    <ul>
+      <li>3/4 cup margarine melted</li>
+      <li>1 cup white sugar</li>
+      <li>1 egg</li>
+      <li>1/4 cup molasses</li> 
+      <li>2 cups flour</li>
+      <li>2 teaspoons baking soda</li>
+      <li>1/2 teaspoon salt</li>
+      <li>1 teaspoon ground cinnamon</li>
+      <li>1/2 teaspoon ground cloves</li>
+      <li>1/2 teaspoon ground ginger</li>
+      <li>white sugar (for rolling)</li>
+    </ul>
+
+    <div class="section-label">steps:</div>
+    <ol>
+      <li>combine all ingredients (except for rolling sugar). combine wet and dry ingredients seperately and then combine both mixtures.</li>
+      <li>chill the dough for an hour</li>
+      <li>preheat oven to 375 F</li>
+      <li>roll dough into like walnut sized balls, then roll them in that white sugar. place onto ungreased baking sheets</li>
+      <li>bake for 8-10 minutes in the oven, OR until the tops look cracked.</li>
+      <li>let chill on wire rack</li>
+      <li>enjoy!</li>
+    </ol>
+
+    <p class="recipe-note">I first made this recipe for an extra credit project in 8th grade. and now, I make them every holiday season for my family! Also my old 
+      photography teacher loved these cookies a lot.
+    </p>
+  </div>
+
+  <div class="recipe-card" id="cinnaroll">
+    <h2 class="recipe-name">cinnamon rolls!</h2>
+
+    <div class="section-label">ingredients:</div>
+    <ul>
+      <li>ill get to transcribing this from my notebook soon. one of my fav seasonal recipes!</li>
+    </ul>
+
+    <div class="section-label">steps:</div>
+    <ol>
+      <li></li>
+    </ol>
+
+    <p class="recipe-note"></p>
+  </div>
+
+  <div class="recipe-card" id="buttspie">
+    <h2 class="recipe-name">cinnamon butterscotch pie</h2>
+
+    <div class="section-label">ingredients:</div>
+    <ul>
+      <li>ill get to transcribing this from my notebook soon! a treat i make for my friends.</li>
+    </ul>
+
+    <div class="section-label">steps:</div>
+    <ol>
+      <li></li>
+    </ol>
+
+    <p class="recipe-note"></p>
+  </div>
+
+  <div class="recipe-card" id="bluejam">
+    <h2 class="recipe-name">blueberry jam/filling</h2>
+
+    <div class="section-label">ingredients:</div>
+    <ul>
+      <li>ill get to transcribing this from my notebook soon, this one is scattered between like 4 diff pages...</li>
+    </ul>
+
+    <div class="section-label">steps:</div>
+    <ol>
+      <li></li>
+    </ol>
+
+    <p class="recipe-note"></p>
+  </div>
+
+  <div class="recipe-card" id="cheesecake">
+  <img class="card-deco deco-br" src="/assets/balloon.gif" alt="" style="width: 4rem; padding-bottom: 1rem;">
+    <h2 class="recipe-name">cheesecake</h2>
+
+    <div class="section-label">ingredients:</div>
+    <ul>
+      <li>wouldn't you like to have this one... ill get to transcribing this from my notebook soon as well!</li>
+    </ul>
+
+    <div class="section-label">steps:</div>
+    <ol>
+      <li></li>
+    </ol>
+
+    <p class="recipe-note"></p>
+  </div>
+
+  </div>
+
+</main>
+
+<script>
+(function () {
+  const TILTS = [-0.4, 0.5, -0.2, 0.6, -0.5];
+  const MAX_VISIBLE = 3;
+  const PEEK_REM = 0.5;
+  const SHADE_STEP = 0.45;
+
+  const stack   = document.getElementById('card-stack');
+  const cards   = [...stack.querySelectorAll('.recipe-card')];
+  if (!cards.length) return;
+
+  let order = cards.map((_, i) => i); 
+
+  function layout() {
+    order.forEach((ci, depth) => {
+      const c = cards[ci];
+      const shown = depth < MAX_VISIBLE;
+      const peek = Math.min(depth, MAX_VISIBLE - 1) * PEEK_REM;
+      c.style.zIndex = cards.length - depth;
+      c.style.transform = `translate(${peek}rem, ${peek}rem) rotate(${TILTS[ci % TILTS.length]}deg)`;
+      c.style.opacity = shown ? '1' : '0';
+      c.style.setProperty('--shade', Math.min(depth, MAX_VISIBLE - 1) * SHADE_STEP);
+      c.style.pointerEvents = depth === 0 ? 'auto' : 'none';
+      c.setAttribute('aria-hidden', depth === 0 ? 'false' : 'true');
+    });
+    const frontId = '#' + cards[order[0]].id;
+    document.querySelectorAll('.toc a').forEach(a => {
+      a.classList.toggle('pressed', a.getAttribute('href') === frontId);
+    });
+  }
+
+  function sizeStack() {
+    let h = 0;
+    cards.forEach(c => { h = Math.max(h, c.offsetHeight); });
+    stack.style.height = `calc(${h}px + ${(MAX_VISIBLE - 1) * PEEK_REM}rem)`;
+  }
+
+  document.querySelectorAll('.toc a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const idx = cards.findIndex(c => '#' + c.id === link.getAttribute('href'));
+      if (idx === -1) return;
+      e.preventDefault();
+      while (order[0] !== idx) order.push(order.shift());
+      layout();
+      stack.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  layout();
+  sizeStack();
+  window.addEventListener('resize', sizeStack);
+  window.addEventListener('load', sizeStack); 
+})();
+</script>
+
+<footer>haphazardly stitched together from the scrapbook page as a template!<br>kaia © 2022 - whenever i stop reusing code</footer>
+
+</body>
+</html>

@@ -34,6 +34,16 @@ body {
 .gallery-panel {
   flex: 1;
   min-width: 0; /* lets the gallery grid shrink instead of overflowing */
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 8rem); /* EDIT ME: height of the scrollable gallery column */
+}
+
+/* only the drawings scroll — the panel title stays put */
+.gallery-panel .panel-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 /* stack instead of squeezing side by side on narrow viewports */
@@ -44,6 +54,10 @@ body {
   .draw-panel {
     flex-basis: auto;
     width: 100%;
+  }
+  .gallery-panel {
+    width: 100%;
+    height: 70vh; /* EDIT ME: gallery height when stacked on phones */
   }
 }
 

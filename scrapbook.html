@@ -9,13 +9,6 @@
   <style>
     body {
       font-size: 1.5rem;
-      background-image: url('rework/assets/general/bkg4.png');
-      background-repeat: repeat;
-    }
-
-    body.dark-mode {
-      background-color: #11151a;
-      background-blend-mode: multiply;
     }
 
     :root {
@@ -464,6 +457,18 @@
       .lb-arrow { align-self: auto; }
       .lb-polaroid { transform: none; }
     }
+
+    .card-deco {
+      position: absolute;
+      width: 4rem;              /* default size, override per image if needed */
+      image-rendering: pixelated;
+      pointer-events: none;    
+    }
+
+    .deco-tl { top: -1rem;    left: -1rem; }
+    .deco-tr { top: -1rem;    right: -1rem; }
+    .deco-bl { bottom: -1rem; left: -1rem; }
+    .deco-br { bottom: -1rem; right: -1rem; }
   </style>
 </head>
 
@@ -476,6 +481,7 @@
     <aside class="sidebar">
 
       <div class="panel">
+      <img class="card-deco deco-br" src="/assets/cleaning.gif" alt="" style="width: 4rem;">
         <div class="panel-head">photo museum</div>
         <div class="panel-body">
           <p class="museum-intro">the photo museum! it is collection of photos and screenshots from everywhere that i wish to produly put on display. <br><br> yes. proudly.</p>
@@ -653,7 +659,8 @@ ROOMS.forEach((room, ri) => {
 
   const banner = document.createElement("div");
   banner.className = "room-banner";
-  banner.innerHTML = `<div class="room-banner-title">${room.label}</div><div class="room-banner-desc">${room.desc}</div>`;
+  banner.innerHTML = `<div class="room-banner-title">
+      <img class="card-deco deco-tr" src="/assets/aoldance.gif" alt="" style="width: 6rem;">${room.label}</div><div class="room-banner-desc">${room.desc}</div>`;
   section.appendChild(banner);
 
   const grid = document.createElement("div");

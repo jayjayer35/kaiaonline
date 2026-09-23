@@ -44,7 +44,7 @@
     .pull {
       background: var(--pull-bg);
       padding: 0.5rem 0.75rem;
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       color: var(--text);
       line-height: 1.5;
       margin: 0.75rem 0;
@@ -65,7 +65,7 @@
       display: flex;
       gap: 0.6rem;
       align-items: flex-start;
-      font-size: 1.1rem;
+      font-size: 1rem;
       color: var(--text);
       line-height: 1.45;
       transition: color 0.3s;
@@ -77,7 +77,7 @@
       height: 1.8rem;
       background: var(--panel-head);
       color: #fff;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: bold;
       display: flex;
       align-items: center;
@@ -109,7 +109,7 @@
       background: var(--panel-head);
       border-bottom: 1px solid var(--panel-head-b);
       padding: 0.1rem 0.5rem;
-      font-size: 1.2rem;
+      font-size: 1.rem;
       font-weight: bold;
       letter-spacing: 0.1rem;
       color: #fff;
@@ -192,33 +192,27 @@
     }
 
     /* ── 88x31 buttons ── */
-    .btn-filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.3rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .btn-filter-tab {
-      font-family: 'NDS', monospace, sans-serif;
-      font-size: 1.1rem;
-      padding: 0.1rem 0.5rem;
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      box-shadow: 1px 1px 0 var(--panel-shadow);
+    .btn-section-label {
+      font-size: 1.5rem;
       color: var(--text);
-      cursor: pointer;
-      letter-spacing: 0.05em;
-      transition: background 0.1s, color 0.1s, border-color 0.3s;
+      margin: 1rem 0 0.4rem;
     }
 
-    .btn-filter-tab:hover  { background: rgba(182,198,223,0.3); }
-    .btn-filter-tab.active {
-      background: var(--panel-head);
-      color: #fff;
-      border-color: var(--panel-head-b);
-      box-shadow: 1px 1px 0 var(--panel-shadow);
+    .btn-divider {
+      border: none;
+      border-top: 1px dashed var(--divider);
+      margin: 1.25rem 0 0;
     }
+
+    .other-links {
+      font-size: 1rem;
+      line-height: 1.5;
+      list-style: none;
+      padding-left: 1rem;
+      color: var(--text);
+    }
+
+    .other-links a { color: var(--link); }
 
     .button-grid {
       display: flex;
@@ -266,7 +260,6 @@
     }
 
     .badge-wrap:hover::after { opacity: 1; }
-    .badge-wrap.hidden        { display: none; }
 
     /* ── responsive ── */
     @media (max-width: 52rem) {
@@ -309,6 +302,9 @@
                 </p>
                 <p><br>
                   be human, create art.
+                </p>
+                <p>
+                  <em>p.s. - look ma, im <a href="https://jamesg.blog/2026/07/09/75-reasons-to-start-a-personal-website">famous!</a></em>
                 </p>
               </div>
             </div>
@@ -411,24 +407,17 @@
 
 
     <div class="panel">
-      <div class="panel-head">buttons!</div>
+      <div class="panel-head">button hell</div>
       <div class="panel-body">
 
         <p class="manifesto-text">
-          <span style="text-decoration: underline;">neighbors</span> are sites that have put my button up! <br>
-          <span style="text-decoration: underline;">cool sites</span> are other peoples own pages! <br>
-          <span style="text-decoration: underline;">funsies</span> are buttons i like, that dont (usually) lead to another page.<br>
-          <em>(let me know by email or on the guestbook if you've included my button on your site!! ill add you here too!)</em>
+          linkrot... beware!!!!
+          <em>(let me know by email, or on the guestbook, if you've included my button on your site!! ill add you to my nneighbors!!)</em>
         </p>
 
-        <div class="btn-filters" id="btn-filters" style="padding-top: .5rem;">
-          <button class="btn-filter-tab active" data-filter="all">all</button>
-          <button class="btn-filter-tab" data-filter="neighbor">neighbors</button>
-          <button class="btn-filter-tab" data-filter="sites">cool sites</button>
-          <button class="btn-filter-tab" data-filter="fun">funsies</button>
-        </div>
-
-        <div class="button-grid" id="button-grid" style="max-height: 10rem; overflow-y: auto;">
+        <!-- EDIT ME: each section is its own grid, add a .badge-wrap to whichever one it belongs in -->
+        <div class="btn-section-label">neighbors</div>
+        <div class="button-grid">
 
           <div class="badge-wrap" data-label="hey this is me! feel free to hotlink on the img!" data-cat="neighbor">
             <a href="https://kaia.starscene.com" target="_blank" rel="noopener">
@@ -438,11 +427,6 @@
           <div class="badge-wrap" data-label="Liz's place!" data-cat="neighbor">
             <a href="https://adnyx.nekoweb.org/" target="_blank" rel="noopener">
               <img src="/assets/buttons/sitelinks/adnyx_button.gif" alt="adynx's button" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="melonland forum!" data-cat="sites">
-            <a href="https://forum.melonland.net/" target="_blank" rel="noopener">
-              <img src="https://forum.melonland.net/images/MELONLAND-FORUM.GIF" alt="melps' button" style="image-rendering: pixelated;">
             </a>
           </div>
           <div class="badge-wrap" data-label="iDestyKK's Homepage!" data-cat="neighbor">
@@ -458,6 +442,22 @@
           <div class="badge-wrap" data-label="sillyfes" data-cat="neighbor">
             <a href="https://sillyfes.neocities.org/" target="_blank" rel="noopener">
               <img src="/assets/buttons/sitelinks/sillybutton.png" alt="sillyfes' button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="4377" data-cat="neighbor">
+            <a href="https://4377.neocities.org" target="_blank" rel="noopener">
+              <img src="/assets/buttons/sitelinks/4377.png" alt="4377's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+
+        </div>
+
+        <div class="btn-section-label">cool sites</div>
+        <div class="button-grid">
+
+          <div class="badge-wrap" data-label="melonland forum!" data-cat="sites">
+            <a href="https://forum.melonland.net/" target="_blank" rel="noopener">
+              <img src="https://forum.melonland.net/images/MELONLAND-FORUM.GIF" alt="melps' button" style="image-rendering: pixelated;">
             </a>
           </div>
           <div class="badge-wrap" data-label="lu's space, one of the first indie websites i stumbled across... a huge inspo!" data-cat="sites">
@@ -493,11 +493,6 @@
           <div class="badge-wrap" data-label="layercake's site" data-cat="sites">
             <a href="https://layercake.nekoweb.org/" target="_blank" rel="noopener">
               <img src="/assets/buttons/sitelinks/layercake3.gif" alt="layercake's button" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="4377" data-cat="neighbor">
-            <a href="https://4377.neocities.org" target="_blank" rel="noopener">
-              <img src="/assets/buttons/sitelinks/4377.png" alt="4377's button" style="image-rendering: pixelated;">
             </a>
           </div>
           <div class="badge-wrap" data-label="cyberdemon's site!" data-cat="sites">
@@ -560,6 +555,87 @@
               <img src="https://melps.neocities.org/limk2.jpg" alt="melps' button" style="image-rendering: pixelated;">
             </a>
           </div>
+          <div class="badge-wrap" data-label="massive 88x31 button list" data-cat="sites">
+            <a href="https://capstasher.neocities.org/88x31collection-page1" target="_blank" rel="noopener">
+              <img src="assets/buttons/sitelinks/the-largest-88x31-collection-2.png" alt="88x31 button archive" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="BLOODBATHSPITES website" data-cat="sites">
+            <a href="https://bloodbathspite.neocities.org/" target="_blank" rel="noopener">
+              <img src="https://bloodbathspite.neocities.org/button.gif" alt="bloodbathspite's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="feysound's site" data-cat="sites">
+            <a href="https://feysound.neocities.org/" target="_blank" rel="noopener">
+              <img src="assets/buttons/sitelinks/feysound.gif" alt="feysound's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="s1nez's site!" data-cat="sites">
+            <a href="https://dirk.horse/home" target="_blank" rel="noopener">
+              <img src="https://dirk.horse/BUTTON.gif" alt="dirk.horse's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="ophanim's site" data-cat="sites">
+            <a href="https://ophanim.neocities.org/" target="_blank" rel="noopener">
+              <img src="https://ophanimkei.com/ophanim.png" alt="ophanim's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="dizzy's bunny hell" data-cat="sites">
+            <a href="https://doctordizzy.space/" target="_blank" rel="noopener">
+              <img src="https://doctordizzy.space/meta/img/img_graphics/img_sg/dizzy.gif" alt="doctordizzy's site" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="Sky's House" data-cat="sites">
+            <a href="https://bigburger.neocities.org/main%20sites/home" target="_blank" rel="noopener">
+              <img src="https://bigburger.neocities.org/button.gif" alt="bigburgers button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="Celestial Delirium" data-cat="sites">
+            <a href="https://liyashi.neocities.org/" target="_blank" rel="noopener">
+              <img src="https://liyashi.neocities.org/websitebutton.png" alt="celestialdelirium's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="Kriemhilds Site" data-cat="sites">
+            <a href="https://kriemhilds.net/" target="_blank" rel="noopener">
+              <img src="https://kriemhilds.net/img/banner/kriemhilds.gif" alt="krimhilds' button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="sunnishinez's site, it has an amazing pvz theme! (it makes my brain happy)" data-cat="sites">
+            <a href="https://sunnishinez.neocities.org" target="_blank" rel="noopener">
+              <img src="https://sunnishinez.neocities.org/button.png" alt="sunnishinez button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="max's apartment" data-cat="sites">
+            <a href="https://maxpixels.moe/" target="_blank" rel="noopener">
+              <img src="https://max.nekoweb.org/images/button.png" alt="max's button" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="lazer bunny's site!" data-cat="sites">
+            <a href="https://lazer-bunny.neocities.org/" target="_blank" rel="noopener">
+              <img src="https://lazer-bunny.neocities.org/art_storage/site_buttons/Button_88x31.gif" alt="lazer bunny" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="the frutiger aero archive!" data-cat="sites">
+            <a href="https://frutigeraeroarchive.org/" target="_blank" rel="noopener">
+              <img src="https://frutigeraeroarchive.org/images/buttons/frutigeraeroarchive_button_2.png" alt="frutiget aero archive" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <div class="badge-wrap" data-label="Robin's Aviary" data-cat="sites">
+            <a href="https://robinsaviary.com" target="_blank" rel="noopener">
+              <img src="https://robinsaviary.com/robins-aviary.gif" alt="Robin's Aviary" style="image-rendering: pixelated;">
+            </a>
+          </div>
+          <!-- <div class="badge-wrap" data-label="" data-cat="sites">
+            <a href="" target="_blank" rel="noopener">
+              <img src="" alt="" style="image-rendering: pixelated;">
+            </a>
+          </div> -->
+
+        </div>
+
+        <div class="btn-section-label">random buttons</div>
+        <div class="button-grid">
+
           <div class="badge-wrap" data-cat="fun">
             <a><img src="/assets/america-ya-button.gif" alt="america ya!" style="image-rendering: pixelated;"></a>
           </div>
@@ -629,119 +705,124 @@
           <div class="badge-wrap" data-cat="fun">
             <a><img src="/assets/buttons/rec/wii.gif" style="image-rendering: pixelated;"></a>
           </div>
-          <div class="badge-wrap" data-label="massive 88x31 button list" data-cat="sites">
-            <a href="https://capstasher.neocities.org/88x31collection-page1" target="_blank" rel="noopener">
-              <img src="assets/buttons/sitelinks/the-largest-88x31-collection-2.png" alt="88x31 button archive" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="BLOODBATHSPITES website" data-cat="sites">
-            <a href="https://bloodbathspite.neocities.org/" target="_blank" rel="noopener">
-              <img src="https://bloodbathspite.neocities.org/button.gif" alt="bloodbathspite's button" style="image-rendering: pixelated;">
-            </a>
-          </div>
           <div class="badge-wrap" data-cat="fun">
             <a><img src="/assets/buttons/rec/kaomoji.gif" style="image-rendering: pixelated;"></a>
           </div>
           <div class="badge-wrap" data-cat="fun">
             <a><img src="/assets/buttons/rec/trans.png" style="image-rendering: pixelated;"></a>
           </div>
-          <div class="badge-wrap" data-label="feysound's site" data-cat="sites">
-            <a href="https://feysound.neocities.org/" target="_blank" rel="noopener">
-              <img src="assets/buttons/sitelinks/feysound.gif" alt="feysound's button" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="s1nez's site!" data-cat="sites">
-            <a href="https://dirk.horse/home" target="_blank" rel="noopener">
-              <img src="https://dirk.horse/BUTTON.gif" alt="dirk.horse's button" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="ophanim's site" data-cat="sites">
-            <a href="https://ophanim.neocities.org/" target="_blank" rel="noopener">
-              <img src="https://ophanimkei.com/ophanim.png" alt="ophanim's button" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="dizzy's bunny hell" data-cat="sites">
-            <a href="https://doctordizzy.space/" target="_blank" rel="noopener">
-              <img src="https://doctordizzy.space/meta/img/img_graphics/img_sg/dizzy.gif" alt="doctordizzy's site" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="Sky's House" data-cat="sites">
-            <a href="https://bigburger.neocities.org/main%20sites/home" target="_blank" rel="noopener">
-              <img src="https://bigburger.neocities.org/button.gif" alt="bigburgers button" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="Celestial Delirium" data-cat="sites">
-            <a href="https://liyashi.neocities.org/" target="_blank" rel="noopener">
-              <img src="https://liyashi.neocities.org/websitebutton.png" alt="celestialdelirium's button" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="Kriemhilds Site" data-cat="sites">
-            <a href="https://kriemhilds.net/" target="_blank" rel="noopener">
-              <img src="https://kriemhilds.net/img/banner/kriemhilds.gif" alt="krimhilds' button" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="sunnishinez's site, it has an amazing pvz theme! (it makes my brain happy)" data-cat="sites">
-            <a href="https://sunnishinez.neocities.org" target="_blank" rel="noopener">
-              <img src="https://sunnishinez.neocities.org/button.png" alt="sunnishinez button" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="max's apartment" data-cat="sites">
-            <a href="https://maxpixels.moe/" target="_blank" rel="noopener">
-              <img src="https://max.nekoweb.org/images/button.png" alt="max's button" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="lazer bunny's site!" data-cat="sites">
-            <a href="https://lazer-bunny.neocities.org/" target="_blank" rel="noopener">
-              <img src="https://lazer-bunny.neocities.org/art_storage/site_buttons/Button_88x31.gif" alt="lazer bunny" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="the frutiger aero archive!" data-cat="sites">
-            <a href="https://frutigeraeroarchive.org/" target="_blank" rel="noopener">
-              <img src="https://frutigeraeroarchive.org/images/buttons/frutigeraeroarchive_button_2.png" alt="frutiget aero archive" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <div class="badge-wrap" data-label="Robin's Aviary" data-cat="sites">
-            <a href="https://robinsaviary.com" target="_blank" rel="noopener">
-              <img src="https://robinsaviary.com/robins-aviary.gif" alt="Robin's Aviary" style="image-rendering: pixelated;">
-            </a>
-          </div>
-          <!-- <div class="badge-wrap" data-label="" data-cat="sites">
-            <a href="" target="_blank" rel="noopener">
-              <img src="" alt="" style="image-rendering: pixelated;">
-            </a>
-          </div> -->
 
         </div>
+
+        <hr class="btn-divider">
+
+        <!-- one <li> per link 
+        <div class="btn-section-label">other links</div>
+        <ul class="other-links">
+          <li><a href="https://example.com" target="_blank" rel="noopener">link name</a> - a little note about it</li>
+          <li><a href="https://example.com" target="_blank" rel="noopener">link name</a> - a little note about it</li>
+        </ul>-->
+
       </div>
     </div>
 
+
+    <div class="panel">
+      <div class="panel-head">link hell</div>
+      <div class="panel-body">
+        <p class="manifesto-text">
+          various resources you can use to get started!!!!!! i have used a handful of these.
+        </p>
+        <div class="btn-section-label">tutorials</div>
+        <ul class="other-links">
+          <li><a href="https://petrapixel.neocities.org/coding/" target="_blank" rel="noopener">petra's various tutorials</a> - many different things to pick from here!</li>
+          <li><a href="https://neocities.org/tutorials" target="_blank" rel="noopener">the official neocities tutorial</a> - neocities is a great place to start, btw.</li>
+          <li><a href="https://neocities.org/" target="_blank" rel="noopener">the official neocities site</a></li>
+        </ul>
+        <div class="btn-section-label">templates</div>
+        <ul class="other-links">
+          <li><a href="https://petrapixel.neocities.org/coding/layout-base-code" target="_blank" rel="noopener">petrapixel</a> - seriously, she is a saint when it comes to webdev stuff, learned a decent bit here!</li>
+          <li><a href="https://nomnomnami.com/templates/" target="_blank" rel="noopener">nomnomnami templates</a></li>
+          <li><a href="https://repth.neocities.org/theme" target="_blank" rel="noopener">repth themes</a></li>
+          <li><a href="https://foollovers.com/te/index-nf00.html" target="_blank" rel="noopener">fool lovers</a> - templates</li>
+          <li><a href="https://eggramen.neocities.org/code/css_testpages" target="_blank" rel="noopener">eggramen</a> - i really like the name of the site... also good templates!</li>
+          <li><a href="https://www.createblog.com/layouts/" target="_blank" rel="noopener">createblog's templates</a></li>
+        </ul>
+        <div class="btn-section-label">graphics</div>
+        <ul class="other-links">
+          <li><a href="https://kiunlo.neocities.org/cursors" target="_blank" rel="noopener">web cursors!</a> - i considered using these... but wanted to try and make my own instead.</li>
+          <li><a href="https://gifcities.org/" target="_blank" rel="noopener">old gif searcher</a></li>
+          <li><a href="https://www.mazeguy.net/smilies.html" target="_blank" rel="noopener">mazeguy smilies</a></li>
+          <li><a href="https://forestcake.carrd.co/" target="_blank" rel="noopener">ryder favicons</a></li>
+          <li><a href="https://oceancake.carrd.co/" target="_blank" rel="noopener">ryder graphics</a></li>
+          <li><a href="https://fairytrash.neocities.org/portal/oldweb" target="_blank" rel="noopener">fairytrash graphics</a> - all types of graphics! blinkies, buttons, stamps galore</li>
+          <li><a href="https://cutekawaiiresources.wordpress.com/" target="_blank" rel="noopener">Cute Kawaii Resources</a></li>
+          <li><a href="https://textures.neocities.org/" target="_blank" rel="noopener">TextureTown!</a> - melon's various patterns and textures for backgrounds and stuff, great for repeating tiles/backgrounds</li>
+          <li><a href="https://hekate2.github.io/website-tools/archive/backgrounds.html" target="_blank" rel="noopener">hekate background archive</a></li>
+        </ul>
+        <div class="btn-section-label">blinkies!</div>
+        <ul class="other-links">
+          <li><a href="https://adriansblinkiecollection.neocities.org/" target="_blank" rel="noopener">Adrian's Blinkie Collection</a></li>
+          <li><a href="https://blinkiecollecti0n.neocities.org/" target="_blank" rel="noopener">Blinkie Collection</a></li>
+          <li><a href="https://blinkies.cafe/" target="_blank" rel="noopener">blinkies.cafe</a> - blinkie generator</li>
+        </ul>
+        <div class="btn-section-label">stamps/buttons/badges</div>
+        <ul class="other-links">
+          <li><a href="https://idbuttons.neocities.org/database/?" target="_blank" rel="noopener">fluffmoth's identity buttons</a></li>
+          <li><a href="https://rentry.co/pixelflags" target="_blank" rel="noopener">pixel pride flags</a></li>
+          <li><a href="https://raining-starss.neocities.org/stampcollection" target="_blank" rel="noopener">Raining Starss Stamps</a></li>
+          <li><a href="https://web.badges.world/" target="_blank" rel="noopener">Web Badges World</a></li>
+          <li><a href="https://anlucas.neocities.org/88x31Buttons" target="_blank" rel="noopener">A.N. Lucas 88x31 button archive</a></li>
+          <li><a href="https://cyber.dabamos.de/88x31/" target="_blank" rel="noopener">The 88x31 GIF Collection</a> - (Part 1)</li>
+          <li><a href="" target="_blank" rel="noopener"></a></li>
+        </ul>
+        <div class="btn-section-label">html/css/js thingies</div>
+        <ul class="other-links">
+          <li><a href="https://developer.mozilla.org/en-US/" target="_blank" rel="noopener">Mozilla Developer Network</a> - tutorials for CSS, JS, and HTML.</li>
+          <li><a href="https://status.cafe/" target="_blank" rel="noopener">status.cafe</a> - you know what this is.</li>
+          <li><a href="https://github.com/biancarosa/lastfm-last-played" target="_blank" rel="noopener">last.fm last played</a></li>
+          <li><a href="https://kallistero.neocities.org/creation/effects-maker/" target="_blank" rel="noopener">Kallistero's Effect Customizer</a> - cool effects for backgrounds</li>
+          <li><a href="https://rssguide.neocities.org/" target="_blank" rel="noopener">RSS Setup</a> - i have yet to get around to this...</li>
+          <li><a href="https://www.magicpattern.design/tools/css-backgrounds" target="_blank" rel="noopener">CSS background patterns</a></li>
+
+          <li><a href="https://botoxparty.github.io/XP.css/" target="_blank" rel="noopener">xp.css</a> - Windows XP CSS Library</li>
+          <li><a href="https://jdan.github.io/98.css/" target="_blank" rel="noopener">98.css</a> - Windows 98 CSS Library</li>
+          <li><a href="https://khang-nd.github.io/7.css/" target="_blank" rel="noopener">7.css</a> - Windows 7 CSS Library</li>
+          <li><a href="https://sakofchit.github.io/system.css/" target="_blank" rel="noopener">system.css</a> - Apple's System OS CSS Library</li>
+          <li><a href="https://ianlunn.github.io/Hover/" target="_blank" rel="noopener">hover.css</a> - a collections of hover effects you can use</li>
+          <li><a href="https://scripted.neocities.org/" target="_blank" rel="noopener">Scripted's Resources</a> - various code snippets for you to steal and use and learn from</li>
+          <li><a href="" target="_blank" rel="noopener"></a> - </li>
+        </ul>
+        <div class="btn-section-label">misc resources</div>
+        <ul class="other-links">
+          <li><a href="https://wordtohtml.net/" target="_blank" rel="noopener">Word to HTML</a> - conver text files to html</li>
+          <li><a href="https://vert.sh/" target="_blank" rel="noopener">vert.sh</a> - best file converter. hands down</li>
+          <li><a href="https://lostletters.neocities.org/resources/" target="_blank" rel="noopener">lost letters</a></li>
+          <li><a href="" target="_blank" rel="noopener"></a> - </li>
+        </ul>
+        <div class="btn-section-label">tools</div>
+        <ul class="other-links">
+          <li><a href="https://ahrefs.com/backlink-checker/" target="_blank" rel="noopener">Backlink Checker</a></li>
+          <li><a href="https://petrapixel.neocities.org/coding/git-tutorial" target="_blank" rel="noopener">Git Tutorial</a> - "thank you Petra" we all say in unison</li>
+          <li><a href="https://relt-1.github.io/app/" target="_blank" rel="noopener">Windows Error Message Creator</a></li>
+          <li><a href="" target="_blank" rel="noopener"></a> - </li>
+          <li><a href="" target="_blank" rel="noopener"></a> - </li>
+          <li><a href="" target="_blank" rel="noopener"></a> - </li>
+        </ul>
+        <div class="btn-section-label">manifestos, articles, and the such</div>
+        <ul class="other-links">
+          <li><a href="https://justinjackson.ca/webmaster/" target="_blank" rel="noopener">I am a fucking webmaster</a></li>
+          <li><a href="https://neonaut.neocities.org/cyber/webrings/" target="_blank" rel="noopener">The State of Webrings</a> - writing on webrings, and a list of some!</li>
+          <li><a href="https://lu.tiny-universes.net/indiewebmanifesto.html" target="_blank" rel="noopener">The Indie Web Manifesto</a></li>
+          <li><a href="https://jamesg.blog/2026/07/09/75-reasons-to-start-a-personal-website" target="_blank" rel="noopener">75 reasons to start a personal website</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </main>
 
 <footer>for humans by humans &lt;3 <br>kaia © 2022 - til the web is entirely explored!</footer>
 
-<script>
-/* ── 88x31 filter tabs ── */
-const filters   = document.getElementById("btn-filters");
-const allBadges = document.querySelectorAll(".badge-wrap");
-
-filters.addEventListener("click", e => {
-  const tab = e.target.closest(".btn-filter-tab");
-  if (!tab) return;
-
-  document.querySelectorAll(".btn-filter-tab").forEach(t => t.classList.remove("active"));
-  tab.classList.add("active");
-
-  const cat = tab.dataset.filter;
-  allBadges.forEach(badge => {
-    if (cat === "all" || badge.dataset.cat === cat) {
-      badge.classList.remove("hidden");
-    } else {
-      badge.classList.add("hidden");
-    }
-  });
-});
-</script>
 
 </body>
 </html>

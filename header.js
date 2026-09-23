@@ -4,6 +4,7 @@
   const ALERT_TEXT = "";
 
   const PLAYLIST = [
+    // comment out whichever songs i dont want in the playlist
     //{ file: "/music/again.mp3",  name: "again, someday - kaiasei" },
     //{ file: "/music/moonsetter.mp3",  name: "Moonsetter - Homestuck" },
     //{ file: "/music/ki.mp3",  name: "Ki - C418" },
@@ -39,7 +40,7 @@
   const DEFAULT_VOL = 0.03;           // 0.0 – 1.0
 
 
-  // ── UI SOUNDS ───────────────────────────────────────────────────────────────
+  // ui sounds
   const SOUNDS = {
     enabled: true,
     volume: 0.2,
@@ -66,7 +67,7 @@
     },
   };
 
-  // ── NAV STRUCTURE ───────────────────────────────────────────────────────────
+  // nav structure
   const NAV = [
     { label: "home", href: "/indexnew.html", plain: true },
     {
@@ -74,21 +75,22 @@
       children: [
         { label: "the webmistress",     href: "/kaia.html" },
         { label: "the blog",     href: "/blog/index.html" },
+        { label: "scrapbook",   href: "/scrapbook.html" },
         { label: "friends", badge: "",
           submenu: [
             { label: "memory vids", href: "/memoryvids.html"},
             { label: "hall of messages (wip)", href: "/msgs.html" },
           ]
         },
+        { label: "cliffside sunset", href: "/undertale/index.html", pauseMusic: true },
       ],
       
     },
     {
       label: "for u",
       children: [
-        { label: "scrapbook",   href: "/scrapbook.html" },
         { label: "music", href: "/mymusic.html", badge: "" },
-        { label: "recipes (wip)",   href: "/myrecipes.html" },
+        { label: "recipes (wip)",   href: "/recipes.html" },
         { label: "web projects", href: "/mywebdev.html" },
       ],
     },
@@ -102,7 +104,7 @@
           submenu: [
             { label: "outer wilds", href: "/wilds.html" },
             { label: "megpoid gumi", href: "/gumi.html" },
-            { label: "gaster (WIP)", href: "/gaster.html" },
+            { label: "deltarune (wip)", href: "/deltarune.html", pauseMusic: true  },
           ],
         },
         { label: "site archives",
@@ -114,31 +116,31 @@
         { label: "old update log", href: "/ofb/updates.html" },
           ]
         },
-        { label: "stamps (WIP)",   href: "stamps.html" },
       ],
     },
     {
       label: "other",
       children: [
+        { label: "starwalker",  href: "/ofb/starwalker.html" },
         { label: "404", href: "/404.html" },
         { label: "landing", href: "/index.html" },
       ],
     },
   ];
 
-  // ── APPLY SAVED THEME ───────────────────────────────────────────────────────
+  // apply theme
   const savedTheme = localStorage.getItem("kaia-theme");
   if (savedTheme === "dark") document.body.classList.add("dark-mode");
 
-  // ── SITE COLOR THEME ────────────────────────────────────────────────────────
-  // Set to "fall" to switch the whole site to the pastel/deep-orange palette
-  // (defined as body.theme-fall / body.dark-mode.theme-fall overrides in
-  // header.css and kaia-base.css). Set to "default" to go back to blue.
+  // site color theme
+  // set to "fall" to switch the whole site to autumn color pallette
+  // (body.theme-fall / body.dark-mode.theme-fall overrides in
+  // header.css and kaia-base.css). set "default" to restore
   const SITE_THEME = "fall";
   //const SITE_THEME = "default";
   if (SITE_THEME === "fall") document.body.classList.add("theme-fall");
 
-  // ── STYLES ──────────────────────────────────────────────────────────────────
+  // style
   function injectStyles() {
   if (document.getElementById("kaia-header-styles")) return;
 
@@ -152,7 +154,7 @@
 
   // egg room nav chance
   const EGG_CHANCE = 0.01;
-  const EGG_HREF   = "/egg.html";
+  const EGG_HREF   = "/khdjnerdwexr78r762/egg.html";
   function maybeRedirectToEgg(e) {
     const dest = e.currentTarget.getAttribute("href");
     if (dest === EGG_HREF) return; 
@@ -162,7 +164,7 @@
     }
   }
 
-  // ── BUILD HEADER DOM ────────────────────────────────────────────────────────
+  // make header
   function buildHeader() {
     const bar = document.createElement("header");
     bar.id = "kaia-single-bar";
@@ -267,6 +269,7 @@
             a.addEventListener("click",      () => window.kaiaSound.play("click"));
             a.addEventListener("click",      maybeRedirectToEgg);
             a.addEventListener("mouseenter", () => window.kaiaSound.play("hover"));
+            if (child.pauseMusic) a.addEventListener("click", pauseMusic);
             menu.appendChild(a);
           }
         });
@@ -315,7 +318,6 @@
       </div>
     `;
 
-    // rotating ticker — centred absolutely inside the bar row
     const tickerRow = document.createElement("div");
     tickerRow.id = "kaia-ticker-row";
     tickerRow.innerHTML = `
@@ -328,7 +330,7 @@
     barRow.appendChild(statWrap);
     bar.appendChild(barRow);
 
-    // music row
+    // music
     if (PLAYLIST.length > 0) {
       const musicRow = document.createElement("div");
       musicRow.id = "kaia-music-row";
@@ -367,30 +369,17 @@
     return bar;
   }
 
-  // ── MUSIC PLAYER ────────────────────────────────────────────────────────────
-  // Seamless cross-page playback strategy:
-  //   - On every timeupdate (fires ~4x/sec), we write currentTime to localStorage.
-  //   - On page load we read that saved time and seek immediately via
-  //     "loadedmetadata" so the audio resumes at the exact position.
-  //   - We also record a wall-clock timestamp alongside the saved time so we can
-  //     compensate for the few hundred ms of page-load overhead and seek even
-  //     more accurately.
-  //   - play() is attempted unconditionally when wasPlaying=true; modern browsers
-  //     permit this when the user has previously interacted with the origin.
-  //   - PLAYLIST entries: { file: "/music/foo.mp3", name: "Display Name" }
-  //     The `file` path is never shown to the user — only `name` is displayed.
-  //   - Shuffle is on by default; previous button walks actual play history.
-  //   - Song-select dropdown lists all tracks by display name.
+  // ── kaia music player new and improves 100000x better than the last ────────────────────────────────────────────────────────────
 
   let _audio      = null;
-  let _shuffleQ   = [];   // PLAYLIST indices in shuffle order
+  let _shuffleQ   = [];   // playlist makes in shuffle order
   let _qPos       = 0;    // current position in _shuffleQ
-  let _history    = [];   // stack of _shuffleQ positions we've actually played
+  let _history    = [];   // history of _shuffleQ positions its actually played
   let _histPos    = -1;   // pointer into _history (-1 = live / at the front)
   let _playing    = false;
   let _repeat     = false;  // loop current track when true
 
-  // Fisher-Yates shuffle
+  // shuffle code i ripped from someone elses code
   function shuffle(arr) {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -407,7 +396,7 @@
       history:   _history,
       histPos:   _histPos,
       time:      _audio ? _audio.currentTime : 0,
-      savedAt:   Date.now(),           // wall-clock snapshot for drift correction
+      savedAt:   Date.now(),          
       volume:    _audio ? _audio.volume : DEFAULT_VOL,
       playing:   _playing,
       repeat:    _repeat,
@@ -421,6 +410,15 @@
       if (!raw) return null;
       return JSON.parse(raw);
     } catch { return null; }
+  }
+
+  // pause music (used by nav links flagged with pauseMusic: true)
+  function pauseMusic() {
+    if (!_playing || !_audio) return;
+    _audio.pause();
+    _playing = false;
+    updateUI();
+    saveState();
   }
 
   function currentTrackIdx() {
@@ -454,7 +452,7 @@
     PLAYLIST.forEach((track, i) => {
       const btn = document.createElement("div");
       btn.className = "ksb-song-option";
-      // Always show the display name — the file path is never exposed in the UI
+      // always show the display name 
       btn.textContent = track.name;
       btn.dataset.idx = i;
       btn.addEventListener("click", (e) => {
@@ -467,10 +465,10 @@
     });
   }
 
-  // Jump to a specific PLAYLIST index directly (bypasses shuffle order)
+  // jump to a specific PLAYLIST index directly
   function jumpToTrack(playlistIdx, seekTo) {
     const vol = _audio ? _audio.volume : DEFAULT_VOL;
-    // find it in shuffleQ or append it
+    // find it in shuffleQ or append 
     let qIdx = _shuffleQ.indexOf(playlistIdx);
     if (qIdx === -1) {
       _shuffleQ.push(playlistIdx);
@@ -491,7 +489,7 @@
       _histPos = -1;
     }
     _history.unshift(qIdx);
-    if (_history.length > 100) _history.pop(); // cap memory
+    if (_history.length > 100) _history.pop(); // cap memory, this might be overkill
   }
 
   function loadTrack(playlistIdx, seekTo, vol) {
@@ -503,9 +501,9 @@
     const volEl = document.getElementById("ksb-volume");
     if (volEl) volEl.value = _audio.volume;
 
-    // Seek to the saved position once metadata is ready.
-    // We also compensate for the small wall-clock gap since the state was saved
-    // so the audio resumes exactly where it left off even across page loads.
+    // goto saved position once metadata is ready.
+    // compensates for the small wall-clock gap since the state was saved
+    // audio needs to resume exactly where it left off even across page loads. IMPORTANT
     if (seekTo > 0) {
       _audio.addEventListener("loadedmetadata", () => {
         _audio.currentTime = Math.min(seekTo, _audio.duration || seekTo);
@@ -521,8 +519,6 @@
       }
     });
 
-    // Persist position frequently so cross-page resume is seamless.
-    // We write on every timeupdate (~4 Hz) rather than just every second.
     _audio.addEventListener("timeupdate", () => {
       if (_playing) saveState();
     });
@@ -533,7 +529,7 @@
   function goNext() {
     const vol = _audio ? _audio.volume : DEFAULT_VOL;
     if (_histPos > 0) {
-      // we stepped back previously — go forward through history
+      // we stepped back previously, go forward through history
       _histPos--;
       const trackIdx = _shuffleQ[_history[_histPos]];
       loadTrack(trackIdx, 0, vol);
@@ -541,7 +537,7 @@
       // normal advance: push current onto history, move queue forward
       pushHistory(_qPos);
       _qPos = (_qPos + 1) % _shuffleQ.length;
-      // when we exhaust the queue, reshuffle and extend (no repeat)
+      // when q exhausted, reshuffle and extend (no repeat)
       if (_qPos === 0) {
         const newShuffle = shuffle(PLAYLIST.map((_, i) => i));
         _shuffleQ = _shuffleQ.concat(newShuffle);
@@ -555,7 +551,7 @@
 
   function goPrev() {
     const vol = _audio ? _audio.volume : DEFAULT_VOL;
-    // If we're more than 3 s into the track, restart it first (standard behaviour)
+    // if more than 3 s into the track, restart it first
     if (_audio && _audio.currentTime > 3) {
       _audio.currentTime = 0;
       updateUI();
@@ -564,9 +560,9 @@
     }
     // Walk backwards through actual play history
     if (_histPos < 0) {
-      // Not yet walking history — push current position so we can come back forward
+      // Not yet walking history, push current position so we can come back forward
       pushHistory(_qPos);
-      _histPos = 1; // jump past the entry we just pushed (that's where we are now)
+      _histPos = 1; // jump past the entry we just pushed 
     } else {
       _histPos++;
     }
@@ -586,7 +582,7 @@
 
     const saved = loadState();
 
-    // Restore or initialise the shuffle queue
+    // Restore or initialize the shuffle queue
     if (saved && saved.shuffleQ && saved.shuffleQ.length > 0) {
       _shuffleQ = saved.shuffleQ;
       _qPos     = saved.qPos    || 0;
@@ -600,10 +596,6 @@
       _histPos  = -1;
     }
 
-    // Calculate the compensated seek position.
-    // savedAt is the wall-clock time when saveState() last ran.
-    // If we were playing, the song has been advancing while the page loaded,
-    // so we add the elapsed wall-clock time to get the correct position.
     let startTime = (saved && saved.time) ? saved.time : 0;
     if (saved && saved.playing && saved.savedAt) {
       const driftSec = (Date.now() - saved.savedAt) / 1000;
@@ -616,20 +608,19 @@
     loadTrack(currentTrackIdx(), startTime, startVol);
 
     // Attempt immediate resume.  Browsers permit this when the user has already
-    // interacted with the origin (which they have — they navigated here from
-    // another page on the same site).
+    // interacted with the origin
     if (wasPlaying) {
       _playing = true;
       _audio.play().catch(() => {
-        // Autoplay was blocked (e.g. first-ever visit with no prior interaction).
-        // Fall back to paused state; user can press play manually.
+        // Autoplay was blocked (first-ever visit with no prior interaction or LOSERS with autoplay off).
+        // fall back to paused state
         _playing = false;
         updateUI();
       });
       updateUI();
     }
 
-    // ── Controls ──────────────────────────────────────────────────────────────
+    // ── controls ──────────────────────────────────────────────────────────────
     const playBtn = document.getElementById("ksb-play");
     const prevBtn = document.getElementById("ksb-prev");
     const nextBtn = document.getElementById("ksb-next");
@@ -683,7 +674,7 @@
     }
   }
 
-  // ── GENERAL RUNTIME ─────────────────────────────────────────────────────────
+  // general navbar operations
   function startRuntime() {
     const themeBtn = document.getElementById("sb-theme-btn");
     const updateThemeIcon = () => {
@@ -759,9 +750,8 @@
 
     startMusicRuntime();
 
-    // ── ROTATING TICKER ───────────────────────────────────────────────────────
-    // Fetches /rotating-text.json and picks one random item to show for the
-    // duration of the page load — no cycling.
+    // random splash
+    // Fetch from /splashes.json and picks one random item to show for the
     const TICKER_SRC = "/splashes.json";
 
     (function startTicker() {
@@ -785,14 +775,14 @@
     })();
   }
 
-  // ── SPACER ──────────────────────────────────────────────────────────────────
+  // spacer
   let _spacer    = null;
   let _headerBar = null;
   function syncSpacer() {
     if (_spacer && _headerBar) _spacer.style.height = _headerBar.offsetHeight + "px";
   }
 
-  // ── INJECT ──────────────────────────────────────────────────────────────────
+  // inject
   function inject() {
     if (document.getElementById("kaia-single-bar")) return;
     injectStyles();
@@ -823,6 +813,7 @@
 
     const cornerLink = document.createElement('a');
     cornerLink.href = '/ofb/forest.html';
+    cornerLink.addEventListener('click', pauseMusic);
 
     const cornerImg = document.createElement('img');
 
@@ -910,14 +901,12 @@
       audio.volume = 0.5; // Half volume
 
       cornerImg.addEventListener('click', () => {
-          // Stop whatever is currently playing
+          // stop whatever is currently playing
           audio.pause();
           audio.currentTime = 0;
 
-          // Pick a new sound
           audio.src = sounds[Math.floor(Math.random() * sounds.length)];
 
-          // Play it
           audio.play();
       });
 
@@ -925,7 +914,7 @@
   }
 
 
-// flowery
+// YAM YAM
   if (Math.random() < 0.05) {
 
       const cornerImg = document.createElement('img');
@@ -947,7 +936,7 @@
       ];
 
       const audio = new Audio();
-      audio.volume = 0.25; // Half volume
+      audio.volume = 0.25;
 
       cornerImg.addEventListener('click', () => {
           audio.pause();
@@ -961,7 +950,7 @@
       document.body.appendChild(cornerImg);
   }
 
-  // ── FALLING LEAVES (fall decoration) ────────────────────────────────────────
+  // matter.js falling particle, i ripped from a site as well...
   const LEAVES_ENABLED  = true;
   const LEAF_MAX_COUNT  = 30;
   const LEAF_IMG_SRC    = "/assets/leaf.png";
