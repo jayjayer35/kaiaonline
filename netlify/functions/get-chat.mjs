@@ -16,8 +16,6 @@ export default async (req) => {
   const messages = (await store.get("messages", { type: "json" })) || [];
   const pin = (await store.get("pin", { type: "text" })) || "";
 
-  // /who: people who chatted in the last 24 hours. counted by (hashed) ip,
-  // names listed newest first
   const since = Date.now() - DAY;
   const people = new Set();
   const names = [];
@@ -25,11 +23,10 @@ export default async (req) => {
     const m = messages[i];
     if (m.timestamp < since) break;
     people.add(m.owner ? "kaia" : m.ipHash);
-    const shown = (m.owner ? "★" : "") + m.name;
+    const shown = m.name;
     if (!names.includes(shown) && names.length < 15) names.push(shown);
   }
 
-  // never send the ip hash back out
   const safe = messages.map(({ id, name, text, timestamp, owner, kind }) =>
     ({ id, name, text, timestamp, owner: !!owner, kind: kind || "msg" }));
 

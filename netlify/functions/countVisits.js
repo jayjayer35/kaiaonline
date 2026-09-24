@@ -7,12 +7,13 @@ const IPINFO_TOKEN = process.env.IPINFO_TOKEN;
 // Random messages
 function getRandomMessage() {
   const messages = [
-    "Hello!"
+    "Hello!",
+    "Look, a person!",
+    "Haia",
   ];
   return messages[Math.floor(Math.random() * messages.length)];
 }
 
-// GIFs
 const gifs = [
   /*"https://kaia.starscene.com/assets/spamton.gif",
   "https://kaia.starscene.com/assets/outtahere.gif",
@@ -31,7 +32,6 @@ const gifs = [
   "https://kaia.starscene.com/assets/jade-jade-harley.gif",*/
 ];
 
-// Get location from IP
 async function getLocation(ip) {
   if (ip === 'Unknown') return null;
   try {
@@ -50,23 +50,19 @@ async function getLocation(ip) {
 
 exports.handler = async (event) => {
   try {
-    // Get visitorID from query
     const visitorID = event.queryStringParameters?.visitorID;
     if (!visitorID) return { statusCode: 400, body: "Missing visitorID" };
 
-    // Get visitor IP
     const visitorIP =
       event.headers['x-nf-client-connection-ip'] ||
       event.headers['x-forwarded-for'] ||
       'Unknown';
 
-    // Get location
     const location = await getLocation(visitorIP);
     const locationText = location
       ? `${location.city}, ${location.region}, ${location.country}`
       : 'Unknown location';
 
-    // Ashburn VA bots
     if (
       location &&
       location.city.toLowerCase() === 'ashburn' &&

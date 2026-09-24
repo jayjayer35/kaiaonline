@@ -1,6 +1,4 @@
-// Checks the admin password without doing anything else.
-// Uses the same environment variable as delete-drawing — if yours is
-// named something other than ADMIN_PASSWORD, change it below to match.
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'method not allowed' };

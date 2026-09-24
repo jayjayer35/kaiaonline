@@ -155,20 +155,18 @@
     .term-time { color: var(--term-dim); }
     .term-name { color: var(--term-name); }
     .term-line.me .term-name { color: var(--term-me); }
-    /* kaia's own messages: a highlighted name chip in the site's selection colors */
-    .term-line.owner .term-tag,
-    .term-prompt.owner {
-      background: var(--selected-bg);
-      color: var(--selected-text);
-      border: 1px solid var(--button-bg-selected);
-      padding: 0 0.2rem;
-    }
-    .term-line.owner .term-name { color: var(--term-fg); }
+    /* kaia's own name: same format as everyone, just its own color.
+       purple, from the .tag.purple colors in kaia-base.css, so it stands
+       apart from the blue/pink/green names in every theme */
+    .panel.term { --term-owner: #8a55e0; }
+    body.dark-mode .panel.term { --term-owner: #d9bcff; }
+    .term-line.owner .term-name,
+    .term-prompt.owner { color: var(--term-owner); }
     .term-line.sys { color: var(--term-sys); }
     .term-line.err { color: var(--term-err); }
     .term-input input:disabled { opacity: 0.5; }
     /* in "name>" the name is a shade darker than the ">" */
-    .term-line.msg:not(.action):not(.roll):not(.owner) .term-tag,
+    .term-line.msg:not(.action):not(.roll) .term-tag,
     .term-label-name,
     .term-prompt-name {
       color: color-mix(in srgb, currentColor 62%, #000);
@@ -239,6 +237,26 @@
     }
     .term-input input::placeholder { color: var(--term-dim); }
     .panel.term:focus-within { border-color: var(--panel-head-b); }
+
+    /* ── latest guestbook drawing ── */
+    #latestDrawingPanel[hidden] { display: none; }
+    .latest-drawing { text-align: center; }
+    .latest-drawing img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: contain;
+      image-rendering: pixelated;
+      background: #fff;
+      border: 1px solid var(--panel-border);
+    }
+    .latest-drawing-caption {
+      margin-top: 0.25rem;
+      color: var(--text-soft);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
     /* ── status.cafe ── */
     .cafe-quote {
@@ -433,8 +451,7 @@
         <div class="panel-head">updates <span style="font-size:1rem;letter-spacing:0;">(scroll!)</span></div>
         <div class="panel-body">
           <div class="update-scroll">
-            <div class="update-entry"><div class="update-date">[7:11 AM - 9/24/26]</div>+ emergency fix, i broke the blog page lol. fixed now!</div>
-            <div class="update-entry"><div class="update-date">[5:16 AM - 9/24/26]</div>+ added spring color pallete! (going unused until.... spring, duh.)<br>~ this page has come a long way since last year when all the stuff was broken and new... thanks for sticking around! <br>im really proud of what i have made here, and what i continue to make here.</div>
+            <div class="update-entry"><div class="update-date">[10:19 AM - 9/24/26]</div>+ added live chat on main index page!<br>+ most recent drawing displays here on the right side now<br>+ fixed the blog page i accidentally broke<br>+ added spring color pallete! (going unused until.... spring, duh.)<br>~ this page has come a long way since last year when all the stuff was broken and new... thanks for sticking around! <br>im really proud of what i have made here, and what i continue to make here.</div>
             <div class="update-entry"><div class="update-date">[1:06 PM - 9/23/26]</div>+ actually finished my recipes page layout + 1 recipe now live there<br>+ indie web page updated with lots of links and slight layout change<br>+ updated webmistress page fuhuhu, games and music added to stuff i like<br>+ fixed drawings layout in guestbook<br>+ added <a href="/undertale/index.html">CLIFFSIDE SUNSET</a> (undertale) dialogue layout to KAIA tab.<br>+ moved <a href="/scrapbook.html">SCRAPBOOK</a> to KAIA tab<br>+ changed GASTER shrine to DELTARUNE shrine (still a wip)<br>+ a couple of blog posts since last update<br>+ fixed dark mode being wrong color on scrapbook page<br>+ hidden egg page now properly displays nav bar<br>+ hidden forest page now properly displays nav bar<br>~ working on myself, and getting better. almost a month no purging!</div>
             <div class="update-entry"><div class="update-date">[9:56 PM - 9/15/26]</div>+ madotsuki blog post<br>~ happy birthday undertale!</div>
             <div class="update-entry"><div class="update-date">[7:33 PM - 9/12/26]</div>+ new deltarune song on music player<br>+ couple of blog posts</div>
@@ -495,6 +512,14 @@
 
     </div><div class="col right">
 
+      <div class="panel" id="latestDrawingPanel" hidden>
+        <div class="panel-head">latest guest book drawing</div>
+        <div class="panel-body latest-drawing">
+          <img id="latestDrawingImg" alt="">
+          <div class="latest-drawing-caption" id="latestDrawingCaption"></div>
+        </div>
+      </div>
+
       <div class="panel">
         <div class="panel-head">&lt;3</div>
         <div class="panel-body">
@@ -537,6 +562,23 @@
 
 
   <script>
+    (async function () {
+      try {
+        const res = await fetch('/.netlify/functions/get-drawings', { cache: 'no-store' });
+        const { drawings } = await res.json();
+        if (!drawings || !drawings.length) return;
+        const d = drawings.reduce((a, b) => (b.timestamp > a.timestamp ? b : a));
+        const mins = Math.floor((Date.now() - d.timestamp) / 60000);
+        const ago = mins < 1 ? 'just now' : mins < 60 ? mins + 'm ago'
+          : mins < 1440 ? Math.floor(mins / 60) + 'h ago' : Math.floor(mins / 1440) + 'd ago';
+        const img = document.getElementById('latestDrawingImg');
+        img.src = d.image;
+        img.alt = 'drawing by ' + (d.name || 'anonymous');
+        document.getElementById('latestDrawingCaption').textContent = 'by ' + (d.name || 'anonymous') + ' · ' + ago;
+        document.getElementById('latestDrawingPanel').hidden = false;
+      } catch (e) {}
+    })();
+
     // rosie cam
     (function(){
       const n = Math.floor(Math.random()*13)+1;
@@ -693,15 +735,10 @@
   </script>
 
   <script>
-  /* ── live chat terminal ──
-     CHAT_API is where the netlify functions live. same as the drawing
-     guestbook: if the page and functions are on the same site, leave it.
-     if this page is on neocities, put your netlify site here instead,
-     e.g. 'https://yoursite.netlify.app/.netlify/functions' */
   (function () {
     const CHAT_API = '/.netlify/functions';
     const POLL_MS = 4000;
-    const KAIA_TZ = 'America/New_York'; // your time zone, for /time
+    const KAIA_TZ = 'America/New_York'; 
 
     const logEl = document.getElementById('termLog');
     const pinEl = document.getElementById('termPin');
@@ -709,9 +746,6 @@
     const input = document.getElementById('termText');
     const promptEl = document.getElementById('termPrompt');
     const statusEl = document.getElementById('termStatus');
-
-    // blocks any name containing "kaia", including k@ia, KA1A, k_a_i_a, etc.
-    // (post-chat.mjs does the same check, so it can't be skipped)
     function isReserved(name) {
       const squashed = name.toLowerCase()
         .replace(/[4@]/g, 'a')
@@ -723,25 +757,23 @@
     let nick = 'anon';
     try { nick = localStorage.getItem('kaiaChatNick') || 'anon'; } catch (e) {}
     if (isReserved(nick)) nick = 'anon';
-    // owner login: the server hands back a token after /login, kept on this device
     let ownerToken = null;
     try { ownerToken = localStorage.getItem('kaiaChatOwner'); } catch (e) {}
     let awaitingPassword = false;
     let lastSig = null;
     let sending = false;
-    let current = [];   // latest messages from the server (used by /delete)
-    let who = null;     // { count, names } for /who
-    let clearArmed = 0; // /clearchat needs to be typed twice
+    let current = []; 
+    let who = null;    
+    let clearArmed = 0; 
     const myIds = new Set();
-    const shown = new Map(); // id -> element
+    const shown = new Map(); 
 
     function setPrompt() {
       promptEl.classList.toggle('owner', !!ownerToken);
-      if (ownerToken) { promptEl.textContent = '★kaia>'; return; }
       promptEl.textContent = '';
       const n = document.createElement('span');
       n.className = 'term-prompt-name';
-      n.textContent = nick;
+      n.textContent = ownerToken ? 'kaia' : nick;
       promptEl.appendChild(n);
       promptEl.appendChild(document.createTextNode('>'));
     }
@@ -753,7 +785,6 @@
       if (message) sys(message);
     }
 
-    // [14:02] for today, [9/20 14:02] for older messages
     function stamp(ts) {
       const d = new Date(ts);
       const time = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
@@ -778,7 +809,6 @@
       return el;
     }
 
-    // "SYSTEM> " with the name part in its own span, so it can be darker
     function labelFor(name) {
       const label = document.createElement('span');
       label.className = 'term-label';
@@ -790,7 +820,6 @@
       return label;
     }
 
-    // system lines read "SYSTEM> ...", errors read "ERROR> ..."
     function sys(text, cls) {
       cls = cls || 'sys';
       const el = line(cls);
@@ -813,10 +842,9 @@
       return tag;
     }
 
-    // one server message -> one line. kinds: msg, action (/me), roll, announce
     function buildMessage(m) {
       const kind = m.kind || 'msg';
-      const who = (m.owner ? '★' : '') + m.name;
+      const who = m.name;
       const el = line('msg ' + kind + (m.owner ? ' owner' : myIds.has(m.id) ? ' me' : ''));
       el.dataset.id = m.id;
       el.appendChild(timeSpan(m.timestamp));
@@ -832,7 +860,6 @@
         el.appendChild(n);
         el.appendChild(document.createTextNode(m.text));
       } else {
-        // "* rosie waves" / "* rosie rolled 2d6: 3 + 5 = 8"
         n.appendChild(document.createTextNode('* '));
         n.appendChild(nameTag(who));
         el.appendChild(n);
@@ -841,7 +868,6 @@
       return el;
     }
 
-    // add new messages, and remove any that were deleted or cleared
     function renderMessages(messages) {
       const stick = nearBottom();
       const ids = new Set(messages.map(m => m.id));
@@ -861,7 +887,7 @@
     }
 
     async function poll() {
-      if (quiz) return; // paused during /egg, resumes when it ends
+      if (quiz) return;
       try {
         const res = await fetch(CHAT_API + '/get-chat', { cache: 'no-store' });
         if (!res.ok) throw new Error();
@@ -883,10 +909,6 @@
       }
     }
 
-    /* ── /egg questions ──
-       answered with 1 or 2. answers are only judged at the end, so nobody
-       learns which one they got wrong. edit freely: `a` is the correct
-       option for each. */
     const EGG_QUESTIONS = [
       { q: 'Do you remember the way here?',                 o: ['no, of course not?', 'maybe i do...'],               a: 1 },
       { q: 'Was the door open, or were you always inside?', o: ['the door was open', 'i was always inside'],          a: 2 },
@@ -897,10 +919,6 @@
       { q: 'Are you sure?',                                 o: ['without a shadow of a doubt.', 'uncertain.'],        a: 1 }
     ];
 
-    /* ── egg streak ──
-       ??? gets more impatient each time someone fails. the count is kept in
-       their browser. line 1 is the first failure, the last set repeats
-       forever after. GREETINGS play before the questions on later tries. */
     const EGG_FAIL_LINES = [
       ['You are not there yet.','Goodbye.'],
       ['Again?', 'I am not sure if you will ever get there.','Goodbye.'],
@@ -922,14 +940,13 @@
       try { localStorage.setItem('kaiaEggFails', String(n)); } catch (e) {}
     }
 
-    let quiz = null; // { index, answers, waiting }
+    let quiz = null; 
 
     const instant = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const wait = ms => new Promise(r => setTimeout(r, instant ? 0 : ms));
 
     const EGG_NAME = '???';
 
-    // a local-only chat line that looks exactly like a normal message
     function chatLine(name, text, cls) {
       const el = line('msg' + (cls ? ' ' + cls : ''));
       el.appendChild(timeSpan(Date.now()));
@@ -944,7 +961,6 @@
       return body;
     }
 
-    // ??? "types" its message one character at a time
     async function eggSay(text, speed = 45) {
       const body = chatLine(EGG_NAME, '');
       for (const ch of text) {
@@ -970,7 +986,6 @@
       lockInput(false);
     }
 
-    // pause the header.js music player (and anything else making sound)
     function stopMusic() {
       const media = new Set(window.__kaiaMedia || []);
       document.querySelectorAll('audio, video').forEach(m => media.add(m));
@@ -991,13 +1006,10 @@
 
     async function answerEgg(text) {
       if (!quiz || !quiz.waiting) return;
-      // their answer shows up as their own message: the option they picked,
-      // not the number (anything that isn't 1 or 2 is shown as typed)
       const valid = text === '1' || text === '2';
       const said = valid ? EGG_QUESTIONS[quiz.index].o[Number(text) - 1] : text;
-      // the mystery man's options vanish once they've answered
       if (valid && quiz.optionsLine) { quiz.optionsLine.remove(); quiz.optionsLine = null; }
-      if (ownerToken) chatLine('★kaia', said, 'owner'); else chatLine(nick, said, 'me');
+      if (ownerToken) chatLine('kaia', said, 'owner'); else chatLine(nick, said, 'me');
       if (!valid) { eggSay('1 OR 2.'); return; }
       quiz.waiting = false;
       quiz.answers.push(Number(text));
@@ -1010,7 +1022,7 @@
       if (passed) {
         await eggSay('. . .', 120);
         if (eggFails() >= 3) { await eggSay('finally.'); await wait(300); }
-        stopMusic(); // music cuts out only on success, as "proceed" appears
+        stopMusic(); 
         await eggSay('proceed', 240);
         setEggFails(0);
         try { sessionStorage.setItem('kaiaEgg', '1'); } catch (e) {}
@@ -1035,10 +1047,9 @@
       input.placeholder = 'type a message, or /help';
       setPrompt();
       if (message) chatLine(EGG_NAME, message);
-      poll(); // catch up on anything said while the questions were running
+      poll(); 
     }
 
-    /* ── lines for /fortune ── */
     const FORTUNES = [
       'a small door will open soon. walk through it.',
       'someone is thinking about you right now, probably.',
@@ -1059,9 +1070,6 @@
       'if you look back, you will soon be going that way/',
     ];
 
-    /* ── hooks into header.js ──
-       header.js shares its corner popups and theme helpers as
-       window.kaiaHooks (lancer, flowery, forest, theme). */
     function hook(name) {
       const h = window.kaiaHooks || {};
       return h[name];
@@ -1074,7 +1082,6 @@
       sys(result === false ? already : arrived);
     }
 
-    // /splash: the same /splashes.json the header ticker uses
     let splashes = null;
     async function showSplash() {
       if (!splashes) {
@@ -1087,8 +1094,6 @@
       else sys("couldn't find the splash texts.", 'err');
     }
 
-    // /theme: uses header.js so the choice is remembered on every page and
-    // the nav's dark mode button stays in sync. falls back to plain classes.
     const SEASONS = ['theme-fall', 'theme-spring'];
     function setTheme(arg) {
       const b = document.body;
@@ -1114,7 +1119,6 @@
       sys('theme set to ' + arg + '.');
     }
 
-    // /random: any link on this page that stays on the site
     function randomPage() {
       const here = location.pathname.replace(/\/index\.html$/, '/');
       const pages = new Set();
@@ -1154,9 +1158,6 @@
       append(el);
     }
 
-    /* ── /help ──
-       shown as a compact grid instead of a long list. click a command to put
-       it in the input; /help <name> explains one command. */
     const COMMANDS = [
       ['nick',    '<name>', 'set your name'],
       ['me',      '<action>', 'do something, like /me waves'],
@@ -1223,8 +1224,6 @@
         el.appendChild(helpGrid(OWNER_COMMANDS));
       }
       logEl.appendChild(el);
-      // line the top of the list up with the top of the chat, so nothing
-      // needs scrolling up to see
       logEl.scrollTop = el.offsetTop - logEl.offsetTop - 4;
     }
 
@@ -1237,12 +1236,12 @@
           body: JSON.stringify(Object.assign({ action, token: ownerToken }, extra))
         });
         const data = await res.json().catch(() => ({}));
-        if (res.status === 401) { logout('your owner login expired — /login again.'); return null; }
+        if (res.status === 401) { logout('your owner login expired, /login again.'); return null; }
         if (!res.ok) { sys('could not ' + action + ': ' + (data.error || 'server error'), 'err'); return null; }
         await poll();
         return data;
       } catch (e) {
-        sys('could not ' + action + ' — chat is offline.', 'err');
+        sys('could not ' + action + ' - chat is offline~', 'err');
         return null;
       }
     }
@@ -1381,7 +1380,7 @@
         setPrompt();
         sys('welcome back, kaia ★');
       } catch (e) {
-        sys('could not log in — chat is offline.', 'err');
+        sys('could not log in, chat is offline.', 'err');
       }
     }
 
@@ -1434,7 +1433,7 @@
     });
 
     setPrompt();
-    sys('kaiaonline chat v1.1 - be nice! ');
+    sys('kaiaonline chat v1.2 - be nice! ');
     sys('type /help for commands. type /help <command> or hover to see what it does.');
     poll();
     setInterval(() => { if (!document.hidden) poll(); }, POLL_MS);
