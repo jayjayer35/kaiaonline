@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<!--hint, its not anywhere here in the code. nice try though-->
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>drawings — admin</title>
+<title>drawing admin panel</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="/kaia-base.css">
 <style>
-/* kept plainer than the public pages since it's just for you — but still
-   pulling colors/font from kaia-base.css so it doesn't clash */
 body {
   max-width: 44rem;
   margin: 1.25rem auto;
@@ -86,8 +86,9 @@ h1 {
 </style>
 </head>
 <body>
-<h1>drawing guestbook — admin</h1>
-
+  <script src="header.js"></script>
+<h1>drawing guestbook - admin panel</h1>
+<p>you shouldnt be here! but im confident you </p>
 <div id="gate">
   <input id="pw" type="password" placeholder="admin password">
   <button id="unlockBtn" type="button">unlock</button>
@@ -104,6 +105,7 @@ h1 {
   const unlockBtn = document.getElementById('unlockBtn');
   const statusEl = document.getElementById('status');
   const listEl = document.getElementById('list');
+  const gateEl = document.getElementById('gate');
 
   function timeAgo(ts) {
     const diff = Date.now() - ts;
@@ -158,18 +160,56 @@ h1 {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, password })
       });
+      if (res.status === 401 || res.status === 403) {
+        lock('password was rejected — unlock again.');
+        return;
+      }
       if (!res.ok) throw new Error('delete failed');
       loadDrawings();
     } catch (err) {
-      alert('could not delete — wrong password, or something went wrong.');
+      alert('could not delete — something went wrong.');
       btn.disabled = false;
     }
   }
 
-  unlockBtn.addEventListener('click', () => {
-    password = pwInput.value;
-    if (!password) return;
-    loadDrawings();
+  // hide everything and show the password box again
+  function lock(message) {
+    password = null;
+    listEl.innerHTML = '';
+    gateEl.style.display = '';
+    statusEl.textContent = message || '';
+  }
+
+  async function unlock() {
+    const attempt = pwInput.value;
+    if (!attempt) return;
+    unlockBtn.disabled = true;
+    statusEl.textContent = 'checking…';
+    try {
+      const res = await fetch('/.netlify/functions/verify-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: attempt })
+      });
+      if (!res.ok) {
+        lock('wrong password.');
+        pwInput.select();
+        return;
+      }
+      password = attempt;
+      pwInput.value = '';
+      gateEl.style.display = 'none';
+      loadDrawings();
+    } catch (err) {
+      lock('could not check the password — try again.');
+    } finally {
+      unlockBtn.disabled = false;
+    }
+  }
+
+  unlockBtn.addEventListener('click', unlock);
+  pwInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') unlock();
   });
 })();
 </script>

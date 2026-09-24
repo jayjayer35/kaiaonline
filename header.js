@@ -122,6 +122,7 @@
       label: "other",
       children: [
         { label: "starwalker",  href: "/ofb/starwalker.html" },
+        { label: "draw-admin",  href: "/draw-admin.html" },
         { label: "404", href: "/404.html" },
         { label: "landing", href: "/index.html" },
       ],
@@ -133,7 +134,9 @@
   if (savedTheme === "dark") document.body.classList.add("dark-mode");
 
   // site color theme
+  // set to "default" to switch the whole site to winter color pallette
   // set to "fall" to switch the whole site to autumn color pallette
+  // set to "spring" to switch the whole site to spring color pallette
   // (body.theme-fall / body.dark-mode.theme-fall overrides in
   // header.css and kaia-base.css). set "default" to restore
   const SITE_THEME = "fall";

@@ -14,7 +14,6 @@
 }
 
 
-/* ── design tokens: light mode ────────────────────────── */
 :root {
   /* backgr */
   --sky:           #d8eaf8;
@@ -82,7 +81,6 @@
 }
 
 
-/* ── design tokens: dark mode ─────────────────────────── */
 body.dark-mode {
   --sky:           #1a2028;
   --sky2:          #11151a;
@@ -97,9 +95,6 @@ body.dark-mode {
   --head-b-shadow1: #3a4a60;
   --head-b-shadow2: #10141a;
 
-  /* re-declare alias here — var() aliases resolve using the value on
-     the element they're declared on, so without this it stays frozen
-     to :root's light-mode shadow regardless of theme */
   --head-b-s1: var(--head-b-shadow1);
   --head-b-s2: var(--head-b-shadow2);
 
@@ -132,7 +127,6 @@ body.dark-mode {
   --soft-pink:     #2d1e2a;
   --soft-yellow:   #2a1e35;
 
-  /* interactive buttons / selection (used by blog) */
   --button-bg:          #2a3340;
   --button-bg-hover:    #3a4a60;
   --button-bg-selected: #3a6a9a;
@@ -142,12 +136,11 @@ body.dark-mode {
   --selected-bg:   #2a3a50;
   --selected-text: #e0e8f0;
 
-  /* blend the background gif into the dark gradient */
   background-blend-mode: multiply;
 }
 
 
-/* ── design tokens: fall theme (toggle via SITE_THEME in header.js) ──── */
+/* FALL THEME, must be toggled in header.js */
 body.theme-fall {
   --sky:           #fbe3c6;
   --sky2:          #fdf2e4;
@@ -246,14 +239,10 @@ body.dark-mode.theme-fall {
   --soft-pink:     #3a2415;
   --soft-yellow:   #4a3315;
 
-  /* explicit — without these, body.theme-fall's light rgba values would
-     win the cascade tie against body.dark-mode's, since both selectors
-     have equal specificity and theme-fall is declared later in the file */
   --update-line:   rgba(255, 255, 255, 0.05);
   --divider:       rgba(255, 255, 255, 0.05);
   --today-bg:      rgba(255, 255, 255, 0.1);
 
-  /* interactive buttons / selection (used by blog) */
   --button-bg:          #3a2815;
   --button-bg-hover:    #6b4525;
   --button-bg-selected: #b5652c;
@@ -264,8 +253,120 @@ body.dark-mode.theme-fall {
   --selected-text: #f0dcc0;
 }
 
+/* SPRING THEME, must be toggled in header.js */
+body.theme-spring {
+  --sky:           #dcfbc6;
+  --sky2:          #ecfde4;
 
-/* ── reset ────────────────────────────────────────────── */
+  --panel-border:  #b7e09c;
+  --panel-shadow:  #95c974;
+  --panel-head:    #b0e888;
+  --panel-head-b:  #93cf5e;
+
+  --head-t-shadow:  #6bb13f;
+  --head-b-shadow1: #d3f5b8;
+  --head-b-shadow2: #8fcf5e;
+
+  --head-b-s1: var(--head-b-shadow1);
+  --head-b-s2: var(--head-b-shadow2);
+
+  --text:          #354a20;
+  --text-soft:     #678a52;
+  --link:          #6dc92c;
+
+  --update-line:   rgba(143, 216, 100, 0.4);
+  --divider:       rgba(144, 216, 100, 0.4);
+  --today-bg:      rgba(138, 230, 80, 0.18);
+
+  --bg-header:     #a5e888;
+  --border-header: #91cf5e;
+
+  --tag-bg:     #d9f5c0;
+  --tag-border: #8fcf5e;
+
+  --pull-bg:       #f0fde4;
+  --pull-border:   #bce09c;
+
+  --wall:          #dff2c8;
+  --plaque-bg:     #eff7e0;
+  --plaque-border: #b2d18f;
+  --plaque-text:   #394a20;
+  --plaque-soft:   #698a52;
+  --mat:           #d5ecc0;
+
+  --soft-blue:     #c0f5d4;
+  --pale-blue:     #e4fdea;
+  --soft-pink:     #f1f8c4;
+  --soft-yellow:   #e8f5a8;
+
+  /* interactive buttons / selection (used by blog) */
+  --button-bg:          #dbf5c0;
+  --button-bg-hover:    rgba(154, 216, 100, 0.6);
+  --button-bg-selected: #89d43f;
+  --button-text:        #374a20;
+  --button-border:      #95cf5e;
+
+  --selected-bg:   #b8f58a;
+  --selected-text: #364a20;
+}
+
+body.dark-mode.theme-spring {
+  --sky:           #1e2a0d;
+  --sky2:          #141a0a;
+
+  --panel-bg:      #242e10;
+  --panel-border:  #111a08;
+  --panel-shadow:  #0c1005;
+  --panel-head:    #334a18;
+  --panel-head-b:  #121a08;
+
+  --head-t-shadow:  #000000;
+  --head-b-shadow1: #556b25;
+  --head-b-shadow2: #0b1005;
+
+  --head-b-s1: var(--head-b-shadow1);
+  --head-b-s2: var(--head-b-shadow2);
+
+  --text:          #daf0c0;
+  --text-soft:     #a0c977;
+  --link:          #a1e84a;
+
+  --bg-header:     #2b3a15;
+  --border-header: #121a08;
+
+  --tag-bg:     #293a15;
+  --tag-border: #121a08;
+
+  --pull-bg:       #1a2408;
+  --pull-border:   #354a18;
+
+  --wall:          #182408;
+  --plaque-bg:     #252e13;
+  --plaque-border: #384a20;
+  --plaque-text:   #e0f0c0;
+  --plaque-soft:   #a3c977;
+  --mat:           #2a3a15;
+
+  --soft-blue:     #2a3a15;
+  --pale-blue:     #1a2408;
+  --soft-pink:     #2a3a15;
+  --soft-yellow:   #304a15;
+
+  --update-line:   rgba(255, 255, 255, 0.05);
+  --divider:       rgba(255, 255, 255, 0.05);
+  --today-bg:      rgba(255, 255, 255, 0.1);
+
+  --button-bg:          #2c3a15;
+  --button-bg-hover:    #516b25;
+  --button-bg-selected: #7eb52c;
+  --button-text:        #def0c0;
+  --button-border:      #151a08;
+
+  --selected-bg:   #445a1f;
+  --selected-text: #dff0c0;
+}
+
+
 *,
 *::before,
 *::after {
@@ -284,7 +385,6 @@ html {
 }
 
 
-/* ── base body ────────────────────────────────────────── */
 body {
   font-family: 'NDS', monospace, sans-serif;
   color: var(--text);
@@ -299,12 +399,6 @@ body {
 }
 
 
-/* ── panel primitive ──────────────────────────────────── */
-/*
-  Use class="panel" (or "tile" — both work) for a white card.
-  Use class="panel-head" (or inside a .tile, a plain h2) for the title bar.
-  Use class="panel-body" for the padded content area.
-*/
 .panel,
 .tile {
   background: var(--panel-bg);
@@ -335,7 +429,6 @@ body {
 }
 
 
-/* ── tag chips ────────────────────────────────────────── */
 .tag {
   font-size: 0.75rem;
   padding: 0.1rem 0.35rem;
@@ -347,7 +440,6 @@ body {
   color: var(--text);
 }
 
-/* coloured tag variants */
 .tag.red    { background: #ffc1c1; border-color: #694f4f; color: #3a2020; }
 .tag.orange { background: #ffd6ab; border-color: #69594f; color: #3a2c20; }
 .tag.yellow { background: #ffffaf; border-color: #69664f; color: #3a3820; }
@@ -365,7 +457,6 @@ body.dark-mode .tag.purple { background: #2a1e3a; border-color: #614f69; color: 
 body.dark-mode .tag.pink   { background: #3a1e38; border-color: #694f63; color: #ffb0fc; }
 
 
-/* ── decorative corner sprites ────────────────────────── */
 .decor {
   position: absolute;
   width: 2.5rem;
@@ -379,7 +470,6 @@ body.dark-mode .tag.pink   { background: #3a1e38; border-color: #694f63; color: 
 .corner-br        { bottom: -0.35rem; right: -0.35rem; }
 
 
-/* ── float animation ──────────────────────────────────── */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-0.25rem); }
@@ -389,7 +479,6 @@ body.dark-mode .tag.pink   { background: #3a1e38; border-color: #694f63; color: 
 .hover.fast { animation-duration: 1s; }
 
 
-/* ── pseudo-button (border-image style) ───────────────── */
 .pseudo-button {
   display: inline-block;
   padding: 0;
@@ -413,7 +502,6 @@ body.dark-mode .tag.pink   { background: #3a1e38; border-color: #694f63; color: 
 }
 
 
-/* ── footer ───────────────────────────────────────────── */
 footer {
   text-align: center;
   font-size: 80%;
@@ -423,7 +511,6 @@ footer {
 }
 
 
-/* ── scrollbar ────────────────────────────────────────── */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--panel-head) transparent;
