@@ -6,120 +6,490 @@
   <link rel="stylesheet" href="/kaia-base.css">
   <link rel="stylesheet" href="/header.css">
 <style>
+@font-face {
+  font-family: 'DialogueFont';
+  src: url('/assets/big-shot.ttf') format('truetype');
+  font-display: block;
+}
+
 html, body {
-margin: 0;
-padding: 0;
-width: 100%;
-height: 100%;
-background: #000;
-overflow: hidden;
-  }
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
 
 .stage {
-width: 100vw;
-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-  }
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .gif-wrap {
-position: relative;
-transform: scale(2);
-display: block;
-line-height: 0;
-cursor: pointer;
-  }
+  transform: translateY(-10rem) scale(2);
+  line-height: 0;
+}
 
-.gif-wrap img,
-.gif-wrap canvas {
-display: block;
-image-rendering: pixelated;
-  }
-
+.gif-wrap img {
+  display: block;
+  image-rendering: pixelated;
+}
 
 .play-overlay {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.2);
-color: #fff;
-font-family: sans-serif;
-display: none;
-align-items: center;
-justify-content: center;
-cursor: pointer;
-z-index: 10;
-transition: opacity 0.4s ease;
-  }
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  display: none;
+  cursor: pointer;
+  z-index: 10;
+  transition: opacity 0.4s ease;
+}
 
 .play-overlay.show {
-    display: flex;
+  display: block;
 }
 
 .play-overlay.hidden {
-opacity: 0;
-pointer-events: none;
-  }
+  opacity: 0;
+  pointer-events: none;
+}
+
+#ui {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 640px;
+  height: 480px;
+  transform-origin: top left;
+  pointer-events: none;
+  z-index: 20;
+}
+
+#textbox {
+  position: absolute;
+  left: 25px;
+  top: 328px;
+  width: 590px;
+  height: 122px;
+  box-sizing: border-box;
+  background: #000;
+  border: 4px solid #fff;
+  padding: 14px 18px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0.6s;
+  pointer-events: auto;
+}
+
+#textbox.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+#dialogue-text,
+#code-row {
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 24px;
+  letter-spacing: 1px;
+  line-height: 1.15em;
+}
+
+#dialogue-text {
+  white-space: pre-wrap;
+}
+
+.wide-space {
+  margin-right: 0.20em;
+}
+
+#code-row {
+  position: relative;
+  display: none;
+  margin-top: 2px;
+}
+
+#code-row.show {
+  display: flex;
+}
+
+.code-prompt {
+  margin-right: 0.6em;
+}
+
+#code-display {
+  color: #ff0;
+  white-space: pre;
+}
+
+#code-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  border: none;
+  padding: 0;
+  pointer-events: none;
+}
 </style>
 </head>
-<body>
+<!--Now, it's no fun when you snoop around like this. Is it?-->
+<body data-pause-music>
   <script src="/header.js"></script>
 
 <div class="play-overlay" id="playOverlay"></div>
 
 <div class="stage">
-  <div class="gif-wrap" id="gifWrap">
-    <img id="photoGif" src="/assets/tree.gif" alt="">
+  <div class="gif-wrap">
+    <img src="/assets/tree.gif" alt="">
+  </div>
+</div>
+
+<div id="ui">
+  <div id="textbox">
+    <div id="dialogue-text"></div>
+    <div id="code-row">
+      <span class="code-prompt">&gt;</span>
+      <span id="code-display"></span>
+      <input id="code-input" type="text" maxlength="16"
+             autocomplete="off" inputmode="numeric" spellcheck="false">
+    </div>
   </div>
 </div>
 
 <audio id="bgAudio" loop></audio>
+<b>
+  <b>
+    <b>
+      <b>
+        <b>
+          <b>
+            <b>
+              <b>
+                <b>
+                  <b>
+                    <b>
+                      <b>
+                        <b>
+                          <b>
+                            <b>
+                              <b>
+                                <b>
+                                  <b>
+                                    <b>
+                                      <b>
+                                        <b>
+                                          <b>
+                                            <b>
+                                              <b>
 
 <script>
+const PROMPT_DELAY_MS = 1 * 5 * 1000;
+
+const PROMPT_TEXT = "( Something seems to be carved into the bark. )[p:1500]\n( It seems to be waiting for a code. )[p:1500]";
+const WRONG_TEXT  = "( You set some numbers into the dial. )[p:1500]\n( Briefly,[p:200] you feel dizzy. )[p:1500]\n( Seems like nonsense. )";
+
+const CODES = {
+  "022805": { text: "(The bark shifts.[p:400].[p:400].[p:400])\n(Suddenly!)" },
+};
+
 const overlay = document.getElementById('playOverlay');
 const audio = document.getElementById('bgAudio');
-const track = Math.random() < 0.5 ? '/music/man.ogg' : '/music/man2.ogg';
 
-audio.src = track;
+audio.src = Math.random() < 0.5 ? '/music/man.ogg' : '/music/man2.ogg';
 audio.volume = 0.25;
 
 audio.play().then(() => {
   overlay.classList.add('hidden');
 }).catch(() => {
+  overlay.classList.add('show');
   overlay.addEventListener('click', () => {
     audio.play();
     overlay.classList.add('hidden');
   }, { once: true });
 });
 
-const gifImg = document.getElementById('photoGif');
-const gifWrap = document.getElementById('gifWrap');
-const canvas = document.getElementById('freezeFrame');
-const ctx = canvas.getContext('2d');
-let frozen = true;
+const ui = document.getElementById('ui');
+const NATIVE_W = 640;
+const NATIVE_H = 480;
 
-function captureFrame() {
-  canvas.width = gifImg.naturalWidth;
-  canvas.height = gifImg.naturalHeight;
-  ctx.drawImage(gifImg, 0, 0);
-  canvas.style.display = 'block';
+function resize() {
+  const scale = Math.min(window.innerWidth / NATIVE_W, window.innerHeight / NATIVE_H);
+  const offsetX = (window.innerWidth - NATIVE_W * scale) / 2;
+  const offsetY = (window.innerHeight - NATIVE_H * scale) / 2;
+  ui.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 }
+window.addEventListener('resize', resize);
+resize();
 
-if (gifImg.complete) {
-  captureFrame();
-} else {
-  gifImg.addEventListener('load', captureFrame, { once: true });
-}
-
-gifWrap.addEventListener('click', () => {
-  if (frozen) {
-    canvas.style.display = 'none';
-  } else {
-    captureFrame();
+function createBlipPlayer(src, volume, poolSize = 6) {
+  const pool = [];
+  for (let i = 0; i < poolSize; i++) {
+    const a = new Audio(src);
+    a.volume = volume;
+    pool.push(a);
   }
-  frozen = !frozen;
+  let next = 0;
+  return function playBlip() {
+    const a = pool[next];
+    next = (next + 1) % pool.length;
+    a.pause();
+    a.currentTime = 0;
+    a.play().catch(() => {});
+  };
+}
+
+const playTypeSound = createBlipPlayer('/assets/blip_none.wav', 0.4);
+const playConfirmSound = createBlipPlayer('/assets/menu_sound/menu_confirm.wav', 0.1, 3);
+
+const TYPE_SPEED_MS = 45;
+
+const textboxEl = document.getElementById('textbox');
+const textEl = document.getElementById('dialogue-text');
+const codeRowEl = document.getElementById('code-row');
+const codeInputEl = document.getElementById('code-input');
+const codeDisplayEl = document.getElementById('code-display');
+
+function parseDialogueMarkup(rawStr) {
+  const str = '* ' + rawStr.replace(/\n/g, '\n* ');
+  const tokens = [];
+  const colorStack = [];
+  let i = 0;
+  while (i < str.length) {
+    const ch = str[i];
+    if (ch === '[') {
+      const close = str.indexOf(']', i);
+      if (close !== -1) {
+        const tag = str.slice(i + 1, close);
+        if (tag.startsWith('p:')) {
+          tokens.push({ type: 'pause', ms: parseInt(tag.slice(2), 10) || 0 });
+          i = close + 1;
+          continue;
+        }
+        if (tag.startsWith('c:')) {
+          colorStack.push(tag.slice(2));
+          i = close + 1;
+          continue;
+        }
+        if (tag === '/c') {
+          colorStack.pop();
+          i = close + 1;
+          continue;
+        }
+      }
+    }
+    tokens.push({ type: 'char', ch, color: colorStack[colorStack.length - 1] || null });
+    i++;
+  }
+  return tokens;
+}
+
+function escapeHtml(ch) {
+  if (ch === '<') return '&lt;';
+  if (ch === '>') return '&gt;';
+  if (ch === '&') return '&amp;';
+  if (ch === '"') return '&quot;';
+  return ch;
+}
+
+function charsToHtml(chars) {
+  let html = '';
+  for (const t of chars) {
+    const safe = escapeHtml(t.ch);
+    const wrapped = t.ch === ' ' ? `<span class="wide-space">${safe}</span>` : safe;
+    html += t.color ? `<span style="color:${t.color}">${wrapped}</span>` : wrapped;
+  }
+  return html;
+}
+
+let tokens = [];
+let tokenIndex = 0;
+let revealed = [];
+let typing = false;
+let typeTimer = null;
+let afterTyping = null;   
+let afterAdvance = null;  
+let inputActive = false;
+
+function say(text, { then = null, onAdvance = null } = {}) {
+  clearTimeout(typeTimer);
+  tokens = parseDialogueMarkup(text);
+  tokenIndex = 0;
+  revealed = [];
+  typing = true;
+  afterTyping = then;
+  afterAdvance = onAdvance;
+  textEl.innerHTML = '';
+  typeStep();
+}
+
+function typeStep() {
+  if (tokenIndex >= tokens.length) {
+    doneTyping();
+    return;
+  }
+  const token = tokens[tokenIndex++];
+  if (token.type === 'pause') {
+    typeTimer = setTimeout(typeStep, token.ms);
+    return;
+  }
+  revealed.push(token);
+  textEl.innerHTML = charsToHtml(revealed);
+  if (!/\s/.test(token.ch)) playTypeSound();
+  typeTimer = setTimeout(typeStep, TYPE_SPEED_MS);
+}
+
+function finishTyping() {
+  if (!typing) return;
+  clearTimeout(typeTimer);
+  revealed = tokens.filter((t) => t.type === 'char');
+  textEl.innerHTML = charsToHtml(revealed);
+  doneTyping();
+}
+
+function doneTyping() {
+  typing = false;
+  if (afterTyping) {
+    const fn = afterTyping;
+    afterTyping = null;
+    fn();
+  }
+}
+
+function advance() {
+  if (typing || inputActive || !afterAdvance) return;
+  const fn = afterAdvance;
+  afterAdvance = null;
+  fn();
+}
+
+function openBox() {
+  textboxEl.classList.add('open');
+}
+
+function closeBox() {
+  textboxEl.classList.remove('open');
+}
+
+function renderCode() {
+  const code = codeInputEl.value.toUpperCase();
+  codeDisplayEl.textContent = code + (code.length < codeInputEl.maxLength ? '_' : '');
+}
+
+codeInputEl.addEventListener('input', () => {
+  codeInputEl.value = codeInputEl.value.replace(/[^0-9]/g, '');
+  renderCode();
 });
+
+function showInput() {
+  codeInputEl.value = '';
+  renderCode();
+  codeRowEl.classList.add('show');
+  inputActive = true;
+  codeInputEl.focus();
+}
+
+function hideInput() {
+  inputActive = false;
+  codeRowEl.classList.remove('show');
+  codeInputEl.blur();
+}
+
+function askForCode() {
+  say(PROMPT_TEXT, { then: showInput });
+}
+
+function submitCode() {
+  const code = codeInputEl.value.trim().toUpperCase();
+  if (!code) return;
+  hideInput();
+  playConfirmSound();
+
+  const hit = CODES[code];
+  if (hit) {
+    say(hit.text, { onAdvance: closeBox });
+  } else {
+    say(WRONG_TEXT, { onAdvance: askForCode });
+  }
+}
+
+codeInputEl.addEventListener('keydown', (e) => {
+  e.stopPropagation(); 
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    submitCode();
+  }
+  if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) {
+    e.preventDefault();
+  }
+});
+
+textboxEl.addEventListener('click', () => {
+  if (inputActive) codeInputEl.focus();
+  else advance();
+});
+
+window.addEventListener('keydown', (e) => {
+  if (!textboxEl.classList.contains('open')) return;
+  const k = e.key.toLowerCase();
+  if (k === 'z' || k === 'enter') {
+    e.preventDefault();
+    advance();
+  } else if (k === 'x' || k === 'shift') {
+    e.preventDefault();
+    finishTyping();
+  }
+});
+
+let listenedMs = 0;
+let lastTick = performance.now();
+let promptShown = false;
+
+const listenTimer = setInterval(() => {
+  const now = performance.now();
+  const dt = Math.min(now - lastTick, 1000); 
+  lastTick = now;
+
+  if (!audio.paused && !document.hidden) listenedMs += dt;
+
+  if (listenedMs >= PROMPT_DELAY_MS && !promptShown) {
+    promptShown = true;
+    clearInterval(listenTimer);
+    openBox();
+    askForCode();
+  }
+}, 250);
 </script>
+                                              </b>
+                                            </b>
+                                          </b>
+                                        </b>
+                                      </b>
+                                    </b>
+                                  </b>
+                                </b>
+                              </b>
+                            </b>
+                          </b>
+                        </b>
+                      </b>
+                    </b>
+                  </b>
+                </b>
+              </b>
+            </b>
+          </b>
+        </b>
+      </b>
+    </b>
+  </b>
+</b>
 
 </body>
 </html>

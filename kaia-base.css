@@ -1,11 +1,4 @@
-/* ════════════════════════════════════════════════════════
-   kaia-base.css  —  shared styles for kaia online
-   To retheme the whole site, edit the :root block below.
-   Dark-mode overrides live in body.dark-mode.
-   ════════════════════════════════════════════════════════ */
 
-
-/* ── font ─────────────────────────────────────────────── */
 @font-face {
   font-family: "NDS";
   src: url("/rework/assets/fonts/nds.ttf") format("truetype");
@@ -147,7 +140,7 @@ body.theme-fall {
 
   --panel-border:  #e0c19c;
   --panel-shadow:  #c9a274;
-  --panel-head:    #e8b988;
+  --panel-head:    #dea66a;
   --panel-head-b:  #cf9a5e;
 
   --head-t-shadow:  #b17c3f;

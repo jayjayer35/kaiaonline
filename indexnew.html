@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script>
+    // remembers every <audio>/<video> that starts playing so the chat's /egg
+    // questions can pause the header music player. must load before header.js.
+    (function () {
+      const playing = window.__kaiaMedia = new Set();
+      const play = HTMLMediaElement.prototype.play;
+      HTMLMediaElement.prototype.play = function () {
+        playing.add(this);
+        return play.apply(this, arguments);
+      };
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>kaia online</title>
   <link rel="stylesheet" href="rework/assets/css/kaia-base.css">
@@ -70,6 +82,163 @@
     }
     .social-list a:hover { background: var(--update-line); }
     .social-dot { width: 0.375rem; height: 0.375rem; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── live chat terminal ── */
+    /* follows the current mode like every other tile: light background +
+       dark text in light mode, dark tile + light text in dark mode.
+       message colors are the .tag colors from kaia-base.css — the darker
+       tag borders in light mode, the light tag text colors in dark mode. */
+    .panel.term {
+      --term-bg:     var(--panel-bg);
+      --term-fg:     var(--text);
+      --term-dim:    color-mix(in srgb, var(--text-soft) 80%, var(--text));
+      --term-name:   color-mix(in srgb, var(--link) 55%, var(--text));
+      --term-line:   var(--panel-border);
+      --term-strip:  var(--pale-blue);
+      --term-me:     #8a3f80; /* between .tag.pink's border and text */
+      --term-sys:    #3f6b3c; /* .tag.green, darkened for white */
+      --term-err:    #8a3b3b; /* .tag.red, darkened for white */
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: var(--term-bg);
+      color: var(--term-fg);
+    }
+    body.dark-mode .panel.term {
+      --term-me:  #ffb0fc; /* dark-mode .tag.pink */
+      --term-sys: #a0ffa0; /* dark-mode .tag.green */
+      --term-err: #ffb0b0; /* dark-mode .tag.red */
+    }
+    /* title bar = a normal .panel-head, plus the >_ badge and status */
+    .term-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.125rem 0.5rem;
+      background: var(--panel-head);
+      border-bottom: 1px solid var(--panel-head-b);
+      box-shadow:
+        inset 0 1px 0 var(--head-b-shadow1),
+        inset 0 -1px 0 var(--head-b-shadow2);
+      color: #fff;
+      letter-spacing: 0.15rem;
+      text-shadow: 0 1px 0 var(--head-t-shadow);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .term-icon {
+      flex-shrink: 0;
+      padding: 0 0.25rem;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-head-b);
+      color: var(--term-name);
+      letter-spacing: 0;
+      text-shadow: none;
+      line-height: 1.3;
+    }
+    .term-caret { animation: term-blink 1s steps(1) infinite; }
+    @keyframes term-blink { 50% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .term-caret { animation: none; } }
+    .term-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .term-online { font-size: 0.85rem; letter-spacing: 0.05rem; }
+    .term-online::first-letter { text-shadow: none; }
+    .term-online.ok::first-letter  { color: #aeffaa; } /* .tag.green */
+    .term-online.bad::first-letter { color: #ffc1c1; } /* .tag.red */
+    .term-log {
+      height: 13rem;
+      overflow-y: auto;
+      padding: 0.375rem 0.5rem;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+    .term-line { margin: 0 0 0.15rem; white-space: pre-wrap; }
+    .term-time { color: var(--term-dim); }
+    .term-name { color: var(--term-name); }
+    .term-line.me .term-name { color: var(--term-me); }
+    /* kaia's own messages: a highlighted name chip in the site's selection colors */
+    .term-line.owner .term-tag,
+    .term-prompt.owner {
+      background: var(--selected-bg);
+      color: var(--selected-text);
+      border: 1px solid var(--button-bg-selected);
+      padding: 0 0.2rem;
+    }
+    .term-line.owner .term-name { color: var(--term-fg); }
+    .term-line.sys { color: var(--term-sys); }
+    .term-line.err { color: var(--term-err); }
+    .term-input input:disabled { opacity: 0.5; }
+    /* in "name>" the name is a shade darker than the ">" */
+    .term-line.msg:not(.action):not(.roll):not(.owner) .term-tag,
+    .term-label-name,
+    .term-prompt-name {
+      color: color-mix(in srgb, currentColor 62%, #000);
+    }
+    /* /help grid */
+    .term-help > div:not(.term-help-grid) { margin-top: 0.15rem; }
+    .term-help-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+      gap: 0.15rem 0.5rem;
+      margin: 0.15rem 0 0.25rem;
+    }
+    .term-cmd {
+      font: inherit;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--term-name);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .term-cmd:hover, .term-cmd:focus-visible { text-decoration: underline; outline: none; }
+    /* /me and /roll: "* name does a thing" */
+    .term-line.action, .term-line.roll { font-style: italic; }
+    .term-line.roll { color: var(--term-sys); }
+    /* /announce: a full-width banner line everyone sees */
+    .term-line.announce {
+      background: var(--selected-bg);
+      color: var(--selected-text);
+      border-left: 0.2rem solid var(--button-bg-selected);
+      padding: 0.1rem 0.375rem;
+      margin: 0.2rem 0;
+    }
+    .term-line.announce .term-time { color: inherit; opacity: 0.7; }
+    /* /pin: sits above the log */
+    .term-pin {
+      padding: 0.2rem 0.5rem;
+      background: var(--term-strip);
+      border-bottom: 1px dashed var(--term-line);
+      color: var(--term-fg);
+      overflow-wrap: anywhere;
+    }
+    .term-pin[hidden] { display: none; }
+    /* /rosie */
+    .term-line.rosie img { max-height: 5rem; image-rendering: pixelated; display: block; }
+    .term-line a { color: var(--link); }
+    .term-input {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.3rem 0.5rem;
+      background: var(--term-strip);
+      border-top: 1px dashed var(--term-line);
+      transition: background 0.3s;
+    }
+    .term-prompt { color: var(--term-me); white-space: nowrap; }
+    .term-input input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--term-fg);
+      caret-color: var(--term-name);
+      font: inherit;
+      padding: 0;
+    }
+    .term-input input::placeholder { color: var(--term-dim); }
+    .panel.term:focus-within { border-color: var(--panel-head-b); }
 
     /* ── status.cafe ── */
     .cafe-quote {
@@ -182,7 +351,7 @@
 
   </style>
 </head>
-<body>
+<body data-autoplay-music>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script src="header.js"></script>
@@ -264,6 +433,7 @@
         <div class="panel-head">updates <span style="font-size:1rem;letter-spacing:0;">(scroll!)</span></div>
         <div class="panel-body">
           <div class="update-scroll">
+            <div class="update-entry"><div class="update-date">[7:11 AM - 9/24/26]</div>+ emergency fix, i broke the blog page lol. fixed now!</div>
             <div class="update-entry"><div class="update-date">[5:16 AM - 9/24/26]</div>+ added spring color pallete! (going unused until.... spring, duh.)<br>~ this page has come a long way since last year when all the stuff was broken and new... thanks for sticking around! <br>im really proud of what i have made here, and what i continue to make here.</div>
             <div class="update-entry"><div class="update-date">[1:06 PM - 9/23/26]</div>+ actually finished my recipes page layout + 1 recipe now live there<br>+ indie web page updated with lots of links and slight layout change<br>+ updated webmistress page fuhuhu, games and music added to stuff i like<br>+ fixed drawings layout in guestbook<br>+ added <a href="/undertale/index.html">CLIFFSIDE SUNSET</a> (undertale) dialogue layout to KAIA tab.<br>+ moved <a href="/scrapbook.html">SCRAPBOOK</a> to KAIA tab<br>+ changed GASTER shrine to DELTARUNE shrine (still a wip)<br>+ a couple of blog posts since last update<br>+ fixed dark mode being wrong color on scrapbook page<br>+ hidden egg page now properly displays nav bar<br>+ hidden forest page now properly displays nav bar<br>~ working on myself, and getting better. almost a month no purging!</div>
             <div class="update-entry"><div class="update-date">[9:56 PM - 9/15/26]</div>+ madotsuki blog post<br>~ happy birthday undertale!</div>
@@ -309,21 +479,18 @@
         </div>
       </div>
 
-      <div class="panel">
-        <div class="panel-head">my other links???</div>
-        <div class="panel-body">
-          <p style="margin-bottom:0.375rem;">you're not getting anything else from me! this website is ALL you got! the one stop shop for everything ME. <br>
-            im kidding, but truthfully there isn't any other place like this, here is the best you're gonna get. <br>
-            below is my youtube, for my videos and music. my bandcamp if ya wanna follow me there. then my email to send me a note if you wish! <br>
-            wait.. whats the other link there?
-          </p>
-          <div class="social-list">
-            <a href="https://www.youtube.com/@kaiasei" target="_blank"><span class="social-dot" style="background:#e05555;"></span>youtube</a>
-            <a href="https://bandcamp.com/kaiasei" target="_blank"><span class="social-dot" style="background:#888;"></span>bandcamp</a>
-            <a href="mailto:blue.jay02304@gmail.com"><span class="social-dot" style="background:#4caf50;"></span>email</a>
-            <a href="/404_special.html"><span class="social-dot" style="background:#185070;"></span>twitter</a>
-          </div>
+      <div class="panel term" id="term">
+        <div class="term-bar">
+          <img src="/assets/funnyalien.gif" alt="" style="max-width: 1rem;">
+          <span class="term-title">kaia@online: ~/live-chat</span>
+          <span class="term-online" id="termStatus">connecting…</span>
         </div>
+        <div class="term-pin" id="termPin" hidden></div>
+        <div class="term-log" id="termLog" aria-live="polite"></div>
+        <form class="term-input" id="termForm" autocomplete="off">
+          <label class="term-prompt" for="termText" id="termPrompt">anon&gt;</label>
+          <input id="termText" type="text" maxlength="200" spellcheck="false" placeholder="type a message, or /help">
+        </form>
       </div>
 
     </div><div class="col right">
@@ -523,6 +690,756 @@
       document.getElementById('nextMonth').onclick=()=>{curr.setMonth(curr.getMonth()+1);render();};
       render();
     })();
+  </script>
+
+  <script>
+  /* ── live chat terminal ──
+     CHAT_API is where the netlify functions live. same as the drawing
+     guestbook: if the page and functions are on the same site, leave it.
+     if this page is on neocities, put your netlify site here instead,
+     e.g. 'https://yoursite.netlify.app/.netlify/functions' */
+  (function () {
+    const CHAT_API = '/.netlify/functions';
+    const POLL_MS = 4000;
+    const KAIA_TZ = 'America/New_York'; // your time zone, for /time
+
+    const logEl = document.getElementById('termLog');
+    const pinEl = document.getElementById('termPin');
+    const form = document.getElementById('termForm');
+    const input = document.getElementById('termText');
+    const promptEl = document.getElementById('termPrompt');
+    const statusEl = document.getElementById('termStatus');
+
+    // blocks any name containing "kaia", including k@ia, KA1A, k_a_i_a, etc.
+    // (post-chat.mjs does the same check, so it can't be skipped)
+    function isReserved(name) {
+      const squashed = name.toLowerCase()
+        .replace(/[4@]/g, 'a')
+        .replace(/[1!|l]/g, 'i')
+        .replace(/[^a-z]/g, '');
+      return squashed.includes('kaia');
+    }
+
+    let nick = 'anon';
+    try { nick = localStorage.getItem('kaiaChatNick') || 'anon'; } catch (e) {}
+    if (isReserved(nick)) nick = 'anon';
+    // owner login: the server hands back a token after /login, kept on this device
+    let ownerToken = null;
+    try { ownerToken = localStorage.getItem('kaiaChatOwner'); } catch (e) {}
+    let awaitingPassword = false;
+    let lastSig = null;
+    let sending = false;
+    let current = [];   // latest messages from the server (used by /delete)
+    let who = null;     // { count, names } for /who
+    let clearArmed = 0; // /clearchat needs to be typed twice
+    const myIds = new Set();
+    const shown = new Map(); // id -> element
+
+    function setPrompt() {
+      promptEl.classList.toggle('owner', !!ownerToken);
+      if (ownerToken) { promptEl.textContent = '★kaia>'; return; }
+      promptEl.textContent = '';
+      const n = document.createElement('span');
+      n.className = 'term-prompt-name';
+      n.textContent = nick;
+      promptEl.appendChild(n);
+      promptEl.appendChild(document.createTextNode('>'));
+    }
+
+    function logout(message) {
+      ownerToken = null;
+      try { localStorage.removeItem('kaiaChatOwner'); } catch (e) {}
+      setPrompt();
+      if (message) sys(message);
+    }
+
+    // [14:02] for today, [9/20 14:02] for older messages
+    function stamp(ts) {
+      const d = new Date(ts);
+      const time = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+      const today = new Date().toDateString() === d.toDateString();
+      return '[' + (today ? '' : (d.getMonth() + 1) + '/' + d.getDate() + ' ') + time + ']';
+    }
+
+    function nearBottom() {
+      return logEl.scrollHeight - logEl.scrollTop - logEl.clientHeight < 24;
+    }
+
+    function line(cls) {
+      const el = document.createElement('div');
+      el.className = 'term-line' + (cls ? ' ' + cls : '');
+      return el;
+    }
+
+    function append(el) {
+      const stick = nearBottom();
+      logEl.appendChild(el);
+      if (stick) logEl.scrollTop = logEl.scrollHeight;
+      return el;
+    }
+
+    // "SYSTEM> " with the name part in its own span, so it can be darker
+    function labelFor(name) {
+      const label = document.createElement('span');
+      label.className = 'term-label';
+      const n = document.createElement('span');
+      n.className = 'term-label-name';
+      n.textContent = name;
+      label.appendChild(n);
+      label.appendChild(document.createTextNode('> '));
+      return label;
+    }
+
+    // system lines read "SYSTEM> ...", errors read "ERROR> ..."
+    function sys(text, cls) {
+      cls = cls || 'sys';
+      const el = line(cls);
+      el.appendChild(labelFor(cls === 'err' ? 'ERROR' : 'SYSTEM'));
+      el.appendChild(document.createTextNode(text));
+      return append(el);
+    }
+
+    function timeSpan(ts) {
+      const t = document.createElement('span');
+      t.className = 'term-time';
+      t.textContent = stamp(ts) + ' ';
+      return t;
+    }
+
+    function nameTag(name) {
+      const tag = document.createElement('span');
+      tag.className = 'term-tag';
+      tag.textContent = name;
+      return tag;
+    }
+
+    // one server message -> one line. kinds: msg, action (/me), roll, announce
+    function buildMessage(m) {
+      const kind = m.kind || 'msg';
+      const who = (m.owner ? '★' : '') + m.name;
+      const el = line('msg ' + kind + (m.owner ? ' owner' : myIds.has(m.id) ? ' me' : ''));
+      el.dataset.id = m.id;
+      el.appendChild(timeSpan(m.timestamp));
+      if (kind === 'announce') {
+        el.appendChild(document.createTextNode('★ ' + m.text));
+        return el;
+      }
+      const n = document.createElement('span');
+      n.className = 'term-name';
+      if (kind === 'msg') {
+        n.appendChild(nameTag(who));
+        n.appendChild(document.createTextNode('> '));
+        el.appendChild(n);
+        el.appendChild(document.createTextNode(m.text));
+      } else {
+        // "* rosie waves" / "* rosie rolled 2d6: 3 + 5 = 8"
+        n.appendChild(document.createTextNode('* '));
+        n.appendChild(nameTag(who));
+        el.appendChild(n);
+        el.appendChild(document.createTextNode(' ' + m.text));
+      }
+      return el;
+    }
+
+    // add new messages, and remove any that were deleted or cleared
+    function renderMessages(messages) {
+      const stick = nearBottom();
+      const ids = new Set(messages.map(m => m.id));
+      shown.forEach((el, id) => { if (!ids.has(id)) { el.remove(); shown.delete(id); } });
+      messages.forEach(m => {
+        if (shown.has(m.id)) return;
+        const el = buildMessage(m);
+        shown.set(m.id, el);
+        logEl.appendChild(el);
+      });
+      if (stick) logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function renderPin(pin) {
+      pinEl.hidden = !pin;
+      pinEl.textContent = pin ? '[pinned] ' + pin : '';
+    }
+
+    async function poll() {
+      if (quiz) return; // paused during /egg, resumes when it ends
+      try {
+        const res = await fetch(CHAT_API + '/get-chat', { cache: 'no-store' });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const messages = data.messages || [];
+        current = messages;
+        who = data.who || null;
+        const sig = messages.length + ':' + (messages.length ? messages[messages.length - 1].id : '') + ':' + (data.pin || '');
+        if (sig !== lastSig) {
+          lastSig = sig;
+          renderMessages(messages);
+          renderPin(data.pin || '');
+        }
+        statusEl.textContent = '● online';
+        statusEl.className = 'term-online ok';
+      } catch (e) {
+        statusEl.textContent = '● offline';
+        statusEl.className = 'term-online bad';
+      }
+    }
+
+    /* ── /egg questions ──
+       answered with 1 or 2. answers are only judged at the end, so nobody
+       learns which one they got wrong. edit freely: `a` is the correct
+       option for each. */
+    const EGG_QUESTIONS = [
+      { q: 'Do you remember the way here?',                 o: ['no, of course not?', 'maybe i do...'],               a: 1 },
+      { q: 'Was the door open, or were you always inside?', o: ['the door was open', 'i was always inside'],          a: 2 },
+      { q: 'What are you carrying?',                        o: ['nothing', 'something'],                              a: 2 },
+      { q: 'If I asked for it, would you give it to me?',   o: ['only sometimes', 'never crossed my mind to'],        a: 1 },
+      { q: 'Who is waiting for you?',                       o: ['somebody', 'nobody'],                                a: 1 },
+      { q: 'Would you wait for someone?',                   o: ['not for too long', 'as long as it takes'],           a: 2 },
+      { q: 'Are you sure?',                                 o: ['without a shadow of a doubt.', 'uncertain.'],        a: 1 }
+    ];
+
+    /* ── egg streak ──
+       ??? gets more impatient each time someone fails. the count is kept in
+       their browser. line 1 is the first failure, the last set repeats
+       forever after. GREETINGS play before the questions on later tries. */
+    const EGG_FAIL_LINES = [
+      ['You are not there yet.','Goodbye.'],
+      ['Again?', 'I am not sure if you will ever get there.','Goodbye.'],
+      ['You keep coming back.', 'You know this is not the way.','Goodbye.'],
+      ['Why do you keep entertaining me?', 'You already know the answers.','Goodbye.'],
+      ['Try something else.']
+    ];
+    const EGG_GREETINGS = [
+      null,            // first try: no greeting
+      null,            // after 1 failure: no greeting
+      'you again.',    // after 2
+      'back so soon?', // after 3
+      '. . .'          // after 4+
+    ];
+    function eggFails() {
+      try { return Number(localStorage.getItem('kaiaEggFails')) || 0; } catch (e) { return 0; }
+    }
+    function setEggFails(n) {
+      try { localStorage.setItem('kaiaEggFails', String(n)); } catch (e) {}
+    }
+
+    let quiz = null; // { index, answers, waiting }
+
+    const instant = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const wait = ms => new Promise(r => setTimeout(r, instant ? 0 : ms));
+
+    const EGG_NAME = '???';
+
+    // a local-only chat line that looks exactly like a normal message
+    function chatLine(name, text, cls) {
+      const el = line('msg' + (cls ? ' ' + cls : ''));
+      el.appendChild(timeSpan(Date.now()));
+      const n = document.createElement('span');
+      n.className = 'term-name';
+      n.appendChild(nameTag(name));
+      n.appendChild(document.createTextNode('> '));
+      const body = document.createTextNode(text);
+      el.appendChild(n);
+      el.appendChild(body);
+      append(el);
+      return body;
+    }
+
+    // ??? "types" its message one character at a time
+    async function eggSay(text, speed = 45) {
+      const body = chatLine(EGG_NAME, '');
+      for (const ch of text) {
+        body.textContent += ch;
+        logEl.scrollTop = logEl.scrollHeight;
+        if (ch !== ' ') await wait(ch === '.' || ch === '?' || ch === ',' ? speed * 4 : speed);
+      }
+    }
+
+    function lockInput(locked) {
+      input.disabled = locked;
+      if (!locked) input.focus({ preventScroll: true });
+    }
+
+    async function askEggQuestion() {
+      const { q, o } = EGG_QUESTIONS[quiz.index];
+      lockInput(true);
+      await wait(500);
+      await eggSay(q);
+      await wait(250);
+      quiz.optionsLine = chatLine(EGG_NAME, '1) ' + o[0] + '   2) ' + o[1]).parentNode;
+      quiz.waiting = true;
+      lockInput(false);
+    }
+
+    // pause the header.js music player (and anything else making sound)
+    function stopMusic() {
+      const media = new Set(window.__kaiaMedia || []);
+      document.querySelectorAll('audio, video').forEach(m => media.add(m));
+      media.forEach(m => { try { m.pause(); } catch (e) {} });
+    }
+
+    async function startEgg() {
+      quiz = { index: 0, answers: [], waiting: false };
+      input.placeholder = '1 or 2';
+      input.value = '';
+      lockInput(true);
+      await eggSay('. . .', 120);
+      const fails = eggFails();
+      const greeting = EGG_GREETINGS[Math.min(fails, EGG_GREETINGS.length - 1)];
+      if (greeting) { await wait(300); await eggSay(greeting); }
+      await askEggQuestion();
+    }
+
+    async function answerEgg(text) {
+      if (!quiz || !quiz.waiting) return;
+      // their answer shows up as their own message: the option they picked,
+      // not the number (anything that isn't 1 or 2 is shown as typed)
+      const valid = text === '1' || text === '2';
+      const said = valid ? EGG_QUESTIONS[quiz.index].o[Number(text) - 1] : text;
+      // the mystery man's options vanish once they've answered
+      if (valid && quiz.optionsLine) { quiz.optionsLine.remove(); quiz.optionsLine = null; }
+      if (ownerToken) chatLine('★kaia', said, 'owner'); else chatLine(nick, said, 'me');
+      if (!valid) { eggSay('1 OR 2.'); return; }
+      quiz.waiting = false;
+      quiz.answers.push(Number(text));
+      quiz.index++;
+      if (quiz.index < EGG_QUESTIONS.length) { askEggQuestion(); return; }
+
+      const passed = quiz.answers.every((n, i) => n === EGG_QUESTIONS[i].a);
+      lockInput(true);
+      await wait(700);
+      if (passed) {
+        await eggSay('. . .', 120);
+        if (eggFails() >= 3) { await eggSay('finally.'); await wait(300); }
+        stopMusic(); // music cuts out only on success, as "proceed" appears
+        await eggSay('proceed', 240);
+        setEggFails(0);
+        try { sessionStorage.setItem('kaiaEgg', '1'); } catch (e) {}
+        await wait(900);
+        window.location.href = '/khdjnerdwexr78r762/egg.html';
+        return;
+      }
+      const fails = eggFails();
+      const lines = EGG_FAIL_LINES[Math.min(fails, EGG_FAIL_LINES.length - 1)];
+      setEggFails(fails + 1);
+      await eggSay('. . .', 120);
+      for (let i = 0; i < lines.length; i++) {
+        if (i) await wait(200);
+        await eggSay(lines[i]);
+      }
+      endEgg();
+    }
+
+    function endEgg(message) {
+      quiz = null;
+      lockInput(false);
+      input.placeholder = 'type a message, or /help';
+      setPrompt();
+      if (message) chatLine(EGG_NAME, message);
+      poll(); // catch up on anything said while the questions were running
+    }
+
+    /* ── lines for /fortune ── */
+    const FORTUNES = [
+      'a small door will open soon. walk through it.',
+      'someone is thinking about you right now, probably.',
+      'drink some water. that is the whole fortune.',
+      'the thing you lost is in the second place you look.',
+      'you will hear a song today that sticks.',
+      'today is a good day to make something small.',
+      'a friend will send you something weird. treasure it.',
+      'the answer is yes, but not the way you think.',
+      'go outside for five minutes.',
+      'you are exactly where you need to be. probably.',
+      'flowers blooms in your heart.',
+      'the egg is closer than it seems.',
+      'take a nap. you have earned it.',
+      'someone out there is glad you exist.',
+      'finish one tiny thing today and call it a win.',
+      'what you are looking for is looking back.',
+      'if you look back, you will soon be going that way/',
+    ];
+
+    /* ── hooks into header.js ──
+       header.js shares its corner popups and theme helpers as
+       window.kaiaHooks (lancer, flowery, forest, theme). */
+    function hook(name) {
+      const h = window.kaiaHooks || {};
+      return h[name];
+    }
+    function popup(name, arrived, already) {
+      const fn = hook(name);
+      if (typeof fn !== 'function') { sys("they aren't around right now.", 'err'); return; }
+      let result;
+      try { result = fn(); } catch (e) { sys('something went wrong.', 'err'); return; }
+      sys(result === false ? already : arrived);
+    }
+
+    // /splash: the same /splashes.json the header ticker uses
+    let splashes = null;
+    async function showSplash() {
+      if (!splashes) {
+        try {
+          const data = await (await fetch('/splashes.json')).json();
+          splashes = Array.isArray(data) ? data : (data.items || []);
+        } catch (e) { splashes = null; }
+      }
+      if (splashes && splashes.length) sys('~ ' + splashes[Math.floor(Math.random() * splashes.length)]);
+      else sys("couldn't find the splash texts.", 'err');
+    }
+
+    // /theme: uses header.js so the choice is remembered on every page and
+    // the nav's dark mode button stays in sync. falls back to plain classes.
+    const SEASONS = ['theme-fall', 'theme-spring'];
+    function setTheme(arg) {
+      const b = document.body;
+      const t = hook('theme') || {};
+      const season = SEASONS.find(c => b.classList.contains(c));
+      const nowName = (b.classList.contains('dark-mode') ? 'dark' : 'light') + ' / ' + (season ? season.slice(6) : 'default');
+      switch (arg) {
+        case 'dark':
+        case 'light':
+          if (t.setDark) t.setDark(arg === 'dark');
+          else b.classList.toggle('dark-mode', arg === 'dark');
+          break;
+        case 'fall':
+        case 'spring':
+        case 'default':
+          if (t.setSeason) t.setSeason(arg);
+          else { SEASONS.forEach(c => b.classList.remove(c)); if (arg !== 'default') b.classList.add('theme-' + arg); }
+          break;
+        default:
+          sys('theme is ' + nowName + '\nusage: /theme light | dark | fall | spring | default');
+          return;
+      }
+      sys('theme set to ' + arg + '.');
+    }
+
+    // /random: any link on this page that stays on the site
+    function randomPage() {
+      const here = location.pathname.replace(/\/index\.html$/, '/');
+      const pages = new Set();
+      document.querySelectorAll('a[href]').forEach(a => {
+        let u;
+        try { u = new URL(a.getAttribute('href'), location.href); } catch (e) { return; }
+        if (u.origin !== location.origin || !/^https?:$/.test(u.protocol)) return;
+        const path = u.pathname.replace(/\/index\.html$/, '/');
+        if (path === here) return;
+        pages.add(u.pathname + u.search);
+      });
+      const list = [...pages];
+      if (!list.length) { sys('nowhere to go...', 'err'); return; }
+      const pick = list[Math.floor(Math.random() * list.length)];
+      sys('taking you somewhere...');
+      setTimeout(() => { location.href = pick; }, 500);
+    }
+
+    function kaiaTime() {
+      const fmt = tz => new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', timeZone: tz });
+      let mine;
+      try { mine = fmt(KAIA_TZ); } catch (e) { mine = fmt(undefined); }
+      const yours = fmt(undefined);
+      const hour = Number(new Date().toLocaleString('en-US', { hour: 'numeric', hour12: false, timeZone: KAIA_TZ }));
+      const mood = hour < 6 ? ' (probably asleep, shh)' : hour < 10 ? ' (probably just woke up)' : hour >= 23 ? ' (should be asleep...)' : '';
+      sys("it's " + mine + ' for kaia' + mood + (mine === yours ? '.' : ', and ' + yours + ' for you.'));
+    }
+
+    function showRosie() {
+      const n = Math.floor(Math.random() * 13) + 1;
+      const el = line('rosie');
+      const img = document.createElement('img');
+      img.src = 'rework/assets/general/rosie/rosie' + n + '.gif';
+      img.alt = 'Rosie';
+      img.addEventListener('load', () => { logEl.scrollTop = logEl.scrollHeight; });
+      el.appendChild(img);
+      append(el);
+    }
+
+    /* ── /help ──
+       shown as a compact grid instead of a long list. click a command to put
+       it in the input; /help <name> explains one command. */
+    const COMMANDS = [
+      ['nick',    '<name>', 'set your name'],
+      ['me',      '<action>', 'do something, like /me waves'],
+      ['roll',    '[2d6]', 'roll dice for everyone (d20, 3d8+2...)'],
+      ['who',     '', 'who has chatted today'],
+      ['time',    '', 'what time it is for kaia'],
+      ['theme',   '<name>', 'light, dark, fall, spring or default'],
+      ['fortune', '', 'get a fortune'],
+      ['splash',  '', 'a random splash text'],
+      ['rosie',   '', 'rosie!!'],
+      ['lancer',  '', 'ho ho ho'],
+      ['flowery', '', ':)'],
+      ['forest',  '', 'the forest orchid'],
+      ['random',  '', 'go somewhere random'],
+      ['egg',     '', '???'],
+      ['help',    '[name]', 'this list, or explain one command']
+    ];
+    const OWNER_COMMANDS = [
+      ['announce',  '<text>', 'big message for everyone'],
+      ['pin',       '<text>', 'pin a message above the chat'],
+      ['unpin',     '', 'remove the pinned message'],
+      ['delete',    '[n]', 'delete the newest message, or the nth newest'],
+      ['clearchat', '', 'wipe the whole chat (type twice)'],
+      ['logout',    '', 'stop posting as kaia']
+    ];
+
+    function helpGrid(list) {
+      const grid = document.createElement('div');
+      grid.className = 'term-help-grid';
+      list.forEach(([name, args, desc]) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'term-cmd';
+        b.textContent = '/' + name;
+        b.title = desc;
+        b.addEventListener('click', () => {
+          input.value = '/' + name + (args ? ' ' : '');
+          input.focus();
+        });
+        grid.appendChild(b);
+      });
+      return grid;
+    }
+
+    function showHelp(arg) {
+      const name = arg.replace(/^\//, '').toLowerCase();
+      if (name) {
+        const all = COMMANDS.concat(ownerToken ? OWNER_COMMANDS : []);
+        const c = all.find(x => x[0] === name);
+        if (!c) { sys('no command called /' + name + '.', 'err'); return; }
+        sys('/' + c[0] + (c[1] ? ' ' + c[1] : '') + ' - ' + c[2]);
+        return;
+      }
+      const el = line('sys term-help');
+      const head = document.createElement('div');
+      head.appendChild(labelFor('SYSTEM'));
+      head.appendChild(document.createTextNode('commands (click one, or /help <name>):'));
+      el.appendChild(head);
+      el.appendChild(helpGrid(COMMANDS));
+      if (ownerToken) {
+        const h2 = document.createElement('div');
+        h2.textContent = 'kaia only:';
+        el.appendChild(h2);
+        el.appendChild(helpGrid(OWNER_COMMANDS));
+      }
+      logEl.appendChild(el);
+      // line the top of the list up with the top of the chat, so nothing
+      // needs scrolling up to see
+      logEl.scrollTop = el.offsetTop - logEl.offsetTop - 4;
+    }
+
+    async function admin(action, extra) {
+      if (!ownerToken) { sys('that one is kaia only.', 'err'); return null; }
+      try {
+        const res = await fetch(CHAT_API + '/admin-chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.assign({ action, token: ownerToken }, extra))
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 401) { logout('your owner login expired — /login again.'); return null; }
+        if (!res.ok) { sys('could not ' + action + ': ' + (data.error || 'server error'), 'err'); return null; }
+        await poll();
+        return data;
+      } catch (e) {
+        sys('could not ' + action + ' — chat is offline.', 'err');
+        return null;
+      }
+    }
+
+    async function deleteMessage(arg) {
+      const n = arg ? parseInt(arg, 10) : 1;
+      if (!(n >= 1)) { sys('usage: /delete or /delete 3 (3rd newest)', 'err'); return; }
+      await poll();
+      const m = current[current.length - n];
+      if (!m) { sys('there is no message ' + n + ' back.', 'err'); return; }
+      if (await admin('delete', { id: m.id })) sys('deleted ' + m.name + ': "' + m.text.slice(0, 40) + (m.text.length > 40 ? '…' : '') + '"');
+    }
+
+    function command(text) {
+      const [cmd, ...rest] = text.slice(1).split(' ');
+      const arg = rest.join(' ').trim();
+      switch (cmd.toLowerCase()) {
+        case 'help':
+          showHelp(arg);
+          break;
+        case 'nick':
+          if (ownerToken) { sys('you post as kaia while logged in. /logout to use another name.', 'err'); break; }
+          if (!arg) { sys('usage: /nick <name>', 'err'); break; }
+          const wanted = arg.replace(/\s+/g, '_').slice(0, 20);
+          if (isReserved(wanted)) { sys('that name is reserved, pick another!', 'err'); break; }
+          nick = wanted;
+          try { localStorage.setItem('kaiaChatNick', nick); } catch (e) {}
+          setPrompt();
+          sys('you are now ' + '[ '+nick+' ]');
+          break;
+        case 'me':
+          if (!arg) { sys('usage: /me waves', 'err'); break; }
+          send({ kind: 'action', text: arg });
+          break;
+        case 'roll':
+          send({ kind: 'roll', roll: arg || '1d6' });
+          break;
+        case 'who':
+          if (!who) { sys('still connecting...', 'err'); break; }
+          if (!who.count) { sys("nobody's chatted today yet. be the first!"); break; }
+          sys((who.count === 1 ? '1 person has' : who.count + ' people have') + ' chatted today: ' + who.names.join(', '));
+          break;
+        case 'time':
+          kaiaTime();
+          break;
+        case 'theme':
+          setTheme(arg.toLowerCase());
+          break;
+        case 'fortune':
+          sys('~ ' + FORTUNES[Math.floor(Math.random() * FORTUNES.length)]);
+          break;
+        case 'splash':
+          showSplash();
+          break;
+        case 'rosie':
+          showRosie();
+          break;
+        case 'lancer':
+          popup('lancer', 'lancer has arrived. (bottom right!)', 'lancer is already here!');
+          break;
+        case 'flowery':
+          popup('flowery', 'flowery is here :) (bottom right!)', 'flowery is already here :)');
+          break;
+        case 'forest':
+          popup('forest', 'the forest orchid has bloomed. (bottom left!)', 'the forest orchid is already here.');
+          break;
+        case 'random':
+          randomPage();
+          break;
+        case 'egg':
+          startEgg();
+          break;
+        // kaia only
+        case 'announce':
+          if (!ownerToken) { sys('that one is for kaia only.', 'err'); break; }
+          if (!arg) { sys('usage: /announce <text>', 'err'); break; }
+          send({ kind: 'announce', text: arg });
+          break;
+        case 'pin':
+          if (!arg) { sys('usage: /pin <text>  (or /unpin)', 'err'); break; }
+          admin('pin', { text: arg }).then(d => d && sys('pinned.'));
+          break;
+        case 'unpin':
+          admin('pin', { text: '' }).then(d => d && sys('unpinned.'));
+          break;
+        case 'delete':
+          if (!ownerToken) { sys('that one is for kaia only.', 'err'); break; }
+          deleteMessage(arg);
+          break;
+        case 'clearchat':
+          if (!ownerToken) { sys('that one is for kaia only.', 'err'); break; }
+          if (Date.now() - clearArmed > 10000) {
+            clearArmed = Date.now();
+            sys('this deletes every message for everyone. type /clearchat again within 10 seconds to confirm.', 'err');
+            break;
+          }
+          clearArmed = 0;
+          admin('clear').then(d => d && sys('chat cleared.'));
+          break;
+        case 'login':
+          if (ownerToken) { sys('already logged in as kaia.'); break; }
+          awaitingPassword = true;
+          input.type = 'password';
+          promptEl.textContent = 'password:';
+          sys('enter password (esc to cancel)');
+          break;
+        case 'logout':
+          if (!ownerToken) { sys('not logged in.', 'err'); break; }
+          logout('logged out. you are ' + nick + ' again.');
+          break;
+        default:
+          sys('unknown command: /' + cmd + ' (try /help)', 'err');
+      }
+    }
+
+    function endPasswordEntry() {
+      awaitingPassword = false;
+      input.type = 'text';
+      input.value = '';
+      setPrompt();
+    }
+
+    async function login(password) {
+      endPasswordEntry();
+      sys('checking…');
+      try {
+        const res = await fetch(CHAT_API + '/chat-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.token) { sys('wrong password.', 'err'); return; }
+        ownerToken = data.token;
+        try { localStorage.setItem('kaiaChatOwner', ownerToken); } catch (e) {}
+        setPrompt();
+        sys('welcome back, kaia ★');
+      } catch (e) {
+        sys('could not log in — chat is offline.', 'err');
+      }
+    }
+
+    // post to the chat. extra = { kind, text } or { kind: 'roll', roll }
+    async function send(extra) {
+      if (sending) return;
+      sending = true;
+      try {
+        const res = await fetch(CHAT_API + '/post-chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.assign({ name: nick, token: ownerToken || undefined }, extra))
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 401 && ownerToken) {
+          logout('your owner login expired — /login again.');
+          return;
+        }
+        if (!res.ok) {
+          sys(res.status === 429 ? 'slow down a little!' : 'could not send: ' + (data.error || 'server error'), 'err');
+          return;
+        }
+        if (data.id) myIds.add(data.id);
+        input.value = '';
+        await poll();
+      } catch (e) {
+        sys('could not send — chat is offline.', 'err');
+      } finally {
+        sending = false;
+      }
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (awaitingPassword) {
+        const pw = input.value;
+        if (pw) login(pw); else endPasswordEntry();
+        return;
+      }
+      const text = input.value.trim();
+      if (quiz) { input.value = ''; if (text) answerEgg(text); return; }
+      if (!text) return;
+      if (text.startsWith('/')) { input.value = ''; command(text); return; }
+      send({ kind: 'msg', text });
+    });
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && awaitingPassword) { endPasswordEntry(); sys('login cancelled.'); }
+      if (e.key === 'Escape' && quiz && quiz.waiting) endEgg('. . .');
+    });
+
+    setPrompt();
+    sys('kaiaonline chat v1.1 - be nice! ');
+    sys('type /help for commands. type /help <command> or hover to see what it does.');
+    poll();
+    setInterval(() => { if (!document.hidden) poll(); }, POLL_MS);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
+  })();
   </script>
 
 </body>

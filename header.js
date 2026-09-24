@@ -1,7 +1,10 @@
+//hey thanks for looking at my code! its sparsely notated, but maybe you can learn from it. 
+//i also have a habit of just commenting out stuffi  dont wanna use (like all that unused music in there...) so try to not pay 
+//mind to all of that. have fun going thru my mess!
 (function () {
   "use strict";
 
-  const ALERT_TEXT = "";
+  const ALERT_TEXT = "I forgot I had alert headers!!! Remember if the light mode is too much on your eyes, you can toggle the dark mode via the nav bar! It should be riiight under THIS text";
 
   const PLAYLIST = [
     // comment out whichever songs i dont want in the playlist
@@ -14,6 +17,7 @@
     { file: "/music/castletown.mp3",  name: "My Castle Town - Toby Fox" },
     //{ file: "/music/story.mp3",  name: "Before the Story - Toby Fox" },
     { file: "/music/walking.mp3",  name: "Walking Home - Toby Fox" },
+    { file: "/music/comehome.mp3",  name: "You Can Always Come Home - Toby Fox" },
     { file: "/music/inlove.mp3",  name: "I guess I'm in love feat. Itoki Hana - Toby Fox" },
     { file: "/music/scarletforest.mp3",  name: "Scarlet Forest - Toby Fox" },
     //{ file: "/music/scarlet.mp3",  name: "Scarlet Forest - Toby Fox & Trevor Alan Gomes" },
@@ -122,7 +126,7 @@
       label: "other",
       children: [
         { label: "starwalker",  href: "/ofb/starwalker.html" },
-        { label: "draw-admin",  href: "/draw-admin.html" },
+        { label: "admin panel",  href: "/draw-admin.html" },
         { label: "404", href: "/404.html" },
         { label: "landing", href: "/index.html" },
       ],
@@ -134,14 +138,33 @@
   if (savedTheme === "dark") document.body.classList.add("dark-mode");
 
   // site color theme
-  // set to "default" to switch the whole site to winter color pallette
-  // set to "fall" to switch the whole site to autumn color pallette
-  // set to "spring" to switch the whole site to spring color pallette
-  // (body.theme-fall / body.dark-mode.theme-fall overrides in
-  // header.css and kaia-base.css). set "default" to restore
+  // set to "default", "fall" or "spring" (spring currently buggy <- FIX FIX FIX)
+  // (body.theme / body.dark-mode.theme overrides in
+  // header.css and kaia-base.css).e
   const SITE_THEME = "fall";
   //const SITE_THEME = "default";
-  if (SITE_THEME === "fall") document.body.classList.add("theme-fall");
+  // a visitor's own pick from the chat's /theme wins over SITE_THEME
+  let savedSeason = null;
+  try { savedSeason = localStorage.getItem("kaia-season"); } catch (e) {}
+  const activeSeason = savedSeason || SITE_THEME;
+  if (activeSeason === "fall")   document.body.classList.add("theme-fall");
+  if (activeSeason === "spring") document.body.classList.add("theme-spring");
+
+  // theme helpers, shared by the nav toggle and the chat's /theme
+  function updateThemeIcon() {
+    const btn = document.getElementById("sb-theme-btn");
+    if (btn) btn.textContent = document.body.classList.contains("dark-mode") ? "[ ☼ ]" : "[ ☾ ]";
+  }
+  function setDark(on) {
+    document.body.classList.toggle("dark-mode", on);
+    try { localStorage.setItem("kaia-theme", on ? "dark" : "light"); } catch (e) {}
+    updateThemeIcon();
+  }
+  function setSeason(name) { // "fall", "spring" or "default"
+    document.body.classList.remove("theme-fall", "theme-spring");
+    if (name === "fall" || name === "spring") document.body.classList.add("theme-" + name);
+    try { localStorage.setItem("kaia-season", name); } catch (e) {}
+  }
 
   // style
   function injectStyles() {
@@ -155,7 +178,7 @@
   document.head.appendChild(link);
 }
 
-  // egg room nav chance
+  // egg room nav chance 1/100
   const EGG_CHANCE = 0.01;
   const EGG_HREF   = "/khdjnerdwexr78r762/egg.html";
   function maybeRedirectToEgg(e) {
@@ -372,13 +395,13 @@
     return bar;
   }
 
-  // ── kaia music player new and improves 100000x better than the last ────────────────────────────────────────────────────────────
+  // ---- kaia music player new and improved 100000x better than the last ---------------------------------------
 
   let _audio      = null;
   let _shuffleQ   = [];   // playlist makes in shuffle order
-  let _qPos       = 0;    // current position in _shuffleQ
-  let _history    = [];   // history of _shuffleQ positions its actually played
-  let _histPos    = -1;   // pointer into _history (-1 = live / at the front)
+  let _qPos       = 0;       // current position in _shuffleQ
+  let _history    = [];          // history of _shuffleQ positions its actually played
+  let _histPos    = -1;     // pointer into _history (-1 = live / at the front)
   let _playing    = false;
   let _repeat     = false;  // loop current track when true
 
@@ -486,7 +509,7 @@
   }
 
   function pushHistory(qIdx) {
-    // trim any forward-history branch when the user acts from mid-history
+    // trim any forward-history branch when acted from mid-history
     if (_histPos >= 0) {
       _history = _history.slice(_histPos);
       _histPos = -1;
@@ -607,23 +630,51 @@
 
     const startVol   = (saved && saved.volume) ? saved.volume : DEFAULT_VOL;
     const wasPlaying = saved ? !!saved.playing : false;
+    const pageMuted  = document.body.hasAttribute("data-pause-music");
+    // pages with <body data-autoplay-music> start the music on load,
+    // even if it was paused before (the homepage uses this)
+    const pageAutoplay = document.body.hasAttribute("data-autoplay-music");
 
     loadTrack(currentTrackIdx(), startTime, startVol);
 
+    // pages with <body data-pause-music> stay silent: save as paused,
+    // keeping the song's position so it picks up from the same spot later
+    if (pageMuted && wasPlaying) {
+      try {
+        localStorage.setItem(MUSIC_KEY, JSON.stringify({
+          ...saved, time: startTime, playing: false, savedAt: Date.now(),
+        }));
+      } catch (e) {}
+    }
+
     // Attempt immediate resume.  Browsers permit this when the user has already
     // interacted with the origin
-    if (wasPlaying) {
+    let userUsedPlayer = false; // set when they press play/pause themselves
+    if ((wasPlaying || pageAutoplay) && !pageMuted) {
       _playing = true;
       _audio.play().catch(() => {
         // Autoplay was blocked (first-ever visit with no prior interaction or LOSERS with autoplay off).
-        // fall back to paused state
+        // show paused, then start on their first click/tap/keypress anywhere
         _playing = false;
         updateUI();
+        const events = ["pointerdown", "keydown", "touchstart"];
+        const startOnFirstTouch = (e) => {
+          events.forEach(ev => document.removeEventListener(ev, startOnFirstTouch, true));
+          if (userUsedPlayer || _playing) return;
+          // clicking the play button itself is handled by the button
+          if (e.target && e.target.closest && e.target.closest("#ksb-play")) return;
+          _audio.play().then(() => {
+            _playing = true;
+            updateUI();
+            saveState();
+          }).catch(() => {});
+        };
+        events.forEach(ev => document.addEventListener(ev, startOnFirstTouch, true));
       });
       updateUI();
     }
 
-    // ── controls ──────────────────────────────────────────────────────────────
+    // ----------------------- controls
     const playBtn = document.getElementById("ksb-play");
     const prevBtn = document.getElementById("ksb-prev");
     const nextBtn = document.getElementById("ksb-next");
@@ -633,6 +684,7 @@
 
     if (playBtn) {
       playBtn.addEventListener("click", () => {
+        userUsedPlayer = true;
         if (_playing) {
           _audio.pause();
           _playing = false;
@@ -680,18 +732,11 @@
   // general navbar operations
   function startRuntime() {
     const themeBtn = document.getElementById("sb-theme-btn");
-    const updateThemeIcon = () => {
-      if (!themeBtn) return;
-      themeBtn.textContent = document.body.classList.contains("dark-mode") ? "[ ☼ ]" : "[ ☾ ]";
-    };
     if (themeBtn) {
       updateThemeIcon();
       themeBtn.addEventListener("click", () => {
         window.kaiaSound.play("click");
-        document.body.classList.toggle("dark-mode");
-        localStorage.setItem("kaia-theme",
-          document.body.classList.contains("dark-mode") ? "dark" : "light");
-        updateThemeIcon();
+        setDark(!document.body.classList.contains("dark-mode"));
       });
     }
 
@@ -811,10 +856,16 @@
 
   window.injectHeader = inject;
 
-  //flower
-  if (Math.random() < 0.05) {
+  // corner popups. each one shows up on its own 5% of the time, and the
+  // chat's /forest, /lancer and /flowery can call them directly.
+  // they return false if that popup is already on the page.
+
+  //flower (forest orchid)
+  function showOrchid() {
+    if (document.getElementById('kaia-pop-orchid')) return false;
 
     const cornerLink = document.createElement('a');
+    cornerLink.id = 'kaia-pop-orchid';
     cornerLink.href = '/ofb/forest.html';
     cornerLink.addEventListener('click', pauseMusic);
 
@@ -835,13 +886,15 @@
 
     cornerLink.appendChild(cornerImg);
     document.body.appendChild(cornerLink);
-                   
+    return true;
   }
 
   //lancer
-  if (Math.random() < 0.05) {
+  function showLancer() {
+    if (document.getElementById('kaia-pop-lancer')) return false;
 
     const cornerLink = document.createElement('a');
+    cornerLink.id = 'kaia-pop-lancer';
     cornerLink.href = 'https://deltarune.com/lancer';
 
     const cornerImg = document.createElement('img');
@@ -861,13 +914,15 @@
 
     cornerLink.appendChild(cornerImg);
     document.body.appendChild(cornerLink);
-                   
+    return true;
   }
 
 // flowery
-  if (Math.random() < 0.05) {
+  function showFlowery() {
+      if (document.getElementById('kaia-pop-flowery')) return false;
 
       const cornerImg = document.createElement('img');
+      cornerImg.id = 'kaia-pop-flowery';
       cornerImg.src = '/assets/floweryidle.gif';
 
       Object.assign(cornerImg.style, {
@@ -914,7 +969,20 @@
       });
 
       document.body.appendChild(cornerImg);
+      return true;
   }
+
+  if (Math.random() < 0.05) showOrchid();
+  if (Math.random() < 0.05) showLancer();
+  if (Math.random() < 0.05) showFlowery();
+
+  // hand these to the homepage chat (/lancer, /flowery, /forest, /theme)
+  window.kaiaHooks = Object.assign(window.kaiaHooks || {}, {
+    lancer:  showLancer,
+    flowery: showFlowery,
+    forest:  showOrchid,
+    theme:   { setDark, setSeason }
+  });
 
 
 // YAM YAM
@@ -982,7 +1050,7 @@
       function rand(min, max) { return Math.random() * (max - min) + min; }
 
       // initial=true spreads leaves across the whole viewport height so the
-      // screen isn't empty on load; recycled leaves always re-enter from above.
+      // screen isn't empty on load; recycled leaves always re-enter from above
       function makeLeaf(initial) {
         const size = rand(19, 39);
         return {
@@ -990,11 +1058,11 @@
           y:         initial ? rand(-h, h) : -size - rand(0, h * 0.3),
           size,
           speedY:    rand(18, 42),     // px/sec
-          swayAmp:   rand(20, 60),     // px
-          swaySpeed: rand(0.4, 1.1),   // rad/sec
+          swayAmp:   rand(20, 60),         // px
+          swaySpeed: rand(0.4, 1.1),             // rad/sec
           swayPhase: rand(0, Math.PI * 2),
           rotation:  rand(0, Math.PI * 2),
-          rotSpeed:  rand(-0.6, 0.6),  // rad/sec
+          rotSpeed:  rand(-0.6, 0.6),           // rad/sec
           opacity:   rand(0.25, 0.65),
         };
       }
@@ -1004,7 +1072,7 @@
 
       let lastT = performance.now();
       function tick(t) {
-        const dt = Math.min((t - lastT) / 1000, 0.05); // clamp for tab-away jumps
+        const dt = Math.min((t - lastT) / 1000, 0.05); // for tab-away jumps
         lastT = t;
 
         ctx.clearRect(0, 0, w, h);

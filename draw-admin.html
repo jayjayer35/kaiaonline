@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!--hint, its not anywhere here in the code. nice try though-->
+<!--hint, its not anywhere here in the code. nice try though, im not that silly!-->
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>drawing admin panel</title>
+<title>admin panel</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="/kaia-base.css">
 <style>
@@ -83,19 +83,89 @@ h1 {
   font-size: 0.85rem;
   color: var(--text-soft);
 }
+
+/* ── sections ── */
+.admin-section { display: none; margin-top: 1.25rem; }
+.admin-section.open { display: block; }
+.admin-section h2 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.admin-section h2 .count { font-size: 0.8rem; color: var(--text-soft); font-weight: normal; }
+
+/* ── chat moderation ── */
+.mod-bar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.mod-btn {
+  font-family: 'NDS', monospace, sans-serif;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.6rem;
+  border: 0.0625rem solid var(--button-border);
+  background: var(--button-bg);
+  color: var(--button-text);
+  cursor: pointer;
+}
+.mod-btn:hover { background: var(--button-bg-hover); }
+.mod-btn.on { background: var(--button-bg-selected); color: #fff; }
+#chatList {
+  background: var(--panel-bg);
+  border: 0.0625rem solid var(--panel-border);
+  box-shadow: 0.125rem 0.125rem 0 var(--panel-shadow);
+  max-height: 26rem;
+  overflow-y: auto;
+}
+.msg-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem 0.5rem;
+  padding: 0.375rem 0.5rem;
+  border-bottom: 1px solid var(--update-line);
+  font-size: 0.85rem;
+}
+.msg-row:last-child { border-bottom: none; }
+.msg-row.flagged { background: color-mix(in srgb, #ffc1c1 35%, transparent); }
+body.dark-mode .msg-row.flagged { background: color-mix(in srgb, #3a2020 70%, transparent); }
+.msg-meta { color: var(--text-soft); font-size: 0.75rem; }
+.msg-meta b { color: var(--text); }
+.msg-text { overflow-wrap: anywhere; }
+.msg-flags { display: flex; gap: 0.25rem; flex-wrap: wrap; margin-top: 0.2rem; }
+.msg-flags .tag { font-size: 0.65rem; }
+.msg-row .del-btn { align-self: start; }
+.empty-note { padding: 0.75rem; color: var(--text-soft); font-size: 0.85rem; }
 </style>
 </head>
 <body>
   <script src="header.js"></script>
-<h1>drawing guestbook - admin panel</h1>
-<p>you shouldnt be here! but im confident you </p>
+<p>you shouldnt be here! but im confident you wont get my password... fuhuhu! <br> that isnt a challenge... (-.-")</p>
 <div id="gate">
-  <input id="pw" type="password" placeholder="admin password">
+  <input id="pw" type="password" placeholder="password">
   <button id="unlockBtn" type="button">unlock</button>
 </div>
 <p id="status"></p>
 
-<div id="list"></div>
+<section class="admin-section" id="chatSection">
+  <h2>live chat <span class="count" id="chatCount"></span></h2>
+  <div class="mod-bar">
+    <button class="mod-btn on" id="showFlagged" type="button">flagged</button>
+    <button class="mod-btn" id="showAll" type="button">all messages</button>
+    <button class="mod-btn" id="refreshChat" type="button">refresh</button>
+  </div>
+  <div id="chatList"></div>
+</section>
+
+<section class="admin-section" id="drawSection">
+  <h2>drawings</h2>
+  <div id="list"></div>
+</section>
 
 <script>
 (function () {
@@ -118,12 +188,11 @@ h1 {
   }
 
   async function loadDrawings() {
-    statusEl.textContent = 'loading…';
     try {
       const res = await fetch('/.netlify/functions/get-drawings');
       const { drawings } = await res.json();
       listEl.innerHTML = '';
-      statusEl.textContent = drawings.length + ' drawing(s)';
+      document.querySelector('#drawSection h2').textContent = 'drawings (' + drawings.length + ')';
       drawings.forEach(d => {
         const item = document.createElement('div');
         item.className = 'item';
@@ -147,7 +216,7 @@ h1 {
         listEl.appendChild(item);
       });
     } catch (err) {
-      statusEl.textContent = 'failed to load.';
+      listEl.innerHTML = '<p class="empty-note">failed to load drawings.</p>';
     }
   }
 
@@ -172,10 +241,12 @@ h1 {
     }
   }
 
-  // hide everything and show the password box again
   function lock(message) {
     password = null;
+    chatToken = null;
     listEl.innerHTML = '';
+    chatListEl.innerHTML = '';
+    document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('open'));
     gateEl.style.display = '';
     statusEl.textContent = message || '';
   }
@@ -199,13 +270,187 @@ h1 {
       password = attempt;
       pwInput.value = '';
       gateEl.style.display = 'none';
+      statusEl.textContent = '';
+      document.querySelectorAll('.admin-section').forEach(el => el.classList.add('open'));
       loadDrawings();
+      startChatMod(attempt);
     } catch (err) {
       lock('could not check the password — try again.');
     } finally {
       unlockBtn.disabled = false;
     }
   }
+
+
+  const chatListEl = document.getElementById('chatList');
+  const chatCountEl = document.getElementById('chatCount');
+  let chatToken = null;     
+  let chatMessages = [];
+  let flaggedOnly = true;
+
+  const FLAG_WORDS = [
+    'fuck*', 'shit*', 'bitch*', 'cunt*', 'asshole*', 'bastard*', 'dick', 'dicks', 'cock*', 'pussy', 'twat*', 'wank*',' nigger*', 'faggot',
+    'kys', 'kill yourself', 'kill urself', 'kill ur self', 'go die', 'retard*', 'loser', 'ugly', 'stupid', 'idiot*',
+    'porn*', 'nude*', 'nudes', 'sex', 'sexy', 'hentai', 'horny', 'onlyfans', 'boob*', 'penis*', 'vagina*',
+    // add your own below
+  ];
+
+  const IMPERSONATION = ['system', 'error', 'admin', 'mod', 'moderator', 'kaia', 'owner', 'server'];
+
+  function normalize(text) {
+    return text.toLowerCase()
+      .replace(/[@4]/g, 'a').replace(/[8]/g, 'b').replace(/[3]/g, 'e')
+      .replace(/[1!|]/g, 'i').replace(/[0]/g, 'o').replace(/[$5]/g, 's')
+      .replace(/[7+]/g, 't').replace(/v(?=ck)/g, 'u')
+      .replace(/(.)\1{2,}/g, '$1$1'); // fuuuuuck -> fuuck
+  }
+
+  const WORD_RULES = FLAG_WORDS.map(w => {
+    const prefix = w.endsWith('*');
+    const letters = w.replace(/\*$/, '').split('');
+    const body = letters.map(ch => ch === ' '
+      ? '[^a-z]+'
+      : ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '+').join('[^a-z]*');
+    return { word: w.replace(/\*$/, ''), re: new RegExp('(^|[^a-z])' + body + (prefix ? '' : '(?![a-z])')) };
+  });
+
+  function flagsFor(m, all) {
+    const flags = [];
+    const norm = normalize(m.text);
+    const hits = WORD_RULES.filter(r => r.re.test(norm)).map(r => r.word);
+    if (hits.length) flags.push(['red', 'words: ' + [...new Set(hits)].join(', ')]);
+
+    if (/(https?:\/\/|www\.|\b[a-z0-9-]+\.(com|net|org|gg|io|xyz|ru|ly|me|co|tv)\b)/i.test(m.text))
+      flags.push(['orange', 'link']);
+    if (/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i.test(m.text) || /(\d[\s().-]*){7,}/.test(m.text))
+      flags.push(['orange', 'contact info?']);
+
+    const letters = m.text.replace(/[^a-z]/gi, '');
+    if (letters.length >= 8 && letters.replace(/[^A-Z]/g, '').length / letters.length > 0.8)
+      flags.push(['yellow', 'shouting']);
+    if (/(.)\1{7,}/.test(m.text)) flags.push(['yellow', 'spam']);
+    const repeats = all.filter(o => o.name === m.name && o.text.trim().toLowerCase() === m.text.trim().toLowerCase()).length;
+    if (repeats >= 3) flags.push(['yellow', 'repeated x' + repeats]);
+
+    if (!m.owner) {
+      const n = normalize(m.name).replace(/[^a-z?]/g, '');
+      if (IMPERSONATION.some(w => n.includes(w)) || /^\?+$/.test(n)) flags.push(['purple', 'name']);
+      const nameHits = WORD_RULES.filter(r => r.re.test(normalize(m.name))).map(r => r.word);
+      if (nameHits.length) flags.push(['red', 'name: ' + nameHits.join(', ')]);
+    }
+    return flags;
+  }
+
+  async function startChatMod(pw) {
+    chatListEl.innerHTML = '<p class="empty-note">loading chat…</p>';
+    try {
+      const res = await fetch('/.netlify/functions/chat-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw })
+      });
+      const data = await res.json().catch(() => ({}));
+      chatToken = res.ok ? data.token : null;
+    } catch (e) { chatToken = null; }
+    loadChat();
+  }
+
+  async function loadChat() {
+    try {
+      const res = await fetch('/.netlify/functions/get-chat', { cache: 'no-store' });
+      const data = await res.json();
+      chatMessages = data.messages || [];
+      renderChat();
+    } catch (e) {
+      chatListEl.innerHTML = '<p class="empty-note">failed to load the chat.</p>';
+    }
+  }
+
+  function renderChat() {
+    const rows = chatMessages
+      .map(m => ({ m, flags: flagsFor(m, chatMessages) }))
+      .reverse(); // newest first
+    const flaggedCount = rows.filter(r => r.flags.length).length;
+    chatCountEl.textContent = chatMessages.length + ' messages · ' + flaggedCount + ' flagged';
+    const shown = flaggedOnly ? rows.filter(r => r.flags.length) : rows;
+
+    chatListEl.innerHTML = '';
+    if (!shown.length) {
+      chatListEl.innerHTML = '<p class="empty-note">' +
+        (flaggedOnly ? 'nothing flagged. the chat is being nice :)' : 'no messages yet.') + '</p>';
+      return;
+    }
+    shown.forEach(({ m, flags }) => {
+      const row = document.createElement('div');
+      row.className = 'msg-row' + (flags.length ? ' flagged' : '');
+
+      const main = document.createElement('div');
+      const meta = document.createElement('div');
+      meta.className = 'msg-meta';
+      const who = document.createElement('b');
+      who.textContent = (m.owner ? '★' : '') + m.name;
+      meta.appendChild(who);
+      const kind = m.kind && m.kind !== 'msg' ? ' · ' + m.kind : '';
+      meta.appendChild(document.createTextNode(' · ' + timeAgo(m.timestamp) + kind));
+      const text = document.createElement('div');
+      text.className = 'msg-text';
+      text.textContent = m.text;
+      main.appendChild(meta);
+      main.appendChild(text);
+      if (flags.length) {
+        const fl = document.createElement('div');
+        fl.className = 'msg-flags';
+        flags.forEach(([color, label]) => {
+          const t = document.createElement('span');
+          t.className = 'tag ' + color;
+          t.textContent = label;
+          fl.appendChild(t);
+        });
+        main.appendChild(fl);
+      }
+
+      const del = document.createElement('button');
+      del.className = 'del-btn';
+      del.type = 'button';
+      del.textContent = 'delete';
+      del.addEventListener('click', () => deleteChatMessage(m, del));
+
+      row.appendChild(main);
+      row.appendChild(del);
+      chatListEl.appendChild(row);
+    });
+  }
+
+  async function deleteChatMessage(m, btn) {
+    if (!chatToken) { alert('could not get chat access — try unlocking again.'); return; }
+    if (!confirm('delete this message from ' + m.name + '?')) return;
+    btn.disabled = true;
+    try {
+      const res = await fetch('/.netlify/functions/admin-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'delete', id: m.id, token: chatToken })
+      });
+      if (res.status === 401) { lock('password was rejected — unlock again.'); return; }
+      if (!res.ok && res.status !== 404) throw new Error();
+      loadChat();
+    } catch (e) {
+      alert('could not delete — something went wrong.');
+      btn.disabled = false;
+    }
+  }
+
+  const showFlaggedBtn = document.getElementById('showFlagged');
+  const showAllBtn = document.getElementById('showAll');
+  function setFilter(onlyFlagged) {
+    flaggedOnly = onlyFlagged;
+    showFlaggedBtn.classList.toggle('on', onlyFlagged);
+    showAllBtn.classList.toggle('on', !onlyFlagged);
+    renderChat();
+  }
+  showFlaggedBtn.addEventListener('click', () => setFilter(true));
+  showAllBtn.addEventListener('click', () => setFilter(false));
+  document.getElementById('refreshChat').addEventListener('click', loadChat);
 
   unlockBtn.addEventListener('click', unlock);
   pwInput.addEventListener('keydown', e => {
