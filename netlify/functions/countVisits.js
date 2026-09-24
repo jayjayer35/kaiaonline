@@ -7,7 +7,7 @@
 // (it used to be pasted in this file; keeping it in env vars keeps it private)
 
 const BIN_URL = 'https://api.jsonbin.io/v3/b/689937f9ae596e708fc718f9'; //your bin URL you IDIOT
-const BIN_API_KEY = process.env.JSONBIN_KEY; //JSON bin API key (Netlify env var)
+const BIN_API_KEY = '$2a$10$UzWzekC9pYB.ho/FqEH7oOGidp3/9ZBv4JcsLsTFj00vfuAVbVfSy'; //JSON bin API key (Netlify env var)
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL; //Netlify env vars
 const DISCORD_WEBHOOK_URL_2 = process.env.DISCORD_WEBHOOK_URL_2; //second Discord webhook (optional)
 const IPINFO_TOKEN = process.env.IPINFO_TOKEN;

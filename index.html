@@ -120,24 +120,19 @@
   </div>
 
   <script>
-    /* ── seasonal theme: mirrors the SITE_THEME flag in header.js ──
-       this page doesn't load header.js, so it needs its own copy.
-       keep this in sync with header.js by hand. */
     (function () {
-      const SITE_THEME = "fall"; // "fall" or "default"
+      const SITE_THEME = "fall"; // 
       if (SITE_THEME === "fall") {
         document.body.classList.add('theme-fall');
       }
     })();
 
-    /* ── dark mode: read saved pref ── */
     (function () {
       if (localStorage.getItem('kaia-theme') === 'dark') {
         document.body.classList.add('dark-mode');
       }
     })();
 
-    /* ── dark mode: toggle ── */
     const btn = document.getElementById('theme-btn');
 
     function syncIcon() {
