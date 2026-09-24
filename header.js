@@ -784,17 +784,21 @@
 
     const id = localStorage.getItem("visitorID") || crypto.randomUUID();
     localStorage.setItem("visitorID", id);
-    fetch(`/.netlify/functions/countVisits?visitorID=${id}`)
-      .then(r => r.json())
+    // shows "?" instead of a forever "…" if the counter fails, and says why
+    // in the browser console (F12)
+    const showVisitors = (v) => {
+      const el  = document.getElementById("sb-visitors");
+      const el2 = document.getElementById("visitor-count");
+      if (el)  el.textContent  = v;
+      if (el2) el2.textContent = v;
+    };
+    fetch(`/.netlify/functions/countVisits?visitorID=${encodeURIComponent(id)}`)
+      .then(r => r.json().catch(() => ({ error: "not json (status " + r.status + ")" })))
       .then(d => {
-        if (d.totalCount !== undefined) {
-          const el  = document.getElementById("sb-visitors");
-          const el2 = document.getElementById("visitor-count");
-          if (el)  el.textContent  = d.totalCount;
-          if (el2) el2.textContent = d.totalCount;
-        }
+        if (d.totalCount !== undefined) showVisitors(d.totalCount);
+        else { showVisitors("?"); console.warn("visitor counter:", d.error || d); }
       })
-      .catch(() => {});
+      .catch(e => { showVisitors("?"); console.warn("visitor counter:", e); });
 
     startMusicRuntime();
 

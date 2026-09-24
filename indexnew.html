@@ -451,7 +451,7 @@
         <div class="panel-head">updates <span style="font-size:1rem;letter-spacing:0;">(scroll!)</span></div>
         <div class="panel-body">
           <div class="update-scroll">
-            <div class="update-entry"><div class="update-date">[10:19 AM - 9/24/26]</div>+ added live chat on main index page!<br>+ most recent drawing displays here on the right side now<br>+ fixed the blog page i accidentally broke<br>+ added spring color pallete! (going unused until.... spring, duh.)<br>~ this page has come a long way since last year when all the stuff was broken and new... thanks for sticking around! <br>im really proud of what i have made here, and what i continue to make here.</div>
+            <div class="update-entry"><div class="update-date">[10:19 AM - 9/24/26]</div>+ added live chat on main index page!<br>+ most recent drawing displays here on the right side now<br>+ header now properly dispalyed unique visitor count in top right<br>+ fixed the blog page i accidentally broke<br>+ added spring color pallete! (going unused until.... spring, duh.)<br>~ this page has come a long way since last year when all the stuff was broken and new... thanks for sticking around! <br>im really proud of what i have made here, and what i continue to make here.</div>
             <div class="update-entry"><div class="update-date">[1:06 PM - 9/23/26]</div>+ actually finished my recipes page layout + 1 recipe now live there<br>+ indie web page updated with lots of links and slight layout change<br>+ updated webmistress page fuhuhu, games and music added to stuff i like<br>+ fixed drawings layout in guestbook<br>+ added <a href="/undertale/index.html">CLIFFSIDE SUNSET</a> (undertale) dialogue layout to KAIA tab.<br>+ moved <a href="/scrapbook.html">SCRAPBOOK</a> to KAIA tab<br>+ changed GASTER shrine to DELTARUNE shrine (still a wip)<br>+ a couple of blog posts since last update<br>+ fixed dark mode being wrong color on scrapbook page<br>+ hidden egg page now properly displays nav bar<br>+ hidden forest page now properly displays nav bar<br>~ working on myself, and getting better. almost a month no purging!</div>
             <div class="update-entry"><div class="update-date">[9:56 PM - 9/15/26]</div>+ madotsuki blog post<br>~ happy birthday undertale!</div>
             <div class="update-entry"><div class="update-date">[7:33 PM - 9/12/26]</div>+ new deltarune song on music player<br>+ couple of blog posts</div>
@@ -1143,7 +1143,7 @@
       try { mine = fmt(KAIA_TZ); } catch (e) { mine = fmt(undefined); }
       const yours = fmt(undefined);
       const hour = Number(new Date().toLocaleString('en-US', { hour: 'numeric', hour12: false, timeZone: KAIA_TZ }));
-      const mood = hour < 6 ? ' (probably asleep, shh)' : hour < 10 ? ' (probably just woke up)' : hour >= 23 ? ' (should be asleep...)' : '';
+      const mood = hour < 6 ? ' (im probably asleep...)' : hour < 10 ? ' (i probably just woke up...)' : hour >= 23 ? ' (i should be asleep...)' : '';
       sys("it's " + mine + ' for kaia' + mood + (mine === yours ? '.' : ', and ' + yours + ' for you.'));
     }
 
