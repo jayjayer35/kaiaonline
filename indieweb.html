@@ -261,6 +261,49 @@
 
     .badge-wrap:hover::after { opacity: 1; }
 
+    /* ── userbox marquee ── */
+    .userbox-marquee {
+      overflow: hidden;
+      border: 1px dashed var(--divider);
+      padding: 0.5rem 0;
+      transition: border-color 0.3s;
+    }
+
+    .userbox-track {
+      display: flex;
+      width: max-content;
+      animation: userbox-scroll var(--ub-speed, 40s) linear infinite;
+    }
+
+    /* hover (or keyboard focus) pauses it so people can actually read them */
+    .userbox-marquee:hover .userbox-track,
+    .userbox-marquee:focus-within .userbox-track {
+      animation-play-state: paused;
+    }
+
+    .userbox-track a,
+    .userbox-track > img {
+      flex-shrink: 0;
+      margin-right: 0.5rem; /* margin instead of gap keeps the loop seamless */
+    }
+
+    .userbox-track img {
+      display: block;
+      width: 275px;
+      height: 58px;
+      object-fit: fill; 
+      image-rendering: pixelated;
+    }
+
+    @keyframes userbox-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .userbox-track { animation: none; flex-wrap: wrap; width: auto; }
+    }
+
     /* ── responsive ── */
     @media (max-width: 52rem) {
       .two-col-row { grid-template-columns: 1fr; }
@@ -404,6 +447,48 @@
       </div>
 
     </div> <!-- end .two-col-row -->
+
+
+    <div class="panel">
+      <div class="panel-body">
+        <div class="userbox-marquee">
+          <div class="userbox-track" id="userbox-track">
+
+            <img src="/assets/userboxes/1.jpg">
+            <img src="/assets/userboxes/2.png">
+            <img src="/assets/userboxes/3.jpg">
+            <img src="/assets/userboxes/4.jpg">
+            <img src="/assets/userboxes/5.png">
+            <img src="/assets/userboxes/6.jpg">
+            <img src="/assets/userboxes/7.jpg">
+            <img src="/assets/userboxes/8.jpg">
+            <img src="/assets/userboxes/9.jpg">
+            <img src="/assets/userboxes/10.jpg">
+            <img src="/assets/userboxes/11.jpg">
+            <img src="/assets/userboxes/12.jpg">
+            <img src="/assets/userboxes/13.jpg">
+            <img src="/assets/userboxes/14.jpg">
+            <img src="/assets/userboxes/15.jpg">
+            <img src="/assets/userboxes/16.png">
+            <img src="/assets/userboxes/17.png">
+            <img src="/assets/userboxes/18.jpg">
+            <img src="/assets/userboxes/19.jpg">
+            <img src="/assets/userboxes/20.jpg">
+            <img src="/assets/userboxes/21.png">
+            <img src="/assets/userboxes/22.jpg">
+            <img src="/assets/userboxes/23.jpg">
+            <img src="/assets/userboxes/24.png">
+            <img src="/assets/userboxes/25.jpg">
+            <img src="/assets/userboxes/26.png">
+            <img src="/assets/userboxes/27.png">
+            <img src="/assets/userboxes/28.png">
+            <img src="/assets/userboxes/29.jpg">
+            <!-- <a href="" target="_blank" rel="noopener"><img src="" alt=""></a> -->
+
+          </div>
+        </div>
+      </div>
+    </div>
 
 
     <div class="panel">
@@ -750,6 +835,7 @@
         </ul>
         <div class="btn-section-label">graphics</div>
         <ul class="other-links">
+          <li><a href="https://www.tumblr.com/dashboard" target="_blank" rel="noopener">old gif searcher</a> - this one is a little vague and basic... but you can find a lot of cool webgraphics on tumblr!!</li>
           <li><a href="https://kiunlo.neocities.org/cursors" target="_blank" rel="noopener">web cursors!</a> - i considered using these... but wanted to try and make my own instead.</li>
           <li><a href="https://gifcities.org/" target="_blank" rel="noopener">old gif searcher</a></li>
           <li><a href="https://www.mazeguy.net/smilies.html" target="_blank" rel="noopener">mazeguy smilies</a></li>
@@ -823,6 +909,24 @@
 
 <footer>for humans by humans &lt;3 <br>kaia © 2022 - til the web is entirely explored!</footer>
 
+
+<script>
+  // copies the userbox list once so the marquee loops without a gap,
+  // and scales the speed to how many userboxes there are
+  (function () {
+    const track = document.getElementById('userbox-track');
+    if (!track) return;
+    const items = [...track.children];
+    items.forEach(el => {
+      const clone = el.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      clone.querySelectorAll('a').forEach(a => a.tabIndex = -1);
+      if (clone.tagName === 'A') clone.tabIndex = -1;
+      track.appendChild(clone);
+    });
+    track.style.setProperty('--ub-speed', (items.length * 6) + 's');
+  })();
+</script>
 
 </body>
 </html>

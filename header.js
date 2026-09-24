@@ -17,7 +17,7 @@
     { file: "/music/castletown.mp3",  name: "My Castle Town - Toby Fox" },
     //{ file: "/music/story.mp3",  name: "Before the Story - Toby Fox" },
     { file: "/music/walking.mp3",  name: "Walking Home - Toby Fox" },
-    { file: "/music/comehome.mp3",  name: "You Can Always Come Home - Toby Fox" },
+    //{ file: "/music/comehome.mp3",  name: "You Can Always Come Home - Toby Fox" },
     { file: "/music/inlove.mp3",  name: "I guess I'm in love feat. Itoki Hana - Toby Fox" },
     { file: "/music/scarletforest.mp3",  name: "Scarlet Forest - Toby Fox" },
     //{ file: "/music/scarlet.mp3",  name: "Scarlet Forest - Toby Fox & Trevor Alan Gomes" },
@@ -78,7 +78,7 @@
       label: "kaia",
       children: [
         { label: "the webmistress",     href: "/kaia.html" },
-        { label: "the blog",     href: "/blog/index.html" },
+        { label: "her diary",     href: "/blog/index.html" },
         { label: "scrapbook",   href: "/scrapbook.html" },
         { label: "friends", badge: "",
           submenu: [

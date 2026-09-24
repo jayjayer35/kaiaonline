@@ -236,7 +236,7 @@ body.dark-mode .msg-row.flagged { background: color-mix(in srgb, #3a2020 70%, tr
       if (!res.ok) throw new Error('delete failed');
       loadDrawings();
     } catch (err) {
-      alert('could not delete — something went wrong.');
+      alert('could not delete, something went wrong.');
       btn.disabled = false;
     }
   }
@@ -289,10 +289,9 @@ body.dark-mode .msg-row.flagged { background: color-mix(in srgb, #3a2020 70%, tr
   let flaggedOnly = true;
 
   const FLAG_WORDS = [
-    'fuck*', 'shit*', 'bitch*', 'cunt*', 'asshole*', 'bastard*', 'dick', 'dicks', 'cock*', 'pussy', 'twat*', 'wank*',' nigger*', 'faggot',
+    'fuck*', 'shit*', 'bitch*', 'cunt*', 'asshole*', 'bastard*', 'dick', 'dicks', 'cock*', 'pussy', 'twat*', 'wank*',' nigger*', 'faggot*',
     'kys', 'kill yourself', 'kill urself', 'kill ur self', 'go die', 'retard*', 'loser', 'ugly', 'stupid', 'idiot*',
     'porn*', 'nude*', 'nudes', 'sex', 'sexy', 'hentai', 'horny', 'onlyfans', 'boob*', 'penis*', 'vagina*',
-    // add your own below
   ];
 
   const IMPERSONATION = ['system', 'error', 'admin', 'mod', 'moderator', 'kaia', 'owner', 'server'];
