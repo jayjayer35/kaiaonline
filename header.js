@@ -178,8 +178,8 @@
   document.head.appendChild(link);
 }
 
-  // egg room nav chance 1/100
-  const EGG_CHANCE = 0.01;
+  // egg room nav chance 1/1000
+  const EGG_CHANCE = 0.0001;
   const EGG_HREF   = "/khdjnerdwexr78r762/egg.html";
   function maybeRedirectToEgg(e) {
     const dest = e.currentTarget.getAttribute("href");
