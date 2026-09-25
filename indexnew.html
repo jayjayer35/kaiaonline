@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <script>
-    // remembers every <audio>/<video> that starts playing so the chat's /egg
-    // questions can pause the header music player. must load before header.js.
     (function () {
       const playing = window.__kaiaMedia = new Set();
       const play = HTMLMediaElement.prototype.play;
@@ -1023,7 +1021,7 @@
         await eggSay('. . .', 120);
         if (eggFails() >= 3) { await eggSay('finally.'); await wait(300); }
         stopMusic(); 
-        await eggSay('proceed', 240);
+        await eggSay('Very well.',);
         setEggFails(0);
         try { sessionStorage.setItem('kaiaEgg', '1'); } catch (e) {}
         await wait(900);
@@ -1172,7 +1170,7 @@
       ['flowery', '', ':)'],
       ['forest',  '', 'the forest orchid'],
       ['random',  '', 'go somewhere random'],
-      ['egg',     '', '???'],
+      ['survey',     '', '???'],
       ['help',    '[name]', 'this list, or explain one command']
     ];
     const OWNER_COMMANDS = [
@@ -1311,7 +1309,7 @@
         case 'random':
           randomPage();
           break;
-        case 'egg':
+        case 'survey':
           startEgg();
           break;
         // kaia only

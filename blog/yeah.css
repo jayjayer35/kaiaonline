@@ -1,0 +1,156 @@
+
+
+:root {
+  --yeah-size: 0.85em;           /* overall scale — lower = smaller     */
+  --yeah-rest-opacity: 0.9;      /* how faded it sits until you hover   */
+  --yeah-accent: #a66ad1;        /* color once you've yeah'd            */
+}
+
+article.post .yeah-bar {
+  position: relative;
+  display: inline-flex !important; 
+  flex-direction: row !important;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.35em;
+  width: auto;
+  margin: 0 0.75em 0.2em 0;
+  padding: 0;
+  vertical-align: middle;
+  font-size: var(--yeah-size);
+  line-height: 1;
+  color: inherit;
+  background: none;
+  border: 0;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: normal;
+  opacity: var(--yeah-rest-opacity);
+  transition: opacity 0.15s;
+}
+article.post .yeah-bar:hover,
+article.post .yeah-bar:focus-within,
+article.post .yeah-bar:has(.is-yeahed) {
+  opacity: 1;
+}
+
+article.post .yeah-btn {
+  --px: 2px;
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.3em;
+  width: auto !important;
+  height: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0.2em 0.5em 0.2em 0.35em;
+  font: inherit;
+  font-weight: bold;
+  line-height: 1;
+  color: inherit;
+  background: transparent;
+  border: 1.5px solid currentColor;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+  float: none;
+  clip-path: polygon(
+    0 var(--px), var(--px) var(--px), var(--px) 0,
+    calc(100% - var(--px)) 0, calc(100% - var(--px)) var(--px), 100% var(--px),
+    100% calc(100% - var(--px)), calc(100% - var(--px)) calc(100% - var(--px)), calc(100% - var(--px)) 100%,
+    var(--px) 100%, var(--px) calc(100% - var(--px)), 0 calc(100% - var(--px))
+  );
+  -webkit-tap-highlight-color: transparent;
+}
+article.post .yeah-btn:hover:not(:disabled) { color: var(--yeah-accent); }
+article.post .yeah-btn:active:not(:disabled) { transform: translateY(1px); }
+article.post .yeah-btn:focus-visible { outline: none; box-shadow: inset 0 0 0 1px var(--yeah-accent); }
+article.post .yeah-btn:disabled { opacity: 0.6; cursor: default; }
+article.post .yeah-btn.is-busy { cursor: progress; }
+
+article.post .yeah-bar span,
+article.post .yeah-bar button {
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: inherit;
+}
+article.post .yeah-bar span:not(.yeah-pop) { color: inherit; background: none; }
+article.post .yeah-bar *::before,
+article.post .yeah-bar *::after { content: none !important; }
+
+article.post .yeah-label {
+  display: inline !important;
+  margin: 0;
+  padding: 0;
+}
+
+article.post .yeah-face {
+  display: inline-block !important;
+  flex: none;
+  width: 1em !important;
+  height: 1em !important;
+  max-width: none;
+  margin: 0;
+  image-rendering: pixelated;
+}
+article.post .yeah-face--on { display: none !important; }
+
+/* yeah'd: just the color changes, no big fill */
+article.post .yeah-btn.is-yeahed { color: var(--yeah-accent); }
+article.post .yeah-btn.is-yeahed .yeah-face--idle { display: none !important; }
+article.post .yeah-btn.is-yeahed .yeah-face--on {
+  display: inline-block !important;
+  animation: yeah-bounce 0.3s steps(3);
+}
+
+/* the count, sitting right next to the button */
+article.post .yeah-count {
+  display: inline-block !important;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-variant-numeric: tabular-nums;
+}
+article.post .yeah-bar[data-empty="true"] .yeah-count { opacity: 0.6; }
+
+/* little floating "yeah!" when pressed */
+article.post .yeah-pop {
+  position: absolute;
+  left: 1em;
+  bottom: 100%;
+  display: inline-block !important;
+  font-size: 0.9em;
+  font-weight: bold;
+  color: var(--yeah-accent);
+  pointer-events: none;
+  animation: yeah-rise 0.6s steps(6) forwards;
+}
+
+article.post .yeah-btn.is-shake { animation: yeah-shake 0.3s steps(6); }
+
+@keyframes yeah-bounce {
+  0% { transform: scale(0.6); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+@keyframes yeah-rise {
+  0% { transform: translateY(4px); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: translateY(-10px); opacity: 0; }
+}
+@keyframes yeah-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  article.post .yeah-bar,
+  article.post .yeah-btn,
+  article.post .yeah-btn.is-yeahed .yeah-face--on,
+  article.post .yeah-btn.is-shake { animation: none; transition: none; }
+}

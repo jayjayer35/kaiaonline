@@ -30,13 +30,31 @@ html, body {
 }
 
 .gif-wrap {
-  transform: translateY(-10rem) scale(2);
+  transform: translateY(-10rem);
   line-height: 0;
 }
 
 .gif-wrap img {
   display: block;
   image-rendering: pixelated;
+  visibility: hidden;
+}
+
+#ascii-tree {
+  display: none;
+  margin: 0;
+  font-family: Consolas, Menlo, "DejaVu Sans Mono", "Courier New", monospace;
+  color: #fff;
+  white-space: pre;
+  cursor: text;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+#ascii-tree::selection,
+#ascii-tree *::selection {
+  background: #e8b900;
+  color: #080808;
 }
 
 .play-overlay {
@@ -79,27 +97,20 @@ html, body {
   background: #000;
   border: 4px solid #fff;
   padding: 14px 18px;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.6s ease, visibility 0.6s;
+  display: none;
   pointer-events: auto;
 }
 
 #textbox.open {
-  opacity: 1;
-  visibility: visible;
+  display: block;
 }
 
-#dialogue-text,
-#code-row {
+#dialogue-text {
   font-family: 'DialogueFont', monospace;
   color: #fff;
   font-size: 24px;
   letter-spacing: 1px;
   line-height: 1.15em;
-}
-
-#dialogue-text {
   white-space: pre-wrap;
 }
 
@@ -107,40 +118,40 @@ html, body {
   margin-right: 0.20em;
 }
 
-#code-row {
-  position: relative;
+#choice-grid {
   display: none;
-  margin-top: 2px;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 20px;
+  row-gap: 4px;
+  height: 100%;
+  align-content: center;
 }
 
-#code-row.show {
-  display: flex;
+.choice-cell {
+  position: relative;
+  font-family: 'DialogueFont', monospace;
+  color: #fff;
+  font-size: 24px;
+  letter-spacing: 1px;
+  padding: 4px 0px 8px 34px;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
-.code-prompt {
-  margin-right: 0.6em;
-}
-
-#code-display {
-  color: #ff0;
-  white-space: pre;
-}
-
-#code-input {
+.cursor-icon {
   position: absolute;
   left: 0;
-  top: 0;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  border: none;
-  padding: 0;
-  pointer-events: none;
+  top: 50%;
+  transform: translateY(-60%);
+  scale: 90%;
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
 }
 </style>
 </head>
 <!--Now, it's no fun when you snoop around like this. Is it?-->
-<body data-pause-music>
+<body data-pause-music data-no-leaves>
   <script src="/header.js"></script>
 
 <div class="play-overlay" id="playOverlay"></div>
@@ -148,18 +159,14 @@ html, body {
 <div class="stage">
   <div class="gif-wrap">
     <img src="/assets/tree.gif" alt="">
+    <pre id="ascii-tree"></pre>
   </div>
 </div>
 
 <div id="ui">
   <div id="textbox">
     <div id="dialogue-text"></div>
-    <div id="code-row">
-      <span class="code-prompt">&gt;</span>
-      <span id="code-display"></span>
-      <input id="code-input" type="text" maxlength="16"
-             autocomplete="off" inputmode="numeric" spellcheck="false">
-    </div>
+    <div id="choice-grid"></div>
   </div>
 </div>
 
@@ -189,20 +196,439 @@ html, body {
                                             <b>
                                               <b>
 
+<script type="module">
+const TREE_SRC = '/assets/tree.gif';
+const SCALE = 3;
+const CELL_SIZE = 9;
+const CHARSET = Array.from(' \-+=.()<>:');
+const COLOR_MODE = 'source';
+const INK = '#e8b900';
+const BACKDROP = '#000000';
+const DARK_CUTOFF = 0.10;
+
+const img = document.querySelector('.gif-wrap img');
+const pre = document.getElementById('ascii-tree');
+
+let cols = 0;
+let rows = 0;
+let small = null;
+let smallCtx = null;
+
+function toHex(r, g, b) {
+  return '#' + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
+}
+
+function setupGrid(w, h) {
+  const fontPx = CELL_SIZE / 0.6;
+  pre.style.fontSize = fontPx + 'px';
+  pre.style.lineHeight = fontPx + 'px';
+  pre.style.background = BACKDROP;
+  pre.style.position = 'absolute';
+  pre.style.visibility = 'hidden';
+  pre.style.display = 'block';
+
+  const probe = document.createElement('span');
+  probe.textContent = CHARSET[CHARSET.length - 1].repeat(20);
+  pre.appendChild(probe);
+  const charW = probe.getBoundingClientRect().width / 20 || CELL_SIZE;
+  probe.remove();
+
+  cols = Math.max(1, Math.round((w * SCALE) / charW));
+  rows = Math.max(1, Math.round((h * SCALE) / fontPx));
+
+  small = document.createElement('canvas');
+  small.width = cols;
+  small.height = rows;
+  smallCtx = small.getContext('2d', { willReadFrequently: true });
+  smallCtx.imageSmoothingEnabled = true;
+  smallCtx.imageSmoothingQuality = 'high';
+}
+
+function frameToHtml(source) {
+  smallCtx.clearRect(0, 0, cols, rows);
+  smallCtx.drawImage(source, 0, 0, cols, rows);
+  const data = smallCtx.getImageData(0, 0, cols, rows).data;
+  const lines = [];
+
+  for (let y = 0; y < rows; y++) {
+    let line = '';
+    let run = '';
+    let runColor = null;
+    const flush = () => {
+      if (!run) return;
+      line += runColor ? `<span style="color:${runColor}">${run}</span>` : run;
+      run = '';
+    };
+
+    for (let x = 0; x < cols; x++) {
+      const i = (y * cols + x) * 4;
+      const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3] / 255;
+      const lum = ((0.299 * r + 0.587 * g + 0.114 * b) / 255) * a;
+      const ch = lum < DARK_CUTOFF
+        ? ' '
+        : CHARSET[Math.max(0, Math.min(CHARSET.length - 1, Math.round(lum * (CHARSET.length - 1))))];
+      const color = ch === ' ' ? runColor : (COLOR_MODE === 'source' ? toHex(r, g, b) : INK);
+      if (color !== runColor) {
+        flush();
+        runColor = color;
+      }
+      run += ch === '<' ? '&lt;' : ch === '>' ? '&gt;' : ch === '&' ? '&amp;' : ch;
+    }
+    flush();
+    lines.push(line);
+  }
+  return lines.join('\n');
+}
+
+function reveal() {
+  img.remove();
+  pre.style.position = '';
+  pre.style.visibility = 'visible';
+}
+
+function showGifInstead() {
+  pre.style.display = 'none';
+  img.style.width = (img.naturalWidth * SCALE) + 'px';
+  img.style.visibility = 'visible';
+}
+
+let frames = [];
+let frameIndex = 0;
+let pointerOnTree = false;
+let paused = false;
+
+function updatePaused() {
+  const sel = window.getSelection();
+  const selecting = sel && !sel.isCollapsed &&
+    (pre.contains(sel.anchorNode) || pre.contains(sel.focusNode));
+  paused = pointerOnTree || selecting;
+}
+
+pre.addEventListener('pointerdown', () => {
+  pointerOnTree = true;
+  updatePaused();
+});
+window.addEventListener('pointerup', () => {
+  pointerOnTree = false;
+  updatePaused();
+});
+document.addEventListener('selectionchange', updatePaused);
+
+function tick() {
+  if (!paused) {
+    frameIndex = (frameIndex + 1) % frames.length;
+    pre.innerHTML = frames[frameIndex].html;
+  }
+  setTimeout(tick, frames[frameIndex].delay);
+}
+
+async function loadAnimated() {
+  const { parseGIF, decompressFrames } = await import('https://esm.sh/gifuct-js@2.1.2');
+  const res = await fetch(TREE_SRC);
+  if (!res.ok) throw new Error('gif download failed');
+  const gif = parseGIF(await res.arrayBuffer());
+  const raw = decompressFrames(gif, true);
+  const w = gif.lsd.width;
+  const h = gif.lsd.height;
+  if (!raw.length) throw new Error('no frames');
+
+  setupGrid(w, h);
+
+  const full = document.createElement('canvas');
+  full.width = w;
+  full.height = h;
+  const fullCtx = full.getContext('2d', { willReadFrequently: true });
+  const patch = document.createElement('canvas');
+  const patchCtx = patch.getContext('2d');
+  let saved = null;
+
+  raw.forEach((f, i) => {
+    const prev = raw[i - 1];
+    if (prev && prev.disposalType === 2) {
+      fullCtx.clearRect(prev.dims.left, prev.dims.top, prev.dims.width, prev.dims.height);
+    }
+    if (prev && prev.disposalType === 3 && saved) fullCtx.putImageData(saved, 0, 0);
+    saved = f.disposalType === 3 ? fullCtx.getImageData(0, 0, w, h) : null;
+
+    patch.width = f.dims.width;
+    patch.height = f.dims.height;
+    patchCtx.putImageData(new ImageData(new Uint8ClampedArray(f.patch), f.dims.width, f.dims.height), 0, 0);
+    fullCtx.drawImage(patch, f.dims.left, f.dims.top);
+
+    frames.push({ html: frameToHtml(full), delay: Math.max(20, f.delay) });
+  });
+
+  pre.innerHTML = frames[0].html;
+  reveal();
+  if (frames.length > 1) setTimeout(tick, frames[0].delay);
+}
+
+async function loadStill() {
+  await img.decode();
+  setupGrid(img.naturalWidth, img.naturalHeight);
+  pre.innerHTML = frameToHtml(img);
+  reveal();
+}
+
+try {
+  await loadAnimated();
+} catch (e) {
+  try {
+    await loadStill();
+  } catch (e2) {
+    showGifInstead();
+  }
+}
+</script>
+
 <script>
-const PROMPT_DELAY_MS = 1 * 5 * 1000;
+const PROMPT_DELAY_MS = 1 * 39 * 1000;
 
-const PROMPT_TEXT = "( Something seems to be carved into the bark. )[p:1500]\n( It seems to be waiting for a code. )[p:1500]";
-const WRONG_TEXT  = "( You set some numbers into the dial. )[p:1500]\n( Briefly,[p:200] you feel dizzy. )[p:1500]\n( Seems like nonsense. )";
+const NODES = {
+  start: {
+    text: "(Reluctantly,[p:800] you finally take a glance and[p:300].[p:300].[p:300].)",
+    next: "expect",
+  },
+  expect: {
+    text: "(For some reason, [p:500]you thought you would see a man here.)",
+    next: "nobody",
+  },
+  nobody: {
+    text: "(But,[p:600] nobody was in sight.)",
+    next: "feels1",
+  },
+  feels1: {
+    text: "(Kaia felt a strange feeling.)",
+    next: "feels2",
+  },
+  feels2: {
+    text: "(One that was difficult to describe.)",
+    next: "feels3",
+  },
+  feels3: {
+    text: "(It caused you to think about time passed by.)",
+    next: "duskpre",
+  },
+  duskpre: {
+    text: "(Minutes.[p:500] Hours.[p:500] Days.[p:500] Months.[p:500] Years.)",
+    next: "der",
+  },
+  der: {
+    text: "([p:300].[p:300].[p:300].)",
+    next: "dusk",
+  },
+  dusk: {
+    text: "(You recalled that you hadn't seen anyone here.)",
+    next: "seasons",
+  },
+  seasons: {
+    text: "(Even as the seasons changed.)[p:700]\n(Even as you grew up[p:300].[p:300].[p:300].)",
+    next: "never",
+  },
+  never: {
+    text: "(Surely enough,[p:400] there was never anyone here.)",
+    next: "der2",
+  },
+  der2: {
+    text: "(.[p:300].[p:300].[p:300])",
+    next: "spin",
+  },
+  spin: {
+    text: "(Kaia's head began to spin.)",
+    next: "spin2",
+  },
+  spin2: {
+    text: "(She seems confused[p:300].[p:300].[p:300].)",
+    next: "thought",
+  },
+  thought: {
+    text: "(For a brief moment,[p:300] if only just a thought[p:300].[p:300].[p:300].)",
+    next: "someoneElse",
+  },
+  someoneElse: {
+    text: "(You considered that she was trying to think for someone else.)",
+    next: "someone",
+  },
+  someone: {
+    text: "(Someone who stood here once.)",
+    next: "ask",
+  },
+  ask: {
+    text: "(Will you wait for them?)",
+    next: "ask1",
+  },
+  ask1: {
+    text: "",
+    choices: [
+      { label: "Wait", next: "wait1" },
+      { label: "Do not", next: "leave1" },
+    ],
+  },
 
-const CODES = {
-  "022805": { text: "(The bark shifts.[p:400].[p:400].[p:400])\n(Suddenly!)" },
+  wait1: {
+    text: "(You wait.)[p:1200]\n(.[p:400].[p:400].[p:400])",
+    next: "wait2",
+  },
+  wait2: {
+    text: "(You wait a little longer.)",
+    next: "wait3",
+  },
+  wait3: {
+    text: "(The wind moves through the leaves.)",
+    next: "wait4",
+  },
+  wait4: {
+    text: "(The bark is warm,[p:200] like someone was just leaning on it.)",
+    next: "wait5",
+  },
+  wait5: {
+    text: "(Kaia closes her eyes.)",
+    hideTree: true,
+    next: "wait6",
+  },
+  wait6: {
+    text: "([p:300].[p:300].[p:300].)",
+    next: "wait7",
+  },
+  wait7: {
+    text: "(When she opens them,[p:400] nothing has changed.)",
+    next: "egg",
+  },
+  egg: {
+    text: "(You look around to see if anything changed.)",
+    next: "egg1",
+  },
+  egg1: {
+    text: "(You see a figure walking off in the distance,[p:400] too far to make out.)",
+    next: "egg2",
+  },
+  egg2: {
+    text: "(You feel like you're carrying too much.)",
+    next: "egg3",
+  },
+  egg3: {
+    text: "([p:300].[p:300].[p:300].)",
+    next: "egg4",
+  },
+  egg4: {
+    text: "(Just like always.)",
+    next: null,
+  },
+
+  leave1: {
+    text: "(You decide not to wait.)",
+    next: "leave2",
+  },
+  leave2: {
+    text: "(You turn to leave,[p:400] but suddenly.)",
+    next: "leave3",
+  },
+  leave3: {
+    text: "(You feel a hand grace your shoulder briefly.)",
+    next: "leave4",
+  },
+  leave4: {
+    text: "(Turning around,[p:400] you are met with an unfamiliar face.)",
+    next: "leave5",
+  },
+  leave5: {
+    text: "(A hand is extended toward you.)",
+    next: "leave6",
+  },
+  leave6: {
+    text: "(You take the hand.)",
+    next: "leave7",
+  },
+  leave7: {
+    text: "(You feel an object get placed in yours.)",
+    next: "leave8",
+  },
+  leave8: {
+    text: "(With a glance,[p:400] you see a mirror.)",
+    next: "leave9",
+  },
+  leave9: {
+    text: "(Kaia throws the mirror to the ground.)",
+    next: "leave99",
+  },
+  leave99: {
+    text: "(It shatters before you get a chance to look through it.)",
+    next: "leave10",
+  },
+  leave10: {
+    text: "(The figure remains ahead,[p:400] waiting.)",
+    next: "leave11",
+  },
+  leave11: {
+    text: "(So you talked.)",
+    next: "leave12",
+  },
+  leave12: {
+    text: "(...and you talked.)",
+    next: "leave13",
+  },
+  leave13: {
+    text: "(...)",
+    next: "leave14",
+  },
+  leave14: {
+    text: "(You felt an unease inside your body.)",
+    next: "leave15",
+  },
+  leave15: {
+    text: "(You felt a warmth inside your body.)",
+    next: "leave16",
+  },
+  leave16: {
+    text: "(Kaia started to feel okay.)",
+    next: "leave18",
+  },
+  leave18: {
+    text: "(...)",
+    next: "leave19",
+  },
+  leave19: {
+    text: "(Reluctantly,[p:400] you realize it's time to go.)",
+    next: "leave20",
+  },
+  leave20: {
+    text: "(No sense in staying.)",
+    next: "leave21",
+  },
+  leave21: {
+    text: "(You part ways with the figure.)",
+    next: "leave22",
+  },
+  leave22: {
+    text: "(Kaia takes one last look behind the tree,[p:400] wiping her eyes.)",
+    next: "leave23",
+  },
+  leave23: {
+    text: "(With the feeling that she had left something behind.)",
+    next: "leave24",
+  },
+  leave24: {
+    text: "(But the woman behind the tree waved,[p:400] with a patient smile across her face.)",
+    next: "leave25",
+  },
+  leave25: {
+    text: "(Just as you were about to call out to her one last time...)",
+    next: "leave26",
+  },
+  leave26: {
+    text: "(Nobody was in sight.)",
+    next: "leave27",
+  },
+  leave27: {
+    text: "(Kaia felt better.)",
+    next: null,
+  },
 };
 
 const overlay = document.getElementById('playOverlay');
 const audio = document.getElementById('bgAudio');
 
-audio.src = Math.random() < 0.5 ? '/music/man.ogg' : '/music/man2.ogg';
+audio.src = Math.random() < 0.5 ? '/music/man3.mp3' : '/music/man3.mp3';
 audio.volume = 0.25;
 
 audio.play().then(() => {
@@ -246,15 +672,15 @@ function createBlipPlayer(src, volume, poolSize = 6) {
 }
 
 const playTypeSound = createBlipPlayer('/assets/blip_none.wav', 0.4);
-const playConfirmSound = createBlipPlayer('/assets/menu_sound/menu_confirm.wav', 0.1, 3);
+const playMenuSelectSound = createBlipPlayer('/assets/menu_sound/menu_select.wav', 0.1, 3);
 
+const CURSOR_SRC = '/assets/soul_select.png';
+const CHOICE_COLS = 2;
 const TYPE_SPEED_MS = 45;
 
 const textboxEl = document.getElementById('textbox');
 const textEl = document.getElementById('dialogue-text');
-const codeRowEl = document.getElementById('code-row');
-const codeInputEl = document.getElementById('code-input');
-const codeDisplayEl = document.getElementById('code-display');
+const choiceGridEl = document.getElementById('choice-grid');
 
 function parseDialogueMarkup(rawStr) {
   const str = '* ' + rawStr.replace(/\n/g, '\n* ');
@@ -308,23 +734,32 @@ function charsToHtml(chars) {
   return html;
 }
 
+let currentNodeId = null;
 let tokens = [];
 let tokenIndex = 0;
 let revealed = [];
 let typing = false;
 let typeTimer = null;
-let afterTyping = null;   
-let afterAdvance = null;  
-let inputActive = false;
+let choiceActive = false;
+let currentChoices = [];
+let choiceIndex = 0;
 
-function say(text, { then = null, onAdvance = null } = {}) {
+const treeEl = document.querySelector('.gif-wrap');
+
+function startNode(id) {
+  const node = NODES[id];
+  if (!node) {
+    closeBox();
+    return;
+  }
+  treeEl.style.visibility = node.hideTree ? 'hidden' : '';
+  currentNodeId = id;
   clearTimeout(typeTimer);
-  tokens = parseDialogueMarkup(text);
+  hideChoiceGrid();
+  tokens = parseDialogueMarkup(node.text);
   tokenIndex = 0;
   revealed = [];
   typing = true;
-  afterTyping = then;
-  afterAdvance = onAdvance;
   textEl.innerHTML = '';
   typeStep();
 }
@@ -355,18 +790,84 @@ function finishTyping() {
 
 function doneTyping() {
   typing = false;
-  if (afterTyping) {
-    const fn = afterTyping;
-    afterTyping = null;
-    fn();
+  const node = NODES[currentNodeId];
+  if (node && node.choices && node.choices.length) {
+    showChoiceGrid(node.choices);
   }
 }
 
+function cursorImgHtml() {
+  return `<img class="cursor-icon" src="${CURSOR_SRC}" alt="">`;
+}
+
+function showChoiceGrid(choices) {
+  currentChoices = choices;
+  choiceIndex = 0;
+  choiceActive = true;
+  textEl.style.display = 'none';
+  choiceGridEl.style.display = 'grid';
+  renderChoiceGrid();
+}
+
+function hideChoiceGrid() {
+  choiceActive = false;
+  currentChoices = [];
+  choiceGridEl.style.display = 'none';
+  choiceGridEl.innerHTML = '';
+  textEl.style.display = '';
+}
+
+function renderChoiceGrid() {
+  let html = '';
+  currentChoices.forEach((choice, i) => {
+    const cursor = i === choiceIndex ? cursorImgHtml() : '';
+    let label = '';
+    for (const ch of choice.label) label += escapeHtml(ch);
+    html += `<div class="choice-cell" data-index="${i}">${cursor}${label}</div>`;
+  });
+  choiceGridEl.innerHTML = html;
+  choiceGridEl.querySelectorAll('.choice-cell').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      choiceIndex = parseInt(el.dataset.index, 10);
+      confirmChoice();
+    });
+  });
+}
+
+function moveChoiceGrid(dRow, dCol) {
+  if (!currentChoices.length) return;
+  const total = currentChoices.length;
+  const rows = Math.ceil(total / CHOICE_COLS);
+  let row = Math.floor(choiceIndex / CHOICE_COLS);
+  let col = choiceIndex % CHOICE_COLS;
+  row = (row + dRow + rows) % rows;
+  col = (col + dCol + CHOICE_COLS) % CHOICE_COLS;
+  let newIndex = row * CHOICE_COLS + col;
+  if (newIndex >= total) newIndex = total - 1;
+  if (newIndex !== choiceIndex) {
+    choiceIndex = newIndex;
+    renderChoiceGrid();
+    playMenuSelectSound();
+  }
+}
+
+function confirmChoice() {
+  const choice = currentChoices[choiceIndex];
+  hideChoiceGrid();
+  if (choice && choice.next) startNode(choice.next);
+  else closeBox();
+}
+
 function advance() {
-  if (typing || inputActive || !afterAdvance) return;
-  const fn = afterAdvance;
-  afterAdvance = null;
-  fn();
+  if (typing) return;
+  if (choiceActive) {
+    confirmChoice();
+    return;
+  }
+  const node = NODES[currentNodeId];
+  if (node && node.next) startNode(node.next);
+  else closeBox();
 }
 
 function openBox() {
@@ -374,66 +875,14 @@ function openBox() {
 }
 
 function closeBox() {
+  clearTimeout(typeTimer);
+  hideChoiceGrid();
+  currentNodeId = null;
+  treeEl.style.visibility = '';
   textboxEl.classList.remove('open');
 }
 
-function renderCode() {
-  const code = codeInputEl.value.toUpperCase();
-  codeDisplayEl.textContent = code + (code.length < codeInputEl.maxLength ? '_' : '');
-}
-
-codeInputEl.addEventListener('input', () => {
-  codeInputEl.value = codeInputEl.value.replace(/[^0-9]/g, '');
-  renderCode();
-});
-
-function showInput() {
-  codeInputEl.value = '';
-  renderCode();
-  codeRowEl.classList.add('show');
-  inputActive = true;
-  codeInputEl.focus();
-}
-
-function hideInput() {
-  inputActive = false;
-  codeRowEl.classList.remove('show');
-  codeInputEl.blur();
-}
-
-function askForCode() {
-  say(PROMPT_TEXT, { then: showInput });
-}
-
-function submitCode() {
-  const code = codeInputEl.value.trim().toUpperCase();
-  if (!code) return;
-  hideInput();
-  playConfirmSound();
-
-  const hit = CODES[code];
-  if (hit) {
-    say(hit.text, { onAdvance: closeBox });
-  } else {
-    say(WRONG_TEXT, { onAdvance: askForCode });
-  }
-}
-
-codeInputEl.addEventListener('keydown', (e) => {
-  e.stopPropagation(); 
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    submitCode();
-  }
-  if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) {
-    e.preventDefault();
-  }
-});
-
-textboxEl.addEventListener('click', () => {
-  if (inputActive) codeInputEl.focus();
-  else advance();
-});
+textboxEl.addEventListener('click', advance);
 
 window.addEventListener('keydown', (e) => {
   if (!textboxEl.classList.contains('open')) return;
@@ -444,6 +893,18 @@ window.addEventListener('keydown', (e) => {
   } else if (k === 'x' || k === 'shift') {
     e.preventDefault();
     finishTyping();
+  } else if (choiceActive && k === 'arrowleft') {
+    e.preventDefault();
+    moveChoiceGrid(0, -1);
+  } else if (choiceActive && k === 'arrowright') {
+    e.preventDefault();
+    moveChoiceGrid(0, 1);
+  } else if (choiceActive && k === 'arrowup') {
+    e.preventDefault();
+    moveChoiceGrid(-1, 0);
+  } else if (choiceActive && k === 'arrowdown') {
+    e.preventDefault();
+    moveChoiceGrid(1, 0);
   }
 });
 
@@ -453,7 +914,7 @@ let promptShown = false;
 
 const listenTimer = setInterval(() => {
   const now = performance.now();
-  const dt = Math.min(now - lastTick, 1000); 
+  const dt = Math.min(now - lastTick, 1000);
   lastTick = now;
 
   if (!audio.paused && !document.hidden) listenedMs += dt;
@@ -462,10 +923,11 @@ const listenTimer = setInterval(() => {
     promptShown = true;
     clearInterval(listenTimer);
     openBox();
-    askForCode();
+    startNode('start');
   }
 }, 250);
 </script>
+
                                               </b>
                                             </b>
                                           </b>

@@ -1030,7 +1030,10 @@
   const LEAF_MAX_COUNT  = 30;
   const LEAF_IMG_SRC    = "/assets/leaf.png";
 
-  if (LEAVES_ENABLED && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  // pages with <body data-no-leaves> skip the falling leaves
+  const pageNoLeaves = document.body && document.body.hasAttribute("data-no-leaves");
+
+  if (LEAVES_ENABLED && !pageNoLeaves && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     (function initLeaves() {
       const canvas = document.createElement("canvas");
       canvas.id = "kaia-leaf-canvas";
@@ -1053,8 +1056,6 @@
 
       function rand(min, max) { return Math.random() * (max - min) + min; }
 
-      // initial=true spreads leaves across the whole viewport height so the
-      // screen isn't empty on load; recycled leaves always re-enter from above
       function makeLeaf(initial) {
         const size = rand(19, 39);
         return {
