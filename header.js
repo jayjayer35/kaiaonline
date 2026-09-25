@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  const ALERT_TEXT = "I forgot I had alert headers!!! Remember if the light mode is too much on your eyes, you can toggle the dark mode via the nav bar! It should be riiight under THIS text";
+  const ALERT_TEXT = "";
 
   const PLAYLIST = [
     // comment out whichever songs i dont want in the playlist
