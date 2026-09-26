@@ -9,6 +9,7 @@
         font-display: swap; */
       }
 
+      /* ── winter theme (base colors, also body.theme-winter) ───────────── */
       :root {
         --hdr-bg:            #9eb4d1;
         --hdr-border-top:    #c4d6e8;
@@ -141,6 +142,193 @@
         --steam-text:        #d9995f;
       }
 
+      /* ── spring theme ──────────────────────────────────────────────────── */
+      body.theme-spring {
+        --hdr-bg:            #5a9636;
+        --hdr-border-top:    #a5d888;
+        --hdr-border-bottom: #4f8a2e;
+        --hdr-shadow-1:      #8cc76a;
+        --hdr-shadow-2:      #3f6e22;
+        --hdr-text-shadow:   #2f5518;
+        --drop-bg:           #f0fbe4;
+        --drop-border:       #5f9e3a;
+        --drop-border-top:   #a5d888;
+        --drop-shadow:       #4f8a2e;
+        --drop-text:         #24361a;
+        --drop-hover-bg:     #c8eca8;
+        --drop-hover-text:   #1a2a10;
+        --steam-text:        #f0fbe4;
+        --steam-shadow:      #2f5518;
+      }
+
+      body.dark-mode.theme-spring {
+        --hdr-bg:            #2b3a15;
+        --hdr-border-top:    #516b25;
+        --hdr-border-bottom: #121a08;
+        --hdr-shadow-1:      #3f551f;
+        --hdr-shadow-2:      #0b1005;
+        --hdr-text:          #daf0c0;
+        --drop-bg:           #1a2408;
+        --drop-border:       #121a08;
+        --drop-border-top:   #3f551f;
+        --drop-shadow:       #0a0d05;
+        --drop-text:         #b0cc85;
+        --drop-hover-bg:     #2c3d14;
+        --drop-hover-text:   #daf0c0;
+        --steam-text:        #a1e84a;
+      }
+
+      /* ── flowery theme (deltarune ch5) ─────────────────────────────────── */
+      body.theme-flowery {
+        --hdr-bg:            #f2c230;
+        --hdr-border-top:    #fbe08a;
+        --hdr-border-bottom: #c98a1c;
+        --hdr-shadow-1:      #fbe08a;
+        --hdr-shadow-2:      #d9a02a;
+        --hdr-text:          #3a2a10;
+        --hdr-text-shadow:   #f9dc78;
+        --hdr-hover-bg:      rgba(0,0,0,0.08);
+        --drop-bg:           #fffdf6;
+        --drop-border:       #c98a1c;
+        --drop-border-top:   #fbe08a;
+        --drop-shadow:       #b8862a;
+        --drop-text:         #3a2e18;
+        --drop-hover-bg:     #f2c230;
+        --drop-hover-text:   #2a1e08;
+        --steam-text:        #5a3e0a;
+        --steam-shadow:      #f9dc78;
+      }
+
+      body.dark-mode.theme-flowery {
+        --hdr-bg:            #221b0c;
+        --hdr-border-top:    #5c4718;
+        --hdr-border-bottom: #0a0805;
+        --hdr-shadow-1:      #3a2c0e;
+        --hdr-shadow-2:      #050403;
+        --hdr-text:          #ffd84a;
+        --hdr-text-shadow:   #000;
+        --hdr-hover-bg:      rgba(255,216,74,0.12);
+        --drop-bg:           #17140e;
+        --drop-border:       #0a0805;
+        --drop-border-top:   #5c4718;
+        --drop-shadow:       #050403;
+        --drop-text:         #e6d6a8;
+        --drop-hover-bg:     #3a2c0e;
+        --drop-hover-text:   #ffd84a;
+        --steam-text:        #a6dc6e;
+        --steam-shadow:      #000;
+      }
+
+      /* ── blossom theme (sakura) ────────────────────────────────────────── */
+      body.theme-blossom {
+        --hdr-bg:            #d0668f;
+        --hdr-border-top:    #e896b4;
+        --hdr-border-bottom: #a8456c;
+        --hdr-shadow-1:      #e896b4;
+        --hdr-shadow-2:      #8a3558;
+        --hdr-text-shadow:   #7a2d4c;
+        --drop-bg:           #fff5f8;
+        --drop-border:       #e08aab;
+        --drop-border-top:   #f7cddb;
+        --drop-shadow:       #c4557f;
+        --drop-text:         #4a2a32;
+        --drop-hover-bg:     #ffc4d8;
+        --drop-hover-text:   #3a1a24;
+        --steam-text:        #ffe0ea;
+        --steam-shadow:      #7a2d4c;
+      }
+
+      body.dark-mode.theme-blossom {
+        --hdr-bg:            #3a1f2e;
+        --hdr-border-top:    #6e2f4c;
+        --hdr-border-bottom: #120e18;
+        --hdr-shadow-1:      #5a2a42;
+        --hdr-shadow-2:      #08060c;
+        --hdr-text:          #f8e8ee;
+        --drop-bg:           #1e1824;
+        --drop-border:       #120e18;
+        --drop-border-top:   #5a2a42;
+        --drop-shadow:       #08060c;
+        --drop-text:         #dcbccb;
+        --drop-hover-bg:     #3a2432;
+        --drop-hover-text:   #ffa6c9;
+        --steam-text:        #ffa6c9;
+      }
+
+      /* ── omori theme (white space / black space) ────────────────────────── */
+      body.theme-omori {
+        --hdr-bg:            #fff;
+        --hdr-border-top:    #fff;
+        --hdr-border-bottom: #000;
+        --hdr-shadow-1:      #fff;
+        --hdr-shadow-2:      #fff;
+        --hdr-text:          #000;
+        --hdr-text-shadow:   transparent;
+        --hdr-hover-bg:      rgba(0,0,0,0.08);
+        --drop-bg:           #fff;
+        --drop-border:       #000;
+        --drop-border-top:   #000;
+        --drop-shadow:       #000;
+        --drop-text:         #000;
+        --drop-hover-bg:     #000;
+        --drop-hover-text:   #fff;
+        --pill-bg:           #fff;
+        --pill-border:       #000;
+        --steam-text:        #555;
+        --steam-shadow:      transparent;
+      }
+
+      body.dark-mode.theme-omori {
+        --hdr-bg:            #000;
+        --hdr-border-top:    #fff;
+        --hdr-border-bottom: #fff;
+        --hdr-shadow-1:      #000;
+        --hdr-shadow-2:      #000;
+        --hdr-text:          #fff;
+        --hdr-text-shadow:   #000;
+        --hdr-hover-bg:      rgba(255,255,255,0.15);
+        --drop-bg:           #000;
+        --drop-border:       #fff;
+        --drop-border-top:   #fff;
+        --drop-shadow:       #444;
+        --drop-text:         #fff;
+        --drop-hover-bg:     #fff;
+        --drop-hover-text:   #000;
+        --steam-text:        #ff8fb1;
+        --steam-shadow:      #000;
+      }
+
+      /* omori: music controls are drawn in white-on-color by default,
+         so flip them to black lines on the white bar */
+      body.theme-omori:not(.dark-mode) #kaia-music-row { border-top-color: rgba(0,0,0,0.15); background: #fff; }
+      body.theme-omori:not(.dark-mode) #ksb-transport,
+      body.theme-omori:not(.dark-mode) #ksb-repeat,
+      body.theme-omori:not(.dark-mode) .ksb-vol-wrap,
+      body.theme-omori:not(.dark-mode) #ksb-song-select-btn { border-color: #000; box-shadow: none; }
+      body.theme-omori:not(.dark-mode) .ksb-music-btn { border-right-color: #000; background: #fff; }
+      body.theme-omori:not(.dark-mode) .ksb-music-btn:hover,
+      body.theme-omori:not(.dark-mode) #ksb-repeat:hover,
+      body.theme-omori:not(.dark-mode) #ksb-song-select-btn:hover,
+      body.theme-omori:not(.dark-mode) #ksb-song-select-wrap.open #ksb-song-select-btn { background: rgba(0,0,0,0.08); }
+      body.theme-omori:not(.dark-mode) #ksb-repeat.on { background: #000; color: #fff; border-color: #000; }
+      body.theme-omori:not(.dark-mode) #ksb-volume { background: rgba(0,0,0,0.2); }
+      body.theme-omori:not(.dark-mode) .ksb-song-option.active { background: rgba(0,0,0,0.08); }
+      /* flowery light: gold bar, so music control outlines go dark */
+      body.theme-flowery:not(.dark-mode) #kaia-music-row { border-top-color: rgba(58,42,16,0.2); }
+      body.theme-flowery:not(.dark-mode) #ksb-transport,
+      body.theme-flowery:not(.dark-mode) #ksb-repeat,
+      body.theme-flowery:not(.dark-mode) .ksb-vol-wrap,
+      body.theme-flowery:not(.dark-mode) #ksb-song-select-btn { border-color: rgba(58,42,16,0.45); }
+      body.theme-flowery:not(.dark-mode) .ksb-music-btn { border-right-color: rgba(58,42,16,0.45); }
+      body.theme-flowery:not(.dark-mode) #ksb-volume { background: rgba(58,42,16,0.25); }
+
+      /* hp / bat bars go monochrome too */
+      body.theme-omori .sb-pill-fill.hp,
+      body.theme-omori .sb-pill-fill.bat { background: #000; }
+      body.dark-mode.theme-omori .sb-pill-fill.hp,
+      body.dark-mode.theme-omori .sb-pill-fill.bat { background: #fff; }
+      body.dark-mode.theme-omori .ksb-song-option.active { background: rgba(255,255,255,0.12); }
+
       /* alert bar */
       #kaia-alert-bar {
         width: 100%;
@@ -189,6 +377,16 @@
         font-family: 'NDS', monospace, sans-serif;
         font-weight: bold;
         transition: background 0.3s, border-color 0.3s;
+      }
+
+      /* images hanging off the bottom of the bar (HEADER_HANGERS in header.js) */
+      #kaia-single-bar .kaia-hanger {
+        position: absolute;
+        top: calc(100% + 3px);   /* just under the bar's bottom border */
+        pointer-events: none;    /* clicks go through to the page */
+        image-rendering: pixelated;
+        user-select: none;
+        z-index: -1;             /* tucks under the bar's dropdown menus */
       }
 
       #kaia-bar-row {
@@ -613,7 +811,7 @@
       }
       @media (max-width: 60rem) { #kaia-ticker-row { display: none; } }
 
-      /* ── falling leaves (fall decoration) ────────────────────────────────── */
+      /* ── falling leaves / snowflakes (image picked per theme in header.js) ────────────────────────────────── */
       #kaia-leaf-canvas {
         position: fixed;
         top: 0; left: 0;
@@ -621,4 +819,20 @@
         height: 100vh;
         pointer-events: none;
         z-index: 5;
+      }
+
+      /* drifting gifs (flowery), see DRIFT_PARTICLES in header.js */
+      #kaia-drift-layer {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 5;
+      }
+      #kaia-drift-layer .kaia-drift {
+        position: absolute;
+        top: 0; left: 0;
+        image-rendering: pixelated;
+        will-change: transform;
+        user-select: none;
       }

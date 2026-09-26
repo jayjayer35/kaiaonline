@@ -14,7 +14,6 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>kaia online</title>
-  <link rel="stylesheet" href="rework/assets/css/kaia-base.css">
   <script src="hide-scrollbars.js"></script>
   <link rel="stylesheet" href="/kaia-base.css">
   <link rel="stylesheet" href="/header.css">
@@ -119,7 +118,7 @@
       box-shadow:
         inset 0 1px 0 var(--head-b-shadow1),
         inset 0 -1px 0 var(--head-b-shadow2);
-      color: #fff;
+      color: var(--head-text, #fff);
       letter-spacing: 0.15rem;
       text-shadow: 0 1px 0 var(--head-t-shadow);
       transition: background 0.3s, border-color 0.3s;
@@ -283,7 +282,7 @@
     .cal-btn {
       background: var(--panel-head);
       border: 1px solid var(--panel-head-b);
-      color: #fff;
+      color: var(--head-text, #fff);
       font-family: 'NDS', monospace, sans-serif;
       font-size: 1rem;
       padding: 0.1rem 0.35rem;
@@ -316,7 +315,7 @@
       left: 50%;
       transform: translateX(-50%);
       background: var(--panel-head);
-      color: #fff;
+      color: var(--head-text, #fff);
       padding: 0.125rem 0.3rem;
       font-size: 1rem;
       white-space: nowrap;
@@ -408,21 +407,14 @@
       </div>
 
       <div class="panel">
-        <div class="panel-head">to-do list <span style="font-size:1rem;letter-spacing:0;">(scroll!)</span></div>
+        <div class="panel-head">calendar</div>
         <div class="panel-body">
-          <div class="update-scroll" style="max-height: 5.5rem;">
-            <ul>
-              <li>- Get page displayed onto neocities and/or nekoweb</li>
-              <li>- re-implement last.fm stuff</li>
-              <li>- get in a couple webrings</li>
-              <li>- apply for navlink</li>
-              <li>- learn how to use lists properly</li>
-              <li>- browse the web</li>
-              <li>- marry marisa kirisame</li>
-              <li>- marry gumi megpoid</li>
-              <li>- marry flowery</li>
-            </ul>  
+          <div class="cal-head">
+            <button class="cal-btn" id="prevMonth">◄</button>
+            <span id="calendarTitle"></span>
+            <button class="cal-btn" id="nextMonth">►</button>
           </div>
+          <div class="cal-grid" id="calendarGrid"></div>
         </div>
       </div>
 
@@ -449,7 +441,8 @@
         <div class="panel-head">updates <span style="font-size:1rem;letter-spacing:0;">(scroll!)</span></div>
         <div class="panel-body">
           <div class="update-scroll">
-            <div class="update-entry"><div class="update-date">[5:50 AM - 9/25/26]</div>+ added 'yeah!' feature to blog posts. (like the miiverse lolll)<br>+ egg room updated. random chance is now quite low... but there <em>is</em> a guaranteed way to get it... <em>(hint, do /survery in the chatbox!)</em></div>
+            <div class="update-entry"><div class="update-date">[8:09 AM - 9/26/26]</div>+ 4 new tracks added to music player. ('By Your Side', 'A Home for Flowers', and 'Trees...', and 'The Diner Song of Best Friends')<br>+ 1 new hidden track<br>+ /theme command now works<br>+ spring, blossom, omori, and flowery themes added..</div>
+            <div class="update-entry"><div class="update-date">[5:50 PM - 9/25/26]</div>+ added 'yeah!' feature to blog posts. (like the miiverse lolll<br>+ egg room updated. random chance is now quite low... but there <em>is</em> a guaranteed way to get it... <em><br>(hint, do /survery in the chatbox!)</em></div>
             <div class="update-entry"><div class="update-date">[10:19 AM - 9/24/26]</div>+ added live chat on main index page!<br>+ most recent drawing displays here on the right side now<br>+ header now properly dispalyed unique visitor count in top right<br>+ fixed the blog page i accidentally broke<br>+ added spring color pallete! (going unused until.... spring, duh.)<br>~ this page has come a long way since last year when all the stuff was broken and new... thanks for sticking around! <br>im really proud of what i have made here, and what i continue to make here.</div>
             <div class="update-entry"><div class="update-date">[1:06 PM - 9/23/26]</div>+ actually finished my recipes page layout + 1 recipe now live there<br>+ indie web page updated with lots of links and slight layout change<br>+ updated webmistress page fuhuhu, games and music added to stuff i like<br>+ fixed drawings layout in guestbook<br>+ added <a href="/undertale/index.html">CLIFFSIDE SUNSET</a> (undertale) dialogue layout to KAIA tab.<br>+ moved <a href="/scrapbook.html">SCRAPBOOK</a> to KAIA tab<br>+ changed GASTER shrine to DELTARUNE shrine (still a wip)<br>+ a couple of blog posts since last update<br>+ fixed dark mode being wrong color on scrapbook page<br>+ hidden egg page now properly displays nav bar<br>+ hidden forest page now properly displays nav bar<br>~ working on myself, and getting better. almost a month no purging!</div>
             <div class="update-entry"><div class="update-date">[9:56 PM - 9/15/26]</div>+ madotsuki blog post<br>~ happy birthday undertale!</div>
@@ -535,14 +528,21 @@
 
       <div class="panel">
         <img src="/rework/assets/decor/hm3.png" class="decor corner-br" alt="harvest moon " style="width: 120%; top: 15em; left: -3rem;">
-        <div class="panel-head">calendar</div>
+        <div class="panel-head">to-do list <span style="font-size:1rem;letter-spacing:0;">(scroll!)</span></div>
         <div class="panel-body">
-          <div class="cal-head">
-            <button class="cal-btn" id="prevMonth">◄</button>
-            <span id="calendarTitle"></span>
-            <button class="cal-btn" id="nextMonth">►</button>
+          <div class="update-scroll" style="max-height: 5.5rem;">
+            <ul>
+              <li>- Get page displayed onto neocities and/or nekoweb</li>
+              <li>- re-implement last.fm stuff</li>
+              <li>- get in a couple webrings</li>
+              <li>- apply for navlink</li>
+              <li>- learn how to use lists properly</li>
+              <li>- browse the web</li>
+              <li>- marry marisa kirisame</li>
+              <li>- marry gumi megpoid</li>
+              <li>- marry flowery</li>
+            </ul>  
           </div>
-          <div class="cal-grid" id="calendarGrid"></div>
         </div>
       </div>
 
@@ -1093,27 +1093,22 @@
       else sys("couldn't find the splash texts.", 'err');
     }
 
-    const SEASONS = ['theme-fall', 'theme-spring'];
+    const THEME_NAMES = ['winter', 'fall', 'spring', 'flowery', 'blossom', 'omori'];
     function setTheme(arg) {
       const b = document.body;
       const t = hook('theme') || {};
-      const season = SEASONS.find(c => b.classList.contains(c));
-      const nowName = (b.classList.contains('dark-mode') ? 'dark' : 'light') + ' / ' + (season ? season.slice(6) : 'default');
-      switch (arg) {
-        case 'dark':
-        case 'light':
-          if (t.setDark) t.setDark(arg === 'dark');
-          else b.classList.toggle('dark-mode', arg === 'dark');
-          break;
-        case 'fall':
-        case 'spring':
-        case 'default':
-          if (t.setSeason) t.setSeason(arg);
-          else { SEASONS.forEach(c => b.classList.remove(c)); if (arg !== 'default') b.classList.add('theme-' + arg); }
-          break;
-        default:
-          sys('theme is ' + nowName + '\nusage: /theme light | dark | fall | spring | default');
-          return;
+      const names = t.list || THEME_NAMES;
+      const season = names.find(n => b.classList.contains('theme-' + n)) || 'winter';
+      const nowName = (b.classList.contains('dark-mode') ? 'dark' : 'light') + ' / ' + season;
+      if (arg === 'dark' || arg === 'light') {
+        if (t.setDark) t.setDark(arg === 'dark');
+        else b.classList.toggle('dark-mode', arg === 'dark');
+      } else if (names.includes(arg)) {
+        if (t.setSeason) t.setSeason(arg);
+        else { names.forEach(n => b.classList.remove('theme-' + n)); b.classList.add('theme-' + arg); }
+      } else {
+        sys('current theme: ' + nowName + '\nusage: /theme light | dark | ' + names.join(' | '));
+        return;
       }
       sys('theme set to ' + arg + '.');
     }
@@ -1163,7 +1158,7 @@
       ['roll',    '[2d6]', 'roll dice for everyone (d20, 3d8+2...)'],
       ['who',     '', 'who has chatted today'],
       ['time',    '', 'what time it is for kaia'],
-      ['theme',   '<name>', 'light, dark, fall, spring or default'],
+      ['theme',   '<name>', 'light, dark, winter, fall, spring, flowery, blossom, omori'],
       ['fortune', '', 'get a fortune'],
       ['splash',  '', 'a random splash text'],
       ['rosie',   '', 'rosie!!'],

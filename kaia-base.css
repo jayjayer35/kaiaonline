@@ -1,4 +1,3 @@
-
 @font-face {
   font-family: "NDS";
   src: url("/rework/assets/fonts/nds.ttf") format("truetype");
@@ -8,6 +7,15 @@
 
 
 :root {
+  /* WINTER THEME (the base values, also applies with body.theme-winter) */
+
+  /* page background image, per theme. EDIT ME: override --bg-image in any
+     theme block below. use absolute paths (starting with /) since relative
+     urls inside css variables resolve inconsistently between browsers.
+     set --bg-image: none; for just the gradient. */
+  --bg-image:      url('/rework/assets/general/bkg2.gif');
+  --bg-size:       auto;   /* auto = tile it, cover = one big stretched image */
+
   /* backgr */
   --sky:           #d8eaf8;
   --sky2:          #eef5fc;
@@ -18,6 +26,7 @@
   --panel-shadow:  #9ca7c3;
   --panel-head:    #b6c6df;
   --panel-head-b:  #8a99b8;
+  --head-text:     #fff;   /* panel title text */
 
   /* panel title-bar shadows */
   --head-t-shadow:  #7a93b0;
@@ -75,6 +84,8 @@
 
 
 body.dark-mode {
+  /* --bg-image: url('/rework/assets/general/bkg-winter-dark.png'); */  /* EDIT ME */
+
   --sky:           #1a2028;
   --sky2:          #11151a;
 
@@ -135,6 +146,8 @@ body.dark-mode {
 
 /* FALL THEME, must be toggled in header.js */
 body.theme-fall {
+  --bg-image: url('/rework/assets/general/bkg4.png'); /* EDIT ME */
+
   --sky:           #fbe3c6;
   --sky2:          #fdf2e4;
 
@@ -248,34 +261,36 @@ body.dark-mode.theme-fall {
 
 /* SPRING THEME, must be toggled in header.js */
 body.theme-spring {
+  --bg-image: url('/assets/general/bkg-spring.png');  /* EDIT ME */
+
   --sky:           #dcfbc6;
   --sky2:          #ecfde4;
 
-  --panel-border:  #b7e09c;
-  --panel-shadow:  #95c974;
-  --panel-head:    #b0e888;
-  --panel-head-b:  #93cf5e;
+  --panel-border:  #9fcf80;
+  --panel-shadow:  #7fb55c;
+  --panel-head:    #5f9e3a;
+  --panel-head-b:  #4f8a2e;
 
-  --head-t-shadow:  #6bb13f;
-  --head-b-shadow1: #d3f5b8;
-  --head-b-shadow2: #8fcf5e;
+  --head-t-shadow:  #3f6e22;
+  --head-b-shadow1: #8cc76a;
+  --head-b-shadow2: #4f8a2e;
 
   --head-b-s1: var(--head-b-shadow1);
   --head-b-s2: var(--head-b-shadow2);
 
-  --text:          #354a20;
-  --text-soft:     #678a52;
-  --link:          #6dc92c;
+  --text:          #24361a;
+  --text-soft:     #4f6b3c;
+  --link:          #3a7d16;
 
-  --update-line:   rgba(143, 216, 100, 0.4);
-  --divider:       rgba(144, 216, 100, 0.4);
+  --update-line:   rgba(95, 158, 58, 0.3);
+  --divider:       rgba(95, 158, 58, 0.3);
   --today-bg:      rgba(138, 230, 80, 0.18);
 
-  --bg-header:     #a5e888;
-  --border-header: #91cf5e;
+  --bg-header:     #5a9636;
+  --border-header: #4f8a2e;
 
   --tag-bg:     #d9f5c0;
-  --tag-border: #8fcf5e;
+  --tag-border: #5f9e3a;
 
   --pull-bg:       #f0fde4;
   --pull-border:   #bce09c;
@@ -283,8 +298,8 @@ body.theme-spring {
   --wall:          #dff2c8;
   --plaque-bg:     #eff7e0;
   --plaque-border: #b2d18f;
-  --plaque-text:   #394a20;
-  --plaque-soft:   #698a52;
+  --plaque-text:   #24361a;
+  --plaque-soft:   #4f6b3c;
   --mat:           #d5ecc0;
 
   --soft-blue:     #c0f5d4;
@@ -295,12 +310,12 @@ body.theme-spring {
   /* interactive buttons / selection (used by blog) */
   --button-bg:          #dbf5c0;
   --button-bg-hover:    rgba(154, 216, 100, 0.6);
-  --button-bg-selected: #89d43f;
-  --button-text:        #374a20;
-  --button-border:      #95cf5e;
+  --button-bg-selected: #5f9e3a;
+  --button-text:        #24361a;
+  --button-border:      #5f9e3a;
 
-  --selected-bg:   #b8f58a;
-  --selected-text: #364a20;
+  --selected-bg:   #c8f0a8;
+  --selected-text: #24361a;
 }
 
 body.dark-mode.theme-spring {
@@ -360,6 +375,418 @@ body.dark-mode.theme-spring {
 }
 
 
+/* FLOWERY THEME (deltarune ch5), must be toggled in header.js
+   light = flowery's gold with dark title text + vest-green links,
+   dark = his black cape: near-black panels, gold title text */
+body.theme-flowery {
+  --bg-image: none;  /* towery.gif is drawn by the cover layer below */
+
+  --sky:                #fff1c2;
+  --sky2:               #fffaf0;
+  --panel-bg:           #fffdf6;
+  --panel-border:       #e0b84a;
+  --panel-shadow:       #b8862a;
+  --panel-head:         #f2c230;
+  --panel-head-b:       #c98a1c;
+  --head-text:          #3a2a10;
+  --head-t-shadow:      #f9dc78;
+  --head-b-shadow1:     #fbe08a;
+  --head-b-shadow2:     #d9a02a;
+  --head-b-s1:          var(--head-b-shadow1);
+  --head-b-s2:          var(--head-b-shadow2);
+  --text:               #3a2e18;
+  --text-soft:          #7a6540;
+  --link:               #2f7a2f;
+  --update-line:        rgba(224, 184, 74, 0.4);
+  --divider:            rgba(224, 184, 74, 0.4);
+  --today-bg:           rgba(242, 194, 48, 0.25);
+  --bg-header:          #f2c230;
+  --border-header:      #c98a1c;
+  --tag-bg:             #fdf0c8;
+  --tag-border:         #c98a1c;
+  --pull-bg:            #fff8e0;
+  --pull-border:        #e0b84a;
+  --wall:               #fbefcc;
+  --plaque-bg:          #fffaf0;
+  --plaque-border:      #d9a84a;
+  --plaque-text:        #3a2e18;
+  --plaque-soft:        #7a6540;
+  --mat:                #f3e2b0;
+  --soft-blue:          #e2eed8;
+  --pale-blue:          #fffaf0;
+  --soft-pink:          #fde0c4;
+  --soft-yellow:        #fff0b0;
+  --button-bg:          #fdf0c8;
+  --button-bg-hover:    rgba(242, 194, 48, 0.45);
+  --button-bg-selected: #c8641e;
+  --button-text:        #3a2e18;
+  --button-border:      #c98a1c;
+  --selected-bg:        #ffe27a;
+  --selected-text:      #3a2e18;
+}
+
+body.dark-mode.theme-flowery {
+
+  --sky:                #1c170c;
+  --sky2:               #0c0a06;
+  --panel-bg:           #17140e;
+  --panel-border:       #0a0805;
+  --panel-shadow:       #050403;
+  --panel-head:         #3a2c0e;
+  --panel-head-b:       #0a0805;
+  --head-text:          #ffd84a;
+  --head-t-shadow:      #000;
+  --head-b-shadow1:     #5c4718;
+  --head-b-shadow2:     #1a1406;
+  --head-b-s1:          var(--head-b-shadow1);
+  --head-b-s2:          var(--head-b-shadow2);
+  --text:               #f4ecd8;
+  --text-soft:          #c9b98a;
+  --link:               #a6dc6e;
+  --update-line:        rgba(255, 255, 255, 0.06);
+  --divider:            rgba(255, 255, 255, 0.06);
+  --today-bg:           rgba(255, 216, 74, 0.15);
+  --bg-header:          #221b0c;
+  --border-header:      #0a0805;
+  --tag-bg:             #2a2210;
+  --tag-border:         #0a0805;
+  --pull-bg:            #1c170c;
+  --pull-border:        #5c4718;
+  --wall:               #14110a;
+  --plaque-bg:          #1c170c;
+  --plaque-border:      #5c4718;
+  --plaque-text:        #f4ecd8;
+  --plaque-soft:        #c9b98a;
+  --mat:                #2a2210;
+  --soft-blue:          #1e2a14;
+  --pale-blue:          #1c170c;
+  --soft-pink:          #2e1c10;
+  --soft-yellow:        #3a2e0e;
+  --button-bg:          #2a2210;
+  --button-bg-hover:    #4a3a14;
+  --button-bg-selected: #8a6a14;
+  --button-text:        #f4ecd8;
+  --button-border:      #0a0805;
+  --selected-bg:        #6a5010;
+  --selected-text:      #fff4d0;
+}
+
+/* flowery background: one image stretched to cover the whole screen,
+   drawn on its own layer so it can be pixelated without pixelating
+   every other image on the page */
+body.theme-flowery::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  top: 1.3rem;   /* EDIT ME: how far down the background starts. bigger = lower */
+  z-index: -1;
+  pointer-events: none;
+  background: url('/assets/towery.gif') center / cover no-repeat;  /* EDIT ME */
+  image-rendering: pixelated;
+}
+/* dark mode: same image, dimmed. lower = darker */
+body.dark-mode.theme-flowery::before { filter: brightness(0.3); }
+
+/* flowery glow: soft pale yellow light around the edges of the screen.
+   sits on top of everything but clicks go straight through it.
+   EDIT ME: the color is the rgba, the px numbers are how far it reaches in */
+body.theme-flowery::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 6000px  rgba(255, 241, 160, 0.482);
+}
+/* dark mode: same glow, a bit dimmer so it doesn't wash out */
+body.dark-mode.theme-flowery::after {
+  box-shadow:
+    inset 0 0 60px  rgba(255, 220, 110, 0.30),
+    inset 0 0 160px rgba(255, 210, 100, 0.15);
+}
+
+/* TILE ART (flowery): a faded picture behind some panels. which theme,
+   how often and how faded are set in TILE_ART in header.js */
+.kaia-has-tile-art {
+  position: relative;          /* so the art sizes to this box (blog posts need it) */
+  isolation: isolate;          /* keeps the art above the panel's own background */
+}
+.kaia-tile-art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;                 /* behind the text */
+  pointer-events: none;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: var(--tile-art-opacity, 0.18);
+}
+.kaia-tile-art.pixelated { image-rendering: pixelated; }
+body.dark-mode .kaia-tile-art { opacity: var(--tile-art-opacity-dark, 0.12); }
+
+/* blossom background: one image covering the screen, softly blurred.
+   it's on its own layer because a page background can't be blurred directly */
+body.theme-blossom::before {
+  content: "";
+  position: fixed;
+  inset: -20px;       /* a little bigger than the screen so the blur has no soft edges */
+  z-index: -1;
+  pointer-events: none;
+  background: url('/assets/blossom.jpg') center / cover no-repeat;  /* EDIT ME */
+  filter: blur(4px);  /* EDIT ME: bigger = blurrier */
+}
+/* dark mode: same blur, dimmed. lower brightness = darker */
+body.dark-mode.theme-blossom::before { filter: blur(4px) brightness(0.3); }
+
+/* BLOSSOM THEME, must be toggled in header.js. petals fall (LEAF_IMAGES)
+   light = sakura pink on white, dark = night sakura (ink + rose) */
+body.theme-blossom {
+  --bg-image: none;   /* blossom.jpg is drawn by the blurred layer just above this block */
+
+  --sky:                #fde4ec;
+  --sky2:               #fff5f8;
+  --panel-bg:           #fff;
+  --panel-border:       #f2b8cc;
+  --panel-shadow:       #d68aa6;
+  --panel-head:         #d0668f;
+  --panel-head-b:       #a8456c;
+  --head-text:          #fff;
+  --head-t-shadow:      #8a3558;
+  --head-b-shadow1:     #e896b4;
+  --head-b-shadow2:     #a8456c;
+  --head-b-s1:          var(--head-b-shadow1);
+  --head-b-s2:          var(--head-b-shadow2);
+  --text:               #4a2a32;
+  --text-soft:          #8a5f6c;
+  --link:               #b8336a;
+  --update-line:        rgba(242, 184, 204, 0.5);
+  --divider:            rgba(242, 184, 204, 0.5);
+  --today-bg:           rgba(240, 120, 160, 0.18);
+  --bg-header:          #d0668f;
+  --border-header:      #a8456c;
+  --tag-bg:             #fde8ef;
+  --tag-border:         #e08aab;
+  --pull-bg:            #fff3f7;
+  --pull-border:        #f2b8cc;
+  --wall:               #fbe6ee;
+  --plaque-bg:          #fff8fa;
+  --plaque-border:      #e6a8be;
+  --plaque-text:        #4a2a32;
+  --plaque-soft:        #8a5f6c;
+  --mat:                #f5dce5;
+  --soft-blue:          #e6ecfa;
+  --pale-blue:          #fff3f7;
+  --soft-pink:          #ffe0ea;
+  --soft-yellow:        #fff2d6;
+  --button-bg:          #fde8ef;
+  --button-bg-hover:    rgba(240, 140, 180, 0.35);
+  --button-bg-selected: #c4557f;
+  --button-text:        #4a2a32;
+  --button-border:      #e08aab;
+  --selected-bg:        #ffc4d8;
+  --selected-text:      #4a2a32;
+}
+
+body.dark-mode.theme-blossom {
+  /* --bg-image: url('/rework/assets/general/bkg-blossom-dark.png'); */  /* EDIT ME */
+
+  --sky:                #1a1624;
+  --sky2:               #0e0b14;
+  --panel-bg:           #221c2a;
+  --panel-border:       #120e18;
+  --panel-shadow:       #08060c;
+  --panel-head:         #6e2f4c;
+  --panel-head-b:       #120e18;
+  --head-text:          #fff;
+  --head-t-shadow:      #000;
+  --head-b-shadow1:     #94466a;
+  --head-b-shadow2:     #3e1a2c;
+  --head-b-s1:          var(--head-b-shadow1);
+  --head-b-s2:          var(--head-b-shadow2);
+  --text:               #f8e8ee;
+  --text-soft:          #c9a3b3;
+  --link:               #ffa6c9;
+  --update-line:        rgba(255, 255, 255, 0.06);
+  --divider:            rgba(255, 255, 255, 0.06);
+  --today-bg:           rgba(255, 166, 201, 0.15);
+  --bg-header:          #3a1f2e;
+  --border-header:      #120e18;
+  --tag-bg:             #33202c;
+  --tag-border:         #120e18;
+  --pull-bg:            #1e1824;
+  --pull-border:        #6e2f4c;
+  --wall:               #16121c;
+  --plaque-bg:          #221c2a;
+  --plaque-border:      #6e2f4c;
+  --plaque-text:        #f8e8ee;
+  --plaque-soft:        #c9a3b3;
+  --mat:                #2e2230;
+  --soft-blue:          #22223a;
+  --pale-blue:          #1e1824;
+  --soft-pink:          #3a1f2e;
+  --soft-yellow:        #332a20;
+  --button-bg:          #33202c;
+  --button-bg-hover:    #5a2a42;
+  --button-bg-selected: #c4557f;
+  --button-text:        #f8e8ee;
+  --button-border:      #120e18;
+  --selected-bg:        #6e2f4c;
+  --selected-text:      #fff;
+}
+
+
+/* OMORI THEME, must be toggled in header.js
+   light = white space (white boxes, black lines), dark = black space.
+   the panning background is set up in header.js (PAN_BACKGROUNDS) */
+body.theme-omori {
+  --bg-image:      none;   /* the panning image replaces this */
+
+  --sky:           #fff;
+  --sky2:          #fff;
+
+  --panel-bg:      #fff;
+  --panel-border:  #000;
+  --panel-shadow:  #000;
+  --panel-head:    #fff;
+  --panel-head-b:  #000;
+  --head-text:     #000;
+
+  --head-t-shadow:  transparent;
+  --head-b-shadow1: #fff;
+  --head-b-shadow2: #fff;
+
+  --head-b-s1: var(--head-b-shadow1);
+  --head-b-s2: var(--head-b-shadow2);
+
+  --text:          #000;
+  --text-soft:     #555;
+  --link:          #000;
+
+  --update-line:   rgba(0, 0, 0, 0.2);
+  --divider:       rgba(0, 0, 0, 0.2);
+  --today-bg:      rgba(0, 0, 0, 0.1);
+
+  --bg-header:     #fff;
+  --border-header: #000;
+
+  --tag-bg:     #fff;
+  --tag-border: #000;
+
+  --pull-bg:       #f4f4f4;
+  --pull-border:   #000;
+
+  --wall:          #f4f4f4;
+  --plaque-bg:     #fff;
+  --plaque-border: #000;
+  --plaque-text:   #000;
+  --plaque-soft:   #555;
+  --mat:           #e8e8e8;
+
+  --soft-blue:     #eee;
+  --pale-blue:     #f6f6f6;
+  --soft-pink:     #eee;
+  --soft-yellow:   #eee;
+
+  --button-bg:          #fff;
+  --button-bg-hover:    #e6e6e6;
+  --button-bg-selected: #000;
+  --button-text:        #000;
+  --button-border:      #000;
+
+  --selected-bg:   #000;
+  --selected-text: #fff;
+}
+
+body.dark-mode.theme-omori {
+  --head-text:     #fff;
+
+  --sky:           #0c0c0c;
+  --sky2:          #000;
+
+  --panel-bg:      #000;
+  --panel-border:  #fff;
+  --panel-shadow:  #444;
+  --panel-head:    #000;
+  --panel-head-b:  #fff;
+
+  --head-t-shadow:  #000;
+  --head-b-shadow1: #000;
+  --head-b-shadow2: #000;
+
+  --head-b-s1: var(--head-b-shadow1);
+  --head-b-s2: var(--head-b-shadow2);
+
+  --text:          #fff;
+  --text-soft:     #9a9a9a;
+  --link:          #ff8fb1;
+
+  --update-line:   rgba(255, 255, 255, 0.15);
+  --divider:       rgba(255, 255, 255, 0.15);
+  --today-bg:      rgba(255, 255, 255, 0.15);
+
+  --bg-header:     #000;
+  --border-header: #fff;
+
+  --tag-bg:     #000;
+  --tag-border: #fff;
+
+  --pull-bg:       #0c0c0c;
+  --pull-border:   #fff;
+
+  --wall:          #0c0c0c;
+  --plaque-bg:     #000;
+  --plaque-border: #fff;
+  --plaque-text:   #fff;
+  --plaque-soft:   #9a9a9a;
+  --mat:           #1a1a1a;
+
+  --soft-blue:     #1a1a1a;
+  --pale-blue:     #0c0c0c;
+  --soft-pink:     #1a1a1a;
+  --soft-yellow:   #1a1a1a;
+
+  --button-bg:          #000;
+  --button-bg-hover:    #2a2a2a;
+  --button-bg-selected: #fff;
+  --button-text:        #fff;
+  --button-border:      #fff;
+
+  --selected-bg:   #fff;
+  --selected-text: #000;
+}
+
+/* PANNING BACKGROUND (used by omori). header.js adds .kaia-pan-bg to the body
+   and sets --pan-image / --pan-w / --pan-dur / --pan-steps from PAN_BACKGROUNDS.
+   it slides left by exactly one image width then jumps back, so it loops forever. */
+body.kaia-pan-bg::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100vw + var(--pan-w, 0px));
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--pan-image);
+  background-repeat: repeat;
+  background-size: var(--pan-w, auto) auto;
+  image-rendering: pixelated;
+  animation: kaia-pan var(--pan-dur, 60s) steps(var(--pan-steps, 600)) infinite;
+  will-change: transform;
+}
+/* dark mode: same image, dimmed like the other themes' backgrounds.
+   EDIT ME: lower = darker (0 is black, 1 is untouched) */
+body.dark-mode.kaia-pan-bg::before { filter: brightness(0.3); }
+
+@keyframes kaia-pan {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-1 * var(--pan-w, 0px))); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.kaia-pan-bg::before { animation: none; }
+}
+
 *,
 *::before,
 *::after {
@@ -384,10 +811,10 @@ body {
   line-height: 1.5;
   min-height: 100%;
   background:
-    url('/rework/assets/general/bkg4.png'),
+    var(--bg-image),
     linear-gradient(to bottom, var(--sky) 0%, var(--sky2) 100%);
   background-attachment: fixed;
-  background-size: auto, 100% 100%;
+  background-size: var(--bg-size), 100% 100%;
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -408,7 +835,7 @@ body {
   padding: 0.125rem 0.5rem;
   font-weight: bold;
   letter-spacing: 0.15rem;
-  color: #fff;
+  color: var(--head-text, #fff);
   text-shadow: 0 1px 0 var(--head-t-shadow);
   box-shadow:
     inset 0 1px 0 var(--head-b-shadow1),

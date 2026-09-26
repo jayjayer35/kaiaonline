@@ -19,7 +19,11 @@
     { file: "/music/walking.mp3",  name: "Walking Home - Toby Fox" },
     //{ file: "/music/comehome.mp3",  name: "You Can Always Come Home - Toby Fox" },
     { file: "/music/inlove.mp3",  name: "I guess I'm in love feat. Itoki Hana - Toby Fox" },
+    { file: "/music/dinersong.mp3",  name: "The Diner Song of Best Friends - Toby Fox" },
     { file: "/music/scarletforest.mp3",  name: "Scarlet Forest - Toby Fox" },
+    { file: "/music/byyourside.mp3",  name: "By Your Side. - OMORI" },
+    { file: "/music/trees.mp3",  name: "Trees... - OMORI" },
+    { file: "/music/tulip.mp3",  name: "A Home For Flowers - OMORI" },
     //{ file: "/music/scarlet.mp3",  name: "Scarlet Forest - Toby Fox & Trevor Alan Gomes" },
     //{ file: "/music/scarfor.mp3",  name: "Field of Hopes and Dreams (Credits Version) - Toby Fox & Trevor Alan Gomes" },
     //{ file: "/music/paradise.mp3",  name: "Welcome to Paradise - Emile van Krieken"   },
@@ -38,7 +42,28 @@
     { file: "/music/mushroom.mp3",  name: "Fall (The Smell of Mushroom) - ConcernedApe" },
     { file: "/music/house.mp3",  name: "House - Harvest Moon Tree of Tranquility OST"   },
     { file: "/music/easytake.mp3",  name: "Taking it Easy - Harvest Moon: Story of Seasons Grand Bazaar OST" },
+
+    // hidden songs: not in the song list and never come up on shuffle,
+    // only play from THEME_SONGS. keep these at the bottom of the list
+    { file: "/music/dadfriend.mp3",  name: "Your Dad's Best Friend - Toby Fox", hidden: true },
   ];
+
+  // playlist positions of the normal (not hidden) songs, used for shuffling
+  function normalTracks() {
+    return PLAYLIST.map((t, i) => i).filter(i => !PLAYLIST[i].hidden);
+  }
+
+  // EDIT ME: songs that fade in when someone switches to a theme while the
+  // music is playing (picks one at random). use the same file paths as PLAYLIST.
+  const THEME_SONGS = {
+    omori:   ["/music/byyourside.mp3", "/music/trees.mp3", "/music/tulip.mp3"],
+    flowery: ["/music/dadfriend.mp3"],
+  };
+  // EDIT ME: themes listed here hard-cut instead of fading: the old song
+  // stops dead and the new one starts right away at full volume
+  const THEME_SONG_CUT = ["flowery"];
+  const THEME_FADE_OUT = 800;   // ms to fade out the old song
+  const THEME_FADE_IN  = 2500;  // ms to fade in the new one
 
   const MUSIC_KEY   = "kaia-music";   // localStorage key
   const DEFAULT_VOL = 0.03;           // 0.0 – 1.0
@@ -138,17 +163,21 @@
   if (savedTheme === "dark") document.body.classList.add("dark-mode");
 
   // site color theme
-  // set to "default", "fall" or "spring" (spring currently buggy <- FIX FIX FIX)
-  // (body.theme / body.dark-mode.theme overrides in
-  // header.css and kaia-base.css).e
+  // EDIT ME: set to "winter", "fall", "spring", "flowery", "blossom" or "omori"
+  // (body.theme-* / body.dark-mode.theme-* overrides live in
+  // header.css and kaia-base.css). winter is the base :root colors.
   const SITE_THEME = "fall";
-  //const SITE_THEME = "default";
+  //const SITE_THEME = "winter";
+  const THEMES = ["winter", "fall", "spring", "flowery", "blossom", "omori"];
+  function normalizeTheme(name) {
+    if (name === "default") return "winter"; // old saved picks from before the rename
+    return THEMES.includes(name) ? name : SITE_THEME;
+  }
   // a visitor's own pick from the chat's /theme wins over SITE_THEME
   let savedSeason = null;
   try { savedSeason = localStorage.getItem("kaia-season"); } catch (e) {}
-  const activeSeason = savedSeason || SITE_THEME;
-  if (activeSeason === "fall")   document.body.classList.add("theme-fall");
-  if (activeSeason === "spring") document.body.classList.add("theme-spring");
+  const activeSeason = normalizeTheme(savedSeason || SITE_THEME);
+  document.body.classList.add("theme-" + activeSeason);
 
   // theme helpers, shared by the nav toggle and the chat's /theme
   function updateThemeIcon() {
@@ -160,10 +189,138 @@
     try { localStorage.setItem("kaia-theme", on ? "dark" : "light"); } catch (e) {}
     updateThemeIcon();
   }
-  function setSeason(name) { // "fall", "spring" or "default"
-    document.body.classList.remove("theme-fall", "theme-spring");
-    if (name === "fall" || name === "spring") document.body.classList.add("theme-" + name);
+  let updateLeaves = null; // set by the falling leaves code at the bottom
+  let updateDrift  = null; // set by the drifting gif code at the bottom
+  // EDIT ME: themes that flash the screen when someone switches to them.
+  //   color = flash color, hold = ms it stays solid, fade = ms to fade out
+  //   overlay = optional gif drawn over the flash that lingers after it
+  //   overlayFade = ms for the overlay to fade out (make it longer than fade)
+  const THEME_FLASH = {
+    flowery: {
+      color: "#f1eabf", hold: 80, fade: 700,
+      overlay: "/assets/sparkleoverlay.gif", overlayFade: 700,
+    },
+  };
+  function flashScreen(name) {
+    const cfg = THEME_FLASH[name];
+    if (!cfg) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const el = document.createElement("div");
+    el.style.cssText =
+      "position:fixed;inset:0;z-index:2147483647;pointer-events:none;" +
+      "background:" + cfg.color + ";opacity:" + (reduce ? 0.35 : 1) + ";" +
+      "transition:opacity " + cfg.fade + "ms ease-out;";
+    document.body.appendChild(el);
+
+    // sparkle gif on top of the flash, fading out slower so it lingers
+    let over = null;
+    if (cfg.overlay) {
+      over = document.createElement("div");
+      // ?t= makes the gif start from its first frame every time
+      const src = cfg.overlay + "?t=" + Date.now();
+      over.style.cssText =
+        "position:fixed;inset:0;z-index:2147483647;pointer-events:none;" +
+        "background:url('" + src + "') center / cover no-repeat;" +
+        "image-rendering:pixelated;opacity:1;" +
+        "transition:opacity " + cfg.overlayFade + "ms ease-in;";
+      document.body.appendChild(over);
+    }
+
+    // the theme swaps underneath while the screen is covered, then it fades
+    setTimeout(() => {
+      el.style.opacity = "0";
+      setTimeout(() => el.remove(), cfg.fade + 50);
+      if (over) {
+        over.style.opacity = "0";
+        setTimeout(() => over.remove(), cfg.overlayFade + 50);
+      }
+    }, cfg.hold);
+  }
+
+  function setSeason(name) { // any name in THEMES
+    name = normalizeTheme(name);
+    flashScreen(name);
+    THEMES.forEach(t => document.body.classList.remove("theme-" + t));
+    document.body.classList.add("theme-" + name);
     try { localStorage.setItem("kaia-season", name); } catch (e) {}
+    if (updateLeaves) updateLeaves(name);
+    if (updateDrift)  updateDrift(name);
+    applyTileArt(name);
+    applyHangers(name);
+    applyPanBg(name);
+    playThemeSong(name);
+  }
+
+  // panning backgrounds. EDIT ME: themes listed here get an image that tiles
+  // and slides left forever. speed = pixels per second.
+  // scale = "auto" picks the smallest whole-number zoom that makes one tile at
+  // least as tall as the window, or put a number (1, 2, 3...) to force one.
+  // zoom is counted in real screen pixels, so it stays crisp on laptops/phones
+  // with display scaling (125%, 150%, retina...) instead of going blurry.
+  const PAN_BACKGROUNDS = {
+    omori: { src: "/assets/whitespace.png", scale: "auto", speed: 20 },
+  };
+  let _panImg = null, _panCfg = null;
+  function sizePanBg() {
+    if (!_panImg || !_panCfg) return;
+    const b   = document.body;
+    const dpr = window.devicePixelRatio || 1;
+    const nw  = _panImg.naturalWidth, nh = _panImg.naturalHeight;
+    let k = _panCfg.scale;
+    if (k === "auto") k = Math.max(1, Math.ceil((window.innerHeight * dpr) / nh));
+    const devW = nw * k;          // tile width in real screen pixels
+    const cssW = devW / dpr;      // same width in css pixels
+    b.style.setProperty("--pan-w", cssW + "px");
+    b.style.setProperty("--pan-dur", (cssW / _panCfg.speed) + "s");
+    b.style.setProperty("--pan-steps", String(devW)); // move 1 screen pixel per step
+  }
+  function applyPanBg(name) {
+    const b = document.body;
+    const cfg = PAN_BACKGROUNDS[name];
+    if (!cfg) { b.classList.remove("kaia-pan-bg"); _panImg = _panCfg = null; return; }
+    const img = new Image();
+    img.onload = () => {
+      if (!b.classList.contains("theme-" + name)) return; // theme changed while loading
+      _panImg = img; _panCfg = cfg;
+      b.style.setProperty("--pan-image", `url("${cfg.src}")`);
+      sizePanBg();
+      b.classList.add("kaia-pan-bg");
+    };
+    img.src = cfg.src;
+  }
+  window.addEventListener("resize", sizePanBg); // also fires on browser zoom
+  applyPanBg(activeSeason);
+
+  // things that hang down from the bottom of the header bar, per theme.
+  // EDIT ME:
+  //   src       = the image
+  //   scale     = how many times bigger than its real size (whole numbers stay crisp)
+  //   positions = where along the bar each one hangs, from the left
+  //               (add more to the list for more vines, e.g. ["12%", "78%"])
+  const HEADER_HANGERS = {
+    flowery: { src: "/assets/Flowery_overworld_vine.gif", scale: 2, positions: ["12%"] },
+  };
+  function applyHangers(name) {
+    document.querySelectorAll(".kaia-hanger").forEach(el => el.remove());
+    const cfg = HEADER_HANGERS[name];
+    const bar = document.getElementById("kaia-single-bar");
+    if (!cfg || !bar) return;
+    const probe = new Image();
+    probe.onload = () => {
+      if (!document.body.classList.contains("theme-" + name)) return; // theme changed while loading
+      if (bar.querySelector(".kaia-hanger")) return;
+      cfg.positions.forEach(pos => {
+        const img = document.createElement("img");
+        img.src = cfg.src;
+        img.alt = "";
+        img.className = "kaia-hanger";
+        img.style.left   = pos;
+        img.style.width  = (probe.naturalWidth  * cfg.scale) + "px";
+        img.style.height = (probe.naturalHeight * cfg.scale) + "px";
+        bar.appendChild(img);
+      });
+    };
+    probe.src = cfg.src;
   }
 
   // style
@@ -415,6 +572,15 @@
     return a;
   }
 
+  // while a theme song is fading, _audio.volume is temporarily low, so this
+  // gives the volume the player is actually set to
+  let _fadeTarget = null;
+  let _fadeTimer  = null;
+  function curVol() {
+    if (_fadeTarget !== null) return _fadeTarget;
+    return _audio ? _audio.volume : DEFAULT_VOL;
+  }
+
   function saveState() {
     const state = {
       shuffleQ:  _shuffleQ,
@@ -423,7 +589,7 @@
       histPos:   _histPos,
       time:      _audio ? _audio.currentTime : 0,
       savedAt:   Date.now(),          
-      volume:    _audio ? _audio.volume : DEFAULT_VOL,
+      volume:    curVol(),
       playing:   _playing,
       repeat:    _repeat,
     };
@@ -476,6 +642,7 @@
     if (!list) return;
     list.innerHTML = "";
     PLAYLIST.forEach((track, i) => {
+      if (track.hidden) return; // hidden songs stay off the list
       const btn = document.createElement("div");
       btn.className = "ksb-song-option";
       // always show the display name 
@@ -492,8 +659,8 @@
   }
 
   // jump to a specific PLAYLIST index directly
-  function jumpToTrack(playlistIdx, seekTo) {
-    const vol = _audio ? _audio.volume : DEFAULT_VOL;
+  function jumpToTrack(playlistIdx, seekTo, startVol) {
+    const vol = (startVol !== undefined) ? startVol : curVol();
     // find it in shuffleQ or append 
     let qIdx = _shuffleQ.indexOf(playlistIdx);
     if (qIdx === -1) {
@@ -525,7 +692,7 @@
     _audio.volume = (vol !== undefined) ? vol : DEFAULT_VOL;
 
     const volEl = document.getElementById("ksb-volume");
-    if (volEl) volEl.value = _audio.volume;
+    if (volEl) volEl.value = curVol();
 
     // goto saved position once metadata is ready.
     // compensates for the small wall-clock gap since the state was saved
@@ -553,7 +720,7 @@
   }
 
   function goNext() {
-    const vol = _audio ? _audio.volume : DEFAULT_VOL;
+    const vol = curVol();
     if (_histPos > 0) {
       // we stepped back previously, go forward through history
       _histPos--;
@@ -565,7 +732,7 @@
       _qPos = (_qPos + 1) % _shuffleQ.length;
       // when q exhausted, reshuffle and extend (no repeat)
       if (_qPos === 0) {
-        const newShuffle = shuffle(PLAYLIST.map((_, i) => i));
+        const newShuffle = shuffle(normalTracks());
         _shuffleQ = _shuffleQ.concat(newShuffle);
         _qPos = _shuffleQ.length - newShuffle.length;
       }
@@ -576,7 +743,7 @@
   }
 
   function goPrev() {
-    const vol = _audio ? _audio.volume : DEFAULT_VOL;
+    const vol = curVol();
     // if more than 3 s into the track, restart it first
     if (_audio && _audio.currentTime > 3) {
       _audio.currentTime = 0;
@@ -601,6 +768,65 @@
     saveState();
   }
 
+  // ---- theme songs: fade out whatever's on, fade in a song for the theme
+  function stopFade() {
+    if (_fadeTimer) clearInterval(_fadeTimer);
+    _fadeTimer = null;
+    _fadeTarget = null;
+  }
+
+  function fadeTo(to, ms, done) {
+    if (_fadeTimer) clearInterval(_fadeTimer);
+    const audio = _audio;
+    const from  = audio.volume;
+    const start = performance.now();
+    _fadeTimer = setInterval(() => {
+      // song got skipped/changed mid-fade: put the volume back and stop
+      if (audio !== _audio) {
+        const v = curVol();
+        stopFade();
+        if (_audio) _audio.volume = v;
+        return;
+      }
+      const t = Math.min(1, (performance.now() - start) / ms);
+      audio.volume = from + (to - from) * t;
+      if (t >= 1) {
+        clearInterval(_fadeTimer);
+        _fadeTimer = null;
+        if (done) done();
+      }
+    }, 30);
+  }
+
+  function playThemeSong(theme) {
+    const files = THEME_SONGS[theme];
+    if (!files || !_audio || !_playing) return; // only when music is on
+    const choices = files
+      .map(f => PLAYLIST.findIndex(t => t.file === f))
+      .filter(i => i >= 0);
+    if (!choices.length) return;
+    if (choices.includes(currentTrackIdx())) return; // already on one of them
+
+    const pick   = choices[Math.floor(Math.random() * choices.length)];
+
+    if (THEME_SONG_CUT.includes(theme)) {
+      const vol = curVol();
+      stopFade();                 // cancel any fade still going from another theme
+      jumpToTrack(pick, 0, vol);  // old song stops, new one starts instantly
+      return;
+    }
+
+    const target = curVol();
+    _fadeTarget  = target;
+    fadeTo(0, THEME_FADE_OUT, () => {
+      jumpToTrack(pick, 0, 0);          // new song starts silent...
+      fadeTo(target, THEME_FADE_IN, () => { // ...and fades up
+        _fadeTarget = null;
+        saveState();
+      });
+    });
+  }
+
   function startMusicRuntime() {
     if (PLAYLIST.length === 0) return;
 
@@ -616,7 +842,7 @@
       _histPos  = (saved.histPos !== undefined) ? saved.histPos : -1;
       _repeat   = !!saved.repeat;
     } else {
-      _shuffleQ = shuffle(PLAYLIST.map((_, i) => i));
+      _shuffleQ = shuffle(normalTracks());
       _qPos     = 0;
       _history  = [];
       _histPos  = -1;
@@ -703,6 +929,7 @@
     if (volEl) {
       volEl.value = startVol;
       volEl.addEventListener("input", () => {
+        stopFade();
         if (_audio) _audio.volume = parseFloat(volEl.value);
         saveState();
       });
@@ -847,6 +1074,7 @@
     document.body.insertBefore(_headerBar, document.body.firstChild);
 
     startRuntime();
+    applyHangers(activeSeason);
 
     window.addEventListener("resize", syncSpacer);
     setTimeout(syncSpacer, 50);
@@ -985,7 +1213,7 @@
     lancer:  showLancer,
     flowery: showFlowery,
     forest:  showOrchid,
-    theme:   { setDark, setSeason }
+    theme:   { setDark, setSeason, list: THEMES }
   });
 
 
@@ -1028,7 +1256,12 @@
   // matter.js falling particle, i ripped from a site as well...
   const LEAVES_ENABLED  = true;
   const LEAF_MAX_COUNT  = 30;
-  const LEAF_IMG_SRC    = "/assets/leaf.png";
+  // EDIT ME: which image falls for each theme. themes not listed here get nothing
+  const LEAF_IMAGES = {
+    winter: "/assets/flake.png",
+    fall:   "/assets/leaf.png",
+    blossom: "/assets/petal.png",
+  };
 
   // pages with <body data-no-leaves> skip the falling leaves
   const pageNoLeaves = document.body && document.body.hasAttribute("data-no-leaves");
@@ -1041,10 +1274,35 @@
 
       const ctx = canvas.getContext("2d");
       const leafImg = new Image();
-      leafImg.src = LEAF_IMG_SRC;
 
       let imgReady = false;
+      let running  = false;
       leafImg.addEventListener("load", () => { imgReady = true; });
+
+      // swaps the falling image to match the theme, or stops it entirely
+      function applyTheme(name) {
+        const src = LEAF_IMAGES[name];
+        if (!src) {
+          running = false;
+          imgReady = false;
+          ctx.clearRect(0, 0, w, h);
+          canvas.style.display = "none";
+          return;
+        }
+        canvas.style.display = "";
+        if (leafImg.getAttribute("src") !== src) {
+          imgReady = false;
+          leafImg.src = src;
+        } else if (leafImg.complete) {
+          imgReady = true;
+        }
+        if (!running) {
+          running = true;
+          lastT = performance.now();
+          requestAnimationFrame(tick);
+        }
+      }
+      updateLeaves = applyTheme;
 
       let w = 0, h = 0;
       function resize() {
@@ -1077,6 +1335,7 @@
 
       let lastT = performance.now();
       function tick(t) {
+        if (!running) return;
         const dt = Math.min((t - lastT) / 1000, 0.05); // for tab-away jumps
         lastT = t;
 
@@ -1103,7 +1362,177 @@
 
         requestAnimationFrame(tick);
       }
-      requestAnimationFrame(tick);
+      applyTheme(activeSeason);
+    })();
+  }
+  // tile art: on some themes, each panel has a chance to get a faded image
+  // covering its background (behind the text). re-rolled on every page load.
+  // EDIT ME:
+  //   images   = pictures to pick from (list every file, like the petals)
+  //   chance   = 0 to 1, how likely each panel is to get one (0.3 = 30%)
+  //   opacity  = how faded it is in light mode (0 invisible, 1 full)
+  //   darkOpacity = same, for dark mode
+  //   pixelated = true for pixel art, false for smooth pictures
+  const TILE_ART = {
+    flowery: {
+      images: [
+        "/assets/flowerytiles/tile1.png",   
+        "/assets/flowerytiles/tile2.png",
+        "/assets/flowerytiles/tile3.png",
+      ],
+      chance: 0.35, opacity: 0.18, darkOpacity: 0.12, pixelated: true,
+    },
+  };
+  const TILE_ART_TARGETS = ".panel, .tile, .post"; // which boxes can get art
+
+  function applyTileArt(name) {
+    // clear old art first
+    document.querySelectorAll(".kaia-tile-art").forEach(el => el.remove());
+    document.querySelectorAll(".kaia-has-tile-art").forEach(el => el.classList.remove("kaia-has-tile-art"));
+
+    const cfg = TILE_ART[name];
+    if (!cfg || !cfg.images.length) return;
+    const b = document.body;
+    b.style.setProperty("--tile-art-opacity", cfg.opacity);
+    b.style.setProperty("--tile-art-opacity-dark", cfg.darkOpacity);
+
+    document.querySelectorAll(TILE_ART_TARGETS).forEach(box => {
+      if (Math.random() >= cfg.chance) return;
+      const art = document.createElement("div");
+      art.className = "kaia-tile-art" + (cfg.pixelated ? " pixelated" : "");
+      const src = cfg.images[Math.floor(Math.random() * cfg.images.length)];
+      art.style.backgroundImage = `url("${src}")`;
+      box.classList.add("kaia-has-tile-art");
+      box.insertBefore(art, box.firstChild);
+    });
+  }
+  applyTileArt(activeSeason);
+
+  // drifting gifs: for themes with an animated gif (canvas only draws a gif's
+  // first frame, so these are real <img>s). they fall from the top and drift
+  // at an angle like they're caught in the wind: no swaying, no spinning.
+  // EDIT ME:
+  //   srcs   = the gifs to pick from (each petal picks one at random). websites
+  //            can't look inside a folder, so every file has to be listed here
+  //   count  = how many on screen at once
+  //   scales = sizes to pick from, as multiples of the gif's real size
+  //            (whole numbers keep pixel art crisp)
+  //   wind   = 1 blows them right, -1 blows them left
+  const DRIFT_PARTICLES = {
+    flowery: {
+      srcs: [
+        "/assets/flowerypetals/flowerpetal1.gif",
+        "/assets/flowerypetals/flowerpetal2.gif",
+        "/assets/flowerypetals/flowerpetal3.gif",
+        "/assets/flowerypetals/flowerpetal4.gif",
+        "/assets/flowerypetals/flowerpetal5.gif",
+        "/assets/flowerypetals/flowerpetal6.gif",
+        "/assets/flowerypetals/flowerpetal7.gif",
+        "/assets/flowerypetals/flowerpetal8.gif",
+      ],
+      count: 22, scales: [1, 2], wind: 1,
+    },
+  };
+
+  if (LEAVES_ENABLED && !pageNoLeaves && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    (function initDrift() {
+      const layer = document.createElement("div");
+      layer.id = "kaia-drift-layer";
+      layer.style.display = "none";
+      document.body.appendChild(layer);
+
+      let cfg = null;
+      let sizes = {};   // src -> { w, h } real size of each gif
+      let parts = [];
+      let running = false;
+      let w = window.innerWidth, h = window.innerHeight;
+      window.addEventListener("resize", () => { w = window.innerWidth; h = window.innerHeight; });
+
+      function rand(min, max) { return Math.random() * (max - min) + min; }
+
+      function reset(p, initial) {
+        const loaded = Object.keys(sizes);
+        const src    = loaded[Math.floor(Math.random() * loaded.length)];
+        if (p.el.getAttribute("src") !== src) p.el.src = src;
+        const scale = cfg.scales[Math.floor(Math.random() * cfg.scales.length)];
+        p.pw = Math.round(sizes[src].w * scale);
+        p.ph = Math.round(sizes[src].h * scale);
+        p.el.style.width  = p.pw + "px";
+        p.el.style.height = p.ph + "px";
+        p.vy = rand(22, 50);               // px/sec downward
+        p.vx = p.vy * rand(0.3, 1.6);      // sideways push: some fall steep, some glide flat
+        p.el.style.opacity = rand(0.5, 0.9).toFixed(2);
+        // start far enough upwind that they cross the screen, not just the corner
+        const upwind = h * 1.6;
+        if (cfg.wind > 0) p.x = rand(-upwind, w);
+        else              p.x = rand(0, w + upwind);
+        p.y = initial ? rand(-h, h) : -p.ph - rand(0, h * 0.3);
+      }
+
+      function applyTheme(name) {
+        const c = DRIFT_PARTICLES[name];
+        if (!c) {
+          running = false;
+          layer.style.display = "none";
+          layer.innerHTML = "";
+          parts = [];
+          cfg = null;
+          return;
+        }
+        if (cfg === c && running) return;
+        cfg = c;
+        sizes = {};
+        // load every gif first to learn its size; skip any that fail (typos etc)
+        let pending = c.srcs.length;
+        c.srcs.forEach(src => {
+          const probe = new Image();
+          probe.onload  = () => { sizes[src] = { w: probe.naturalWidth, h: probe.naturalHeight }; done(); };
+          probe.onerror = () => { console.warn("drift gif missing:", src); done(); };
+          probe.src = src;
+        });
+        function done() {
+          if (--pending > 0) return;
+          if (cfg !== c || !Object.keys(sizes).length) return; // theme changed, or nothing loaded
+          layer.innerHTML = "";
+          parts = [];
+          for (let i = 0; i < c.count; i++) {
+            const el = document.createElement("img");
+            el.alt = "";
+            el.className = "kaia-drift";
+            layer.appendChild(el);
+            const p = { el };
+            reset(p, true);
+            parts.push(p);
+          }
+          layer.style.display = "";
+          if (!running) {
+            running = true;
+            lastT = performance.now();
+            requestAnimationFrame(tick);
+          }
+        }
+      }
+      updateDrift = applyTheme;
+
+      let lastT = performance.now();
+      function tick(t) {
+        if (!running) return;
+        if (!isFinite(t)) t = performance.now(); // live preview quirk
+        const dt = Math.min((t - lastT) / 1000, 0.05);
+        lastT = t;
+        for (const p of parts) {
+          p.x += p.vx * cfg.wind * dt;
+          p.y += p.vy * dt;
+          const gone = p.y > h + p.ph ||
+                       (cfg.wind > 0 ? p.x > w + p.pw : p.x < -p.pw);
+          if (gone) reset(p, false);
+          // whole pixels so the pixel art doesn't blur between frames
+          p.el.style.transform = `translate(${Math.round(p.x)}px, ${Math.round(p.y)}px)`;
+        }
+        requestAnimationFrame(tick);
+      }
+
+      applyTheme(activeSeason);
     })();
   }
 })();
