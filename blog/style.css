@@ -109,7 +109,7 @@ main {
 }
 
 #sidebar h1 {
-  margin-block: 0.5em;
+  margin-block: 0.2em;
   color: var(--text);
 }
 
@@ -118,7 +118,7 @@ main {
   transition: color 0.15s;
 }
 
-#sidebar h1 a { font-size: 1.9em; }
+#sidebar h1 a { font-size: 1.5em; }
 
 #sidebar h1 a,
 #sidebar a:hover { text-decoration: none; }
