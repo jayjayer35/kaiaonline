@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>headspace</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      cursor: pointer;
+    }
+
+    #pan {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: calc(100% + var(--tile, 0px));
+      background-image: url("/assets/whitespace.png");
+      background-repeat: repeat-x;
+      background-size: auto 100%;  
+      image-rendering: pixelated;   
+      will-change: transform;
+      animation: pan var(--duration, 60s) linear infinite;
+    }
+
+    @keyframes pan {
+      from { transform: translateX(0); }
+      to   { transform: translateX(calc(-1 * var(--tile, 0px))); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #pan { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="pan"></div>
+
+  <script>
+    const SPEED = 20; 
+    const SRC = "../assets/whitespace.png";
+    const pan = document.getElementById("pan");
+    const img = new Image();
+
+    function fit() {
+      if (!img.naturalHeight) return;
+      const tile = img.naturalWidth * (window.innerHeight / img.naturalHeight);
+      pan.style.setProperty("--tile", tile + "px");
+      pan.style.setProperty("--duration", (tile / SPEED) + "s");
+    }
+
+    img.onload = fit;
+    img.src = SRC;
+    window.addEventListener("resize", fit);
+
+    document.addEventListener("click", () => {
+      const d = document, el = d.documentElement;
+      const isFull = d.fullscreenElement || d.webkitFullscreenElement;
+      if (isFull) {
+        (d.exitFullscreen || d.webkitExitFullscreen).call(d);
+      } else {
+        (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+      }
+    });
+  </script>
+</body>
+</html>

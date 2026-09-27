@@ -150,6 +150,7 @@
     {
       label: "other",
       children: [
+        { label: "headspace",  href: "/misc/headspace.html" },
         { label: "starwalker",  href: "/ofb/starwalker.html" },
         { label: "admin panel",  href: "/draw-admin.html" },
         { label: "404", href: "/404.html" },
