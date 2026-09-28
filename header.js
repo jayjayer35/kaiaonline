@@ -20,6 +20,7 @@
     //{ file: "/music/comehome.mp3",  name: "You Can Always Come Home - Toby Fox" },
     { file: "/music/inlove.mp3",  name: "I guess I'm in love feat. Itoki Hana - Toby Fox" },
     { file: "/music/dinersong.mp3",  name: "The Diner Song of Best Friends - Toby Fox" },
+    { file: "/music/sunsetsevensuns_sketch.mp3",  name: "Sunset of Seven Suns (Sketch) - Toby Fox" },
     //{ file: "/music/scarletforest.mp3",  name: "Scarlet Forest - Toby Fox" },
     { file: "/music/byyourside.mp3",  name: "By Your Side. - OMORI" },
     { file: "/music/trees.mp3",  name: "Trees... - OMORI" },
