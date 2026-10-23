@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  const ALERT_TEXT = "";
+  const ALERT_TEXT = "I yearn for change. A full site overhaul may be in order. Be ready.";
 
   const PLAYLIST = [
     // comment out whichever songs i dont want in the playlist
